@@ -69,7 +69,9 @@ const Header = () => {
             </button>
 
             <a href="#" className="flex mr-4">
-              <h2 className="text-primary-400 text-3xl font-bold">Forex-ZX</h2>
+              <h2 className="text-primary-400 text-3xl font-extrabold">
+                Forex-ZX
+              </h2>
             </a>
             <form
               action="#"
