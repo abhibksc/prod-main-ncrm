@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Edit, Power } from "lucide-react";
+import { Edit, Power, RotateCcwSquareIcon, SwitchCamera } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import AddNew from "@/components/admin/setup-challenges/AddNew";
 
 const SetupChallenges = () => {
   const [plans, setPlans] = useState([
@@ -46,6 +47,8 @@ const SetupChallenges = () => {
     },
   ]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const toggleDefault = (id) => {
     setPlans(
       plans.map((plan) => ({
@@ -69,11 +72,18 @@ const SetupChallenges = () => {
     );
   };
 
+  const addPlan = (newPlan) => {
+    setPlans([...plans, { ...newPlan, id: plans.length + 1 }]);
+  };
+
   return (
-    <div className=" container w-full p-10 mx-auto">
+    <div className="container w-full p-10 mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-white ">Plans Funded</h2>
-        <button className="text-primary-300 hover:text-primary-400 font-medium">
+        <h2 className="text-2xl font-bold text-white">Plans Funded</h2>
+        <button
+          className="text-white hover:text-primary-100 font-medium"
+          onClick={() => setIsModalOpen(true)}
+        >
           + Add New
         </button>
       </div>
@@ -85,7 +95,7 @@ const SetupChallenges = () => {
               <th className="px-6 py-3 text-left">Plan Name</th>
               <th className="px-6 py-3 text-left">Phase</th>
               <th className="px-6 py-3 text-left">Tree Commission</th>
-              <th className="px-6 py-3 text-left">Is Default</th>
+              <th className="px-6 py-3 text-center">Is Default</th>
               <th className="px-6 py-3 text-left">Status</th>
               <th className="px-6 py-3 text-left">Action</th>
             </tr>
@@ -99,11 +109,9 @@ const SetupChallenges = () => {
                   {plan.treeCommission.toFixed(2)} USD
                 </td>
                 <td className="px-6 py-4">
-                  <Switch
-                    checked={plan.isDefault}
-                    onCheckedChange={() => toggleDefault(plan.id)}
-                    className="data-[state=checked]:bg-green-500"
-                  />
+                  <div className="flex items-center justify-center">
+                    <RotateCcwSquareIcon></RotateCcwSquareIcon>
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <span
@@ -117,7 +125,7 @@ const SetupChallenges = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <button className="text-primary-100 hover:text-indigo-900 mr-3">
+                  <button className="text-white hover:text-primary-100 mr-3">
                     <Edit size={18} />
                   </button>
                   <button
@@ -136,6 +144,12 @@ const SetupChallenges = () => {
           </tbody>
         </table>
       </div>
+
+      <AddNew
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={addPlan}
+      />
     </div>
   );
 };

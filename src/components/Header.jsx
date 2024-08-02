@@ -6,6 +6,7 @@ import {
   LogOut,
   Search,
   User,
+  UserCheck,
 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -154,6 +155,10 @@ const Header = () => {
                   <Link className="flex hover:bg-primary-500 p-2  rounded  gap-2">
                     <KeyRound></KeyRound>
                     <p>Password</p>
+                  </Link>
+                  <Link className=" hover:bg-primary-500 p-2  rounded flex gap-2">
+                    <UserCheck></UserCheck>
+                    <p className=" whitespace-nowrap">KYC varification</p>
                   </Link>
                   <Link className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2">
                     <LogOut></LogOut>

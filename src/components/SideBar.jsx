@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
   Home,
-  User,
   Settings,
   Info,
   ContactIcon,
   ArrowRightCircle,
+  Users,
+  LogIn,
+  ChevronsRight,
 } from "lucide-react";
-import SetupChallenges from "../pages/admin/SetupChallenges";
 
 const Sidebar = () => {
   const [openSections, setOpenSections] = useState(new Set());
@@ -31,7 +32,7 @@ const Sidebar = () => {
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
     {
-      label: "Commission Lavels",
+      label: "Commission Levels",
       icon: <ContactIcon />,
       nested: [
         { label: "Deposit", route: "/admin/deposit" },
@@ -40,10 +41,43 @@ const Sidebar = () => {
     },
     {
       label: "Setup challenges",
-      icon: <ArrowRightCircle />,
+      icon: <ChevronsRight />,
       route: "/admin/setup-challenges",
     },
-
+    {
+      label: "Withdrawal conditions",
+      icon: <ChevronsRight />,
+      route: "/admin/withdraw-conditions",
+    },
+    {
+      label: "Trade Accounts",
+      icon: <ChevronsRight />,
+      route: "/admin/trade-accounts",
+    },
+    {
+      label: "Manage Users",
+      icon: <Users />,
+      nested: [
+        { label: "Active Users", route: "/admin/manage-users/active-users" },
+        { label: "Banned Users", route: "/admin/manage-users/banned-users" },
+        {
+          label: "Email Unverified",
+          route: "/admin/manage-users/email-unverified",
+        },
+        {
+          label: "Mobile Unverified",
+          route: "/admin/manage-users/mobile-unverified",
+        },
+        {
+          label: "KYC Unverified",
+          route: "/admin/manage-users/kyc-unverified",
+        },
+        { label: "KYC Pending", route: "/admin/manage-users/kyc-pending" },
+        { label: "With Balance", route: "/admin/manage-users/with-balance" },
+        { label: "Paid Balance", route: "/admin/manage-users/paid-balance" },
+        { label: "All Users", route: "/admin/manage-users/all-users" },
+      ],
+    },
     {
       label: "Settings",
       icon: <Settings />,
@@ -53,12 +87,13 @@ const Sidebar = () => {
       ],
     },
     { label: "About", icon: <Info />, route: "/about" },
+    { label: "Login", icon: <LogIn />, route: "/login" },
   ];
 
   return (
-    <aside className="h-screen w-64 pt-3 bg-primary-800 text-white">
+    <aside className="h-screen w-64 pt-3 bg-primary-800 text-white overflow-hidden">
       <motion.div
-        className="overflow-y-auto"
+        className="h-full overflow-y-auto custom-scrollbar"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
@@ -96,30 +131,32 @@ const Sidebar = () => {
                   )}
                 </button>
               )}
-              {item.nested && openSections.has(item.label) && (
-                <motion.ul
-                  className="ml-6 mt-1 space-y-1 bg-primary-700 rounded-lg shadow-md"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {item.nested.map((subItem, subIndex) => (
-                    <li key={subIndex}>
-                      <NavLink
-                        to={subItem.route}
-                        className={({ isActive }) =>
-                          `flex items-center p-2 text-left text-gray-300 hover:bg-primary-600 rounded-lg transition-colors duration-200 ${
-                            isActive ? "bg-primary-600" : ""
-                          }`
-                        }
-                      >
-                        <span className="ml-2 text-sm">{subItem.label}</span>
-                      </NavLink>
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
+              <AnimatePresence>
+                {item.nested && openSections.has(item.label) && (
+                  <motion.ul
+                    className="ml-6 mt-1 space-y-1 bg-primary-700 rounded-lg shadow-md overflow-hidden"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {item.nested.map((subItem, subIndex) => (
+                      <li key={subIndex}>
+                        <NavLink
+                          to={subItem.route}
+                          className={({ isActive }) =>
+                            `flex items-center p-2 text-left text-gray-300 hover:bg-primary-600 rounded-lg transition-colors duration-200 ${
+                              isActive ? "bg-primary-600" : ""
+                            }`
+                          }
+                        >
+                          <span className="ml-2 text-sm">{subItem.label}</span>
+                        </NavLink>
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
             </li>
           ))}
         </ul>

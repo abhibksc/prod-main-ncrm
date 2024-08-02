@@ -8,6 +8,9 @@ import SignUp from "./pages/SignUp";
 import Deposit from "./pages/commision-level/Deposit";
 import Withdraw from "./pages/commision-level/Withdraw";
 import SetupChallenges from "./pages/admin/SetupChallenges";
+import WithdrawlConditions from "./pages/admin/WithdrawlConditions";
+import TradeAccounts from "./pages/admin/TradeAccounts";
+import ManageUsers from "./pages/admin/ManageUsers";
 
 const Router = createBrowserRouter([
   {
@@ -29,6 +32,18 @@ const Router = createBrowserRouter([
       {
         path: "/admin/setup-challenges",
         element: <SetupChallenges></SetupChallenges>,
+      },
+      {
+        path: "/admin/withdraw-conditions",
+        element: <WithdrawlConditions></WithdrawlConditions>,
+      },
+      {
+        path: "/admin/trade-accounts",
+        element: <TradeAccounts></TradeAccounts>,
+      },
+      {
+        path: "/admin/manage-users/:subList",
+        element: <ManageUsers></ManageUsers>,
       },
       {
         path: "/contact",
