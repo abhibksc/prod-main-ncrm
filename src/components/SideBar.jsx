@@ -8,7 +8,10 @@ import {
   User,
   Settings,
   Info,
+  ContactIcon,
+  ArrowRightCircle,
 } from "lucide-react";
+import SetupChallenges from "../pages/admin/SetupChallenges";
 
 const Sidebar = () => {
   const [openSections, setOpenSections] = useState(new Set());
@@ -26,15 +29,21 @@ const Sidebar = () => {
   };
 
   const menuItems = [
-    { label: "Dashboard", icon: <Home />, route: "/dashboard" },
+    { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
     {
-      label: "User",
-      icon: <User />,
+      label: "Commission Lavels",
+      icon: <ContactIcon />,
       nested: [
-        { label: "Profile", route: "/user/profile" },
-        { label: "Settings", route: "/user/settings" },
+        { label: "Deposit", route: "/admin/deposit" },
+        { label: "Withdraw", route: "/admin/withdraw" },
       ],
     },
+    {
+      label: "Setup challenges",
+      icon: <ArrowRightCircle />,
+      route: "/admin/setup-challenges",
+    },
+
     {
       label: "Settings",
       icon: <Settings />,

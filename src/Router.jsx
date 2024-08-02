@@ -5,6 +5,9 @@ import About from "./pages/About";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Deposit from "./pages/commision-level/Deposit";
+import Withdraw from "./pages/commision-level/Withdraw";
+import SetupChallenges from "./pages/admin/SetupChallenges";
 
 const Router = createBrowserRouter([
   {
@@ -12,12 +15,20 @@ const Router = createBrowserRouter([
     element: <App></App>,
     children: [
       {
-        path: "/dashboard",
+        path: "/admin/dashboard",
         element: <Dashboard></Dashboard>,
       },
       {
-        path: "/about",
-        element: <About></About>,
+        path: "/admin/deposit",
+        element: <Deposit></Deposit>,
+      },
+      {
+        path: "/admin/withdraw",
+        element: <Withdraw></Withdraw>,
+      },
+      {
+        path: "/admin/setup-challenges",
+        element: <SetupChallenges></SetupChallenges>,
       },
       {
         path: "/contact",
