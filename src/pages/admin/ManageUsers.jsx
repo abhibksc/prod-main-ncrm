@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Search, UserPlus } from "lucide-react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 // Existing dummy user data
 const dummyUsers = [
@@ -298,12 +298,14 @@ const ManageUsers = () => {
     setUsers(shuffleArray([...dummyUsers]));
   }, [subList]);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.username.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredUsers = searchTerm
+    ? users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.username.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : users;
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -319,7 +321,7 @@ const ManageUsers = () => {
           <div className="relative mr-2">
             <input
               type="text"
-              placeholder="Username / Email"
+              placeholder="Username / Email / Name"
               className="pl-10 pr-4 py-2 border rounded-lg"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -356,9 +358,12 @@ const ManageUsers = () => {
                 <td className="py-3 px-4">
                   <div>
                     <div className="font-semibold">{user.name}</div>
-                    <div className="text-sm cursor-pointer text-blue-400">
+                    <Link
+                      to={`/admin/user-detail/${user.name}`}
+                      className="text-sm cursor-pointer text-blue-400"
+                    >
                       {user.username}
-                    </div>
+                    </Link>
                   </div>
                 </td>
                 <td className="py-3 px-4">
@@ -372,9 +377,12 @@ const ManageUsers = () => {
                 </td>
                 <td className="py-3 px-4">{user.balance}</td>
                 <td className="py-3 px-4">
-                  <button className="text-blue-400 hover:text-blue-300">
+                  <Link
+                    to={`/admin/user-detail/${user.name}`}
+                    className="text-blue-400 hover:text-blue-300"
+                  >
                     Details
-                  </button>
+                  </Link>
                 </td>
               </tr>
             ))}

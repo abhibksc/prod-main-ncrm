@@ -11,6 +11,8 @@ import SetupChallenges from "./pages/admin/SetupChallenges";
 import WithdrawlConditions from "./pages/admin/WithdrawlConditions";
 import TradeAccounts from "./pages/admin/TradeAccounts";
 import ManageUsers from "./pages/admin/ManageUsers";
+import UserDetailDashboard from "./pages/admin/UserDetailsDashboard";
+import KYCSetting from "./pages/admin/KycSetting";
 
 const Router = createBrowserRouter([
   {
@@ -44,6 +46,14 @@ const Router = createBrowserRouter([
       {
         path: "/admin/manage-users/:subList",
         element: <ManageUsers></ManageUsers>,
+      },
+      {
+        path: "/admin/user-detail/:id",
+        element: <UserDetailDashboard></UserDetailDashboard>,
+      },
+      {
+        path: "/admin/kyc-setting",
+        element: <KYCSetting></KYCSetting>,
       },
       {
         path: "/contact",
