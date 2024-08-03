@@ -14,10 +14,34 @@ import UserInfoForm from "@/components/admin/user-detail/UserForm";
 import { useParams } from "react-router-dom";
 import TradeAccounts from "./TradeAccounts";
 import UserTradeAccounts from "@/components/admin/user-detail/UserTradeAccounts";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const StatCard = ({ icon, amount, label, bgColor }) => (
-  <div
+  <motion.div
+    variants={cardVariants}
     className={`p-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl ${bgColor} text-white`}
+    style={{
+      backgroundImage:
+        "url('https://png.pngtree.com/background/20230109/original/pngtree-white-abstract-carbon-fiber-texture-background-picture-image_1996167.jpg')", // More visible pattern
+      overlay: "auto",
+      backgroundBlendMode: "overlay",
+      backgroundSize: "cover",
+    }}
   >
     <div className="flex justify-between items-center">
       <div className="flex items-center">
@@ -31,16 +55,18 @@ const StatCard = ({ icon, amount, label, bgColor }) => (
         View All
       </button>
     </div>
-  </div>
+  </motion.div>
 );
 
 const ActionButton = ({ icon, label, bgColor }) => (
-  <button
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
     className={`flex items-center justify-center py-2 px-4 rounded-lg text-white ${bgColor} transition-all duration-300 hover:shadow-md hover:bg-opacity-75`}
   >
     {icon}
     <span className="ml-2">{label}</span>
-  </button>
+  </motion.button>
 );
 
 const UserDetailDashboard = ({ username }) => {
@@ -50,43 +76,43 @@ const UserDetailDashboard = ({ username }) => {
       icon: <Wallet size={24} />,
       amount: "$100.00",
       label: "Balance",
-      bgColor: "bg-green-600",
+      bgColor: "bg-green-800",
     },
     {
       icon: <CreditCard size={24} />,
       amount: "$1,000.00",
       label: "Deposits",
-      bgColor: "bg-indigo-500",
+      bgColor: "bg-indigo-800",
     },
     {
       icon: <ArrowLeftRight size={24} />,
       amount: "$0.00",
       label: "Withdrawals",
-      bgColor: "bg-teal-600",
+      bgColor: "bg-teal-800",
     },
     {
       icon: <ArrowLeftRight size={24} />,
       amount: "4",
       label: "Transactions",
-      bgColor: "bg-blue-600",
+      bgColor: "bg-blue-800",
     },
     {
       icon: <Wallet size={24} />,
       amount: "$0.00",
       label: "Total Invest",
-      bgColor: "bg-blue-500",
+      bgColor: "bg-sky-900",
     },
     {
       icon: <Users size={24} />,
       amount: "$0.00",
       label: "Total Referral Commission",
-      bgColor: "bg-blue-700",
+      bgColor: "bg-pink-600/80",
     },
     {
       icon: <CreditCard size={24} />,
       amount: "$0.00",
       label: "Total Binary Commission",
-      bgColor: "bg-blue-800",
+      bgColor: "bg-yellow-900/80",
     },
     {
       icon: <ArrowLeftRight size={24} />,
@@ -127,11 +153,16 @@ const UserDetailDashboard = ({ username }) => {
   return (
     <div className="container mx-auto px-10 py-5 rounded-lg bg-primary-700 shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-white">User Detail - {id}</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+      >
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
-      </div>
+      </motion.div>
       <div className="grid mx-auto whitespace-nowrap grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
         {actions.map((action, index) => (
           <ActionButton className="px-3" key={index} {...action} />

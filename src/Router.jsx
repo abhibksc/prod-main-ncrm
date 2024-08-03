@@ -13,6 +13,8 @@ import TradeAccounts from "./pages/admin/TradeAccounts";
 import ManageUsers from "./pages/admin/ManageUsers";
 import UserDetailDashboard from "./pages/admin/UserDetailsDashboard";
 import KYCSetting from "./pages/admin/KycSetting";
+import PasswordSetting from "./pages/admin/PasswordSetting";
+import ProfileSetting from "./pages/admin/ProfileSetting";
 
 const Router = createBrowserRouter([
   {
@@ -56,13 +58,21 @@ const Router = createBrowserRouter([
         element: <KYCSetting></KYCSetting>,
       },
       {
+        path: "/admin/password-setting",
+        element: <PasswordSetting></PasswordSetting>,
+      },
+      {
+        path: "/admin/profile-setting",
+        element: <ProfileSetting></ProfileSetting>,
+      },
+      {
         path: "/contact",
         element: <About></About>,
       },
     ],
   },
   {
-    path: "/login",
+    path: "/admin/login",
     element: <Login></Login>,
   },
   {

@@ -5,6 +5,7 @@ import {
   KeyRound,
   LogOut,
   Search,
+  Settings,
   User,
   UserCheck,
 } from "lucide-react";
@@ -133,7 +134,7 @@ const Header = () => {
               <span className="sr-only">Open user menu</span>
               <img
                 className="w-8 h-8 rounded-full"
-                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                src="https://www.svgrepo.com/show/382097/female-avatar-girl-face-woman-user-9.svg"
                 alt="user photo"
               />
             </button>
@@ -148,19 +149,31 @@ const Header = () => {
             >
               {isUserDropdownOpen && (
                 <>
-                  <Link className="flex hover:bg-primary-500 p-2  rounded gap-2">
+                  <Link
+                    to={"/admin/profile-setting"}
+                    className="flex hover:bg-primary-500 p-2  rounded gap-2"
+                  >
                     <User></User>
                     <p>Profile</p>
                   </Link>
-                  <Link className="flex hover:bg-primary-500 p-2  rounded  gap-2">
+                  <Link
+                    to={`/admin/password-setting`}
+                    className="flex hover:bg-primary-500 p-2  rounded  gap-2"
+                  >
                     <KeyRound></KeyRound>
                     <p>Password</p>
                   </Link>
-                  <Link className=" hover:bg-primary-500 p-2  rounded flex gap-2">
+                  <Link
+                    to={`/admin/kyc-setting`}
+                    className=" hover:bg-primary-500 p-2  rounded flex gap-2"
+                  >
                     <UserCheck></UserCheck>
                     <p className=" whitespace-nowrap">KYC varification</p>
                   </Link>
-                  <Link className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2">
+                  <Link
+                    to={"/admin/login"}
+                    className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2"
+                  >
                     <LogOut></LogOut>
                     <p>Logout</p>
                   </Link>

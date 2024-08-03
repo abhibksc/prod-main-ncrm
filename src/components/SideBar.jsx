@@ -12,6 +12,7 @@ import {
   Users,
   LogIn,
   ChevronsRight,
+  LogOut,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -87,7 +88,7 @@ const Sidebar = () => {
       ],
     },
     { label: "About", icon: <Info />, route: "/about" },
-    { label: "Login", icon: <LogIn />, route: "/login" },
+    { label: "Logout", icon: <LogOut />, route: "/admin/login" },
   ];
 
   return (
