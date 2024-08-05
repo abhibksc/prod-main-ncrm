@@ -1,12 +1,12 @@
-import BrowserGraph from "../components/Dashboard/BrowserGraph";
-import CountryGraph from "../components/Dashboard/CountryGraph";
-import DepositWithdrawGraph from "../components/Dashboard/DepositWithdrawGraph";
-import DepositWithdrawReport from "../components/Dashboard/DepositWithdrawReport";
-import InvestmentReport from "../components/Dashboard/InvestmentReport";
-import OsGraph from "../components/Dashboard/OsGraph";
-import TradeReport from "../components/Dashboard/TradeReport";
-import TransitionReportGraph from "../components/Dashboard/TransitionReportGraph";
-import UserMetricReport from "../components/Dashboard/UserMetricReport";
+import BrowserGraph from "../../components/admin/Dashboard/BrowserGraph";
+import CountryGraph from "../../components/admin/Dashboard/CountryGraph";
+import DepositWithdrawGraph from "../../components/admin/Dashboard/DepositWithdrawGraph";
+import DepositWithdrawReport from "../../components/admin/Dashboard/DepositWithdrawReport";
+import InvestmentReport from "../../components/admin/Dashboard/InvestmentReport";
+import OsGraph from "../../components/admin/Dashboard/OsGraph";
+import TradeReport from "../../components/admin/Dashboard/TradeReport";
+import TransitionReportGraph from "../../components/admin/Dashboard/TransitionReportGraph";
+import UserMetricReport from "../../components/admin/Dashboard/UserMetricReport";
 
 export default function Dashboard() {
   return (

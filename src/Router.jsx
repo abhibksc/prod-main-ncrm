@@ -1,12 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import SignUp from "./pages/SignUp";
-import Deposit from "./pages/commision-level/Deposit";
-import Withdraw from "./pages/commision-level/Withdraw";
+import Dashboard from "./pages/admin/Dashboard";
+import Login from "./pages/admin/Login";
+import Deposit from "./pages/admin/commision-level/Deposit";
+import Withdraw from "./pages/admin/commision-level/Withdraw";
 import SetupChallenges from "./pages/admin/SetupChallenges";
 import WithdrawlConditions from "./pages/admin/WithdrawlConditions";
 import TradeAccounts from "./pages/admin/TradeAccounts";
@@ -114,19 +111,11 @@ const Router = createBrowserRouter([
         path: "/admin/profile-setting",
         element: <ProfileSetting></ProfileSetting>,
       },
-      {
-        path: "/contact",
-        element: <About></About>,
-      },
     ],
   },
   {
     path: "/admin/login",
     element: <Login></Login>,
-  },
-  {
-    path: "/signup",
-    element: <SignUp></SignUp>,
   },
 ]);
 
