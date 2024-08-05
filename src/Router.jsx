@@ -15,6 +15,15 @@ import UserDetailDashboard from "./pages/admin/UserDetailsDashboard";
 import KYCSetting from "./pages/admin/KycSetting";
 import PasswordSetting from "./pages/admin/PasswordSetting";
 import ProfileSetting from "./pages/admin/ProfileSetting";
+import AutomaticGetways from "./pages/admin/AutomaticGetways";
+import ManualGetways from "./pages/admin/ManualGetways";
+import DepositsStatus from "./pages/admin/DepositsStatus";
+import WithdrawalStatus from "./pages/admin/WithdrawalStatus";
+import WithdrawalMethods from "./pages/admin/WithdrawalMethods";
+import SupportTicketStatus from "./pages/admin/SupportTicketStatus";
+import TransactionReport from "./pages/admin/TransactionReport";
+import ReportStatus from "./pages/admin/ReportStatus";
+import LoginReport from "./pages/admin/LoginReport";
 
 const Router = createBrowserRouter([
   {
@@ -56,6 +65,42 @@ const Router = createBrowserRouter([
       {
         path: "/admin/user-detail/:id",
         element: <UserDetailDashboard></UserDetailDashboard>,
+      },
+      {
+        path: "/admin/deposit/:status",
+        element: <DepositsStatus></DepositsStatus>,
+      },
+      {
+        path: "/admin/withdrawal/methods",
+        element: <WithdrawalMethods></WithdrawalMethods>,
+      },
+      {
+        path: "/admin/withdrawal/:status",
+        element: <WithdrawalStatus></WithdrawalStatus>,
+      },
+      {
+        path: "/admin/ticket/:status",
+        element: <SupportTicketStatus></SupportTicketStatus>,
+      },
+      {
+        path: "/admin/report/transaction",
+        element: <TransactionReport></TransactionReport>,
+      },
+      {
+        path: "/admin/report/:status",
+        element: <ReportStatus></ReportStatus>,
+      },
+      {
+        path: "/admin/report/login",
+        element: <LoginReport></LoginReport>,
+      },
+      {
+        path: "/admin/getway/automatic",
+        element: <AutomaticGetways></AutomaticGetways>,
+      },
+      {
+        path: "/admin/getway/manual",
+        element: <ManualGetways></ManualGetways>,
       },
       {
         path: "/admin/kyc-setting",

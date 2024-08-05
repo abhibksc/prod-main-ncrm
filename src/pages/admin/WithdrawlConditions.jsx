@@ -67,12 +67,12 @@ const WithdrawlConditions = () => {
                 <td className="py-2 px-4">{item.profitSharing}</td>
                 <td className="py-2 px-4">{item.processTime}</td>
                 <td className="py-2 px-4">
-                  <div className="flex space-x-2">
-                    <button className="text-blue-600 hover:text-blue-800">
-                      <PencilIcon size={16} />
+                  <div className="flex space-x-4">
+                    <button className="text-primary-300 hover:text-primary-400">
+                      <PencilIcon size={20} />
                     </button>
-                    <button className="text-red-600 hover:text-red-800">
-                      <TrashIcon size={16} />
+                    <button className="text-red-600 hover:text-red-700">
+                      <TrashIcon size={20} />
                     </button>
                   </div>
                 </td>

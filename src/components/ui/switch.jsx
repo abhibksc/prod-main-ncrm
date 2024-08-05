@@ -1,7 +1,7 @@
-import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const Switch = React.forwardRef(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
@@ -10,13 +10,15 @@ const Switch = React.forwardRef(({ className, ...props }, ref) => (
       className
     )}
     {...props}
-    ref={ref}>
+    ref={ref}
+  >
     <SwitchPrimitives.Thumb
       className={cn(
         "ypointer-events-none yblock yh-5 yw-5 yrounded-full ybg-background yshadow-lg yring-0 ytransition-transform data-[state=checked]:ytranslate-x-5 data-[state=unchecked]:ytranslate-x-0"
-      )} />
+      )}
+    />
   </SwitchPrimitives.Root>
-))
-Switch.displayName = SwitchPrimitives.Root.displayName
+));
+Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch }
+export { Switch };

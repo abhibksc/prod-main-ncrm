@@ -67,7 +67,7 @@ const KYCSetting = () => {
               <div className="flex mt-4">
                 <button
                   onClick={() => handleEdit(index)}
-                  className="flex-1 bg-blue-500 text-white py-2 rounded-l-md hover:bg-blue-600"
+                  className="flex-1 bg-primary-400 text-white py-2 rounded-l-md hover:bg-primary-500"
                 >
                   <Edit size={16} className="inline mr-1" /> Edit
                 </button>

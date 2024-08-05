@@ -25,7 +25,7 @@ const Deposit = () => {
   };
 
   return (
-    <div className=" w-full p-5 text-white  container mx-auto">
+    <div className="w-full py-5 px-10 text-white container mx-auto">
       <h2 className="text-2xl font-bold mb-4">Commissions</h2>
 
       <div className="overflow-x-auto mb-6">
@@ -46,7 +46,7 @@ const Deposit = () => {
           <tbody>
             {levels.length === 0 ? (
               <tr>
-                <td colSpan="5" className="p-2 text-center text-gray-500">
+                <td colSpan="5" className="p-2 text-center text-gray-400">
                   No levels added yet.
                 </td>
               </tr>
@@ -79,11 +79,11 @@ const Deposit = () => {
               name="commissionPercentage"
               value={newLevel.commissionPercentage}
               onChange={handleInputChange}
-              className="w-full text-black p-2 border rounded"
+              className="w-full p-2 border rounded text-black dark:text-white bg-neutral-800/60"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white  mb-1">
+            <label className="block text-sm font-medium text-white mb-1">
               Personal Investment
             </label>
             <input
@@ -91,11 +91,11 @@ const Deposit = () => {
               name="personalInvestment"
               value={newLevel.personalInvestment}
               onChange={handleInputChange}
-              className="w-full text-black p-2 border rounded"
+              className="w-full p-2 border rounded text-black dark:text-white bg-neutral-800/60"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white  mb-1">
+            <label className="block text-sm font-medium text-white mb-1">
               Team Deposit
             </label>
             <input
@@ -103,11 +103,11 @@ const Deposit = () => {
               name="teamDeposit"
               value={newLevel.teamDeposit}
               onChange={handleInputChange}
-              className="w-full text-black p-2 border rounded"
+              className="w-full p-2 border rounded text-black dark:text-white bg-neutral-800/60"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white  mb-1">
+            <label className="block text-sm font-medium text-white mb-1">
               Group Deposit
             </label>
             <input
@@ -115,7 +115,7 @@ const Deposit = () => {
               name="groupDeposit"
               value={newLevel.groupDeposit}
               onChange={handleInputChange}
-              className="w-full text-black p-2 border rounded"
+              className="w-full p-2 border rounded text-black dark:text-white  bg-neutral-800/60"
             />
           </div>
         </div>

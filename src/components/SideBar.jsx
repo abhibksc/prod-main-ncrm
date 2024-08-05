@@ -13,6 +13,11 @@ import {
   LogIn,
   ChevronsRight,
   LogOut,
+  CreditCard,
+  LucideBadgeDollarSign,
+  Banknote,
+  ListCollapseIcon,
+  Ticket,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -80,19 +85,70 @@ const Sidebar = () => {
       ],
     },
     {
+      label: "Payment Getways",
+      icon: <CreditCard />,
+      nested: [
+        { label: "Automatic getways", route: "/admin/getway/automatic" },
+        { label: "Manual getways", route: "/admin/getway/manual" },
+      ],
+    },
+    {
+      label: "Deposits",
+      icon: <LucideBadgeDollarSign />,
+      nested: [
+        { label: "Pending Deposits", route: "/admin/deposit/pending" },
+        { label: "Approved Deposits", route: "/admin/deposit/approved" },
+        { label: "Successfull Deposits", route: "/admin/deposit/successfull" },
+        { label: "Rejected Deposits", route: "/admin/deposit/rejected" },
+        { label: "Initiated Deposits", route: "/admin/deposit/initiated" },
+        { label: "All Deposits", route: "/admin/deposit/all" },
+      ],
+    },
+    {
+      label: "Withdrawals",
+      icon: <Banknote />,
+      nested: [
+        { label: "Withdrawal Methods", route: "/admin/withdrawal/methods" },
+        { label: "Pending Withdrawals", route: "/admin/withdrawal/pending" },
+        { label: "Approved Withdrawals", route: "/admin/withdrawal/approved" },
+        { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
+        { label: "All Withdrawals", route: "/admin/withdrawal/all" },
+      ],
+    },
+    {
+      label: "Support Ticket",
+      icon: <Ticket></Ticket>,
+      nested: [
+        { label: "Pending Ticket", route: "/admin/ticket/pending" },
+        { label: "Closed Ticket", route: "/admin/ticket/close" },
+        { label: "Answered Ticket", route: "/admin/ticket/answer" },
+        { label: "All Ticket", route: "/admin/ticket/all" },
+      ],
+    },
+    {
+      label: "Report",
+      icon: <ListCollapseIcon></ListCollapseIcon>,
+      nested: [
+        { label: "Transition Log", route: "/admin/report/transaction" },
+        { label: "Invest Log", route: "/admin/report/invest" },
+        { label: "Refral Commision", route: "/admin/report/refral" },
+        { label: "Login History", route: "/admin/report/login" },
+      ],
+    },
+    {
       label: "Settings",
       icon: <Settings />,
       nested: [
-        { label: "Account", route: "/settings/account" },
-        { label: "Privacy", route: "/settings/privacy" },
+        { label: "KYC Varification", route: "/admin/kyc-setting" },
+        { label: "Profile Update", route: "/admin/profile-setting" },
+        { label: "Password Update", route: "/admin/password-setting" },
       ],
     },
-    { label: "About", icon: <Info />, route: "/about" },
     { label: "Logout", icon: <LogOut />, route: "/admin/login" },
   ];
 
   return (
-    <aside className="h-screen w-64 pt-3 bg-primary-800 text-white overflow-hidden">
+    <aside className="h-screen pb-20 w-64 pt-3 bg-primary-800 text-white overflow-hidden">
       <motion.div
         className="h-full overflow-y-auto custom-scrollbar"
         initial={{ opacity: 0, x: -20 }}

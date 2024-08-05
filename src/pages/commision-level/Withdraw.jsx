@@ -49,7 +49,7 @@ const Withdraw = () => {
   };
 
   return (
-    <div className=" w-full container p-5 mx-auto">
+    <div className=" w-full container py-5 px-10 mx-auto">
       <h2 className="text-2xl font-bold text-white mb-4">Commissions</h2>
 
       <div className="bg-pri rounded-lg shadow-sm mb-6">
@@ -82,7 +82,7 @@ const Withdraw = () => {
                         e.target.value
                       )
                     }
-                    className="w-full text-black p-2 border rounded"
+                    className="w-full p-2 border rounded text-white bg-neutral-800/60"
                   />
                 </td>
                 <td className="p-3">
@@ -96,7 +96,7 @@ const Withdraw = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-white bg-neutral-800/60"
                   />
                 </td>
                 <td className="p-3">
@@ -106,7 +106,7 @@ const Withdraw = () => {
                     onChange={(e) =>
                       handleInputChange(level.id, "teamDeposit", e.target.value)
                     }
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-white bg-neutral-800/60"
                   />
                 </td>
                 <td className="p-3">
@@ -120,7 +120,7 @@ const Withdraw = () => {
                         e.target.value
                       )
                     }
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded text-white bg-neutral-800/60"
                   />
                 </td>
               </tr>
@@ -154,7 +154,7 @@ const Withdraw = () => {
             </label>
             <input
               type="number"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded text-white bg-neutral-800/60"
               placeholder="0"
             />
           </div>
@@ -164,7 +164,7 @@ const Withdraw = () => {
             </label>
             <input
               type="number"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded text-white bg-neutral-800/60"
               placeholder="0"
             />
           </div>
@@ -174,7 +174,7 @@ const Withdraw = () => {
             </label>
             <input
               type="number"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded text-white bg-neutral-800/60"
               placeholder="0"
             />
           </div>
@@ -184,14 +184,14 @@ const Withdraw = () => {
             </label>
             <input
               type="number"
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded text-white bg-neutral-800/60"
               placeholder="0"
             />
           </div>
         </div>
         <button
           onClick={handleAddLevel}
-          className="mt-4  bg-green-500 text-white px-10 py-2 rounded hover:bg-green-600 transition-colors"
+          className="mt-4 bg-green-500 text-white px-10 py-2 rounded hover:bg-green-600 transition-colors"
         >
           Add
         </button>
