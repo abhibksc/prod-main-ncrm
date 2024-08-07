@@ -322,7 +322,7 @@ const ManageUsers = () => {
             <input
               type="text"
               placeholder="Username / Email / Name"
-              className="pl-10 pr-4 py-2 bg-neutral-800/60  border-primary-500 border-2 rounded-lg"
+              className="pl-10 pr-4 py-2 bg-neutral-800/60 text-white  border-primary-500 border-2 rounded-lg"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

@@ -21,6 +21,17 @@ import SupportTicketStatus from "./pages/admin/SupportTicketStatus";
 import TransactionReport from "./pages/admin/TransactionReport";
 import ReportStatus from "./pages/admin/ReportStatus";
 import LoginReport from "./pages/admin/LoginReport";
+import UserOutlet from "./UserOutlet";
+import UserDashboard from "./pages/user/UserDashboard";
+import Header from "./components/user/UserHeader";
+import UserLogin from "./pages/user/UserLogin";
+import UserSignUp from "./pages/user/UserSignUp";
+import UserTradeAccount from "./pages/user/UserTradeAcccount";
+import UserReferal from "./pages/user/UserReferals";
+import UserWithdraw from "./pages/user/UserWithdraw";
+import UserPlatform from "./pages/user/UserPlatform";
+import UserSupportTicket from "./pages/user/UserSupportTicket";
+import UserRules from "./pages/user/UserRules";
 
 const Router = createBrowserRouter([
   {
@@ -116,6 +127,52 @@ const Router = createBrowserRouter([
   {
     path: "/admin/login",
     element: <Login></Login>,
+  },
+  {
+    path: "/user",
+    element: <UserOutlet></UserOutlet>,
+    children: [
+      {
+        path: "/user/",
+        element: <h1>User Home Page</h1>,
+      },
+      {
+        path: "/user/dashboard",
+        element: <UserDashboard></UserDashboard>,
+      },
+      {
+        path: "/user/trade-account",
+        element: <UserTradeAccount></UserTradeAccount>,
+      },
+      {
+        path: "/user/referrals",
+        element: <UserReferal></UserReferal>,
+      },
+      {
+        path: "/user/withdraw",
+        element: <UserWithdraw></UserWithdraw>,
+      },
+      {
+        path: "/user/platform",
+        element: <UserPlatform></UserPlatform>,
+      },
+      {
+        path: "/user/support-ticket",
+        element: <UserSupportTicket></UserSupportTicket>,
+      },
+      {
+        path: "/user/rules",
+        element: <UserRules></UserRules>,
+      },
+      {
+        path: "/user/login",
+        element: <UserLogin></UserLogin>,
+      },
+      {
+        path: "/user/signup",
+        element: <UserSignUp></UserSignUp>,
+      },
+    ],
   },
 ]);
 
