@@ -32,6 +32,9 @@ import UserWithdraw from "./pages/user/UserWithdraw";
 import UserPlatform from "./pages/user/UserPlatform";
 import UserSupportTicket from "./pages/user/UserSupportTicket";
 import UserRules from "./pages/user/UserRules";
+import UserEconomicCalendar from "./pages/user/UserEconomicCalendar";
+import Userchallenges from "./pages/admin/Userchallenges";
+import UserProfile from "./pages/user/UserProfile";
 
 const Router = createBrowserRouter([
   {
@@ -165,14 +168,26 @@ const Router = createBrowserRouter([
         element: <UserRules></UserRules>,
       },
       {
-        path: "/user/login",
-        element: <UserLogin></UserLogin>,
+        path: "/user/economic-calendar",
+        element: <UserEconomicCalendar></UserEconomicCalendar>,
       },
       {
-        path: "/user/signup",
-        element: <UserSignUp></UserSignUp>,
+        path: "/user/challenges",
+        element: <Userchallenges></Userchallenges>,
+      },
+      {
+        path: "/user/profile",
+        element: <UserProfile></UserProfile>,
       },
     ],
+  },
+  {
+    path: "/user/signup",
+    element: <UserSignUp></UserSignUp>,
+  },
+  {
+    path: "/user/login",
+    element: <UserLogin></UserLogin>,
   },
 ]);
 

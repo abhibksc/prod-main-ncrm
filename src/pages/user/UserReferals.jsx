@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Copy, ChevronDown, Smile } from "lucide-react";
+import { Copy, Check, ChevronDown, Smile } from "lucide-react";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
   const [level, setLevel] = useState("Level 1");
+  const [isCopied, setIsCopied] = useState(false);
 
   const referralLink = "https://portal.fundedltd.com?ref=rdDU6k";
 
@@ -20,9 +21,16 @@ const UserReferal = () => {
     </button>
   );
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(referralLink).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000); // Reset the icon and text after 2 seconds
+    });
+  };
+
   const ReferralsView = () => (
     <div className="space-y-6 rounded-xl">
-      <div className=" bg-secondary-800 p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
+      <div className="bg-secondary-800 p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
         <h3 className="font-semibold text-lg mb-4">Referral Link</h3>
         <div className="flex items-center bg-gray-100 p-3 rounded-lg">
           <input
@@ -31,8 +39,12 @@ const UserReferal = () => {
             readOnly
             className="flex-grow bg-transparent outline-none text-gray-700"
           />
-          <button className="ml-4 bg-secondary-600 text-white px-4 py-2 rounded-lg hover:bg-secondary-700 transition-colors duration-300">
-            <Copy size={20} />
+          <button
+            onClick={copyToClipboard}
+            className="ml-4 bg-secondary-600 text-white px-4 py-2 rounded-lg hover:bg-secondary-700 transition-colors duration-300 flex items-center"
+          >
+            {isCopied ? <Check size={20} /> : <Copy size={20} />}
+            {isCopied && <span className="ml-2">Copied</span>}
           </button>
         </div>
         <p className="text-sm text-yellow-500 font-semibold mt-3 flex items-center">
@@ -40,7 +52,7 @@ const UserReferal = () => {
           Share this link to invite your friends and earn commissions.
         </p>
       </div>
-      <div className="bg-secondary-600 p-4 rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl">
+      <div className="bg-secondary-700/80 p-4 rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl">
         <span className="text-lg">ⓘ Data not found</span>
       </div>
     </div>
@@ -50,7 +62,7 @@ const UserReferal = () => {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold">Total Commission: 0</h2>
       <div className="bg-secondary-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-        <h3 className="font-semibold text-lg p-6 border-b ">
+        <h3 className="font-semibold text-lg p-6 border-b">
           Commission Details
         </h3>
         <div className="overflow-x-auto">
@@ -102,12 +114,12 @@ const UserReferal = () => {
             <option>Level 3</option>
           </select>
           <ChevronDown
-            className="absolute right-3 top-1/2 transform -translate-y-1/2  pointer-events-none"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
             size={20}
           />
         </div>
       </div>
-      <h1 className="text-3xl font-bold  mb-8">Affiliate Portal</h1>
+      <h1 className="text-3xl font-bold mb-8">Affiliate Portal</h1>
       {activeTab === "referrals" ? <ReferralsView /> : <CommissionView />}
     </div>
   );

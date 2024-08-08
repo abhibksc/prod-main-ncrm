@@ -11,6 +11,7 @@ import {
   Trophy,
   ArrowUpDown,
   ShieldAlertIcon,
+  ReceiptPoundSterlingIcon,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -53,6 +54,11 @@ const UserSidebar = () => {
       link: "/user/rules",
     },
     { icon: Settings, label: "Platform", link: "/user/platform" },
+    {
+      icon: ReceiptPoundSterlingIcon,
+      label: "Economic Calendar",
+      link: "/user/economic-calendar",
+    },
   ];
 
   return (
@@ -64,7 +70,7 @@ const UserSidebar = () => {
             {walletBalance.toFixed(2)} USD
           </p>
         </div>
-        <button className="bg-secondary-500/80 text-white px-4 py-2 rounded-full w-full hover:bg-secondary-500 transition-colors duration-300">
+        <button className="bg-secondary-600 text-white px-4 py-2 rounded-full w-full hover:bg-secondary-500 transition-colors duration-300">
           Start New Challenge
         </button>
       </div>

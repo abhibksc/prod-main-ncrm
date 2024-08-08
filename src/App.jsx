@@ -1,10 +1,12 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "./components/admin/SideBar";
 import Header from "./components/admin/Header";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
     <div className="h-screen flex flex-col">
+      <Toaster></Toaster>
       <div className="fixed top-0 left-0 right-0 z-10">
         <Header />
       </div>

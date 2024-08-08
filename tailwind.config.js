@@ -26,6 +26,9 @@ export default {
           800: "#1b4332",
           900: "#081c15",
         },
+        animation: {
+          spin: "spin 1s linear infinite",
+        },
       },
       backgroundImage: {
         dotted: "url('/dot-bg2.jpg')",

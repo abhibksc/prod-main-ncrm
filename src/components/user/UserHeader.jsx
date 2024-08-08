@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { User, LogOut, Settings, UserCircle, CheckCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const UserDropdown = ({ isOpen, onClose }) => {
   const dropdownRef = useRef(null);
@@ -48,10 +49,10 @@ const UserDropdown = ({ isOpen, onClose }) => {
         href="#"
         className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
       >
-        <div className="flex items-center">
+        <Link to={"/user/login"} className="flex items-center">
           <LogOut className="w-4 h-4 mr-2" />
           Sign out
-        </div>
+        </Link>
       </a>
     </div>
   );
@@ -69,7 +70,9 @@ const UserHeader = () => {
         <div className="relative flex items-center">
           <span className="mr-2 text-green-500 flex items-center">
             <CheckCircle className="w-4 h-4 mr-1" />
-            <span className="text-xs text-white">Verified</span>
+            <span className="text-xs text-green-500 font-semibold">
+              Verified
+            </span>
           </span>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
