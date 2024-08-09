@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserLogin = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
+        { email, password }
+      );
+      toast;
+      toast.success("Login successful!");
+      // navigate("/user/dashboard");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed!");
+    }
+  };
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-secondary-900 p-4">
+      <ToastContainer /> {/* ToastContainer to display toast notifications */}
       <div className="w-full max-w-4xl flex flex-col md:flex-row bg-secondary-800 shadow-lg rounded-lg overflow-hidden">
         <motion.div
           initial={{ opacity: 0, x: -100 }}
@@ -18,7 +42,7 @@ const UserLogin = () => {
           }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Don't have an <br /> Forex-ZX account
+            Don't have an <br /> Forex-ZX account?
           </h2>
           <Link
             to={"/user/signup"}
@@ -37,7 +61,7 @@ const UserLogin = () => {
             Login into Your Account
           </h1>
           <p className="mb-6">Just fill in your details below to log in.</p>
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="mb-4">
               <label htmlFor="email" className="block mb-2">
                 Email*
@@ -46,6 +70,8 @@ const UserLogin = () => {
                 type="email"
                 id="email"
                 className="w-full p-3 text-black rounded"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -57,17 +83,17 @@ const UserLogin = () => {
                 type="password"
                 id="password"
                 className="w-full p-3 text-black rounded"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            <Link to={"/user/dashboard"}>
-              <button
-                type="submit"
-                className="w-full bg-secondary-700 text-white py-3 rounded-lg font-semibold"
-              >
-                Login
-              </button>
-            </Link>
+            <button
+              type="submit"
+              className="w-full bg-secondary-700 text-white py-3 rounded-lg font-semibold"
+            >
+              Login
+            </button>
           </form>
         </motion.div>
       </div>
