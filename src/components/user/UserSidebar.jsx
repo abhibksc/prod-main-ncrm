@@ -13,7 +13,8 @@ import {
   ShieldAlertIcon,
   ReceiptPoundSterlingIcon,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MenuItem = ({ icon: Icon, label, link }) => (
   <NavLink
@@ -31,6 +32,7 @@ const MenuItem = ({ icon: Icon, label, link }) => (
 
 const UserSidebar = () => {
   const [walletBalance, setWalletBalance] = useState(0);
+  const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
@@ -62,7 +64,11 @@ const UserSidebar = () => {
   ];
 
   return (
-    <div className="w-64 bg-secondary-900 text-white h-screen p-4 flex flex-col relative">
+    <div
+      className={` ${
+        isSidebarOpen ? "block" : "hidden"
+      } w-64  md:flex bg-secondary-900 text-white h-screen p-4 flex-col relative`}
+    >
       <div className="mb-8">
         <div className="w-full flex flex-col items-center">
           <p className="text-xs">WALLET BALANCE</p>
@@ -70,9 +76,11 @@ const UserSidebar = () => {
             {walletBalance.toFixed(2)} USD
           </p>
         </div>
-        <button className="bg-secondary-600 text-white px-4 py-2 rounded-full w-full hover:bg-secondary-500 transition-colors duration-300">
-          Start New Challenge
-        </button>
+        <Link to={"/user/new-challenge"}>
+          <button className="bg-secondary-600/80 text-white px-4 py-2 rounded-full w-full hover:bg-secondary-500 transition-colors duration-300">
+            Start New Challenge
+          </button>
+        </Link>
       </div>
       <div className="flex-grow overflow-y-auto user-custom-scrollbar">
         {menuItems.map((item) => (

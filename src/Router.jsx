@@ -35,6 +35,9 @@ import UserRules from "./pages/user/UserRules";
 import UserEconomicCalendar from "./pages/user/UserEconomicCalendar";
 import Userchallenges from "./pages/admin/Userchallenges";
 import UserProfile from "./pages/user/UserProfile";
+import UserNewChallenge from "./pages/user/UserNewChallenge";
+import UserNewChallenge2 from "./pages/user/UserNewChallenge2";
+import NewUserReplicate from "./components/user/NewUserReplicate";
 
 const Router = createBrowserRouter([
   {
@@ -172,8 +175,16 @@ const Router = createBrowserRouter([
         element: <UserEconomicCalendar></UserEconomicCalendar>,
       },
       {
+        path: "/user/new-challenge",
+        element: <NewUserReplicate></NewUserReplicate>,
+      },
+      {
+        path: "/user/new-challenge2",
+        element: <UserNewChallenge2></UserNewChallenge2>,
+      },
+      {
         path: "/user/challenges",
-        element: <Userchallenges></Userchallenges>,
+        element: <UserNewChallenge2></UserNewChallenge2>,
       },
       {
         path: "/user/profile",

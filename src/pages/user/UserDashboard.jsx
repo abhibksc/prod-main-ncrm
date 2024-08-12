@@ -75,7 +75,7 @@ export default function UserDashboard() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 justify-between gap-20 my-10">
+      <div className="grid md:grid-cols-2 grid-cols-1  justify-between gap-20 my-10">
         <div>
           <UserLineChart></UserLineChart>
         </div>
@@ -83,7 +83,7 @@ export default function UserDashboard() {
           <UserDashboardAccount></UserDashboardAccount>
         </div>
       </div>
-      <div className="grid grid-cols-2 justify-between my-10">
+      <div className="grid md:grid-cols-2 grid-cols-1 justify-between my-10">
         <div>
           <UserDashboardAccountStats></UserDashboardAccountStats>
         </div>

@@ -95,15 +95,15 @@ const UserDashboardAccountStats = () => {
   };
 
   return (
-    <div className="bg-secondary-800/70 shadow-md rounded-lg p-6 max-w-4xl mx-auto">
-      <h2 className="text-xl font-semibold mb-4">
+    <div className="bg-secondary-800/70 shadow-md rounded-lg p-4 sm:p-6 max-w-full sm:max-w-4xl mx-auto">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4">
         Account Stats - ONE STEP EVALUATION
       </h2>
       <div className="space-y-2">
         {stats.map((stat) => (
           <div key={stat.id} className="border rounded-md overflow-hidden">
             <div
-              className="flex justify-between items-center p-3 cursor-pointer"
+              className="flex justify-between items-center p-3 cursor-pointer text-sm sm:text-base"
               onClick={() => toggleDropdown(stat.id)}
             >
               <span className="font-medium">{stat.label}</span>
@@ -111,7 +111,7 @@ const UserDashboardAccountStats = () => {
                 <span className="mr-2">{stat.value}</span>
                 {stat.status && (
                   <span
-                    className={`px-2 py-1 rounded-full text-xs text-white ${getStatusColor(
+                    className={`px-2 py-1 rounded-full text-xs sm:text-xs text-white ${getStatusColor(
                       stat.status
                     )}`}
                   >
@@ -133,7 +133,7 @@ const UserDashboardAccountStats = () => {
               } overflow-hidden`}
             >
               {stat.description && (
-                <div className="p-3 bg-secondary-700/50 border-t">
+                <div className="p-3 bg-secondary-700/50 border-t text-sm sm:text-base">
                   {stat.description}
                 </div>
               )}

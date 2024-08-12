@@ -11,12 +11,15 @@ const isUser = path.startsWith("/user") ? true : false;
 console.log("isAdmin", isAdmin);
 console.log("isUser", isUser);
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import ReduxStore from "./redux/ReduxStore.js";
 import { Toaster } from "react-hot-toast";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={Router}>
-    <Toaster />
-    <App />
-  </RouterProvider>
+  <Provider store={ReduxStore}>
+    <RouterProvider router={Router}>
+      <Toaster></Toaster>
+      <App />
+    </RouterProvider>
+  </Provider>
 );

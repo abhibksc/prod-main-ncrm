@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,13 +12,11 @@ const UserLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
         { email, password }
       );
-      toast;
       toast.success("Login successful!");
       // navigate("/user/dashboard");
     } catch (error) {
@@ -27,62 +25,57 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-secondary-900 p-4">
-      <ToastContainer /> {/* ToastContainer to display toast notifications */}
-      <div className="w-full max-w-4xl flex flex-col md:flex-row bg-secondary-800 shadow-lg rounded-lg overflow-hidden">
+    <div className="flex min-h-screen bg-secondary-900">
+      <ToastContainer />
+      <div
+        style={{
+          backgroundImage:
+            "url('https://i.pinimg.com/736x/75/58/f3/7558f32aec01b3d8e452688d6dfd20cc.jpg')",
+          backgroundBlendMode: "overlay",
+          backgroundSize: "cover",
+        }}
+        className="w-full bg-blend-overlay md:w-1/2 bg-secondary-900 flex items-center justify-center p-8"
+      >
         <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full md:w-1/2 p-8 flex flex-col bg-secondary-900 justify-center items-center text-white relative bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://png.pngtree.com/background/20230109/original/pngtree-white-abstract-carbon-fiber-texture-background-picture-image_1996167.jpg')",
-            backgroundBlendMode: "overlay",
-          }}
+          className="w-full max-w-md"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Don't have an <br /> Forex-ZX account?
-          </h2>
-          <Link
-            to={"/user/signup"}
-            className="bg-white text-secondary-800 hover:bg-secondary-700/60 transition-all duration-300 hover:text-white px-6 py-2 rounded-full font-semibold"
-          >
-            Sign up here
-          </Link>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full md:w-1/2 bg-secondary-800/60 text-white p-8"
-        >
-          <h1 className="text-2xl md:text-3xl font-bold mb-4">
-            Login into Your Account
-          </h1>
-          <p className="mb-6">Just fill in your details below to log in.</p>
-          <form onSubmit={handleLogin}>
-            <div className="mb-4">
-              <label htmlFor="email" className="block mb-2">
+          <h1 className="text-3xl font-bold mb-2 text-white">Welcome back!</h1>
+          <p className="text-gray-300 mb-8">
+            Enter to get unlimited access to data & information.
+          </p>
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Email*
               </label>
               <input
                 type="email"
                 id="email"
-                className="w-full p-3 text-black rounded"
+                className="mt-1 block w-full px-3 py-2 bg-secondary-800 border border-secondary-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-white"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="block mb-2">
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-300"
+              >
                 Password*
               </label>
               <input
                 type="password"
                 id="password"
-                className="w-full p-3 text-black rounded"
+                className="mt-1 block w-full px-3 py-2 bg-secondary-800 border border-secondary-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-white"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -90,12 +83,25 @@ const UserLogin = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-secondary-700 text-white py-3 rounded-lg font-semibold"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-700 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              Login
+              Log in
             </button>
           </form>
         </motion.div>
+      </div>
+      <div className="hidden md:block md:w-1/2 bg-secondary-800">
+        <div className="h-full">
+          <div className="h-full flex items-center justify-center">
+            <motion.div className="w-full h-full bg-secondary-700 rounded-lg shadow-lg overflow-hidden">
+              <img
+                src="https://clientpanel.getmoretraffic.com.au/images/login_bg_dark.svg"
+                alt="Login Background"
+                className="h-full w-full object-cover"
+              />
+            </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   );

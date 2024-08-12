@@ -37,44 +37,49 @@ const UserLineChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Allows the chart to adjust its height
     plugins: {
       legend: {
         position: "top",
         labels: {
-          color: "white", // Set legend text color to white
+          color: "white",
         },
       },
       title: {
         display: true,
         text: "Line Chart Example",
-        color: "white", // Set title text color to white
+        color: "white",
       },
       tooltip: {
-        titleColor: "white", // Set tooltip title color to white
-        bodyColor: "white", // Set tooltip body color to white
+        titleColor: "white",
+        bodyColor: "white",
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "white", // Set x-axis text color to white
+          color: "white",
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Optional: Set x-axis grid line color to a lighter white
+          color: "rgba(255, 255, 255, 0.1)",
         },
       },
       y: {
         ticks: {
-          color: "white", // Set y-axis text color to white
+          color: "white",
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Optional: Set y-axis grid line color to a lighter white
+          color: "rgba(255, 255, 255, 0.1)",
         },
       },
     },
   };
 
-  return <Line data={data} options={options} />;
+  return (
+    <div style={{ width: "100%", height: "400px" }}>
+      <Line data={data} options={options} />
+    </div>
+  );
 };
 
 export default UserLineChart;
