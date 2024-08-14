@@ -5,12 +5,14 @@ import {
   ArrowLeft,
   Upload,
   ArrowRightCircleIcon,
-  Phone,
   Loader2,
 } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setCurrentAccount } from "@/redux/user/userSlice";
 
 const NewUserReplicate = () => {
   const [step, setStep] = useState(1);
@@ -35,9 +37,10 @@ const NewUserReplicate = () => {
   const [creatingLoading, setCreatingLoading] = useState(false);
   //   console.log("test lavrage", formData.leverage);
   const [selectedPayment, setSelectedPayment] = useState("");
-  const [amount, setAmount] = useState("10000");
+  const [amount, setAmount] = useState("100");
   const [file, setFile] = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -53,11 +56,19 @@ const NewUserReplicate = () => {
     }));
   };
 
+  const depositApiHandler = async () => {
+    const res = await axios.get(
+      `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=4722476&Amount=50&Comment=test`
+    );
+    console.log("api test--", res);
+  };
+
   const apiTestHandler = async () => {
     setCreatingLoading(true);
     const randomNumber = Math.floor(
       1000000 + Math.random() * 9000000
     ).toString();
+
     try {
       const res = await axios.post(`/api/Adduser`, {
         Manager_Index: 1,
@@ -77,11 +88,51 @@ const NewUserReplicate = () => {
         Leverage: parseInt(formData.leverage),
         Group_Name: "SK GROUP\\M10\\CLASSIC",
       });
-      //   console.log("form data --", formData);
+
+      const DBres = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//new-challenge`,
+        {
+          managerIndex: 1,
+          MT5Account: randomNumber,
+          masterPass: "",
+          InvesterPass: "",
+          fName: formData.firstName,
+          lName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          country: formData.country,
+          State: formData.state,
+          zipCode: formData.zipCode,
+          balance: "0",
+          levrage: parseInt(formData.leverage),
+          groupName: "SK GROUP\\M10\\CLASSIC",
+        }
+      );
+      dispatch(setCurrentAccount(randomNumber));
       setCreatingLoading(false);
 
-      console.log(res.data);
-      toast.success("Created successfully");
+      const depositRes = await axios.get(
+        `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
+      );
+      const depositDBres = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//deposit`,
+        {
+          balance: depositRes.data.Balance,
+          credit: depositRes.data.Credit,
+          equity: depositRes.data.Equity,
+          freeMargin: depositRes.data.FreeMargin,
+          mt5Account: depositRes.data.MT5Accont,
+          margin: depositRes.data.Margin,
+        }
+      );
+      toast.success("Deposit successfully");
+
+      console.log("add user api res---", res.data);
+      console.log("add user DB res--", DBres);
+      console.log("deposit api res --", depositRes.data);
+      console.log("deposit db res--", depositDBres.data.data);
     } catch (error) {
       setCreatingLoading(false);
 
@@ -171,6 +222,7 @@ const NewUserReplicate = () => {
               <h2 className="text-2xl font-bold mb-6">
                 Configure your account
               </h2>
+              {/* <button onClick={apiTestAPI}>Click here</button> */}
 
               <div>
                 <label className="block mb-2 text-sm font-medium">
@@ -304,9 +356,6 @@ const NewUserReplicate = () => {
                   <div className="text-2xl text-center font-bold text-blue-400">
                     5K Two Step X Student
                   </div>
-                  <button onClick={apiTestHandler} className=" m-5">
-                    Click me
-                  </button>
                 </div>
                 <div className="text-blue-400 mb-4">Account Size 5000 USD</div>
                 <button className="bg-blue-600 text-white py-2 px-4 rounded-full mb-6">
@@ -389,9 +438,11 @@ const NewUserReplicate = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
                 />
               </div>
+
               <div>
                 <label className="block mb-2 text-sm font-medium">
                   Mobile Number*

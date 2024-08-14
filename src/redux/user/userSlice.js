@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = {
   isSidebarOpen: false,
+  currentAccount: "",
 };
 
 export const UserSlice = createSlice({
@@ -11,9 +12,12 @@ export const UserSlice = createSlice({
     handleToggleSidebar: (state, action) => {
       state.isSidebarOpen = action.payload;
     },
+    setCurrentAccount: (state, action) => {
+      state.currentAccount = action.payload;
+    },
   },
 });
 
-export const { handleToggleSidebar } = UserSlice.actions;
+export const { handleToggleSidebar, setCurrentAccount } = UserSlice.actions;
 
 export default UserSlice.reducer;

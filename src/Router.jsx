@@ -23,7 +23,6 @@ import ReportStatus from "./pages/admin/ReportStatus";
 import LoginReport from "./pages/admin/LoginReport";
 import UserOutlet from "./UserOutlet";
 import UserDashboard from "./pages/user/UserDashboard";
-import Header from "./components/user/UserHeader";
 import UserLogin from "./pages/user/UserLogin";
 import UserSignUp from "./pages/user/UserSignUp";
 import UserTradeAccount from "./pages/user/UserTradeAcccount";
@@ -33,11 +32,10 @@ import UserPlatform from "./pages/user/UserPlatform";
 import UserSupportTicket from "./pages/user/UserSupportTicket";
 import UserRules from "./pages/user/UserRules";
 import UserEconomicCalendar from "./pages/user/UserEconomicCalendar";
-import Userchallenges from "./pages/admin/Userchallenges";
 import UserProfile from "./pages/user/UserProfile";
-import UserNewChallenge from "./pages/user/UserNewChallenge";
 import UserNewChallenge2 from "./pages/user/UserNewChallenge2";
 import NewUserReplicate from "./components/user/NewUserReplicate";
+import UserChnagePassword from "./pages/user/UserChnagePassword";
 
 const Router = createBrowserRouter([
   {
@@ -189,6 +187,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/profile",
         element: <UserProfile></UserProfile>,
+      },
+      {
+        path: "/user/change-password",
+        element: <UserChnagePassword></UserChnagePassword>,
       },
     ],
   },

@@ -1,11 +1,52 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDownCircle, BadgeDollarSign } from "lucide-react";
+import { ArrowDownCircle, BadgeDollarSign, Loader2 } from "lucide-react";
+import axios from "axios";
+import Loader from "@/components/Loader/Loader";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const UserWithdraw = () => {
   const [selectedGateway, setSelectedGateway] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [amount, setAmount] = useState("");
+  const [apiLoader, setApiLoader] = useState(false);
+
+  const currentAccount = useSelector((store) => store.user.currentAccount);
+
+  const withdrawalHandler = async (e) => {
+    e.preventDefault();
+
+    setApiLoader(true);
+    try {
+      const res = await axios.get(
+        `http://194.163.147.216//api/web/MakeWithdrawCredit?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
+      );
+
+      const withdrawalDBres = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//withdrawal`,
+        {
+          method: selectedGateway,
+          tradeAccount: selectedAccount,
+          balance: res.data.Balance,
+          credit: res.data.Credit,
+          equity: res.data.Equity,
+          freeMargin: res.data.FreeMargin,
+          mt5Account: res.data.MT5Accont,
+          margin: res.data.Margin,
+        }
+      );
+      setApiLoader(false);
+      toast.success("Withdawal success");
+
+      console.log("withdrawal API res--", res.data);
+      console.log("withdrawal DB res--", withdrawalDBres.data.data);
+    } catch (error) {
+      setApiLoader(false);
+      toast.error("Withdawal Failed");
+      console.log("error while withdraw", error);
+    }
+  };
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
@@ -27,7 +68,7 @@ const UserWithdraw = () => {
             Withdraw History
           </button>
         </div>
-        <form className="space-y-6">
+        <form onSubmit={withdrawalHandler} className="space-y-6">
           <div>
             <label
               htmlFor="gateway"
@@ -99,10 +140,12 @@ const UserWithdraw = () => {
             </div>
           </div>
           <button
+            onClick={withdrawalHandler}
             type="submit"
-            className="w-full bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
           >
             Submit Withdrawal
+            {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
           </button>
         </form>
       </motion.div>

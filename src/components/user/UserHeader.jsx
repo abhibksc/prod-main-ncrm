@@ -7,6 +7,7 @@ import {
   CheckCircle,
   ListEndIcon,
   Menu,
+  KeyRound,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -43,19 +44,19 @@ const UserDropdown = ({ isOpen, onClose }) => {
         href="#"
         className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
       >
-        <div className="flex items-center">
+        <Link to={"/user/profile"} className="flex items-center">
           <UserCircle className="w-4 h-4 mr-2" />
           Profile
-        </div>
+        </Link>
       </a>
       <a
         href="#"
         className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
       >
-        <div className="flex items-center">
-          <Settings className="w-4 h-4 mr-2" />
-          Settings
-        </div>
+        <Link to={"/user/change-password"} className="flex items-center">
+          <KeyRound className="w-4 h-4 mr-2" />
+          Change Password
+        </Link>
       </a>
       <a
         href="#"
