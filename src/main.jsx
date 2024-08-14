@@ -10,16 +10,18 @@ const isAdmin = path.startsWith("/admin") ? true : false;
 const isUser = path.startsWith("/user") ? true : false;
 console.log("isAdmin", isAdmin);
 console.log("isUser", isUser);
-import "react-toastify/dist/ReactToastify.css";
 import { Provider } from "react-redux";
-import ReduxStore from "./redux/ReduxStore.js";
+import ReduxStore, { persistor } from "./redux/ReduxStore.js";
 import { Toaster } from "react-hot-toast";
+import { PersistGate } from "redux-persist/integration/react";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={ReduxStore}>
     <RouterProvider router={Router}>
-      <Toaster></Toaster>
-      <App />
+      <PersistGate persistor={persistor}>
+        <Toaster></Toaster>
+        <App />
+      </PersistGate>
     </RouterProvider>
   </Provider>
 );

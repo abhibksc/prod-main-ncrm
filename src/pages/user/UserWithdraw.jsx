@@ -4,23 +4,24 @@ import { ArrowDownCircle, BadgeDollarSign, Loader2 } from "lucide-react";
 import axios from "axios";
 import Loader from "@/components/Loader/Loader";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setAvailableBalance } from "@/redux/user/userSlice";
 
 const UserWithdraw = () => {
   const [selectedGateway, setSelectedGateway] = useState("");
   const [selectedAccount, setSelectedAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
+  const dispatch = useDispatch();
 
   const currentAccount = useSelector((store) => store.user.currentAccount);
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
-
     setApiLoader(true);
     try {
       const res = await axios.get(
-        `http://194.163.147.216//api/web/MakeWithdrawCredit?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
+        `http://194.163.147.216//api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
       );
 
       const withdrawalDBres = await axios.post(
@@ -36,6 +37,7 @@ const UserWithdraw = () => {
           margin: res.data.Margin,
         }
       );
+      dispatch(setAvailableBalance(res.data.Balance));
       setApiLoader(false);
       toast.success("Withdawal success");
 

@@ -12,7 +12,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setCurrentAccount } from "@/redux/user/userSlice";
+import {
+  setAvailableBalance,
+  setCurrentAccount,
+  setDepositBalance,
+} from "@/redux/user/userSlice";
 
 const NewUserReplicate = () => {
   const [step, setStep] = useState(1);
@@ -114,8 +118,9 @@ const NewUserReplicate = () => {
       setCreatingLoading(false);
 
       const depositRes = await axios.get(
-        `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
+        `http://194.163.147.216//api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
       );
+
       const depositDBres = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//deposit`,
         {
@@ -127,6 +132,9 @@ const NewUserReplicate = () => {
           margin: depositRes.data.Margin,
         }
       );
+
+      dispatch(setDepositBalance(amount));
+      dispatch(setAvailableBalance(depositRes.data.Balance));
       toast.success("Deposit successfully");
 
       console.log("add user api res---", res.data);

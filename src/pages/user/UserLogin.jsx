@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -11,22 +10,27 @@ const UserLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
+    const toastStart = toast.loading("Plese wait...");
     e.preventDefault();
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
         { email, password }
       );
-      toast.success("Login successful!");
+      toast.success("Login successful!", { id: toastStart });
+
+      console.log("login res", res);
       // navigate("/user/dashboard");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed!");
+      toast.error(error.response?.data?.message || "Login failed!", {
+        id: toastStart,
+      });
     }
   };
 
   return (
     <div className="flex min-h-screen bg-secondary-900">
-      <ToastContainer />
+      <Toaster></Toaster>
       <div
         style={{
           backgroundImage:

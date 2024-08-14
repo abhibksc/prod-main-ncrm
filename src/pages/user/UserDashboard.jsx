@@ -2,10 +2,25 @@ import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccou
 import UserDashboardAccountStats from "@/components/user/dashboard/UserDashboardAccountStats";
 import UserDashboardCountdown from "@/components/user/dashboard/UserDashboardCountdown";
 import UserLineChart from "@/components/user/UserLineChart";
+import UseUserHook from "@/hooks/user/UseUserHook";
 import { Activity, Scale, Target, TrendingUp } from "lucide-react";
-import React from "react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function UserDashboard() {
+  const abailableBalance = useSelector((store) => store.user.availableBalance);
+  const depositBalance = useSelector((store) => store.user.depositBalace);
+  const profitNloss = useSelector((store) => store.user.profitNloss);
+  const currentAccount = useSelector((store) => store.user.currentAccount);
+  const { GetCloseTradeAPI } = UseUserHook();
+
+  // Use effect ----
+
+  useEffect(() => {
+    GetCloseTradeAPI();
+  }, []);
+
+  // console.log(abailableBalance, depositBalance);
   return (
     <div className="pb-10">
       <div className="grid grid-cols-1">
@@ -21,8 +36,8 @@ export default function UserDashboard() {
           >
             <Scale className="w-6 h-6" />
             <div className="">
-              <p className="text-xs">Simulated Balance</p>
-              <p className="font-bold">50,000.00 USD</p>
+              <p className="text-xs">Deposit Balance</p>
+              <p className="font-bold">{depositBalance} $USD</p>
             </div>
           </div>
 
@@ -37,8 +52,8 @@ export default function UserDashboard() {
           >
             <Activity className="w-6 h-6" />
             <div>
-              <p className="text-xs">Current Balance</p>
-              <p className="font-bold">57,225.00 USD</p>
+              <p className="text-xs">Available Balance</p>
+              <p className="font-bold">{abailableBalance} $USD</p>
             </div>
           </div>
 
@@ -54,7 +69,7 @@ export default function UserDashboard() {
             <TrendingUp className="w-6 h-6 text-green-500" />
             <div>
               <p className="text-xs">Profit/Loss</p>
-              <p className="font-bold text-green-300">7,225.00 USD</p>
+              <p className="font-bold text-green-300">{profitNloss} USD</p>
             </div>
           </div>
 
@@ -80,7 +95,9 @@ export default function UserDashboard() {
           <UserLineChart></UserLineChart>
         </div>
         <div>
-          <UserDashboardAccount></UserDashboardAccount>
+          <UserDashboardAccount
+            currentAccount={currentAccount}
+          ></UserDashboardAccount>
         </div>
       </div>
       <div className="grid md:grid-cols-2 grid-cols-1 justify-between my-10">

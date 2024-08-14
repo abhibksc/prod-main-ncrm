@@ -27,7 +27,7 @@ const CredentialItem = ({ icon: Icon, label, value, badgeColor = "" }) => (
   </div>
 );
 
-const UserDashboardAccount = () => {
+const UserDashboardAccount = ({ currentAccount }) => {
   return (
     <div className="bg-secondary-800/80 shadow-md rounded-lg p-6 max-w-md">
       <h2 className="text-lg font-semibold mb-4">Account credentials</h2>
@@ -35,7 +35,7 @@ const UserDashboardAccount = () => {
         <CredentialItem
           icon={User}
           label="MT5 Account Id"
-          value="9784512772435"
+          value={currentAccount}
           badgeColor="bg-blue-100 text-blue-800"
         />
         <CredentialItem icon={Server} label="Server Name" value="Xtal-Live" />
