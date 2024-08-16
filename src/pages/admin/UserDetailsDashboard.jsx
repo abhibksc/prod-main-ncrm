@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Wallet,
   CreditCard,
@@ -7,12 +6,10 @@ import {
   Ban,
   Key,
   LogIn,
-  Bell,
   TreePine,
 } from "lucide-react";
 import UserInfoForm from "@/components/admin/user-detail/UserForm";
 import { useParams } from "react-router-dom";
-import TradeAccounts from "./TradeAccounts";
 import UserTradeAccounts from "@/components/admin/user-detail/UserTradeAccounts";
 import { motion } from "framer-motion";
 

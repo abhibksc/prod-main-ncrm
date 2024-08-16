@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setLoggedUser } from "@/redux/user/userSlice";
+import { setLoggedUser } from "../../redux/user/userSlice";
 
 const UserChnagePassword = () => {
   const [passwords, setPasswords] = useState({

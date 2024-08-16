@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { setLoggedUser } from "@/redux/user/userSlice";
+import { setLoggedUser } from "../../redux/user/userSlice";
 import { Mail, Lock, LogIn } from "lucide-react";
 
 const UserLogin = () => {

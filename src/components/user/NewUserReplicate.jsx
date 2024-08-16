@@ -18,7 +18,7 @@ import {
   setDepositBalance,
   setInvestorPassword,
   setMasterPassword,
-} from "@/redux/user/userSlice";
+} from "../../redux/user/userSlice";
 
 const NewUserReplicate = () => {
   const [step, setStep] = useState(1);
@@ -95,62 +95,62 @@ const NewUserReplicate = () => {
         Group_Name: "SK GROUP\\M10\\CLASSIC",
       });
 
-      const DBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//new-challenge`,
-        {
-          managerIndex: 1,
-          MT5Account: randomNumber,
-          masterPass: "",
-          InvesterPass: "",
-          fName: formData.firstName,
-          lName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          country: formData.country,
-          State: formData.state,
-          zipCode: formData.zipCode,
-          balance: "0",
-          levrage: parseInt(formData.leverage),
-          groupName: "SK GROUP\\M10\\CLASSIC",
-        }
-      );
-      dispatch(setCurrentAccount(randomNumber));
+      // const DBres = await axios.post(
+      //   `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//new-challenge`,
+      //   {
+      //     managerIndex: 1,
+      //     MT5Account: randomNumber,
+      //     masterPass: "",
+      //     InvesterPass: "",
+      //     fName: formData.firstName,
+      //     lName: formData.lastName,
+      //     email: formData.email,
+      //     phone: formData.phone,
+      //     address: formData.address,
+      //     city: formData.city,
+      //     country: formData.country,
+      //     State: formData.state,
+      //     zipCode: formData.zipCode,
+      //     balance: "0",
+      //     levrage: parseInt(formData.leverage),
+      //     groupName: "SK GROUP\\M10\\CLASSIC",
+      //   }
+      // );
+      // dispatch(setCurrentAccount(randomNumber));
       setCreatingLoading(false);
 
-      const depositRes = await axios.get(
-        `http://194.163.147.216//api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
-      );
+      // const depositRes = await axios.get(
+      //   `http://194.163.147.216//api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
+      // );
 
-      const depositDBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//deposit`,
-        {
-          balance: depositRes.data.Balance,
-          credit: depositRes.data.Credit,
-          equity: depositRes.data.Equity,
-          freeMargin: depositRes.data.FreeMargin,
-          mt5Account: depositRes.data.MT5Accont,
-          margin: depositRes.data.Margin,
-        }
-      );
+      // const depositDBres = await axios.post(
+      //   `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//deposit`,
+      //   {
+      //     balance: depositRes.data.Balance,
+      //     credit: depositRes.data.Credit,
+      //     equity: depositRes.data.Equity,
+      //     freeMargin: depositRes.data.FreeMargin,
+      //     mt5Account: depositRes.data.MT5Accont,
+      //     margin: depositRes.data.Margin,
+      //   }
+      // );
 
-      dispatch(setDepositBalance(amount));
-      dispatch(setInvestorPassword(res.data.Investor_Pwd));
-      dispatch(setMasterPassword(res.data.Master_Pwd));
-      dispatch(setAvailableBalance(depositRes.data.Balance));
+      // dispatch(setDepositBalance(amount));
+      // dispatch(setInvestorPassword(res.data.Investor_Pwd));
+      // dispatch(setMasterPassword(res.data.Master_Pwd));
+      // dispatch(setAvailableBalance(depositRes.data.Balance));
       toast.success("Deposit successfully");
 
       console.log("add user api res---", res.data);
-      console.log("add user DB res--", DBres);
-      console.log("deposit api res --", depositRes.data);
-      console.log("deposit db res--", depositDBres.data.data);
+      // console.log("add user DB res--", DBres);
+      // console.log("deposit api res --", depositRes.data);
+      // console.log("deposit db res--", depositDBres.data.data);
     } catch (error) {
       setCreatingLoading(false);
 
       toast.error("Plese try again");
       //   console.log("form data --", formData);
-      console.log("api testing error", error.response.data.Message);
+      console.log("api testing error---", error);
     }
   };
 

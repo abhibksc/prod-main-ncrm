@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setInvestorPassword } from "@/redux/user/userSlice";
+import { setInvestorPassword } from "../../redux/user/userSlice";
 
 const UserInvesterPassword = () => {
   const [passwords, setPasswords] = useState({

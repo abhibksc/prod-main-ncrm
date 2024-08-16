@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Loader from "@/components/Loader/Loader";
+import Loader from "../../components/Loader/Loader";
 
 export default function UserEconomicCalendar() {
   const [loading, setLoading] = useState(true);

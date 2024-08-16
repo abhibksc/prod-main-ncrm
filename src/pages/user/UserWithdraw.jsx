@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDownCircle, BadgeDollarSign, Loader2 } from "lucide-react";
 import axios from "axios";
-import Loader from "@/components/Loader/Loader";
+import Loader from "../../components/Loader/Loader";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setAvailableBalance, setIsRefresh } from "@/redux/user/userSlice";
-import UseUserHook from "@/hooks/user/UseUserHook";
+import { setAvailableBalance, setIsRefresh } from "../../redux/user/userSlice";
+import UseUserHook from "../../hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
   const [selectedGateway, setSelectedGateway] = useState("");
