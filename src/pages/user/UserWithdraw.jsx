@@ -5,7 +5,8 @@ import axios from "axios";
 import Loader from "@/components/Loader/Loader";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setAvailableBalance } from "@/redux/user/userSlice";
+import { setAvailableBalance, setIsRefresh } from "@/redux/user/userSlice";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
   const [selectedGateway, setSelectedGateway] = useState("");
@@ -15,6 +16,7 @@ const UserWithdraw = () => {
   const dispatch = useDispatch();
 
   const currentAccount = useSelector((store) => store.user.currentAccount);
+  const { GetUserInfoAPI } = UseUserHook();
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
@@ -38,11 +40,14 @@ const UserWithdraw = () => {
         }
       );
       dispatch(setAvailableBalance(res.data.Balance));
+      dispatch;
       setApiLoader(false);
       toast.success("Withdawal success");
+      // dispatch(setIsRefresh());
+      GetUserInfoAPI();
 
-      console.log("withdrawal API res--", res.data);
-      console.log("withdrawal DB res--", withdrawalDBres.data.data);
+      // console.log("withdrawal API res--", res.data);
+      // console.log("withdrawal DB res--", withdrawalDBres.data.data);
     } catch (error) {
       setApiLoader(false);
       toast.error("Withdawal Failed");
@@ -82,7 +87,7 @@ const UserWithdraw = () => {
               id="gateway"
               value={selectedGateway}
               onChange={(e) => setSelectedGateway(e.target.value)}
-              className="block w-full p-3 text-base bg-secondary-700 text-white border border-secondary-600 rounded-md "
+              className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
             >
               <option value="">Select Gateway</option>
               <option value="bank">Bank Transfer</option>
@@ -101,7 +106,7 @@ const UserWithdraw = () => {
               id="account"
               value={selectedAccount}
               onChange={(e) => setSelectedAccount(e.target.value)}
-              className="block w-full p-3 text-base bg-secondary-700 text-white border border-secondary-600 rounded-md "
+              className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
             >
               <option value="">Select Account</option>
               <option value="main">Main Account</option>
@@ -123,7 +128,7 @@ const UserWithdraw = () => {
               <input
                 type="text"
                 id="amount"
-                className="w-full pl-10 py-3 bg-secondary-700 text-white  border-secondary-600 rounded-md placeholder-gray-300 "
+                className="w-full pl-10 py-3 bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

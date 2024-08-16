@@ -36,6 +36,8 @@ import UserProfile from "./pages/user/UserProfile";
 import UserNewChallenge2 from "./pages/user/UserNewChallenge2";
 import NewUserReplicate from "./components/user/NewUserReplicate";
 import UserChnagePassword from "./pages/user/UserChnagePassword";
+import UserInvesterPassword from "./pages/user/UserInvestorPassword";
+import UserMasterPassword from "./pages/user/UserMasterPassword";
 
 const Router = createBrowserRouter([
   {
@@ -191,6 +193,14 @@ const Router = createBrowserRouter([
       {
         path: "/user/change-password",
         element: <UserChnagePassword></UserChnagePassword>,
+      },
+      {
+        path: "/user/master-password",
+        element: <UserMasterPassword></UserMasterPassword>,
+      },
+      {
+        path: "/user/investor-password",
+        element: <UserInvesterPassword></UserInvesterPassword>,
       },
     ],
   },

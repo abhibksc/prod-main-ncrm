@@ -4,7 +4,7 @@ import { User, Mail, Phone, MapPin, Flag } from "lucide-react";
 const UserProfile = () => {
   return (
     <div className="max-w-4xl mx-auto p-8 bg-gradient-to-br bg-secondary-800/60 rounded-xl shadow-lg">
-      <h1 className="text-3xl font-bold mb-8">Profile Information</h1>
+      <h1 className="text-3xl font-bold mb-5">Profile Information</h1>
 
       <form className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -55,12 +55,12 @@ const InputField = ({ label, icon, value, required = false }) => (
       {required && "*"}
     </label>
     <div className="relative rounded-md shadow-sm">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary-200">
         {icon}
       </div>
       <input
         type="text"
-        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white  text-black focus:outline-none focus:ring-2 sm:text-sm"
+        className="block w-full pl-10 pr-3 py-3 rounded-md leading-5 bg-secondary-700 outline-none sm:text-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
         defaultValue={value}
         required={required}
       />
@@ -72,12 +72,12 @@ const ReadOnlyField = ({ label, icon, value }) => (
   <div className="relative">
     <label className="block text-sm font-medium  mb-1">{label}</label>
     <div className="relative rounded-md shadow-sm">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none cursor-not-allowed text-gray-400">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none cursor-not-allowed text-gray-500">
         {icon}
       </div>
       <input
         type="text"
-        className="block w-full pl-10 pr-3 cursor-not-allowed py-2 border border-gray-300 rounded-md leading-5 bg-gray-100 text-gray-700 sm:text-sm"
+        className="block w-full pl-10 pr-3 cursor-not-allowed py-3 border-none outline-none rounded-md leading-5 bg-secondary-700 text-gray-400 sm:text-sm"
         value={value}
         readOnly
       />

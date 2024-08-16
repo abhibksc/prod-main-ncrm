@@ -7,6 +7,11 @@ const initialState = {
   depositBalace: "00",
   availableBalance: "00",
   profitNloss: "00",
+  isRefreshed: true,
+  investorPassword: "",
+  masterPassword: "",
+  userInfo: "",
+  loggedUser: "",
 };
 
 export const UserSlice = createSlice({
@@ -31,6 +36,21 @@ export const UserSlice = createSlice({
     setProfitNloss: (state, action) => {
       state.profitNloss = action.payload;
     },
+    setUserInfo: (state, action) => {
+      state.userInfo = action.payload;
+    },
+    setIsRefresh: (state) => {
+      state.isRefreshed = !state.isRefreshed;
+    },
+    setLoggedUser: (state, action) => {
+      state.loggedUser = action.payload;
+    },
+    setInvestorPassword: (state, action) => {
+      state.investorPassword = action.payload;
+    },
+    setMasterPassword: (state, action) => {
+      state.masterPassword = action.payload;
+    },
   },
 });
 
@@ -41,6 +61,11 @@ export const {
   setDepositBalance,
   setAvailableBalance,
   setProfitNloss,
+  setUserInfo,
+  setIsRefresh,
+  setLoggedUser,
+  setInvestorPassword,
+  setMasterPassword,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

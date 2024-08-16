@@ -4,25 +4,22 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setLoggedUser } from "@/redux/user/userSlice";
+import { setInvestorPassword } from "@/redux/user/userSlice";
 
-const UserChnagePassword = () => {
+const UserInvesterPassword = () => {
   const [passwords, setPasswords] = useState({
-    current: "",
     new: "",
     confirm: "",
   });
   const [showPasswords, setShowPasswords] = useState({
-    current: false,
     new: false,
     confirm: false,
   });
   const [error, setError] = useState("");
+  const currentAccount = useSelector((store) => store.user.currentAccount);
+  const dispatch = useDispatch("");
 
-  const loggedUser = useSelector((store) => store.user.loggedUser);
-  const dispatch = useDispatch();
-
-  // console.log("logged user--", loggedUser);
+  console.log("current account", currentAccount);
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -35,39 +32,39 @@ const UserChnagePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Please wait..");
+    const toastId = toast.loading("Plese wait..");
     if (passwords.new !== passwords.confirm) {
       setError("Passwords do not match. Please try again.");
-      toast.error("Passwords do not match", { id: toastId });
+      toast.error("Plese try again", { id: toastId });
     } else {
       try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/change-password`,
-          {
-            id: loggedUser._id,
-            currentPassword: passwords.current,
-            newPassword: passwords.confirm,
-          }
+        const res = await axios.get(
+          `http://194.163.147.216//api/web/ChangeInvestorPassword?Manager_Index=${"1"}&Account=${currentAccount}&password=${
+            passwords.confirm
+          }`
         );
-        toast.success("Password updated successfully", { id: toastId });
-        dispatch(setLoggedUser(res.data.user));
-        console.log("change password res--", res.data.user);
+        console.log("res", res.data);
+        toast.success(res.data.MESSAGE, { id: toastId });
+        dispatch(setInvestorPassword(passwords.confirm));
       } catch (error) {
-        console.log("error while changing password--", error.response.data);
-        toast.error(error.response.data.msg, { id: toastId });
+        console.log("error while changing master password", error);
+        toast.error("Plese try again", { id: toastId });
       }
+      // Reset the form and error
+      setPasswords({ new: "", confirm: "" });
+      setError("");
     }
   };
 
   return (
     <div className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl">
-      <h2 className="text-3xl sm:text-4xl font-bold  mb-8 text-center">
-        Change Password
+      <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
+        Change your investor password
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {["current", "new", "confirm"].map((field) => (
+        {["new", "confirm"].map((field) => (
           <div key={field} className="relative">
-            <label htmlFor={field} className="block text-sm font-medium  mb-2">
+            <label htmlFor={field} className="block text-sm font-medium mb-2">
               {field.charAt(0).toUpperCase() + field.slice(1)} Password
             </label>
             <div className="relative group">
@@ -77,7 +74,9 @@ const UserChnagePassword = () => {
                 name={field}
                 value={passwords[field]}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-none bg-secondary-800 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-700 focus:border-secondary-700 transition duration-300"
+                className={`w-full px-4 py-3 border-none bg-secondary-800 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-700 focus:border-secondary-700 transition duration-300 ${
+                  error && "ring-red-500 border-red-500"
+                }`}
                 required
               />
               <Lock
@@ -114,7 +113,7 @@ const UserChnagePassword = () => {
           </Link>
           <button
             type="submit"
-            className="w-full sm:w-auto bg-green-600/80 text-white py-3 px-6 rounded-lg  hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            className="w-full sm:w-auto bg-green-700 hover:bg-green-700/70 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
           >
             <CheckCircle className="mr-2" size={20} />
             Change Password
@@ -125,4 +124,4 @@ const UserChnagePassword = () => {
   );
 };
 
-export default UserChnagePassword;
+export default UserInvesterPassword;

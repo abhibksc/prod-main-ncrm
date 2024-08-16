@@ -9,14 +9,21 @@ import {
   Menu,
   KeyRound,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { handleToggleSidebar } from "@/redux/user/userSlice";
+import { handleToggleSidebar, setLoggedUser } from "@/redux/user/userSlice";
 import UserSidebar from "./UserSidebar";
 import Hamburger from "../hamburgar/Hamburgar";
 
 const UserDropdown = ({ isOpen, onClose }) => {
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    dispatch(setLoggedUser(""));
+    navigate("/user/login");
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,7 +41,7 @@ const UserDropdown = ({ isOpen, onClose }) => {
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 top-10 mt-2 w-48 bg-secondary-800 rounded-md shadow-lg py-1 transition-all duration-300 ease-in-out ${
+      className={`absolute z-10 right-0 top-10 mt-2 w-48 bg-secondary-800 rounded-md shadow-lg py-1 transition-all duration-300 ease-in-out ${
         isOpen
           ? "opacity-100 translate-y-0"
           : "opacity-0 -translate-y-2 pointer-events-none"
@@ -62,9 +69,12 @@ const UserDropdown = ({ isOpen, onClose }) => {
         href="#"
         className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
       >
-        <Link to={"/user/login"} className="flex items-center">
+        <Link
+          onClick={logoutHandler}
+          className="flex text-red-500 font-semibold items-center"
+        >
           <LogOut className="w-4 h-4 mr-2" />
-          Sign out
+          Logout
         </Link>
       </a>
     </div>

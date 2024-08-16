@@ -16,6 +16,8 @@ import {
   setAvailableBalance,
   setCurrentAccount,
   setDepositBalance,
+  setInvestorPassword,
+  setMasterPassword,
 } from "@/redux/user/userSlice";
 
 const NewUserReplicate = () => {
@@ -134,6 +136,8 @@ const NewUserReplicate = () => {
       );
 
       dispatch(setDepositBalance(amount));
+      dispatch(setInvestorPassword(res.data.Investor_Pwd));
+      dispatch(setMasterPassword(res.data.Master_Pwd));
       dispatch(setAvailableBalance(depositRes.data.Balance));
       toast.success("Deposit successfully");
 

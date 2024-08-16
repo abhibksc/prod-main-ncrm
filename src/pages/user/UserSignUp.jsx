@@ -2,16 +2,36 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import {
+  Mail,
+  Lock,
+  User,
+  Globe,
+  Phone,
+  Check,
+  LucideMapPinMinusInside,
+} from "lucide-react";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
-    color: black;
+    background-color: #1f2937;
+    color: #fff;
   }
   .react-tel-input .form-control {
+    background-color: #23543F;
+    border-color: #23543F;
+    color: #fff;
     padding-left: 48px !important;
+  }
+  .react-tel-input .selected-flag {
+    background-color: #23543F;
+    border:none
+  }
+  .react-tel-input .country-list .country:hover {
+    background-color: #374151;
   }
 `;
 
@@ -27,188 +47,386 @@ const UserSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
+    const toastId = toast.loading("Creating your account...");
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/signup`,
-        {
-          name,
-          email,
-          password,
-          country,
-          phone,
-        }
+        { name, email, password, country, phone }
       );
       if (res.data.status) {
-        console.log("User created successfully", res.data);
-        toast.success(res.data.msg);
+        toast.success("Account created successfully!", { id: toastId });
         navigate("/user/login");
       } else {
         setError("email");
+        toast.error("Signup failed. Please try again.", { id: toastId });
       }
     } catch (error) {
       console.error("Error during signup:", error);
       setError(error.response.data.msg);
+      toast.error(error.response.data.msg || "Signup failed", { id: toastId });
     }
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-secondary-900 p-4">
+    <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">
       <style>{phoneInputCustomStyles}</style>
       <Toaster />
-      <div className="w-full max-w-6xl flex flex-col md:flex-row bg-secondary-800 shadow-lg rounded-lg overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full md:w-2/5 p-8 flex flex-col bg-secondary-900 justify-center i text-white relative bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://png.pngtree.com/background/20230109/original/pngtree-white-abstract-carbon-fiber-texture-background-picture-image_1996167.jpg')",
-            backgroundBlendMode: "overlay",
-          }}
+
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-50">
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary-800 to-secondary-900" />
+        <svg
+          className="absolute inset-0 w-full h-full"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">
-            Welcome To Forex-ZX
-          </h2>
-          <p className="mb-6 text-lg">Already have an account?</p>
-          <Link to={"/user/login"}>
-            <button className="bg-white  text-secondary-800 hover:bg-secondary-700/60 transition-all duration-300 hover:text-white px-8 py-3 rounded-full font-semibold text-lg">
-              Login here
-            </button>
-          </Link>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full md:w-3/5 bg-secondary-800/60 text-white p-8"
-        >
-          <h1 className="text-3xl md:text-4xl font-bold mb-6">
-            Create Your Account
-          </h1>
-          <p className="mb-8 text-lg">
-            Haven't registered yet? Don't worry just fill up all the information
-            below and get your account now.
-          </p>
-          {error && (
-            <div className="mb-6 text-red-500 text-lg">
-              <p>{error}</p>
-            </div>
-          )}
-          <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="name" className="block mb-2 text-lg">
-                First name
-              </label>
-              <input
-                type="text"
-                id="name"
-                className="w-full p-3 text-black rounded-lg"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block mb-2 text-lg">
-                Email*
-              </label>
-              <input
-                type="email"
-                id="email"
-                className="w-full p-3 text-black rounded-lg"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="country" className="block mb-2 text-lg">
-                Country
-              </label>
-              <select
-                id="country"
-                className="w-full p-3 text-black rounded-lg"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                required
-              >
-                <option value="">Select a country</option>
-                <option value="IN">India</option>
-                <option value="US">United States</option>
-                {/* Add more countries as needed */}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="phone" className="block mb-2 text-lg">
-                Mobile*
-              </label>
-              <PhoneInput
-                country={country.toLowerCase()}
-                value={phone}
-                onChange={(phone) => setPhone(phone)}
-                inputProps={{
-                  required: true,
-                  className: "w-full px-14 py-3 text-black rounded-lg",
-                }}
-                containerClass="react-tel-input"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block mb-2 text-lg">
-                Password*
-              </label>
-              <input
-                type="password"
-                id="password"
-                className="w-full p-3 text-black rounded-lg"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block mb-2 text-lg">
-                Confirm password*
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                className="w-full p-3 text-black rounded-lg"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" required />
-                <span className="text-sm">
-                  I agree with{" "}
-                  <a href="#" className="text-blue-400">
-                    Privacy Policy
-                  </a>
-                  ,{" "}
-                  <a href="#" className="text-blue-400">
-                    Terms of Service
-                  </a>
-                </span>
-              </label>
-            </div>
-            <button
-              type="submit"
-              className="md:col-span-2 w-full bg-secondary-700 text-white py-4 rounded-lg font-semibold text-lg hover:bg-secondary-600 transition-colors duration-300"
-            >
-              Create an Account
-            </button>
-          </form>
-        </motion.div>
+          <pattern
+            id="pattern"
+            x="0"
+            y="0"
+            width="40"
+            height="40"
+            patternUnits="userSpaceOnUse"
+          >
+            <rect
+              x="0"
+              y="0"
+              width="4"
+              height="4"
+              fill="rgba(255,255,255,0.1)"
+            />
+          </pattern>
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern)" />
+        </svg>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-4xl relative z-10"
+      >
+        <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
+          <div className="p-8 md:p-12">
+            <motion.div
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2 className="text-4xl font-bold mb-2 text-white">
+                Create Your Account
+              </h2>
+              <p className="text-secondary-300 mb-8">
+                Join Forex-ZX and start your trading journey today.
+              </p>
+            </motion.div>
+
+            {error && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mb-6 text-red-500 text-lg bg-red-500 bg-opacity-10 border border-red-500 rounded-lg p-4"
+              >
+                <p>{error}</p>
+              </motion.div>
+            )}
+
+            <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6">
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <User
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="First Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <User
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Last Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <Mail
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="email"
+                  id="email"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
+                <Phone
+                  className="absolute top-3 left-3 text-secondary-400 z-10"
+                  size={20}
+                />
+                <PhoneInput
+                  country={country.toLowerCase()}
+                  value={phone}
+                  onChange={(phone) => setPhone(phone)}
+                  inputProps={{
+                    required: true,
+                    className:
+                      "w-full pl-10 pr-4 py-3 bg-secondary-700  border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition",
+                  }}
+                  containerClass="react-tel-input"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="relative"
+              >
+                <Globe
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <select
+                  id="country"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  required
+                >
+                  <option value="">Select a country</option>
+                  <option value="IN">India</option>
+                  <option value="US">United States</option>
+                  {/* Add more countries as needed */}
+                </select>
+              </motion.div>
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <LucideMapPinMinusInside
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Address"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <LucideMapPinMinusInside
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="State"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <LucideMapPinMinusInside
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="City"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="relative"
+              >
+                <LucideMapPinMinusInside
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="text"
+                  id="name"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Zip code"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </motion.div>
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative"
+              >
+                <Lock
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="password"
+                  id="password"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative"
+              >
+                <Lock
+                  className="absolute top-3 left-3 text-secondary-400"
+                  size={20}
+                />
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                  placeholder="Confirm Password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="md:col-span-2"
+              >
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="mr-2 form-checkbox text-green-500 rounded"
+                    required
+                  />
+                  <span className="text-sm text-secondary-300">
+                    I agree with the{" "}
+                    <a
+                      href="#"
+                      className="text-green-500 hover:text-green-400 transition"
+                    >
+                      Privacy Policy
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href="#"
+                      className="text-green-500 hover:text-green-400 transition"
+                    >
+                      Terms of Service
+                    </a>
+                  </span>
+                </label>
+              </motion.div>
+
+              <motion.button
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                type="submit"
+                className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+              >
+                <Check className="mr-2" size={20} />
+                Create Account
+              </motion.button>
+            </form>
+          </div>
+
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="px-8 py-4 bg-secondary-700 bg-opacity-50 border-t border-secondary-600"
+          >
+            <p className="text-center text-sm text-secondary-300">
+              Already have an account?{" "}
+              <Link
+                to="/user/login"
+                className="font-medium text-green-500 hover:text-green-400 transition"
+              >
+                Log in here
+              </Link>
+            </p>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
 };
