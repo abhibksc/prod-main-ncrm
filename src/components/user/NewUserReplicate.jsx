@@ -62,12 +62,12 @@ const NewUserReplicate = () => {
     }));
   };
 
-  const depositApiHandler = async () => {
-    const res = await axios.get(
-      `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=4722476&Amount=50&Comment=test`
-    );
-    console.log("api test--", res);
-  };
+  // const depositApiHandler = async () => {
+  //   const res = await axios.get(
+  //     `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=4722476&Amount=50&Comment=test`
+  //   );
+  //   console.log("api test--", res);
+  // };
 
   const apiTestHandler = async () => {
     setCreatingLoading(true);
@@ -76,7 +76,7 @@ const NewUserReplicate = () => {
     ).toString();
 
     try {
-      const res = await axios.post(`/api/Adduser`, {
+      const res = await axios.post(`http://194.163.147.216//api/web//Adduser`, {
         Manager_Index: 1,
         MT5Account: randomNumber,
         Master_Pwd: "",
@@ -117,6 +117,7 @@ const NewUserReplicate = () => {
       //   }
       // );
       // dispatch(setCurrentAccount(randomNumber));
+
       setCreatingLoading(false);
 
       // const depositRes = await axios.get(
@@ -141,7 +142,7 @@ const NewUserReplicate = () => {
       // dispatch(setAvailableBalance(depositRes.data.Balance));
       toast.success("Deposit successfully");
 
-      console.log("add user api res---", res.data);
+      console.log("add user api res---", res);
       // console.log("add user DB res--", DBres);
       // console.log("deposit api res --", depositRes.data);
       // console.log("deposit db res--", depositDBres.data.data);
