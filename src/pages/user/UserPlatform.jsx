@@ -7,6 +7,7 @@ import {
   Smartphone,
   AppleIcon,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const UserPlatform = () => {
   return (
@@ -16,31 +17,39 @@ const UserPlatform = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <PlatformCard
-          title="MetaTrader 5 (MT5)"
-          description="Download MT5 for desktop and mobile devices."
-          buttons={[
-            { icon: <Monitor className="w-6 h-6" />, text: "Windows" },
-            { icon: <AppleIcon className="w-6 h-6" />, text: "iOS" },
-            { icon: <Smartphone className="w-6 h-6" />, text: "Android" },
-          ]}
-        />
+        <AnimatePresence>
+          <PlatformCard
+            title="MetaTrader 5 (MT5)"
+            description="Download MT5 for desktop and mobile devices."
+            buttons={[
+              { icon: <Monitor className="w-6 h-6" />, text: "Windows" },
+              { icon: <AppleIcon className="w-6 h-6" />, text: "iOS" },
+              { icon: <Smartphone className="w-6 h-6" />, text: "Android" },
+            ]}
+          />
 
-        <PlatformCard
-          title="Webtrader"
-          description="Access our web-based trading platform."
-          buttons={[
-            { icon: <Globe className="w-6 h-6" />, text: "Browser" },
-            { icon: <Laptop className="w-6 h-6" />, text: "Desktop" },
-          ]}
-        />
+          <PlatformCard
+            title="Webtrader"
+            description="Access our web-based trading platform."
+            buttons={[
+              { icon: <Globe className="w-6 h-6" />, text: "Browser" },
+              { icon: <Laptop className="w-6 h-6" />, text: "Desktop" },
+            ]}
+          />
+        </AnimatePresence>
       </div>
     </div>
   );
 };
 
 const PlatformCard = ({ title, description, buttons }) => (
-  <div className="bg-secondary-800/60 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl ">
+  <motion.div
+    className="bg-secondary-800/60 rounded-xl shadow-lg overflow-hidden"
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: 50 }}
+    transition={{ duration: 0.5 }}
+  >
     <div className="p-6">
       <h3 className="text-2xl font-semibold text-white mb-2">{title}</h3>
       <p className="text-gray-300 mb-6">{description}</p>
@@ -50,7 +59,7 @@ const PlatformCard = ({ title, description, buttons }) => (
         ))}
       </div>
     </div>
-  </div>
+  </motion.div>
 );
 
 const DownloadButton = ({ icon, text }) => (

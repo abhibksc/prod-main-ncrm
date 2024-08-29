@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import {
   User,
   Server,
@@ -11,22 +12,36 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const CredentialItem = ({ icon: Icon, label, value, badgeColor = "" }) => (
-  <div className="flex items-center justify-between py-1">
-    <div className="flex items-center space-x-2">
-      <Icon className="w-5 h-5 " />
-      <span className="text-sm ">{label}</span>
+const CredentialItem = ({
+  icon: Icon,
+  label,
+  value,
+  badgeColor = "",
+  delay,
+}) => (
+  <motion.div
+    className="flex items-center justify-between py-2"
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.2, delay }}
+  >
+    <div className="flex items-center space-x-3">
+      <Icon className="w-5 h-5 text-gray-300" />
+      <span className="text-sm font-medium text-gray-200">{label}</span>
     </div>
-    <div className="flex items-center space-x-2">
+    <motion.div
+      className="flex items-center"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.1 }}
+    >
       <span
-        className={`text-sm font-medium px-3 py-1 rounded-full ${
-          badgeColor ? badgeColor : "bg-gray-200 text-gray-800"
-        }`}
+        className={`text-sm font-medium px-3 py-1 rounded-full ${badgeColor}`}
       >
         {value}
       </span>
-    </div>
-  </div>
+    </motion.div>
+  </motion.div>
 );
 
 const UserDashboardAccount = ({ currentAccount }) => {
@@ -34,59 +49,76 @@ const UserDashboardAccount = ({ currentAccount }) => {
   const masterPassword = useSelector((store) => store.user.masterPassword);
   const investorPassword = useSelector((store) => store.user.investorPassword);
 
-  console.log("m&i pass", masterPassword, investorPassword);
   return (
-    <div className="bg-secondary-800/80 shadow-md rounded-lg p-6 max-w-md">
-      <h2 className="text-lg font-semibold mb-2">Account credentials</h2>
-      <div className=" flex flex-col gap-2">
-        <div>
-          <CredentialItem
-            icon={User}
-            label="MT5 Account Id"
-            value={userInfo.MT5Account ? userInfo.MT5Account : "00000"}
-            badgeColor="bg-blue-100 text-blue-800"
-          />
-        </div>
-        <div>
-          <CredentialItem icon={Server} label="Server Name" value="Xtal-Live" />
-        </div>
-        <Link to={"/user/master-password"}>
+    <motion.div
+      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 max-w-md"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.h2
+        className="text-2xl font-bold mb-4 text-gray-200"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        Account Credentials
+      </motion.h2>
+      <div className="space-y-1">
+        <CredentialItem
+          icon={User}
+          label="MT5 Account Id"
+          value={userInfo.MT5Account || "00000"}
+          badgeColor="bg-blue-100 text-blue-800"
+          delay={0.15}
+        />
+        <CredentialItem
+          icon={Server}
+          label="Server Name"
+          value="Xtal-Live"
+          delay={0.2}
+        />
+        <Link to="/user/master-password" className="block">
           <CredentialItem
             icon={Key}
             label="Master Password"
-            value={masterPassword ? masterPassword : "00000"}
+            value={masterPassword || "00000"}
             badgeColor="bg-yellow-100 text-yellow-800"
+            delay={0.25}
           />
         </Link>
-
-        <Link className="" to={"/user/investor-password"}>
+        <Link to="/user/investor-password" className="block">
           <CredentialItem
-            className=""
             icon={Shield}
             label="Investor Password"
-            value={investorPassword ? investorPassword : "00000"}
+            value={investorPassword || "00000"}
             badgeColor="bg-red-100 text-red-800"
+            delay={0.3}
           />
         </Link>
-        <div>
-          <CredentialItem
-            icon={AlertTriangle}
-            label="Hard Rule"
-            value="Breached"
-          />
-        </div>
-        <div>
-          <CredentialItem icon={Info} label="Soft Rule" value="Active" />
-        </div>
-        <div>
-          <CredentialItem
-            icon={CheckCircle}
-            label="Account Status"
-            value="Passed"
-          />
-        </div>
+        <CredentialItem
+          icon={AlertTriangle}
+          label="Hard Rule"
+          value="Breached"
+          badgeColor="bg-orange-100 text-orange-800"
+          delay={0.35}
+        />
+        <CredentialItem
+          icon={Info}
+          label="Soft Rule"
+          value="Active"
+          badgeColor="bg-green-100 text-green-800"
+          delay={0.4}
+        />
+        <CredentialItem
+          icon={CheckCircle}
+          label="Account Status"
+          value="Passed"
+          badgeColor="bg-indigo-100 text-indigo-800"
+          delay={0.45}
+        />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

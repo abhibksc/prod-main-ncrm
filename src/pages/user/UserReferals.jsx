@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Copy, Check, ChevronDown, Smile } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -9,7 +10,9 @@ const UserReferal = () => {
   const referralLink = "https://portal.fundedltd.com?ref=rdDU6k";
 
   const TabButton = ({ label, isActive, onClick }) => (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
         isActive
           ? "bg-secondary-600 text-white shadow-lg"
@@ -18,7 +21,7 @@ const UserReferal = () => {
       onClick={onClick}
     >
       {label}
-    </button>
+    </motion.button>
   );
 
   const copyToClipboard = () => {
@@ -29,7 +32,12 @@ const UserReferal = () => {
   };
 
   const ReferralsView = () => (
-    <div className="space-y-6 rounded-xl">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-6 rounded-xl"
+    >
       <div className="bg-secondary-800 p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
         <h3 className="font-semibold text-lg mb-4">Referral Link</h3>
         <div className="flex items-center bg-gray-100 p-3 rounded-lg">
@@ -39,13 +47,19 @@ const UserReferal = () => {
             readOnly
             className="flex-grow bg-transparent outline-none text-gray-700"
           />
-          <button
+          <motion.button
             onClick={copyToClipboard}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             className="ml-4 bg-secondary-600 text-white px-4 py-2 rounded-lg hover:bg-secondary-700 transition-colors duration-300 flex items-center"
           >
             {isCopied ? <Check size={20} /> : <Copy size={20} />}
-            {isCopied && <span className="ml-2">Copied</span>}
-          </button>
+            {isCopied && (
+              <motion.span layout className="ml-2">
+                Copied
+              </motion.span>
+            )}
+          </motion.button>
         </div>
         <p className="text-sm text-yellow-500 font-semibold mt-3 flex items-center">
           <Smile className="mr-2" size={18} />
@@ -55,11 +69,16 @@ const UserReferal = () => {
       <div className="bg-secondary-700/80 p-4 rounded-xl shadow-lg flex items-center justify-center transition-all duration-300 hover:shadow-xl">
         <span className="text-lg">ⓘ Data not found</span>
       </div>
-    </div>
+    </motion.div>
   );
 
   const CommissionView = () => (
-    <div className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="space-y-6"
+    >
       <h2 className="text-2xl font-bold">Total Commission: 0</h2>
       <div className="bg-secondary-800 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         <h3 className="font-semibold text-lg p-6 border-b">
@@ -85,11 +104,16 @@ const UserReferal = () => {
           </table>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
-    <div className="max-w-5xl mx-auto p-8 rounded-xl bg-secondary-800/60">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+      className="max-w-5xl mx-auto p-8 rounded-xl bg-secondary-800/60"
+    >
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-4 sm:space-y-0">
         <div className="space-x-4">
           <TabButton
@@ -104,15 +128,17 @@ const UserReferal = () => {
           />
         </div>
         <div className="relative">
-          <select
+          <motion.select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
+            whileFocus={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
             className="appearance-none bg-secondary-600 rounded-lg py-3 pl-4 pr-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300"
           >
             <option className="">Level 1</option>
             <option>Level 2</option>
             <option>Level 3</option>
-          </select>
+          </motion.select>
           <ChevronDown
             className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
             size={20}
@@ -120,8 +146,14 @@ const UserReferal = () => {
         </div>
       </div>
       <h1 className="text-3xl font-bold mb-8">Affiliate Portal</h1>
-      {activeTab === "referrals" ? <ReferralsView /> : <CommissionView />}
-    </div>
+      <AnimatePresence mode="wait">
+        {activeTab === "referrals" ? (
+          <ReferralsView key="referrals" />
+        ) : (
+          <CommissionView key="commission" />
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 

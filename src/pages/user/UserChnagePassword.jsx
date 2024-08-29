@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setLoggedUser } from "../../redux/user/userSlice";
+import { motion } from "framer-motion";
 
 const UserChnagePassword = () => {
   const [passwords, setPasswords] = useState({
@@ -21,8 +22,6 @@ const UserChnagePassword = () => {
 
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
-
-  // console.log("logged user--", loggedUser);
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -51,7 +50,6 @@ const UserChnagePassword = () => {
         );
         toast.success("Password updated successfully", { id: toastId });
         dispatch(setLoggedUser(res.data.user));
-        console.log("change password res--", res.data.user);
       } catch (error) {
         console.log("error while changing password--", error.response.data);
         toast.error(error.response.data.msg, { id: toastId });
@@ -60,14 +58,25 @@ const UserChnagePassword = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl">
-      <h2 className="text-3xl sm:text-4xl font-bold  mb-8 text-center">
+    <motion.div
+      className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
         Change Password
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {["current", "new", "confirm"].map((field) => (
-          <div key={field} className="relative">
-            <label htmlFor={field} className="block text-sm font-medium  mb-2">
+          <motion.div
+            key={field}
+            className="relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <label htmlFor={field} className="block text-sm font-medium mb-2">
               {field.charAt(0).toUpperCase() + field.slice(1)} Password
             </label>
             <div className="relative group">
@@ -96,13 +105,18 @@ const UserChnagePassword = () => {
                 )}
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
         {error && (
-          <div className="text-red-500 flex items-center mt-2">
+          <motion.div
+            className="text-red-500 flex items-center mt-2"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
             <AlertCircle className="mr-2" size={20} />
             {error}
-          </div>
+          </motion.div>
         )}
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
           <Link
@@ -112,16 +126,19 @@ const UserChnagePassword = () => {
           >
             Cancel
           </Link>
-          <button
+          <motion.button
             type="submit"
-            className="w-full sm:w-auto bg-green-600/80 text-white py-3 px-6 rounded-lg  hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            className="w-full sm:w-auto bg-green-600/80 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            initial={{ scale: 0.95 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
           >
             <CheckCircle className="mr-2" size={20} />
             Change Password
-          </button>
+          </motion.button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

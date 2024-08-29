@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ChevronDown,
   Check,
@@ -7,6 +7,7 @@ import {
   ArrowRightCircleIcon,
   Loader2,
 } from "lucide-react";
+import CountUp from "react-countup";
 
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
@@ -27,6 +28,7 @@ const NewUserReplicate = () => {
     accountType: "",
     platform: "",
     accountSize: "",
+    accountBalance: "",
     isUSResident: false,
     title: "",
     firstName: "",
@@ -40,34 +42,32 @@ const NewUserReplicate = () => {
     email: "",
     phone: "",
   });
+  const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
   //   console.log("test lavrage", formData.leverage);
   const [selectedPayment, setSelectedPayment] = useState("");
-  const [amount, setAmount] = useState("100");
   const [file, setFile] = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const dispatch = useDispatch();
+  const [direction, setDirection] = useState(1);
+  // use effect for the count animation  -----------
+  useEffect(() => {
+    setStartAnimation(false);
+    setTimeout(() => setStartAnimation(true), 100);
+  }, [formData.accountSize]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     const updatedValue =
-      name === "phone"
-        ? parseInt(value.replace(/\D/g, ""), 10) || "" // Convert to integer or keep empty string
-        : value;
+      name === "phone" ? parseInt(value.replace(/\D/g, ""), 10) || "" : value;
 
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : updatedValue,
     }));
   };
-
-  // const depositApiHandler = async () => {
-  //   const res = await axios.get(
-  //     `http://194.163.147.216//api/web/MakeDepositCredit?Manager_Index=1&MT5Account=4722476&Amount=50&Comment=test`
-  //   );
-  //   console.log("api test--", res);
-  // };
+  // Add user api handler---------------
 
   const apiTestHandler = async () => {
     setCreatingLoading(true);
@@ -76,105 +76,125 @@ const NewUserReplicate = () => {
     ).toString();
 
     try {
-      const res = await axios.post(`http://194.163.147.216//api/web//Adduser`, {
-        Manager_Index: 1,
-        MT5Account: randomNumber,
-        Master_Pwd: "",
-        Investor_Pwd: "",
-        Name: formData.firstName,
-        lName: formData.lastName,
-        Email: formData.email,
-        Phone: formData.phone,
-        Address: formData.address,
-        City: formData.city,
-        Country: formData.country,
-        State: formData.state,
-        Zip_Code: formData.zipCode,
-        Balance: "0",
-        Leverage: parseInt(formData.leverage),
-        Group_Name: "SK GROUP\\M10\\CLASSIC",
-      });
+      const res = await axios.post(
+        `http://103.180.121.22/api/web/Adduser`,
 
-      // const DBres = await axios.post(
-      //   `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//new-challenge`,
-      //   {
-      //     managerIndex: 1,
-      //     MT5Account: randomNumber,
-      //     masterPass: "",
-      //     InvesterPass: "",
-      //     fName: formData.firstName,
-      //     lName: formData.lastName,
-      //     email: formData.email,
-      //     phone: formData.phone,
-      //     address: formData.address,
-      //     city: formData.city,
-      //     country: formData.country,
-      //     State: formData.state,
-      //     zipCode: formData.zipCode,
-      //     balance: "0",
-      //     levrage: parseInt(formData.leverage),
-      //     groupName: "SK GROUP\\M10\\CLASSIC",
-      //   }
-      // );
-      // dispatch(setCurrentAccount(randomNumber));
+        {
+          Manager_Index: 1,
+          MT5Account: randomNumber,
+          Master_Pwd: "",
+          Investor_Pwd: "",
+          Name: formData.firstName,
+          lName: formData.lastName,
+          Email: formData.email,
+          Phone: formData.phone,
+          Address: formData.address,
+          City: formData.city,
+          Country: formData.country,
+          State: formData.state,
+          Zip_Code: formData.zipCode,
+          Balance: parseInt(formData.accountBalance),
+          Leverage: parseInt(formData.leverage),
+          Group_Name: "SK GROUP\\M10\\CLASSIC",
+        }
+      );
+
+      const DBres = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/new-challenge`,
+        {
+          managerIndex: 1,
+          MT5Account: randomNumber,
+          masterPass: "",
+          InvesterPass: "",
+          fName: formData.firstName,
+          lName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          country: formData.country,
+          State: formData.state,
+          zipCode: formData.zipCode,
+          balance: "0",
+          levrage: parseInt(formData.leverage),
+          groupName: "SK GROUP\\M10\\CLASSIC",
+        }
+      );
+      dispatch(setCurrentAccount(randomNumber));
 
       setCreatingLoading(false);
+      // ---
+      console.log("formdata acc bal--", formData.accountBalance);
 
-      // const depositRes = await axios.get(
-      //   `http://194.163.147.216//api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${amount}&Comment=test`
-      // );
+      const depositApires = await axios.get(
+        `http://103.180.121.22/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${formData.accountBalance}&Comment=TEST`
+      );
 
-      // const depositDBres = await axios.post(
-      //   `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//deposit`,
-      //   {
-      //     balance: depositRes.data.Balance,
-      //     credit: depositRes.data.Credit,
-      //     equity: depositRes.data.Equity,
-      //     freeMargin: depositRes.data.FreeMargin,
-      //     mt5Account: depositRes.data.MT5Accont,
-      //     margin: depositRes.data.Margin,
-      //   }
-      // );
+      const depositDBres = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
+        {
+          balance: depositApires.data.Balance,
+          credit: depositApires.data.Credit,
+          equity: depositApires.data.Equity,
+          freeMargin: depositApires.data.FreeMargin,
+          mt5Account: depositApires.data.MT5Accont,
+          margin: depositApires.data.Margin,
+        }
+      );
 
-      // dispatch(setDepositBalance(amount));
-      // dispatch(setInvestorPassword(res.data.Investor_Pwd));
-      // dispatch(setMasterPassword(res.data.Master_Pwd));
-      // dispatch(setAvailableBalance(depositRes.data.Balance));
+      dispatch(setDepositBalance(depositApires.data.Balance));
+      dispatch(setInvestorPassword(res.data.Investor_Pwd));
+      dispatch(setMasterPassword(res.data.Master_Pwd));
+      dispatch(setAvailableBalance(depositApires.data.Balance));
       toast.success("Deposit successfully");
 
       console.log("add user api res---", res);
       // console.log("add user DB res--", DBres);
-      // console.log("deposit api res --", depositRes.data);
+      console.log("deposit api res --", depositApires.data);
       // console.log("deposit db res--", depositDBres.data.data);
     } catch (error) {
       setCreatingLoading(false);
 
       toast.error("Plese try again");
-      //   console.log("form data --", formData);
       console.log("api testing error---", error);
     }
   };
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const nextStep = () => {
+    setDirection(1);
+    setStep((prev) => prev + 1);
+  };
 
+  const prevStep = () => {
+    setDirection(-1);
+    setStep((prev) => prev - 1);
+  };
   const countries = ["Afghanistan", "Albania", "Algeria", "Zimbabwe"];
   const leverageOptions = [
-    { id: 1, label: "1:100", value: "1:100" },
-    { id: 2, label: "1:200", value: "1:200" },
-    { id: 3, label: "1:300", value: "1:300" },
-    { id: 4, label: "1:400", value: "1:400" },
-    { id: 5, label: "1:500", value: "1:500" },
-    { id: 6, label: "1:600", value: "1:600" },
-    { id: 7, label: "1:700", value: "1:700" },
-    { id: 8, label: "1:800", value: "1:800" },
-    { id: 9, label: "1:900", value: "1:900" },
-    { id: 10, label: "1:1000", value: "1:1000" },
+    { id: 1, label: "1:100", value: "100" },
+    { id: 2, label: "1:200", value: "200" },
+    { id: 3, label: "1:300", value: "300" },
+    { id: 4, label: "1:400", value: "400" },
+    { id: 5, label: "1:500", value: "500" },
+    { id: 6, label: "1:600", value: "600" },
+    { id: 7, label: "1:700", value: "700" },
+    { id: 8, label: "1:800", value: "800" },
+    { id: 9, label: "1:900", value: "900" },
+    { id: 10, label: "1:1000", value: "1000" },
   ];
 
   const accountTypes = ["1 Step", "2 Step", "3 Step", "2 Step X"];
+
+  const accountOptions = [
+    { display: 5000, value: 49 },
+    { display: 10000, value: 99 },
+    { display: 25000, value: 149 },
+    { display: 50000, value: 249 },
+    { display: 100000, value: 449 },
+  ];
+
   const platforms = [
-    { name: "Match-Trader", logo: "🌟" },
+    { name: "MT5", logo: "🌟" },
     { name: "cTrader", logo: "💹" },
     { name: "TradeLocker", logo: "🔒" },
     { name: "TradingView", logo: "📈" },
@@ -222,12 +242,13 @@ const NewUserReplicate = () => {
           </div>
         ))}
       </div>
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="wait" initial={false} custom={direction}>
         <motion.div
           key={step}
-          initial={{ opacity: 0, x: 50 }}
+          custom={direction}
+          initial={{ opacity: 0, x: 50 * direction }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
+          exit={{ opacity: 0, x: -50 * direction }}
           transition={{ duration: 0.3 }}
         >
           {step === 1 && (
@@ -311,22 +332,27 @@ const NewUserReplicate = () => {
                   4. Choose account size
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {accountSizes.map((size) => (
+                  {accountOptions.map((option) => (
                     <button
-                      key={size}
+                      key={option.value}
                       onClick={() =>
-                        setFormData({ ...formData, accountSize: size })
+                        setFormData({
+                          ...formData,
+                          accountSize: option.value,
+                          accountBalance: option.display,
+                        })
                       }
                       className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
-                        formData.accountSize === size
+                        formData.accountSize === option.value
                           ? "bg-secondary-700 text-white"
                           : "bg-secondary-800 hover:bg-secondary-900/60"
                       }`}
                     >
-                      {size}
+                      {option.display}
                     </button>
                   ))}
                 </div>
+
                 <div className=" my-5">
                   <label className="block mb-2 text-sm font-medium">
                     5. Choose your Leverage
@@ -391,7 +417,17 @@ const NewUserReplicate = () => {
                   <span className="text-blue-400">here</span>
                 </div>
                 <div className="mt-6">
-                  <span className="text-blue-500 text-4xl font-bold">$32</span>
+                  <span className="text-green-500/90 text-4xl font-bold">
+                    $
+                    {startAnimation && (
+                      <CountUp
+                        start={0}
+                        end={parseInt(formData.accountSize)}
+                        duration={2}
+                        separator=","
+                      />
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
@@ -405,22 +441,6 @@ const NewUserReplicate = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-2 text-sm font-medium">
-                    Title*
-                  </label>
-                  <select
-                    name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
-                    className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select title</option>
-                    <option value="Mr.">Mr.</option>
-                    <option value="Mrs.">Mrs.</option>
-                    <option value="Ms.">Ms.</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm font-medium">
                     First Name*
                   </label>
                   <input
@@ -431,19 +451,20 @@ const NewUserReplicate = () => {
                     className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+                <div>
+                  <label className="block mb-2 text-sm font-medium">
+                    Last Name*
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block mb-2 text-sm font-medium">
-                  Last Name*
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+
               <div>
                 <label className="block mb-2 text-sm font-medium">Email*</label>
                 <input
@@ -561,16 +582,20 @@ const NewUserReplicate = () => {
                 </div>
               )}
 
-              <div>
-                <label className="block mb-2 text-sm font-medium">
-                  Enter Amount in $
-                </label>
-                <input
-                  type="number"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
-                />
+              <div className=" flex  gap-10">
+                <div className=" flex gap-5 items-center">
+                  <h1 className=" text-xl font-semibold">Deposit Balance</h1>
+                  <p className=" bg-orange-400/80 px-5 py-1 font-semibold rounded-full">
+                    {formData.accountBalance}
+                  </p>
+                </div>
+
+                <div className=" flex gap-5 items-center">
+                  <h1 className=" text-xl font-semibold">Payable Amount</h1>
+                  <p className=" bg-green-600 px-5 py-1 font-semibold rounded-full">
+                    ${formData.accountSize}
+                  </p>
+                </div>
               </div>
 
               <div>

@@ -38,6 +38,8 @@ import NewUserReplicate from "./components/user/NewUserReplicate";
 import UserChnagePassword from "./pages/user/UserChnagePassword";
 import UserInvesterPassword from "./pages/user/UserInvestorPassword";
 import UserMasterPassword from "./pages/user/UserMasterPassword";
+import UserTransaction from "./pages/user/UserTransaction";
+import UserChallenges from "./pages/user/UserChallenges";
 
 const Router = createBrowserRouter([
   {
@@ -183,10 +185,6 @@ const Router = createBrowserRouter([
         element: <UserNewChallenge2></UserNewChallenge2>,
       },
       {
-        path: "/user/challenges",
-        element: <UserNewChallenge2></UserNewChallenge2>,
-      },
-      {
         path: "/user/profile",
         element: <UserProfile></UserProfile>,
       },
@@ -201,6 +199,14 @@ const Router = createBrowserRouter([
       {
         path: "/user/investor-password",
         element: <UserInvesterPassword></UserInvesterPassword>,
+      },
+      {
+        path: "/user/transaction",
+        element: <UserTransaction></UserTransaction>,
+      },
+      {
+        path: "/user/challenges",
+        element: <UserChallenges></UserChallenges>,
       },
     ],
   },

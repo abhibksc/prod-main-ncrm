@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://194.163.147.216",
+        target: "https://myapi4crm.testcrm.co.in",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, "/api/web"),
       },

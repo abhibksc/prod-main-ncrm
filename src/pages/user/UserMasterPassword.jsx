@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { setMasterPassword } from "../../redux/user/userSlice";
+import { motion } from "framer-motion";
 
 const UserMasterPassword = () => {
   const [passwords, setPasswords] = useState({
@@ -26,27 +27,24 @@ const UserMasterPassword = () => {
   const togglePasswordVisibility = (field) => {
     setShowPasswords({ ...showPasswords, [field]: !showPasswords[field] });
   };
+
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Plese wait..");
+    const toastId = toast.loading("Please wait...");
     if (passwords.new !== passwords.confirm) {
       setError("Passwords do not match. Please try again.");
-      toast.error("Plese try again", { id: toastId });
+      toast.error("Please try again", { id: toastId });
     } else {
       try {
         const res = await axios.get(
-          `http://194.163.147.216//api/web/ChangeMasterPassword?Manager_Index=${"1"}&Account=${currentAccount}&password=${
-            passwords.confirm
-          }`
+          `http://103.180.121.22/api/web/ChangeMasterPassword?Manager_Index=1&Account=${currentAccount}&password=${passwords.confirm}`
         );
-        console.log("res", res.data);
         toast.success(res.data.MESSAGE, { id: toastId });
         dispatch(setMasterPassword(passwords.confirm));
       } catch (error) {
-        console.log("error while changing master password", error);
-        toast.error("Plese try again", { id: toastId });
+        toast.error("Please try again", { id: toastId });
       }
       // Reset the form and error
       setPasswords({ new: "", confirm: "" });
@@ -55,13 +53,24 @@ const UserMasterPassword = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl">
+    <motion.div
+      className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
         Change your master password
       </h2>
       <form onSubmit={handleSubmit} className="space-y-6">
         {["new", "confirm"].map((field) => (
-          <div key={field} className="relative">
+          <motion.div
+            key={field}
+            className="relative"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: field === "new" ? 0 : 0.1 }}
+          >
             <label htmlFor={field} className="block text-sm font-medium mb-2">
               {field.charAt(0).toUpperCase() + field.slice(1)} Password
             </label>
@@ -78,7 +87,7 @@ const UserMasterPassword = () => {
                 required
               />
               <Lock
-                className="absolute left-4 top-1/2 transform -translate-y-1/2  group-focus-within:secondary-700 transition-colors duration-300"
+                className="absolute left-4 top-1/2 transform -translate-y-1/2 group-focus-within:secondary-700 transition-colors duration-300"
                 size={20}
               />
               <button
@@ -93,13 +102,18 @@ const UserMasterPassword = () => {
                 )}
               </button>
             </div>
-          </div>
+          </motion.div>
         ))}
         {error && (
-          <div className="text-red-500 flex items-center mt-2">
+          <motion.div
+            className="text-red-500 flex items-center mt-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <AlertCircle className="mr-2" size={20} />
             {error}
-          </div>
+          </motion.div>
         )}
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
           <Link
@@ -109,16 +123,18 @@ const UserMasterPassword = () => {
           >
             Cancel
           </Link>
-          <button
+          <motion.button
             type="submit"
             className="w-full sm:w-auto bg-green-700 hover:bg-green-700/70 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <CheckCircle className="mr-2" size={20} />
             Change Password
-          </button>
+          </motion.button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 
