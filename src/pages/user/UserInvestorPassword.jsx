@@ -37,11 +37,12 @@ const UserInvesterPassword = () => {
       toast.error("Please try again", { id: toastId });
     } else {
       try {
-        // const res = await axios.get(
-        //   `http://103.180.121.22/api/web/ChangeInvestorPassword?Manager_Index=1&Account=${currentAccount}&password=${passwords.confirm}`
-        // );
         const res = await axios.get(
-          `http://103.180.121.22/api/web/ChangeInvesterPassword?Manager_Index=1&Account=${currentAccount}&password=${passwords.confirm}`
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/ChangeInvesterPassword?Manager_Index=1&Account=${currentAccount}&password=${
+            passwords.confirm
+          }`
         );
         toast.success(res.data.MESSAGE, { id: toastId });
         dispatch(setInvestorPassword(passwords.confirm));

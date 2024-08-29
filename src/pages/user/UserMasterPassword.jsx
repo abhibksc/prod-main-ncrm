@@ -39,7 +39,11 @@ const UserMasterPassword = () => {
     } else {
       try {
         const res = await axios.get(
-          `http://103.180.121.22/api/web/ChangeMasterPassword?Manager_Index=1&Account=${currentAccount}&password=${passwords.confirm}`
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/ChangeMasterPassword?Manager_Index=1&Account=${currentAccount}&password=${
+            passwords.confirm
+          }`
         );
         toast.success(res.data.MESSAGE, { id: toastId });
         dispatch(setMasterPassword(passwords.confirm));

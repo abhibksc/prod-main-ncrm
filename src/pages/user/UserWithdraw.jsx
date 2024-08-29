@@ -23,7 +23,9 @@ const UserWithdraw = () => {
     setApiLoader(true);
     try {
       const res = await axios.get(
-        `http://103.180.121.22/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
+        `${
+          import.meta.env.VITE_API_END_POINT
+        }/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
       );
 
       const withdrawalDBres = await axios.post(

@@ -20,6 +20,7 @@ import {
   setInvestorPassword,
   setMasterPassword,
 } from "../../redux/user/userSlice";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const NewUserReplicate = () => {
   const [step, setStep] = useState(1);
@@ -44,7 +45,7 @@ const NewUserReplicate = () => {
   });
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
-  //   console.log("test lavrage", formData.leverage);
+  const { GetCloseTradeAPI, GetUserInfoAPI } = UseUserHook();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [file, setFile] = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
@@ -77,7 +78,7 @@ const NewUserReplicate = () => {
 
     try {
       const res = await axios.post(
-        `http://103.180.121.22/api/web/Adduser`,
+        `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
         {
           Manager_Index: 1,
@@ -127,7 +128,11 @@ const NewUserReplicate = () => {
       console.log("formdata acc bal--", formData.accountBalance);
 
       const depositApires = await axios.get(
-        `http://103.180.121.22/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${formData.accountBalance}&Comment=TEST`
+        `${
+          import.meta.env.VITE_API_END_POINT
+        }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
+          formData.accountBalance
+        }&Comment=TEST`
       );
 
       const depositDBres = await axios.post(
@@ -141,6 +146,8 @@ const NewUserReplicate = () => {
           margin: depositApires.data.Margin,
         }
       );
+      GetUserInfoAPI();
+      GetCloseTradeAPI();
 
       dispatch(setDepositBalance(depositApires.data.Balance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));

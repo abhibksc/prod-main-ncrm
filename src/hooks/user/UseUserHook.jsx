@@ -11,7 +11,9 @@ export default function UseUserHook() {
 
   const GetCloseTradeAPI = async () => {
     const res = await axios.get(
-      `http://103.180.121.22/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${currentAccount}&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
+      `${
+        import.meta.env.VITE_API_END_POINT
+      }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${currentAccount}&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
     );
     if (res.data.length === 0) {
       dispatch(setProfitNloss("000"));
@@ -24,7 +26,9 @@ export default function UseUserHook() {
   };
   const GetUserInfoAPI = async () => {
     const res = await axios.get(
-      `http://103.180.121.22/api/web/GetUserInfo?Manager_Index=1&MT5Account=${currentAccount}`
+      `${
+        import.meta.env.VITE_API_END_POINT
+      }/api/web/GetUserInfo?Manager_Index=1&MT5Account=${currentAccount}`
     );
     dispatch(setUserInfo(res.data));
 
