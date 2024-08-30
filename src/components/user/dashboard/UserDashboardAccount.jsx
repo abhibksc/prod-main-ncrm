@@ -75,6 +75,7 @@ const UserDashboardAccount = ({ currentAccount }) => {
         <CredentialItem
           icon={Server}
           label="Server Name"
+          badgeColor="bg-pink-100 text-yellow-800"
           value="Xtal-Live"
           delay={0.2}
         />

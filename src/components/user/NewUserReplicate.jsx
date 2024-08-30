@@ -21,6 +21,7 @@ import {
   setMasterPassword,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import { useNavigate } from "react-router-dom";
 
 const NewUserReplicate = () => {
   const [step, setStep] = useState(1);
@@ -51,6 +52,7 @@ const NewUserReplicate = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const dispatch = useDispatch();
   const [direction, setDirection] = useState(1);
+  const navigate = useNavigate();
   // use effect for the count animation  -----------
   useEffect(() => {
     setStartAnimation(false);
@@ -71,6 +73,7 @@ const NewUserReplicate = () => {
   // Add user api handler---------------
 
   const apiTestHandler = async () => {
+    const toastID = toast.loading("Please wait..");
     setCreatingLoading(true);
     const randomNumber = Math.floor(
       1000000 + Math.random() * 9000000
@@ -124,9 +127,6 @@ const NewUserReplicate = () => {
       dispatch(setCurrentAccount(randomNumber));
 
       setCreatingLoading(false);
-      // ---
-      console.log("formdata acc bal--", formData.accountBalance);
-
       const depositApires = await axios.get(
         `${
           import.meta.env.VITE_API_END_POINT
@@ -146,23 +146,22 @@ const NewUserReplicate = () => {
           margin: depositApires.data.Margin,
         }
       );
-      GetUserInfoAPI();
-      GetCloseTradeAPI();
 
       dispatch(setDepositBalance(depositApires.data.Balance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));
       dispatch(setMasterPassword(res.data.Master_Pwd));
       dispatch(setAvailableBalance(depositApires.data.Balance));
-      toast.success("Deposit successfully");
+      GetUserInfoAPI();
+      GetCloseTradeAPI();
+      toast.success("Deposit successfully", { id: toastID });
 
       console.log("add user api res---", res);
-      // console.log("add user DB res--", DBres);
       console.log("deposit api res --", depositApires.data);
-      // console.log("deposit db res--", depositDBres.data.data);
+      navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
 
-      toast.error("Plese try again");
+      toast.error("Plese try again", { id: toastID });
       console.log("api testing error---", error);
     }
   };
