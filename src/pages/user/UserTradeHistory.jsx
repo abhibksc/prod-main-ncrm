@@ -17,16 +17,16 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=3784187&StartTime=2021-07-20 00:00:00&EndTime=2024-06-05 23:59:59`
+          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=3784187&StartTime=2021-07-20 00:00:00&EndTime=2024-09-05 13:03:59`
         );
       } else {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetOpenTradeByAccount?Manager_Index=1&MT5Accont=3784187`
+          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=3784187`
         );
       }
-      console.log("res trade--", res.data);
+      console.log("res trade history--", res.data);
       setTradeData(res.data);
       setActiveTab(tradeType);
     } catch (error) {
@@ -85,9 +85,9 @@ export default function UserTradeHistory() {
                 ) : (
                   <th className="text-left py-3 px-4">Close Time</th>
                 )}
-                <th className="text-right py-3 px-4">Open Price</th>
+                <th className="text-left py-3 px-4">Open Price</th>
                 {activeTab === "closed" && (
-                  <th className="text-right py-3 px-4">Close Price</th>
+                  <th className="text-left py-3 px-4">Close Price</th>
                 )}
                 <th className="text-center py-3 px-4">Type</th>
                 <th className="text-right py-3 px-4">Volume</th>
@@ -102,13 +102,15 @@ export default function UserTradeHistory() {
                 >
                   <td className="py-3 px-4">{trade?.MT5Account}</td>
                   <td className="py-3 px-4">{trade?.Symbol}</td>
-                  <td className="py-3 px-4">
-                    {activeTab === "open" ? trade?.Open_Time : trade?.closeTime}
+                  <td className="py-3">
+                    {activeTab === "open"
+                      ? trade?.Open_Time
+                      : trade?.Close_Time}
                   </td>
-                  <td className="text-right py-3 px-4">{trade?.Open_Price}</td>
+                  <td className="text-left py-3 px-6">{trade?.Open_Price}</td>
                   {activeTab === "closed" && (
-                    <td className="text-right py-3 px-4">
-                      {trade?.closePrice}
+                    <td className="text-left py-6 px-6 ">
+                      {trade?.Close_Price}
                     </td>
                   )}
                   <td

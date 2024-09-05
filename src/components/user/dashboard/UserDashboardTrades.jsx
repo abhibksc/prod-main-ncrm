@@ -34,8 +34,8 @@ export default function UserDashboardTrades() {
   console.log("Total net profit:", calculateTotalNetProfit());
 
   const tradesSummary = {
-    totalTrades: openTrades.length,
-    profitableTrades: ProfitTradesData.length,
+    totalTrades: openTrades?.length,
+    profitableTrades: ProfitTradesData?.length,
     winRate: calculateWinningRatio(),
     netProfit: calculateTotalNetProfit(),
   };

@@ -10,7 +10,7 @@ const initialState = {
   isRefreshed: true,
   investorPassword: "",
   masterPassword: "",
-  openTrades: "",
+  openTrades: [],
   userInfo: "",
   loggedUser: "",
 };
