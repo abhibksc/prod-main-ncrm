@@ -160,7 +160,6 @@ const NewUserReplicate = () => {
       navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
-
       toast.error("Plese try again", { id: toastID });
       console.log("api testing error---", error);
     }

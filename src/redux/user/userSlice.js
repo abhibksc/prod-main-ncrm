@@ -10,6 +10,7 @@ const initialState = {
   isRefreshed: true,
   investorPassword: "",
   masterPassword: "",
+  openTrades: "",
   userInfo: "",
   loggedUser: "",
 };
@@ -51,6 +52,9 @@ export const UserSlice = createSlice({
     setMasterPassword: (state, action) => {
       state.masterPassword = action.payload;
     },
+    setOpenTrades: (state, action) => {
+      state.openTrades = action.payload;
+    },
   },
 });
 
@@ -66,6 +70,7 @@ export const {
   setLoggedUser,
   setInvestorPassword,
   setMasterPassword,
+  setOpenTrades,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

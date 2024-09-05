@@ -29,10 +29,8 @@ const MenuItem = ({ icon: Icon, label, link }) => (
 );
 
 const UserSidebar = () => {
-  const [walletBalance, setWalletBalance] = useState(0);
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
   const userInfo = useSelector((store) => store.user.userInfo);
-  const isRefreshed = useSelector((store) => store.user.isRefreshed);
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
@@ -63,8 +61,6 @@ const UserSidebar = () => {
     },
   ];
 
-  useEffect(() => {}, [isRefreshed]);
-
   return (
     <div
       className={` ${
@@ -75,7 +71,7 @@ const UserSidebar = () => {
         <div className="w-full flex flex-col items-center">
           <p className="text-xs">WALLET BALANCE</p>
           <p className="text-2xl font-bold mb-4">
-            {userInfo.Equity ? userInfo.Equity : "00000"} USD
+            {userInfo.Balance ? userInfo.Balance : "00000"} USD
           </p>
         </div>
         <Link to={"/user/new-challenge"}>

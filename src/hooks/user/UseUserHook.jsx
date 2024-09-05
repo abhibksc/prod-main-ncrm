@@ -1,4 +1,8 @@
-import { setProfitNloss, setUserInfo } from "@/redux/user/userSlice";
+import {
+  setOpenTrades,
+  setProfitNloss,
+  setUserInfo,
+} from "@/redux/user/userSlice";
 import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,16 +17,17 @@ export default function UseUserHook() {
     const res = await axios.get(
       `${
         import.meta.env.VITE_API_END_POINT
-      }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${currentAccount}&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
+      }/api/web/GetOpenTradeByAccount?Manager_Index=1&MT5Accont=${currentAccount}`
     );
+    dispatch(setOpenTrades(res.data));
     if (res.data.length === 0) {
-      dispatch(setProfitNloss("000"));
+      dispatch(setProfitNloss("0000"));
     } else {
       dispatch(setProfitNloss(res.data[res.data.length - 1].Profit));
       // dispatch(setProfitNloss(200));
     }
 
-    console.log("custom hook--", res.data[res.data.length - 1]);
+    console.log("custom hook open trade--", res.data.length);
   };
   const GetUserInfoAPI = async () => {
     const res = await axios.get(

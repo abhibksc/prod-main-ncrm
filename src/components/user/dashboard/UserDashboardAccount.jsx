@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import {
   User,
@@ -44,10 +43,11 @@ const CredentialItem = ({
   </motion.div>
 );
 
-const UserDashboardAccount = ({ currentAccount }) => {
+const UserDashboardAccount = () => {
   const userInfo = useSelector((store) => store.user.userInfo);
   const masterPassword = useSelector((store) => store.user.masterPassword);
   const investorPassword = useSelector((store) => store.user.investorPassword);
+  // console.log("userInfo-", userInfo);
 
   return (
     <motion.div

@@ -40,6 +40,7 @@ import UserInvesterPassword from "./pages/user/UserInvestorPassword";
 import UserMasterPassword from "./pages/user/UserMasterPassword";
 import UserTransaction from "./pages/user/UserTransaction";
 import UserChallenges from "./pages/user/UserChallenges";
+import UserTradeHistory from "./pages/user/UserTradeHistory";
 
 const Router = createBrowserRouter([
   {
@@ -207,6 +208,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/challenges",
         element: <UserChallenges></UserChallenges>,
+      },
+      {
+        path: "/user/trade-history",
+        element: <UserTradeHistory></UserTradeHistory>,
       },
     ],
   },

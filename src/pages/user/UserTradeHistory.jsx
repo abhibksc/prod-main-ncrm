@@ -1,0 +1,140 @@
+import React, { useState } from "react";
+import { DollarSign, BarChart2 } from "lucide-react";
+import axios from "axios";
+
+export default function UserTradeHistory() {
+  const [activeTab, setActiveTab] = useState("closed");
+  const [tradeData, setTradeData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchTradeData = async (tradeType) => {
+    setLoading(true);
+    setError(null);
+    try {
+      let res;
+      if (tradeType === "closed") {
+        res = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=3784187&StartTime=2021-07-20 00:00:00&EndTime=2024-06-05 23:59:59`
+        );
+      } else {
+        res = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/GetOpenTradeByAccount?Manager_Index=1&MT5Accont=3784187`
+        );
+      }
+      console.log("res trade--", res.data);
+      setTradeData(res.data);
+      setActiveTab(tradeType);
+    } catch (error) {
+      console.error("Error fetching trade data:", error);
+      setError("Failed to fetch trade data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleTabClick = (tradeType) => {
+    if (tradeType !== activeTab) {
+      fetchTradeData(tradeType);
+    }
+  };
+
+  return (
+    <div className="bg-secondary-800/70 p-6 rounded-lg shadow-lg my-5 text-white">
+      <h1 className="mb-6 text-2xl font-bold flex items-center">
+        <BarChart2 className="mr-2" />
+        Trades History
+      </h1>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <button
+          className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
+            activeTab === "closed"
+              ? "bg-yellow-600 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => handleTabClick("closed")}
+        >
+          Closed Trades
+        </button>
+        <button
+          className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
+            activeTab === "open"
+              ? "bg-green-700 text-white"
+              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+          }`}
+          onClick={() => handleTabClick("open")}
+        >
+          Open Trades
+        </button>
+      </div>
+      {loading && <div className="text-center py-4">Loading...</div>}
+      {error && <div className="text-center py-4 text-red-500">{error}</div>}
+      {!loading && !error && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-gray-400 border-b border-gray-700">
+                <th className="text-left py-3 px-4">Account No</th>
+                <th className="text-left py-3 px-4">Symbol</th>
+                {activeTab === "open" ? (
+                  <th className="text-left py-3 px-4">Open Time</th>
+                ) : (
+                  <th className="text-left py-3 px-4">Close Time</th>
+                )}
+                <th className="text-right py-3 px-4">Open Price</th>
+                {activeTab === "closed" && (
+                  <th className="text-right py-3 px-4">Close Price</th>
+                )}
+                <th className="text-center py-3 px-4">Type</th>
+                <th className="text-right py-3 px-4">Volume</th>
+                <th className="text-right py-3 px-4">P/L</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tradeData?.map((trade, index) => (
+                <tr
+                  key={index}
+                  className="border-b border-gray-700 hover:bg-secondary-800"
+                >
+                  <td className="py-3 px-4">{trade?.MT5Account}</td>
+                  <td className="py-3 px-4">{trade?.Symbol}</td>
+                  <td className="py-3 px-4">
+                    {activeTab === "open" ? trade?.Open_Time : trade?.closeTime}
+                  </td>
+                  <td className="text-right py-3 px-4">{trade?.Open_Price}</td>
+                  {activeTab === "closed" && (
+                    <td className="text-right py-3 px-4">
+                      {trade?.closePrice}
+                    </td>
+                  )}
+                  <td
+                    className={`text-center py-3 px-4 ${
+                      trade?.BUY_SELL === 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
+                  </td>
+                  <td className="text-right py-3 px-4">{trade?.Lot}</td>
+                  <td
+                    className={`text-right py-3 px-4 ${
+                      trade?.Profit >= 0 ? "text-green-500" : "text-red-500"
+                    }`}
+                  >
+                    <span className={`flex items-center justify-end`}>
+                      <DollarSign size={16} className="mr-1" />
+                      {trade?.Profit}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}

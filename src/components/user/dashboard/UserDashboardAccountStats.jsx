@@ -26,14 +26,6 @@ const UserDashboardAccountStats = () => {
         "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
     },
     {
-      id: "goal",
-      label: "Goal",
-      value: "6,000.00 USD",
-      status: "Passed",
-      description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
-    },
-    {
       id: "growth",
       label: "Growth",
       value: "14.45%",
@@ -46,27 +38,6 @@ const UserDashboardAccountStats = () => {
       label: "PnL Floating",
       value: "0 USD",
       status: "Information",
-      description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
-    },
-    {
-      id: "fundedPlan",
-      label: "Funded Plan",
-      value: "ONE STEP EVALUATION",
-      description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
-    },
-    {
-      id: "firstTradeAt",
-      label: "First Trade At",
-      value: "08-07-2024",
-      description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
-    },
-    {
-      id: "minimumTradingDays",
-      label: "Minimum Trading Days",
-      value: "28/4",
       description:
         "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
     },
