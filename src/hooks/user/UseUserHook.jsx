@@ -11,7 +11,6 @@ export default function UseUserHook() {
   const currentAccount = useSelector((store) => store.user.currentAccount);
   const isRefreshed = useSelector((store) => store.user.isRefreshed);
   const dispatch = useDispatch();
-  const currentDate = new Date().toISOString().slice(0, 10);
 
   const GetCloseTradeAPI = async () => {
     const res = await axios.get(

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DollarSign, BarChart2 } from "lucide-react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("closed");
   const [tradeData, setTradeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const userInfo = useSelector((store) => store.user.userInfo);
+  const currentDate = new Date().toISOString().slice(0, 10);
 
-  const fetchTradeData = async (tradeType) => {
+  const fetchTradeData = async (tradeType = "closed") => {
     setLoading(true);
     setError(null);
     try {
@@ -17,13 +20,17 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=3784187&StartTime=2021-07-20 00:00:00&EndTime=2024-09-05 13:03:59`
+          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
+            userInfo.MT5Account
+          }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 13:03:59`
         );
       } else {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=3784187`
+          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${
+            userInfo.MT5Account
+          }`
         );
       }
       console.log("res trade history--", res.data);
@@ -36,6 +43,9 @@ export default function UserTradeHistory() {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    fetchTradeData();
+  }, []);
 
   const handleTabClick = (tradeType) => {
     if (tradeType !== activeTab) {
