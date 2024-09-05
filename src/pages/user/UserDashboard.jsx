@@ -57,7 +57,7 @@ export default function UserDashboard() {
       >
         <div>
           <UserDashboardAccountStats />
-          <UserDashboardTrades></UserDashboardTrades>
+          {/* <UserDashboardTrades></UserDashboardTrades> */}
         </div>
         <div className="flex flex-col gap-10 mt-10">
           <div>
