@@ -22,7 +22,7 @@ export default function UserTradeHistory() {
             import.meta.env.VITE_API_END_POINT
           }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
             userInfo.MT5Account
-          }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 13:03:59`
+          }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
       } else {
         res = await axios.get(
@@ -64,7 +64,7 @@ export default function UserTradeHistory() {
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "closed"
               ? "bg-yellow-600 text-white"
-              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("closed")}
         >
@@ -74,7 +74,7 @@ export default function UserTradeHistory() {
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "open"
               ? "bg-green-700 text-white"
-              : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("open")}
         >
