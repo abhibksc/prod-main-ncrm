@@ -98,9 +98,7 @@ const Sidebar = () => {
       nested: [
         { label: "Pending Deposits", route: "/admin/deposit/pending" },
         { label: "Approved Deposits", route: "/admin/deposit/approved" },
-        { label: "Successfull Deposits", route: "/admin/deposit/successfull" },
         { label: "Rejected Deposits", route: "/admin/deposit/rejected" },
-        { label: "Initiated Deposits", route: "/admin/deposit/initiated" },
         { label: "All Deposits", route: "/admin/deposit/all" },
       ],
     },

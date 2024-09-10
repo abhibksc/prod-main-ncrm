@@ -34,14 +34,6 @@ const UserDashboardAccountStats = () => {
         "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
     },
     {
-      id: "pnlFloating",
-      label: "PnL Floating",
-      value: "0 USD",
-      status: "Information",
-      description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
-    },
-    {
       id: "profitTarget",
       label: "Profit Target",
       value: "$7,225.00/$6000",
@@ -67,7 +59,7 @@ const UserDashboardAccountStats = () => {
 
   return (
     <div className="bg-secondary-800/70 shadow-md rounded-lg p-4 sm:p-6 max-w-full sm:max-w-4xl mx-auto">
-      <h2 className="text-lg sm:text-xl font-semibold mb-4">
+      <h2 className="text-lg sm:text-xl text-center font-semibold mb-4">
         Account Stats - ONE STEP EVALUATION
       </h2>
       <div className="space-y-2">

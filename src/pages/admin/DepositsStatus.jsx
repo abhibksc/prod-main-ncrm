@@ -1,203 +1,18 @@
-import React, { useState } from "react";
-import { ArrowLeftRight, CreditCard, Search, Wallet } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { ArrowLeftRight, CircleCheckBig, CircleX, Search } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-
-const dummyData = [
-  {
-    id: 1,
-    gateway: "Perfect Money",
-    transaction: "AX1WHKZ5T6KH",
-    initiated: "2024-07-31 09:45 AM",
-    user: "John Doe",
-    userHandle: "@jdoe123",
-    amount: 95.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Wallet",
-    status: "Initiated",
-  },
-  {
-    id: 2,
-    gateway: "PayPal",
-    transaction: "BY2FGLS7U8PL",
-    initiated: "2024-07-30 11:15 AM",
-    user: "Jane Smith",
-    userHandle: "@jsmith456",
-    amount: 120.5,
-    conversion: "1 USD = 1.00 USD",
-    type: "Card",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    gateway: "Skrill",
-    transaction: "CZ3HGKS9W9ZM",
-    initiated: "2024-07-29 03:30 PM",
-    user: "Mike Johnson",
-    userHandle: "@mjohnson789",
-    amount: 150.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Bank",
-    status: "Failed",
-  },
-  {
-    id: 4,
-    gateway: "Neteller",
-    transaction: "DX4IKJS0X0QK",
-    initiated: "2024-07-28 08:00 AM",
-    user: "Emily Davis",
-    userHandle: "@edavis101",
-    amount: 200.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Wallet",
-    status: "Initiated",
-  },
-  {
-    id: 5,
-    gateway: "Stripe",
-    transaction: "EY5JLMS1Y1TR",
-    initiated: "2024-07-27 06:45 PM",
-    user: "Chris Brown",
-    userHandle: "@cbrown202",
-    amount: 175.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Card",
-    status: "Pending",
-  },
-  {
-    id: 6,
-    gateway: "Payoneer",
-    transaction: "FZ6KMNS2Z2VH",
-    initiated: "2024-07-26 02:30 PM",
-    user: "Olivia Wilson",
-    userHandle: "@owilson303",
-    amount: 110.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Bank",
-    status: "Completed",
-  },
-  {
-    id: 7,
-    gateway: "Bitcoin",
-    transaction: "GZ7LNPT3A3WI",
-    initiated: "2024-07-25 10:00 AM",
-    user: "Liam Martinez",
-    userHandle: "@lmartinez404",
-    amount: 300.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Crypto",
-    status: "Initiated",
-  },
-  {
-    id: 8,
-    gateway: "Ethereum",
-    transaction: "HZ8MOPT4B4XJ",
-    initiated: "2024-07-24 01:15 PM",
-    user: "Sophia Anderson",
-    userHandle: "@sanderson505",
-    amount: 250.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Crypto",
-    status: "Completed",
-  },
-  {
-    id: 9,
-    gateway: "Litecoin",
-    transaction: "IZ9NOPU5C5YK",
-    initiated: "2024-07-23 04:45 PM",
-    user: "Noah Thomas",
-    userHandle: "@nthomas606",
-    amount: 180.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Crypto",
-    status: "Pending",
-  },
-  {
-    id: 10,
-    gateway: "Ripple",
-    transaction: "JZ0OPVU6D6ZL",
-    initiated: "2024-07-22 07:30 AM",
-    user: "Ava White",
-    userHandle: "@awhite707",
-    amount: 220.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Crypto",
-    status: "Failed",
-  },
-  {
-    id: 11,
-    gateway: "Bank Transfer",
-    transaction: "KZ1PQWV7E7ZM",
-    initiated: "2024-07-21 09:45 AM",
-    user: "James Taylor",
-    userHandle: "@jtaylor808",
-    amount: 140.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Bank",
-    status: "Initiated",
-  },
-  {
-    id: 12,
-    gateway: "Western Union",
-    transaction: "LZ2QRWX8F8ZN",
-    initiated: "2024-07-20 11:00 AM",
-    user: "Mia Lee",
-    userHandle: "@mlee909",
-    amount: 170.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Cash",
-    status: "Completed",
-  },
-  {
-    id: 13,
-    gateway: "MoneyGram",
-    transaction: "MZ3RSXY9G9ZO",
-    initiated: "2024-07-19 03:15 PM",
-    user: "Ethan Harris",
-    userHandle: "@eharris010",
-    amount: 130.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Cash",
-    status: "Pending",
-  },
-  {
-    id: 14,
-    gateway: "Perfect Money",
-    transaction: "NZ4STYZ0H0ZP",
-    initiated: "2024-07-18 05:45 PM",
-    user: "Charlotte Clark",
-    userHandle: "@cclark111",
-    amount: 90.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Wallet",
-    status: "Failed",
-  },
-  {
-    id: 15,
-    gateway: "PayPal",
-    transaction: "OZ5TUZ11I1ZQ",
-    initiated: "2024-07-17 08:00 AM",
-    user: "Benjamin Lewis",
-    userHandle: "@blewis212",
-    amount: 160.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Card",
-    status: "Completed",
-  },
-  {
-    id: 16,
-    gateway: "Skrill",
-    transaction: "PZ6UVZ22J2ZR",
-    initiated: "2024-07-16 10:30 AM",
-    user: "Amelia Walker",
-    userHandle: "@awalker313",
-    amount: 115.0,
-    conversion: "1 USD = 1.00 USD",
-    type: "Bank",
-    status: "Initiated",
-  },
-];
-
+import axios from "axios";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -211,37 +26,6 @@ const containerVariants = {
     },
   },
 };
-
-const stats = [
-  {
-    icon: <ArrowLeftRight size={24} />,
-    amount: "$100.00",
-    label: "Successfull Deposits",
-    bgColor: "bg-green-800",
-    link: "successfull",
-  },
-  {
-    icon: <ArrowLeftRight size={24} />,
-    amount: "$1,000.00",
-    label: "Pending Deposits",
-    bgColor: "bg-yellow-800",
-    link: "/admin/deposit/pending",
-  },
-  {
-    icon: <ArrowLeftRight size={24} />,
-    amount: "$0.00",
-    label: "Rejected Deposits",
-    bgColor: "bg-orange-800",
-    link: "/admin/deposit/rejected",
-  },
-  {
-    icon: <ArrowLeftRight size={24} />,
-    amount: "4",
-    label: "Initiated Deposits",
-    bgColor: "bg-blue-800",
-    link: "/admin/deposit/initiated",
-  },
-];
 
 const StatCard = ({ icon, amount, label, bgColor, link }) => (
   <Link to={`${link}`} className="">
@@ -273,20 +57,191 @@ const DepositsStatus = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const { status } = useParams();
+  const [depositData, setDepositData] = useState([]);
+  const [selectedDeposit, setSelectedDeposit] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [actionType, setActionType] = useState("");
 
   const isAll = status === "all" ? true : false;
 
-  // console.log("isAll", isAll);
+  console.log("action type--", actionType);
+
+  const fetchApiData = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
+      );
+      console.log("res all deposits---", res.data.data);
+      setDepositData(res.data.data);
+    } catch (error) {
+      console.log("Error while fetching all deposits--", error);
+    }
+  };
+  function formatDate(isoDateString) {
+    const date = new Date(isoDateString);
+
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // 12-hour format with AM/PM
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  }
+
+  const handleActionClick = (deposit, action) => {
+    setSelectedDeposit(deposit);
+    setActionType(action);
+    setIsDialogOpen(true);
+  };
+  const handleConfirmAction = async (selectedDeposit) => {
+    try {
+      if (actionType === "approve") {
+        const res = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
+          {
+            _id: selectedDeposit._id,
+            status: "Accepted",
+          }
+        );
+        console.log("updated confirm data", res);
+
+        const updatedDepositData = depositData.map((deposit) =>
+          deposit._id === selectedDeposit._id
+            ? {
+                ...deposit,
+                status: "Accepted",
+              }
+            : deposit
+        );
+        setDepositData(updatedDepositData);
+        setIsDialogOpen(false);
+      } else if (actionType === "reject") {
+        const res = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
+          {
+            _id: selectedDeposit._id,
+            status: "Rejected",
+          }
+        );
+        console.log("updated rejection data", res);
+
+        const updatedDepositData = depositData.map((deposit) =>
+          deposit._id === selectedDeposit._id
+            ? {
+                ...deposit,
+                status: "Rejected",
+              }
+            : deposit
+        );
+        setDepositData(updatedDepositData);
+        setIsDialogOpen(false);
+      }
+    } catch (error) {
+      console.error("Error updating deposit status:", error);
+    }
+  };
+  // total deposits ----------
+
+  const TotalDeposits = depositData.reduce(
+    (total, item) => total + parseFloat(item.deposit),
+    0
+  );
+  console.log("total deposits", TotalDeposits);
+  // total pending deposits ----------
+
+  const TotalPendingDeposits = depositData
+    .filter((item) => item.status === "Pending")
+    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+  console.log("total pending", TotalPendingDeposits);
+
+  // total Successfull deposits ----------
+
+  const TotalSuccessfullDeposits = depositData
+    .filter((item) => item.status === "Accepted")
+    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+  console.log("total successfull", TotalSuccessfullDeposits);
+
+  // total rejected deposits ----------
+
+  const TotalRejectedDeposits = depositData
+    .filter((item) => item.status === "Rejected")
+    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+  console.log("Total rejected", TotalRejectedDeposits);
+
+  // stats data------------
+
+  const stats = [
+    {
+      icon: <ArrowLeftRight size={24} />,
+      amount: TotalDeposits,
+      label: "Total Deposits",
+      bgColor: "bg-sky-800",
+      link: "/admin/deposit/all",
+    },
+    {
+      icon: <ArrowLeftRight size={24} />,
+      amount: TotalSuccessfullDeposits,
+      label: "Successfull Deposits",
+      bgColor: "bg-green-800",
+      link: "/admin/deposit/approved",
+    },
+    {
+      icon: <ArrowLeftRight size={24} />,
+      amount: TotalPendingDeposits,
+      label: "Pending Deposits",
+      bgColor: "bg-yellow-800",
+      link: "/admin/deposit/pending",
+    },
+    {
+      icon: <ArrowLeftRight size={24} />,
+      amount: TotalRejectedDeposits,
+      label: "Rejected Deposits",
+      bgColor: "bg-orange-800",
+      link: "/admin/deposit/rejected",
+    },
+  ];
 
   const handleSearch = (e) => {
     e.preventDefault();
-    // Implement search functionality here
   };
+
+  // search filtered data -----------------
+
+  const getFilteredData = () => {
+    if (!searchTerm) return depositData;
+
+    return depositData.filter((item) => {
+      const searchLower = searchTerm.toLowerCase();
+      const userName = item.userId?.name?.toLowerCase() || "";
+      const userEmail = item.userId?.email?.toLowerCase() || "";
+      const account = item.mt5Account?.toLowerCase() || "";
+
+      return (
+        userName.includes(searchLower) ||
+        userEmail.includes(searchLower) ||
+        account.includes(searchLower)
+      );
+    });
+  };
+  const filteredData = getFilteredData();
 
   const handleDateRangeSearch = (e) => {
     e.preventDefault();
     // Implement date range search functionality here
   };
+  // use effect -----------------
+
+  useEffect(() => {
+    fetchApiData();
+  }, []);
 
   return (
     <div className="container mx-auto px-10 py-5">
@@ -298,7 +253,7 @@ const DepositsStatus = () => {
         <form onSubmit={handleSearch} className="flex">
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="User/Email/Account"
             className="border p-2 rounded-l"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -351,35 +306,35 @@ const DepositsStatus = () => {
         <table className="min-w-full bg-primary-700">
           <thead className="bg-primary-400 text-white">
             <tr>
-              <th className="py-2 px-4 text-left">Gateway | Transaction</th>
-              <th className="py-2 px-4 text-left">Initiated</th>
-              <th className="py-2 px-4 text-left">User</th>
-              <th className="py-2 px-4 text-left">Amount</th>
-              <th className="py-2 px-4 text-left">Conversion</th>
-              <th className="py-2 px-4 text-left">Type</th>
+              <th className="py-2 px-4 text-left">User | Email</th>
+              <th className="py-2 px-4 text-left">Requested Date</th>
+              <th className="py-2 px-4 text-left">Deposit</th>
+              <th className="py-2 px-4 text-left">Balance</th>
+              <th className="py-2 px-4 text-left">Account</th>
+              <th className="py-2 px-4 text-left">Plan</th>
               <th className="py-2 px-4 text-left">Status</th>
               <th className="py-2 px-4 text-left">Action</th>
             </tr>
           </thead>
           <tbody className=" text-white">
-            {dummyData.map((item) => (
-              <tr key={item.id} className="border-b">
+            {filteredData?.map((item) => (
+              <tr key={item._id} className="border-b">
                 <td className="py-2 px-4">
-                  <div className="text-blue-400 font-semibold">
-                    {item.gateway}
+                  <div className=" font-semibold">
+                    {item?.userId?.name ? item?.userId?.name : "Not found!!"}
                   </div>
-                  <div className=" text-white text-sm">{item.transaction}</div>
+                  <div className=" text-white/70 text-sm">
+                    {" "}
+                    {item?.userId?.email ? item?.userId?.email : "Not found!!"}
+                  </div>
                 </td>
-                <td className="py-2 px-4">{item.initiated}</td>
-                <td className="py-2 px-4">
-                  <div>{item.user}</div>
-                  <div className="text-blue-400 text-sm">{item.userHandle}</div>
-                </td>
-                <td className="py-2 px-4">${item.amount.toFixed(2)} USD</td>
-                <td className="py-2 px-4">{item.conversion}</td>
+                <td className="py-2 px-4">{formatDate(item?.updatedAt)}</td>
+                <td className="py-2 px-4">{item?.deposit}</td>
+                <td className="py-2 px-4">{item?.balance}</td>
+                <td className="py-2 px-4">{item?.mt5Account}</td>
                 <td className="py-2 px-4">
                   <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                    {item.type}
+                    {"Silver"}
                   </span>
                 </td>
                 <td className="py-2 px-4">
@@ -387,16 +342,71 @@ const DepositsStatus = () => {
                     {item.status}
                   </span>
                 </td>
-                <td className="py-2 px-4">
-                  <button className="text-blue-400 hover:underline">
-                    Details
-                  </button>
-                </td>
+                {item.status === "Pending" && (
+                  <div className="flex items-center mt-4 gap-5">
+                    <button
+                      className="text-green-400  hover:text-green-600 hover:scale-110 transition-all"
+                      onClick={() => handleActionClick(item, "approve")}
+                    >
+                      <CircleCheckBig />
+                    </button>
+                    <button
+                      className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                      onClick={() => handleActionClick(item, "reject")}
+                    >
+                      <CircleX />
+                    </button>
+                  </div>
+                )}
+                {item.status === "Accepted" && (
+                  <div className="pt-4 text-green-400 cursor-not-allowed px-4">
+                    <p>Approved</p>
+                  </div>
+                )}
+                {item.status === "Rejected" && (
+                  <div className="pt-4 text-red-500 cursor-not-allowed px-4">
+                    <p>Rejected</p>
+                  </div>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {actionType === "approve" ? "Approve Deposit" : "Reject Deposit"}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedDeposit && (
+                <div>
+                  <p>User: {selectedDeposit.userId?.name}</p>
+                  <p>Email: {selectedDeposit.userId?.email}</p>
+                  <p>Deposit Amount: ${selectedDeposit.deposit}</p>
+                  <p>Account: {selectedDeposit.mt5Account}</p>
+                  <p>Date: {formatDate(selectedDeposit.updatedAt)}</p>
+                </div>
+              )}
+              <p className="mt-4">
+                Are you sure you want to{" "}
+                {actionType === "approve" ? "approve" : "reject"} this deposit?
+              </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => handleConfirmAction(selectedDeposit)}
+            >
+              Confirm {actionType === "approve" ? "Approval" : "Rejection"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

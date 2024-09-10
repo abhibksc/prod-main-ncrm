@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { DollarSign, BarChart2 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import Loader from "@/components/Loader/Loader";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("closed");
@@ -81,7 +82,13 @@ export default function UserTradeHistory() {
           Open Trades
         </button>
       </div>
-      {loading && <div className="text-center py-4">Loading...</div>}
+      {loading && (
+        <div className="text-center py-4">
+          <span>
+            <Loader></Loader>
+          </span>
+        </div>
+      )}
       {error && <div className="text-center py-4 text-red-500">{error}</div>}
       {!loading && !error && (
         <div className="overflow-x-auto">
@@ -99,7 +106,7 @@ export default function UserTradeHistory() {
                 {activeTab === "closed" && (
                   <th className="text-left py-3 px-4">Close Price</th>
                 )}
-                <th className="text-center py-3 px-4">Type</th>
+                <th className="text-center py-3 px-4">Buy/Sell</th>
                 <th className="text-right py-3 px-4">Volume</th>
                 <th className="text-right py-3 px-4">P/L</th>
               </tr>
@@ -130,14 +137,15 @@ export default function UserTradeHistory() {
                   >
                     {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
                   </td>
-                  <td className="text-right py-3 px-4">{trade?.Lot}</td>
+                  <td className="text-right py-3 px-4">
+                    {trade?.Lot / 100000}
+                  </td>
                   <td
                     className={`text-right py-3 px-4 ${
                       trade?.Profit >= 0 ? "text-green-500" : "text-red-500"
                     }`}
                   >
                     <span className={`flex items-center justify-end`}>
-                      <DollarSign size={16} className="mr-1" />
                       {trade?.Profit}
                     </span>
                   </td>

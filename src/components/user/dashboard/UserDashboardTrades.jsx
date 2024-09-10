@@ -68,7 +68,7 @@ export default function UserDashboardTrades() {
           </p>
         </div>
         <div className="bg-secondary-700 p-4 rounded-lg">
-          <p className="text-gray-100 mb-1">Profit Rate</p>
+          <p className="text-gray-100 mb-1">PnL floating</p>
           <p className="text-2xl font-bold text-yellow-500">
             {tradesSummary.winRate.toFixed(2)}%
           </p>

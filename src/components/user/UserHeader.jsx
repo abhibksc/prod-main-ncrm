@@ -93,13 +93,12 @@ const UserHeader = () => {
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className=" -ml-14 flex gap-5">
-          <h1 className="text-3xl text-center font-extrabold ">Forex-ZX</h1>
+      <div className=" px-5 mx-auto flex justify-between items-center">
+        <div className=" flex gap-2">
           <button className=" md:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
-            {/* <Hamburger></Hamburger>{" "} */}
           </button>
+          <h1 className="md:text-3xl text-xl  font-extrabold ">Forex-ZX</h1>
         </div>
         <div className="relative flex items-center">
           <span className="mr-2 text-green-500 flex items-center">
