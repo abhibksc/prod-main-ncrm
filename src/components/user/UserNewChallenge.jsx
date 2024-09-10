@@ -147,10 +147,11 @@ const UserNewChallenge = () => {
         }
       );
 
+      dispatch(setOpenTrades([]));
+      dispatch(setCurrentAccount(randomNumber));
       dispatch(setDepositBalance(formData.accountBalance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));
       dispatch(setMasterPassword(res.data.Master_Pwd));
-      dispatch(setOpenTrades([]));
       GetUserInfoAPI();
       // GetCloseTradeAPI();
       toast.success("Created new challenge", { id: toastID });
