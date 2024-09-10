@@ -39,7 +39,7 @@ export default function UserTradeHistory() {
       setActiveTab(tradeType);
     } catch (error) {
       console.error("Error fetching trade data:", error);
-      setError("Failed to fetch trade data. Please try again.");
+      // setError("Failed to fetch trade data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -49,9 +49,7 @@ export default function UserTradeHistory() {
   }, []);
 
   const handleTabClick = (tradeType) => {
-    if (tradeType !== activeTab) {
-      fetchTradeData(tradeType);
-    }
+    fetchTradeData(tradeType);
   };
 
   return (
@@ -117,16 +115,16 @@ export default function UserTradeHistory() {
                   key={index}
                   className="border-b border-gray-700 hover:bg-secondary-800"
                 >
-                  <td className="py-3 px-4">{trade?.MT5Account}</td>
-                  <td className="py-3 px-4">{trade?.Symbol}</td>
-                  <td className="py-3">
+                  <td className="py-1 px-4">{trade?.MT5Account}</td>
+                  <td className="py-1 px-4">{trade?.Symbol}</td>
+                  <td className="py-1">
                     {activeTab === "open"
                       ? trade?.Open_Time
                       : trade?.Close_Time}
                   </td>
-                  <td className="text-left py-3 px-6">{trade?.Open_Price}</td>
+                  <td className="text-left py-1 px-6">{trade?.Open_Price}</td>
                   {activeTab === "closed" && (
-                    <td className="text-left py-6 px-6 ">
+                    <td className="text-left py-2 px-6 ">
                       {trade?.Close_Price}
                     </td>
                   )}

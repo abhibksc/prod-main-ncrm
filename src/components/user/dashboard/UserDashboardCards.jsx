@@ -58,9 +58,11 @@ const BalanceCard = ({
 
 const UserDashboardBalanceCards = () => {
   const depositBalance = useSelector((store) => store.user.depositBalace);
+  const availableBalance = useSelector((store) => store.user.availableBalance);
+  console.log("available balence--", availableBalance);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const userInfo = useSelector((store) => store.user.userInfo);
-  console.log("userInfo-", userInfo);
+  // console.log("userInfo-", userInfo);
 
   const isPositive = parseFloat(profitNloss) >= 0;
   return (

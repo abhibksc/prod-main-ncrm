@@ -15,41 +15,31 @@ const UserWithdraw = () => {
   const [apiLoader, setApiLoader] = useState(false);
   const dispatch = useDispatch();
 
-  const currentAccount = useSelector((store) => store.user.currentAccount);
+  const userInfo = useSelector((store) => store.user.userInfo);
   const { GetUserInfoAPI } = UseUserHook();
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     setApiLoader(true);
     try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_API_END_POINT
-        }/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${currentAccount}&Amount=${amount}&Comment=test`
-      );
-
       const withdrawalDBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth//withdrawal`,
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
         {
-          method: selectedGateway,
-          tradeAccount: selectedAccount,
-          balance: res.data.Balance,
-          credit: res.data.Credit,
-          equity: res.data.Equity,
-          freeMargin: res.data.FreeMargin,
-          mt5Account: res.data.MT5Accont,
-          margin: res.data.Margin,
+          method: selectedAccount,
+          tradeAccount: selectedGateway,
+          amount: amount,
+          mt5Account: userInfo.MT5Account,
+          status: "pending",
+          userId: "66de89ee0ab97583ae19ec9a",
+          managerIndex: 1,
+          pNl: "40",
         }
       );
-      dispatch(setAvailableBalance(res.data.Balance));
-      dispatch;
       setApiLoader(false);
-      toast.success("Withdawal success");
-      // dispatch(setIsRefresh());
-      GetUserInfoAPI();
+      toast.success("Withdawal requested");
+      // GetUserInfoAPI();
 
-      // console.log("withdrawal API res--", res.data);
-      // console.log("withdrawal DB res--", withdrawalDBres.data.data);
+      console.log("withdrawal DB res--", withdrawalDBres.data.data);
     } catch (error) {
       setApiLoader(false);
       toast.error("Withdawal Failed");

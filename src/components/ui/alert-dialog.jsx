@@ -67,7 +67,7 @@ export const AlertDialogCancel = ({ children, onClick }) => (
 );
 export const AlertDialogAction = ({ children, onClick }) => (
   <button
-    className="px-4 mx-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+    className="px-4 mx-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-600/80"
     onClick={onClick}
   >
     {children}

@@ -15,14 +15,16 @@ export default function UserDashboardTrades() {
     ).length;
 
     const totalTradesCount = openTrades.length;
+    if (totalTradesCount === 0) {
+      return 0;
+    }
 
     return (positiveTradesCount / totalTradesCount) * 100;
   };
 
-  //   console.log("Overall Profit Percentage:", calculateWinningRatio() + "%");
+  console.log("Overall Profit Percentage:", calculateWinningRatio());
 
   const calculateTotalNetProfit = () => {
-    // Calculate the total net profit by summing up all Profit values
     const totalNetProfit = openTrades.reduce(
       (sum, entry) => sum + entry.Profit,
       0

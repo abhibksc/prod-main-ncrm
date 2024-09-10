@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ArrowLeftRight, CircleCheckBig, CircleX, Search } from "lucide-react";
+import {
+  ArrowLeftRight,
+  CircleCheckBig,
+  CircleX,
+  Loader,
+  Search,
+} from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -61,29 +67,44 @@ const DepositsStatus = () => {
   const [selectedDeposit, setSelectedDeposit] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [actionType, setActionType] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
 
-  console.log("action type--", actionType);
-
   const fetchApiData = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
       );
-      console.log("res all deposits---", res.data.data);
+      // console.log("res all deposits---", res.data.data);
       setDepositData(res.data.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.log("Error while fetching all deposits--", error);
     }
   };
+
+  let filterParamsData = depositData.filter((item) => item.status === status);
+  if (status === "all") {
+    filterParamsData = depositData.filter(
+      (item) =>
+        item.status === "pending" ||
+        item.status === "rejected" ||
+        item.status === "approved"
+    );
+  }
+
+  // format date ---------------------
+
   function formatDate(isoDateString) {
     const date = new Date(isoDateString);
 
-    const formattedDate = date.toLocaleDateString("en-US", {
+    const formattedDate = date.toLocaleDateString("en-GB", {
       year: "numeric",
-      month: "2-digit",
       day: "2-digit",
+      month: "2-digit",
     });
 
     const formattedTime = date.toLocaleTimeString("en-US", {
@@ -108,16 +129,26 @@ const DepositsStatus = () => {
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
           {
             _id: selectedDeposit._id,
-            status: "Accepted",
+            status: "approved",
           }
         );
+
+        const depositApires = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${
+            selectedDeposit.mt5Account
+          }&Amount=${selectedDeposit.balance}&Comment=TEST`
+        );
+
         console.log("updated confirm data", res);
+        console.log("deposit api res", depositApires);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
                 ...deposit,
-                status: "Accepted",
+                status: "approved",
               }
             : deposit
         );
@@ -128,7 +159,7 @@ const DepositsStatus = () => {
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
           {
             _id: selectedDeposit._id,
-            status: "Rejected",
+            status: "rejected",
           }
         );
         console.log("updated rejection data", res);
@@ -137,7 +168,7 @@ const DepositsStatus = () => {
           deposit._id === selectedDeposit._id
             ? {
                 ...deposit,
-                status: "Rejected",
+                status: "rejected",
               }
             : deposit
         );
@@ -154,27 +185,27 @@ const DepositsStatus = () => {
     (total, item) => total + parseFloat(item.deposit),
     0
   );
-  console.log("total deposits", TotalDeposits);
+  // console.log("total deposits", TotalDeposits);
   // total pending deposits ----------
 
   const TotalPendingDeposits = depositData
-    .filter((item) => item.status === "Pending")
+    .filter((item) => item.status === "pending")
     .reduce((total, item) => total + parseFloat(item.deposit), 0);
-  console.log("total pending", TotalPendingDeposits);
+  // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
   const TotalSuccessfullDeposits = depositData
-    .filter((item) => item.status === "Accepted")
+    .filter((item) => item.status === "approved")
     .reduce((total, item) => total + parseFloat(item.deposit), 0);
-  console.log("total successfull", TotalSuccessfullDeposits);
+  // console.log("total successfull", TotalSuccessfullDeposits);
 
   // total rejected deposits ----------
 
   const TotalRejectedDeposits = depositData
-    .filter((item) => item.status === "Rejected")
+    .filter((item) => item.status === "rejected")
     .reduce((total, item) => total + parseFloat(item.deposit), 0);
-  console.log("Total rejected", TotalRejectedDeposits);
+  // console.log("Total rejected", TotalRejectedDeposits);
 
   // stats data------------
 
@@ -216,36 +247,54 @@ const DepositsStatus = () => {
   // search filtered data -----------------
 
   const getFilteredData = () => {
-    if (!searchTerm) return depositData;
+    let filtered = filterParamsData;
 
-    return depositData.filter((item) => {
+    if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
-      const userName = item.userId?.name?.toLowerCase() || "";
-      const userEmail = item.userId?.email?.toLowerCase() || "";
-      const account = item.mt5Account?.toLowerCase() || "";
+      filtered = filtered.filter((item) => {
+        const userName = item.userId?.name?.toLowerCase() || "";
+        const userEmail = item.userId?.email?.toLowerCase() || "";
+        const account = item.mt5Account?.toLowerCase() || "";
 
-      return (
-        userName.includes(searchLower) ||
-        userEmail.includes(searchLower) ||
-        account.includes(searchLower)
-      );
-    });
+        return (
+          userName.includes(searchLower) ||
+          userEmail.includes(searchLower) ||
+          account.includes(searchLower)
+        );
+      });
+    }
+
+    if (dateRange.start && dateRange.end) {
+      const startDate = new Date(dateRange.start);
+      const endDate = new Date(dateRange.end);
+      endDate.setHours(23, 59, 59, 999); // Set to end of day
+
+      filtered = filtered.filter((item) => {
+        const itemDate = new Date(item.createdAt);
+        return itemDate >= startDate && itemDate <= endDate;
+      });
+    }
+
+    return filtered;
   };
-  const filteredData = getFilteredData();
 
   const handleDateRangeSearch = (e) => {
     e.preventDefault();
-    // Implement date range search functionality here
+    // The filtering is now handled in getFilteredData()
+    // This function can be used to trigger a re-render if needed
+    setDepositData([...depositData]);
   };
+
   // use effect -----------------
 
   useEffect(() => {
     fetchApiData();
-  }, []);
+  }, [status]);
+  const filteredData = getFilteredData();
 
   return (
     <div className="container mx-auto px-10 py-5">
-      <h1 className="text-2xl font-bold mb-4  text-white first-letter:uppercase">
+      <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
         {status} Deposits
       </h1>
 
@@ -307,69 +356,83 @@ const DepositsStatus = () => {
           <thead className="bg-primary-400 text-white">
             <tr>
               <th className="py-2 px-4 text-left">User | Email</th>
-              <th className="py-2 px-4 text-left">Requested Date</th>
-              <th className="py-2 px-4 text-left">Deposit</th>
-              <th className="py-2 px-4 text-left">Balance</th>
               <th className="py-2 px-4 text-left">Account</th>
               <th className="py-2 px-4 text-left">Plan</th>
+              <th className="py-2 px-4 text-left">Deposit</th>
+              <th className="py-2 px-4 text-left">Ac Size</th>
+              <th className="py-2 px-4 text-left">Balance</th>
+              <th className="py-2 px-4 text-left">Requested Date</th>
               <th className="py-2 px-4 text-left">Status</th>
               <th className="py-2 px-4 text-left">Action</th>
             </tr>
           </thead>
-          <tbody className=" text-white">
-            {filteredData?.map((item) => (
-              <tr key={item._id} className="border-b">
-                <td className="py-2 px-4">
-                  <div className=" font-semibold">
-                    {item?.userId?.name ? item?.userId?.name : "Not found!!"}
-                  </div>
-                  <div className=" text-white/70 text-sm">
-                    {" "}
-                    {item?.userId?.email ? item?.userId?.email : "Not found!!"}
+
+          <tbody className="text-white">
+            {loading ? (
+              <tr>
+                <td colSpan="8" className="py-4">
+                  <div className="text-white flex justify-center items-center gap-4">
+                    <p>Loading...</p>
+                    <Loader className="animate-spin" />
                   </div>
                 </td>
-                <td className="py-2 px-4">{formatDate(item?.updatedAt)}</td>
-                <td className="py-2 px-4">{item?.deposit}</td>
-                <td className="py-2 px-4">{item?.balance}</td>
-                <td className="py-2 px-4">{item?.mt5Account}</td>
-                <td className="py-2 px-4">
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                    {"Silver"}
-                  </span>
-                </td>
-                <td className="py-2 px-4">
-                  <span className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-sm">
-                    {item.status}
-                  </span>
-                </td>
-                {item.status === "Pending" && (
-                  <div className="flex items-center mt-4 gap-5">
-                    <button
-                      className="text-green-400  hover:text-green-600 hover:scale-110 transition-all"
-                      onClick={() => handleActionClick(item, "approve")}
-                    >
-                      <CircleCheckBig />
-                    </button>
-                    <button
-                      className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                      onClick={() => handleActionClick(item, "reject")}
-                    >
-                      <CircleX />
-                    </button>
-                  </div>
-                )}
-                {item.status === "Accepted" && (
-                  <div className="pt-4 text-green-400 cursor-not-allowed px-4">
-                    <p>Approved</p>
-                  </div>
-                )}
-                {item.status === "Rejected" && (
-                  <div className="pt-4 text-red-500 cursor-not-allowed px-4">
-                    <p>Rejected</p>
-                  </div>
-                )}
               </tr>
-            ))}
+            ) : (
+              filteredData?.map((item) => (
+                <tr key={item._id} className="border-b">
+                  <td className="py-2 px-4">
+                    <div className="font-semibold">
+                      {item?.userId?.name ? item?.userId?.name : "Not found!!"}
+                    </div>
+                    <div className="text-white/70 text-sm">
+                      {item?.userId?.email
+                        ? item?.userId?.email
+                        : "Not found!!"}
+                    </div>
+                  </td>
+                  <td className="py-2 px-4">{item?.mt5Account}</td>
+                  <td className="py-2 px-4">
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
+                      {"Silver"}
+                    </span>
+                  </td>
+                  <td className="py-2 px-4">{item?.deposit}</td>
+                  <td className="py-2 px-4">5000</td>
+                  <td className="py-2 px-4">{item?.balance}</td>
+                  <td className="py-2 px-4">{formatDate(item?.createdAt)}</td>
+                  <td className="py-2 px-4">
+                    <span className="bg-gray-200 first-letter:capitalize text-gray-800 px-2 py-1 rounded-full text-sm">
+                      {item.status.charAt(0).toUpperCase() +
+                        item.status.slice(1)}
+                    </span>
+                  </td>
+                  <td className="py-2 px-4">
+                    {item.status === "pending" && (
+                      <div className="flex items-center gap-5">
+                        <button
+                          className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                          onClick={() => handleActionClick(item, "approve")}
+                        >
+                          <CircleCheckBig />
+                        </button>
+                        <button
+                          className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                          onClick={() => handleActionClick(item, "reject")}
+                        >
+                          <CircleX />
+                        </button>
+                      </div>
+                    )}
+                    {item.status === "approved" && (
+                      <p className="text-green-400">Approved</p>
+                    )}
+                    {item.status === "rejected" && (
+                      <p className="text-red-500">Rejected</p>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -389,7 +452,7 @@ const DepositsStatus = () => {
                   <p>Date: {formatDate(selectedDeposit.updatedAt)}</p>
                 </div>
               )}
-              <p className="mt-4">
+              <p className="mt-2">
                 Are you sure you want to{" "}
                 {actionType === "approve" ? "approve" : "reject"} this deposit?
               </p>

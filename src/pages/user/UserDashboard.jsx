@@ -11,11 +11,10 @@ import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 
 export default function UserDashboard() {
-  const currentAccount = useSelector((store) => store.user.currentAccount);
   const { GetCloseTradeAPI, GetUserInfoAPI } = UseUserHook();
 
   useEffect(() => {
-    GetCloseTradeAPI();
+    // GetCloseTradeAPI();
     GetUserInfoAPI();
   }, []);
 

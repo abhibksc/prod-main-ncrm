@@ -16,7 +16,6 @@ import AutomaticGetways from "./pages/admin/AutomaticGetways";
 import ManualGetways from "./pages/admin/ManualGetways";
 import DepositsStatus from "./pages/admin/DepositsStatus";
 import WithdrawalStatus from "./pages/admin/WithdrawalStatus";
-import WithdrawalMethods from "./pages/admin/WithdrawalMethods";
 import SupportTicketStatus from "./pages/admin/SupportTicketStatus";
 import TransactionReport from "./pages/admin/TransactionReport";
 import ReportStatus from "./pages/admin/ReportStatus";
@@ -33,8 +32,6 @@ import UserSupportTicket from "./pages/user/UserSupportTicket";
 import UserRules from "./pages/user/UserRules";
 import UserEconomicCalendar from "./pages/user/UserEconomicCalendar";
 import UserProfile from "./pages/user/UserProfile";
-import UserNewChallenge2 from "./pages/user/UserNewChallenge2";
-import NewUserReplicate from "./components/user/NewUserReplicate";
 import UserChnagePassword from "./pages/user/UserChnagePassword";
 import UserInvesterPassword from "./pages/user/UserInvestorPassword";
 import UserMasterPassword from "./pages/user/UserMasterPassword";
@@ -42,6 +39,7 @@ import UserTransaction from "./pages/user/UserTransaction";
 import UserChallenges from "./pages/user/UserChallenges";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
 import DevTest from "./pages/user/DevTest";
+import UserNewChallenge from "./components/user/UserNewChallenge";
 
 const Router = createBrowserRouter([
   {
@@ -87,10 +85,6 @@ const Router = createBrowserRouter([
       {
         path: "/admin/deposit/:status",
         element: <DepositsStatus></DepositsStatus>,
-      },
-      {
-        path: "/admin/withdrawal/methods",
-        element: <WithdrawalMethods></WithdrawalMethods>,
       },
       {
         path: "/admin/withdrawal/:status",
@@ -180,11 +174,7 @@ const Router = createBrowserRouter([
       },
       {
         path: "/user/new-challenge",
-        element: <NewUserReplicate></NewUserReplicate>,
-      },
-      {
-        path: "/user/new-challenge2",
-        element: <UserNewChallenge2></UserNewChallenge2>,
+        element: <UserNewChallenge></UserNewChallenge>,
       },
       {
         path: "/user/profile",

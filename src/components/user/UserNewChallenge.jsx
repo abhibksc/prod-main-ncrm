@@ -23,7 +23,7 @@ import {
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
 
-const NewUserReplicate = () => {
+const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     country: "",
@@ -103,7 +103,7 @@ const NewUserReplicate = () => {
         }
       );
 
-      const DBres = await axios.post(
+      const newChallengeDBres = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/new-challenge`,
         {
           managerIndex: 1,
@@ -127,37 +127,37 @@ const NewUserReplicate = () => {
       dispatch(setCurrentAccount(randomNumber));
 
       setCreatingLoading(false);
-      const depositApires = await axios.get(
-        `${
-          import.meta.env.VITE_API_END_POINT
-        }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
-          formData.accountBalance
-        }&Comment=TEST`
-      );
+      // const depositApires = await axios.get(
+      //   `${
+      //     import.meta.env.VITE_API_END_POINT
+      //   }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
+      //     formData.accountBalance
+      //   }&Comment=TEST`
+      // );
 
       const depositDBres = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
         {
-          balance: depositApires.data.Balance,
-          credit: depositApires.data.Credit,
-          equity: depositApires.data.Equity,
-          freeMargin: depositApires.data.FreeMargin,
-          mt5Account: depositApires.data.MT5Accont,
-          margin: depositApires.data.Margin,
+          deposit: formData.accountSize,
+          balance: formData.accountBalance,
+          mt5Account: randomNumber,
+          status: "pending",
+          userId: "66de89ee0ab97583ae19ec9a",
+          managerIndex: "1",
         }
       );
 
-      dispatch(setDepositBalance(depositApires.data.Balance));
+      dispatch(setDepositBalance(formData.accountBalance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));
       dispatch(setMasterPassword(res.data.Master_Pwd));
-      dispatch(setAvailableBalance(depositApires.data.Balance));
+      dispatch(setAvailableBalance(formData.accountBalance));
       GetUserInfoAPI();
-      GetCloseTradeAPI();
-      toast.success("Deposit successfully", { id: toastID });
+      // GetCloseTradeAPI();
+      toast.success("Created new challenge", { id: toastID });
 
       console.log("add user api res---", res);
-      console.log("deposit api res --", depositApires.data);
-      navigate("/user/dashboard");
+      console.log("deposit DBdeposit res --", depositDBres);
+      // navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
       toast.error("Plese try again", { id: toastID });
@@ -688,4 +688,4 @@ const NewUserReplicate = () => {
   );
 };
 
-export default NewUserReplicate;
+export default UserNewChallenge;

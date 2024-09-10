@@ -35,6 +35,7 @@ export default function UseUserHook() {
       }/api/web/GetUserInfo?Manager_Index=1&MT5Account=${currentAccount}`
     );
     dispatch(setUserInfo(res.data));
+    dispatch(setUserInfo(res.data));
 
     console.log("custom hook userInfo--", res.data);
   };

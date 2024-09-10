@@ -106,7 +106,6 @@ const Sidebar = () => {
       label: "Withdrawals",
       icon: <Banknote />,
       nested: [
-        { label: "Withdrawal Methods", route: "/admin/withdrawal/methods" },
         { label: "Pending Withdrawals", route: "/admin/withdrawal/pending" },
         { label: "Approved Withdrawals", route: "/admin/withdrawal/approved" },
         { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
