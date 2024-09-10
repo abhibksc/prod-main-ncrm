@@ -19,6 +19,7 @@ import {
   setDepositBalance,
   setInvestorPassword,
   setMasterPassword,
+  setOpenTrades,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
@@ -124,7 +125,6 @@ const UserNewChallenge = () => {
           groupName: "SK GROUP\\M10\\CLASSIC",
         }
       );
-      dispatch(setCurrentAccount(randomNumber));
 
       setCreatingLoading(false);
       // const depositApires = await axios.get(
@@ -150,7 +150,7 @@ const UserNewChallenge = () => {
       dispatch(setDepositBalance(formData.accountBalance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));
       dispatch(setMasterPassword(res.data.Master_Pwd));
-      dispatch(setAvailableBalance(formData.accountBalance));
+      dispatch(setOpenTrades([""]));
       GetUserInfoAPI();
       // GetCloseTradeAPI();
       toast.success("Created new challenge", { id: toastID });
