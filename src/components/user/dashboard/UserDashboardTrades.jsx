@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 export default function UserDashboardTrades() {
   const navigate = useNavigate();
   const openTrades = useSelector((store) => store.user.openTrades);
-  console.log("open trades--", openTrades);
+  // console.log("open trades--", openTrades);
   const ProfitTradesData = openTrades.filter((value) => value.Profit > 0);
   //   console.log("profit trades--", ProfitTradesData);
   const calculateWinningRatio = () => {
@@ -22,7 +22,7 @@ export default function UserDashboardTrades() {
     return (positiveTradesCount / totalTradesCount) * 100;
   };
 
-  console.log("Overall Profit Percentage:", calculateWinningRatio());
+  // console.log("Overall Profit Percentage:", calculateWinningRatio());
 
   const calculateTotalNetProfit = () => {
     const totalNetProfit = openTrades.reduce(
@@ -33,7 +33,7 @@ export default function UserDashboardTrades() {
     return totalNetProfit;
   };
 
-  console.log("Total net profit:", calculateTotalNetProfit());
+  // console.log("Total net profit:", calculateTotalNetProfit());
 
   const tradesSummary = {
     totalTrades: openTrades?.length,

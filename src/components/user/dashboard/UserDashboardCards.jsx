@@ -6,6 +6,8 @@ import {
   TrendingUp,
   TrendingDown,
   Target,
+  Milestone,
+  CircleDot,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
@@ -58,13 +60,13 @@ const BalanceCard = ({
 
 const UserDashboardBalanceCards = () => {
   const depositBalance = useSelector((store) => store.user.depositBalace);
-  const availableBalance = useSelector((store) => store.user.availableBalance);
-  console.log("available balence--", availableBalance);
+  // const availableBalance = useSelector((store) => store.user.availableBalance);
+  // console.log("available balence--", availableBalance);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const userInfo = useSelector((store) => store.user.userInfo);
-  // console.log("userInfo-", userInfo);
-
+  const availableBalance = useSelector((store) => store.user.availableBalance);
   const isPositive = parseFloat(profitNloss) >= 0;
+  const phase = 1;
   return (
     <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/60 shadow-md rounded-lg p-4 gap-4">
       <BalanceCard
@@ -84,15 +86,15 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Profit/Loss"
-        value={`${profitNloss} USD`}
+        value={`${profitNloss.toFixed(2)} USD`}
         borderColor="#facc15"
         delay={0.4}
         isProfit={isPositive}
       />
       <BalanceCard
-        icon={Target}
-        title="Target"
-        value="6,000.00 USD"
+        icon={CircleDot}
+        title="Your Phase"
+        value={phase}
         borderColor="#a855f7"
         delay={0.5}
       />

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccount";
 import UserDashboardAccountStats from "@/components/user/dashboard/UserDashboardAccountStats";
 import UserDashboardBanner from "@/components/user/dashboard/UserDashboardBanner";
@@ -9,15 +9,40 @@ import UserLineChart from "@/components/user/UserLineChart";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
+import { setProfitNloss } from "@/redux/user/userSlice";
 
 export default function UserDashboard() {
-  const { GetCloseTradeAPI, GetUserInfoAPI } = UseUserHook();
+  const { GetOpenTradeApi, GetUserInfoAPI, GetCloseTradeApi, getAllTradeApi } =
+    UseUserHook();
+  const openTrades = useSelector((store) => store.user.openTrades);
+  const closeTrades = useSelector((store) => store.user.closeTrades);
+  const userInfo = useSelector((store) => store.user.userInfo);
+  const dispatch = useDispatch();
+
+  const allTrades = [...openTrades, ...closeTrades];
+  console.log("all trades---", allTrades);
+
+  const totalNetProfit = allTrades.reduce(
+    (sum, entry) => sum + entry.Profit,
+    0
+  );
+
+  dispatch(setProfitNloss(totalNetProfit));
+
+  console.log("calcilated net profit--", totalNetProfit);
 
   useEffect(() => {
-    // GetCloseTradeAPI();
-    GetUserInfoAPI();
-  }, []);
+    const fetchData = async () => {
+      try {
+        await GetUserInfoAPI();
+        await getAllTradeApi();
+      } catch (error) {
+        console.error("Error in useEffect:", error);
+      }
+    };
 
+    fetchData();
+  }, []);
   return (
     <motion.div
       className="pb-10"

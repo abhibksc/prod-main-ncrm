@@ -11,6 +11,7 @@ const initialState = {
   investorPassword: "",
   masterPassword: "",
   openTrades: [],
+  closeTrades: [],
   userInfo: "",
   loggedUser: "",
 };
@@ -55,6 +56,9 @@ export const UserSlice = createSlice({
     setOpenTrades: (state, action) => {
       state.openTrades = action.payload;
     },
+    setCloseTrades: (state, action) => {
+      state.closeTrades = action.payload;
+    },
   },
 });
 
@@ -71,6 +75,7 @@ export const {
   setInvestorPassword,
   setMasterPassword,
   setOpenTrades,
+  setCloseTrades,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

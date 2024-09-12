@@ -13,7 +13,9 @@ const UserWithdraw = () => {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const profitNloss = useSelector((store) => store.user.profitNloss);
 
   const userInfo = useSelector((store) => store.user.userInfo);
   const { GetUserInfoAPI } = UseUserHook();
@@ -21,25 +23,31 @@ const UserWithdraw = () => {
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     setApiLoader(true);
+    setError("");
     try {
-      const withdrawalDBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
-        {
-          method: selectedAccount,
-          tradeAccount: selectedGateway,
-          amount: amount,
-          mt5Account: userInfo.MT5Account,
-          status: "pending",
-          userId: "66de89ee0ab97583ae19ec9a",
-          managerIndex: 1,
-          pNl: "40",
-        }
-      );
-      setApiLoader(false);
-      toast.success("Withdawal requested");
-      // GetUserInfoAPI();
+      if (profitNloss > 0 && profitNloss >= amount) {
+        const withdrawalDBres = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
+          {
+            method: selectedAccount,
+            tradeAccount: selectedGateway,
+            amount: amount,
+            mt5Account: userInfo.MT5Account,
+            status: "pending",
+            userId: "66de89ee0ab97583ae19ec9a",
+            managerIndex: 1,
+            pNl: "40",
+          }
+        );
+        setApiLoader(false);
+        toast.success("Withdawal requested");
+        // GetUserInfoAPI();
 
-      console.log("withdrawal DB res--", withdrawalDBres.data.data);
+        console.log("withdrawal DB res--", withdrawalDBres.data.data);
+      } else {
+        setError("You don't have sufficient funds for withdrawal !!");
+        setApiLoader(false);
+      }
     } catch (error) {
       setApiLoader(false);
       toast.error("Withdawal Failed");
@@ -56,16 +64,30 @@ const UserWithdraw = () => {
         className="w-full max-w-lg bg-secondary-800 -mt-20 p-8 rounded-lg shadow-xl"
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold text-white flex items-center">
+          <h2 className="text-2xl font-bold text-white flex items-center">
             <ArrowDownCircle className="w-8 h-8 mr-2" />
             Withdraw Funds
           </h2>
-          <button
+          {/* <button
             type="button"
             className="bg-secondary-700 text-white px-4 py-2 rounded-md hover:bg-secondary-600 transition duration-300"
           >
             Withdraw History
-          </button>
+          </button> */}
+          <div>
+            <h1 className=" font-semibold text-sm text-neutral-100">
+              Withdrawalable Balance
+            </h1>
+            <p
+              className={` text-center ${
+                profitNloss > 0
+                  ? "text-green-500 bg-secondary-700/70"
+                  : "text-red-500 bg-red-400/20"
+              }   mt-1 rounded-full py-1  font-bold`}
+            >
+              $ {profitNloss.toFixed(2)}
+            </p>
+          </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
           <div>
@@ -146,6 +168,9 @@ const UserWithdraw = () => {
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
           </button>
+          <div className=" my-2 text-red-500 text-center">
+            <p>{error}</p>
+          </div>
         </form>
       </motion.div>
     </div>

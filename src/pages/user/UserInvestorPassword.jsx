@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
@@ -17,6 +17,7 @@ const UserInvesterPassword = () => {
     confirm: false,
   });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
   const currentAccount = useSelector((store) => store.user.currentAccount);
   const dispatch = useDispatch();
 
@@ -46,6 +47,7 @@ const UserInvesterPassword = () => {
         );
         toast.success(res.data.MESSAGE, { id: toastId });
         dispatch(setInvestorPassword(passwords.confirm));
+        navigate("/user/dashboard");
       } catch (error) {
         console.log(error);
         toast.error("Please try again", { id: toastId });

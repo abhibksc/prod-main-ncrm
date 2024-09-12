@@ -47,6 +47,7 @@ const UserDashboardAccount = () => {
   const userInfo = useSelector((store) => store.user.userInfo);
   const masterPassword = useSelector((store) => store.user.masterPassword);
   const investorPassword = useSelector((store) => store.user.investorPassword);
+  const currentAccount = useSelector((store) => store.user.currentAccount);
   // console.log("userInfo-", userInfo);
 
   return (
@@ -62,23 +63,21 @@ const UserDashboardAccount = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        Account Credentials
+        Server -{" "}
+        <span className=" bg-yellow-600/20 text-xl rounded-full py-1 px-3">
+          {" "}
+          Rpw7gT
+        </span>
       </motion.h2>
       <div className="space-y-1">
         <CredentialItem
           icon={User}
           label="MT5 Account Id"
-          value={userInfo.MT5Account || "00000"}
+          value={currentAccount}
           badgeColor="bg-blue-100 text-blue-800"
           delay={0.15}
         />
-        <CredentialItem
-          icon={Server}
-          label="Server Name"
-          badgeColor="bg-pink-100 text-yellow-800"
-          value="Xtal-Live"
-          delay={0.2}
-        />
+
         <Link to="/user/master-password" className="block">
           <CredentialItem
             icon={Key}
@@ -117,6 +116,13 @@ const UserDashboardAccount = () => {
           value="Passed"
           badgeColor="bg-indigo-100 text-indigo-800"
           delay={0.45}
+        />
+        <CredentialItem
+          icon={Server}
+          label="Dropdown Status"
+          badgeColor="bg-pink-100 text-yellow-800"
+          value="In Progress"
+          delay={0.5}
         />
       </div>
     </motion.div>
