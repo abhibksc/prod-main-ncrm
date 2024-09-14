@@ -40,6 +40,7 @@ import UserChallenges from "./pages/user/UserChallenges";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
 import DevTest from "./pages/user/DevTest";
 import UserNewChallenge from "./components/user/UserNewChallenge";
+import AccountConfiguration from "./pages/admin/AccountConfiguration";
 
 const Router = createBrowserRouter([
   {
@@ -125,6 +126,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/profile-setting",
         element: <ProfileSetting></ProfileSetting>,
+      },
+      {
+        path: "/admin/account-configuration",
+        element: <AccountConfiguration></AccountConfiguration>,
       },
     ],
   },

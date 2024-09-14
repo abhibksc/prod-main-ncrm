@@ -4,7 +4,7 @@ const initialState = {
   isSidebarOpen: false,
   currentAccount: "00",
   currentUser: "00",
-  depositBalace: "00",
+  depositBalance: "",
   availableBalance: "00",
   profitNloss: "00",
   isRefreshed: true,
@@ -12,8 +12,11 @@ const initialState = {
   masterPassword: "",
   openTrades: [],
   closeTrades: [],
+  phase: 0,
   userInfo: "",
   loggedUser: "",
+  platforms: [],
+  paymentMethods: [],
 };
 
 export const UserSlice = createSlice({
@@ -30,7 +33,7 @@ export const UserSlice = createSlice({
       state.currentUser = action.payload;
     },
     setDepositBalance: (state, action) => {
-      state.depositBalace = action.payload;
+      state.depositBalance = action.payload;
     },
     setAvailableBalance: (state, action) => {
       state.availableBalance = action.payload;
@@ -59,6 +62,15 @@ export const UserSlice = createSlice({
     setCloseTrades: (state, action) => {
       state.closeTrades = action.payload;
     },
+    setPhase: (state, action) => {
+      state.phase = action.payload;
+    },
+    setPlatforms: (state, action) => {
+      state.platforms = action.payload;
+    },
+    setPaymentMethods: (state, action) => {
+      state.paymentMethods = action.payload;
+    },
   },
 });
 
@@ -76,6 +88,9 @@ export const {
   setMasterPassword,
   setOpenTrades,
   setCloseTrades,
+  setPhase,
+  setPlatforms,
+  setPaymentMethods,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

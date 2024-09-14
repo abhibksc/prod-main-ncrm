@@ -18,6 +18,7 @@ import {
   Banknote,
   ListCollapseIcon,
   Ticket,
+  Settings2Icon,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -49,6 +50,11 @@ const Sidebar = () => {
       label: "Setup challenges",
       icon: <ChevronsRight />,
       route: "/admin/setup-challenges",
+    },
+    {
+      label: "Account Configuration",
+      icon: <Settings2Icon />,
+      route: "/admin/account-configuration",
     },
     {
       label: "Withdrawal conditions",

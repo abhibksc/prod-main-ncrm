@@ -12,15 +12,12 @@ import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboard
 import { setProfitNloss } from "@/redux/user/userSlice";
 
 export default function UserDashboard() {
-  const { GetOpenTradeApi, GetUserInfoAPI, GetCloseTradeApi, getAllTradeApi } =
-    UseUserHook();
+  const { GetUserInfoAPI, getAllTradeApi, getUpdatePhase } = UseUserHook();
   const openTrades = useSelector((store) => store.user.openTrades);
   const closeTrades = useSelector((store) => store.user.closeTrades);
-  const userInfo = useSelector((store) => store.user.userInfo);
   const dispatch = useDispatch();
 
   const allTrades = [...openTrades, ...closeTrades];
-  console.log("all trades---", allTrades);
 
   const totalNetProfit = allTrades.reduce(
     (sum, entry) => sum + entry.Profit,
@@ -29,13 +26,14 @@ export default function UserDashboard() {
 
   dispatch(setProfitNloss(totalNetProfit));
 
-  console.log("calcilated net profit--", totalNetProfit);
+  // console.log("calcilated net profit--", totalNetProfit);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await GetUserInfoAPI();
         await getAllTradeApi();
+        await getUpdatePhase();
       } catch (error) {
         console.error("Error in useEffect:", error);
       }

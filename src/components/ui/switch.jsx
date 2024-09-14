@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const Switch = React.forwardRef(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      "ypeer yinline-flex yh-6 yw-11 yshrink-0 ycursor-pointer yitems-center yrounded-full yborder-2 yborder-transparent ytransition-colors focus-visible:youtline-none focus-visible:yring-2 focus-visible:yring-ring focus-visible:yring-offset-2 focus-visible:yring-offset-background disabled:ycursor-not-allowed disabled:yopacity-50 data-[state=checked]:ybg-primary data-[state=unchecked]:ybg-input",
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:bg-red-500 data-[state=checked]:bg-green-500  data-[state=unchecked]:bg-red-500",
       className
     )}
     {...props}
@@ -14,7 +14,7 @@ const Switch = React.forwardRef(({ className, ...props }, ref) => (
   >
     <SwitchPrimitives.Thumb
       className={cn(
-        "ypointer-events-none yblock yh-5 yw-5 yrounded-full ybg-background yshadow-lg yring-0 ytransition-transform data-[state=checked]:ytranslate-x-5 data-[state=unchecked]:ytranslate-x-0"
+        "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
       )}
     />
   </SwitchPrimitives.Root>

@@ -46,6 +46,11 @@ const UserSidebar2 = () => {
       link: "/user/transaction",
     },
     {
+      icon: BarChart2,
+      label: "Trade History",
+      link: "/user/trade-history",
+    },
+    {
       icon: MessageSquare,
       label: "Support Ticket",
       link: "/user/support-ticket",

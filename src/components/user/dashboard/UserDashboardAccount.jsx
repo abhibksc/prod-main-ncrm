@@ -117,13 +117,13 @@ const UserDashboardAccount = () => {
           badgeColor="bg-indigo-100 text-indigo-800"
           delay={0.45}
         />
-        <CredentialItem
+        {/* <CredentialItem
           icon={Server}
           label="Dropdown Status"
           badgeColor="bg-pink-100 text-yellow-800"
           value="In Progress"
           delay={0.5}
-        />
+        /> */}
       </div>
     </motion.div>
   );

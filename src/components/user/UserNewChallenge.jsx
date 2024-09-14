@@ -12,7 +12,7 @@ import CountUp from "react-countup";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import {
   setAvailableBalance,
   setCurrentAccount,
@@ -20,9 +20,13 @@ import {
   setInvestorPassword,
   setMasterPassword,
   setOpenTrades,
+  setPhase,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
+import { countries } from "countries-list";
+import { getData } from "country-list";
+import UserChallengeHook from "@/hooks/user/UserChallengeHook";
 
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
@@ -45,21 +49,31 @@ const UserNewChallenge = () => {
     email: "",
     phone: "",
   });
+
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
-  const { GetCloseTradeAPI, GetUserInfoAPI } = UseUserHook();
+  const { GetUserInfoAPI } = UseUserHook();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [file, setFile] = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const dispatch = useDispatch();
   const [direction, setDirection] = useState(1);
   const navigate = useNavigate();
-  // use effect for the count animation  -----------
-  useEffect(() => {
-    setStartAnimation(false);
-    setTimeout(() => setStartAnimation(true), 100);
-  }, [formData.accountSize]);
+  const countriesArray = getData();
+  const { getPlatforms, getPaymentMethod } = UserChallengeHook();
+  const platformData = useSelector((store) => store.user.platforms);
+  const paymentMethods = useSelector((store) => store.user.paymentMethods);
 
+  const filteredPlatformData = platformData.filter(
+    (value) => value.status === "active"
+  );
+  const filteredMethodsData = paymentMethods.filter(
+    (value) => value.status === "active"
+  );
+
+  console.log("all platforms data ---", filteredPlatformData);
+
+  // ------
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -71,6 +85,7 @@ const UserNewChallenge = () => {
       [name]: type === "checkbox" ? checked : updatedValue,
     }));
   };
+
   // Add user api handler---------------
 
   const apiTestHandler = async () => {
@@ -152,13 +167,15 @@ const UserNewChallenge = () => {
       dispatch(setDepositBalance(formData.accountBalance));
       dispatch(setInvestorPassword(res.data.Investor_Pwd));
       dispatch(setMasterPassword(res.data.Master_Pwd));
+      dispatch(setPhase(1));
       GetUserInfoAPI();
+
       // GetCloseTradeAPI();
       toast.success("Created new challenge", { id: toastID });
 
       console.log("add user api res---", res);
       console.log("deposit DBdeposit res --", depositDBres);
-      // navigate("/user/dashboard");
+      navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
       toast.error("Plese try again", { id: toastID });
@@ -175,7 +192,6 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-  const countries = ["Afghanistan", "Albania", "Algeria", "Zimbabwe"];
   const leverageOptions = [
     { id: 1, label: "1:100", value: "100" },
     { id: 2, label: "1:200", value: "200" },
@@ -188,8 +204,12 @@ const UserNewChallenge = () => {
     { id: 9, label: "1:900", value: "900" },
     { id: 10, label: "1:1000", value: "1000" },
   ];
-
-  const accountTypes = ["1 Step", "2 Step", "3 Step", "2 Step X"];
+  const accountTypeOptions = [
+    { id: 1, label: "Bronze", value: "Bronze" },
+    { id: 2, label: "Silver", value: "Silver" },
+    { id: 3, label: "Gold", value: "Gold" },
+    { id: 4, label: "Daimond", value: "Daimond" },
+  ];
 
   const accountOptions = [
     { display: 5000, value: 49 },
@@ -199,27 +219,14 @@ const UserNewChallenge = () => {
     { display: 100000, value: 449 },
   ];
 
-  const platforms = [
-    { name: "MT5", logo: "🌟" },
-    { name: "cTrader", logo: "💹" },
-    { name: "TradeLocker", logo: "🔒" },
-    { name: "TradingView", logo: "📈" },
-  ];
-  const accountSizes = ["$5,000", "$10,000", "$25,000", "$50,000", "$100,000"];
+  // use effect -----------
+  useEffect(() => {
+    setStartAnimation(false);
+    setTimeout(() => setStartAnimation(true), 100);
 
-  const paymentMethods = [
-    {
-      name: "Tether(BEP20)",
-      icon: "💰",
-      details: "Send USDT to: 0x1234...5678",
-    },
-    { name: "Ethereum", icon: "🔷", details: "Send ETH to: 0xabcd...efgh" },
-    {
-      name: "TRON(TRC20)",
-      icon: "🔴",
-      details: "Send TRX to: TRX1234...5678",
-    },
-  ];
+    getPlatforms();
+    getPaymentMethod();
+  }, [formData.accountSize]);
 
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
@@ -262,23 +269,22 @@ const UserNewChallenge = () => {
               <h2 className="text-2xl font-bold mb-6">
                 Configure your account
               </h2>
-              {/* <button onClick={apiTestAPI}>Click here</button> */}
 
               <div>
                 <label className="block mb-2 text-sm font-medium">
-                  1. Choose your country
+                  1. Choose your account type
                 </label>
                 <div className="relative">
                   <select
-                    name="country"
-                    value={formData.country}
+                    name="leverage"
+                    value={formData.leverage}
                     onChange={handleInputChange}
                     className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="">Select country</option>
-                    {countries.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
+                    <option value="">Select Type</option>
+                    {accountTypeOptions.map((value) => (
+                      <option key={value.id} value={value.value}>
+                        {value.label}
                       </option>
                     ))}
                   </select>
@@ -288,33 +294,10 @@ const UserNewChallenge = () => {
 
               <div>
                 <label className="block mb-2 text-sm font-medium">
-                  2. Choose your account type
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {accountTypes.map((type) => (
-                    <button
-                      key={type}
-                      onClick={() =>
-                        setFormData({ ...formData, accountType: type })
-                      }
-                      className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
-                        formData.accountType === type
-                          ? "bg-secondary-600 text-white"
-                          : "bg-secondary-700/50 hover:bg-secondary-700"
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block mb-2 text-sm font-medium">
-                  3. Choose your platform
+                  2. Choose your platform
                 </label>
                 <div className="grid grid-cols-2 gap-4">
-                  {platforms.map((plt) => (
+                  {filteredPlatformData.map((plt) => (
                     <button
                       key={plt.name}
                       onClick={() =>
@@ -335,7 +318,7 @@ const UserNewChallenge = () => {
 
               <div>
                 <label className="block mb-2 text-sm font-medium">
-                  4. Choose account size
+                  3. Choose account size
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {accountOptions.map((option) => (
@@ -361,7 +344,7 @@ const UserNewChallenge = () => {
 
                 <div className=" my-5">
                   <label className="block mb-2 text-sm font-medium">
-                    5. Choose your Leverage
+                    4. Choose your Leverage
                   </label>
                   <div className="relative">
                     <select
@@ -418,10 +401,7 @@ const UserNewChallenge = () => {
                     </div>
                   ))}
                 </div>
-                <div className="text-sm text-gray-400 mt-4">
-                  *For a more detailed overview visit{" "}
-                  <span className="text-blue-400">here</span>
-                </div>
+
                 <div className="mt-6">
                   <span className="text-green-500/90 text-4xl font-bold">
                     $
@@ -481,6 +461,27 @@ const UserNewChallenge = () => {
                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
                   className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium">
+                  Country
+                </label>
+                <div className="relative">
+                  <select
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select country</option>
+                    {countriesArray.map((c) => (
+                      <option key={c.code} value={c.name}>
+                        {c?.name}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                </div>
               </div>
 
               <div>
@@ -559,7 +560,7 @@ const UserNewChallenge = () => {
                   Select Payment Method
                 </label>
                 <div className="grid grid-cols-3 gap-4">
-                  {paymentMethods.map((method) => (
+                  {filteredMethodsData.map((method) => (
                     <button
                       key={method.name}
                       onClick={() => setSelectedPayment(method.name)}
