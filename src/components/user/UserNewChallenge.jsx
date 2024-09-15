@@ -50,6 +50,8 @@ const UserNewChallenge = () => {
     phone: "",
   });
 
+  console.log("formm data----", formData);
+
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
   const { GetUserInfoAPI } = UseUserHook();
@@ -192,32 +194,48 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-  const leverageOptions = [
-    { id: 1, label: "1:100", value: "100" },
-    { id: 2, label: "1:200", value: "200" },
-    { id: 3, label: "1:300", value: "300" },
-    { id: 4, label: "1:400", value: "400" },
-    { id: 5, label: "1:500", value: "500" },
-    { id: 6, label: "1:600", value: "600" },
-    { id: 7, label: "1:700", value: "700" },
-    { id: 8, label: "1:800", value: "800" },
-    { id: 9, label: "1:900", value: "900" },
-    { id: 10, label: "1:1000", value: "1000" },
-  ];
-  const accountTypeOptions = [
-    { id: 1, label: "Bronze", value: "Bronze" },
-    { id: 2, label: "Silver", value: "Silver" },
-    { id: 3, label: "Gold", value: "Gold" },
-    { id: 4, label: "Daimond", value: "Daimond" },
-  ];
 
-  const accountOptions = [
-    { display: 5000, value: 49 },
-    { display: 10000, value: 99 },
-    { display: 25000, value: 149 },
-    { display: 50000, value: 249 },
-    { display: 100000, value: 449 },
+  const accountConfigurations = [
+    {
+      accountType: "basic",
+      leverage: [
+        { label: "1:100", value: "100" },
+        { label: "1:200", value: "200" },
+        { label: "1:300", value: "300" },
+      ],
+      accountSize: [
+        { deposit: "49", balance: "5000" },
+        { deposit: "99", balance: "10000" },
+      ],
+    },
+    {
+      accountType: "Standard",
+      leverage: [
+        { label: "1:400", value: "400" },
+        { label: "1:500", value: "500" },
+      ],
+      accountSize: [
+        { deposit: "149", balance: "20000" },
+        { deposit: "199", balance: "50000" },
+      ],
+    },
+    {
+      accountType: "Premium",
+      leverage: [
+        { label: "1:600", value: "400" },
+        { label: "1:500", value: "500" },
+      ],
+      accountSize: [
+        { deposit: "249", balance: "100000" },
+        { deposit: "299", balance: "200000" },
+      ],
+    },
   ];
+  const filterAccountConfig = accountConfigurations.find(
+    (value) => value.accountType === formData.accountType
+  );
+
+  console.log("filterAccountConfig----", filterAccountConfig);
 
   // use effect -----------
   useEffect(() => {
@@ -276,15 +294,15 @@ const UserNewChallenge = () => {
                 </label>
                 <div className="relative">
                   <select
-                    name="leverage"
-                    value={formData.leverage}
+                    name="accountType"
+                    value={formData.accountType}
                     onChange={handleInputChange}
                     className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select Type</option>
-                    {accountTypeOptions.map((value) => (
-                      <option key={value.id} value={value.value}>
-                        {value.label}
+                    {accountConfigurations.map((value, index) => (
+                      <option key={index} value={value?.accountType}>
+                        {value.accountType}
                       </option>
                     ))}
                   </select>
@@ -321,23 +339,23 @@ const UserNewChallenge = () => {
                   3. Choose account size
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {accountOptions.map((option) => (
+                  {filterAccountConfig?.accountSize?.map((option, index) => (
                     <button
-                      key={option.value}
+                      key={index}
                       onClick={() =>
                         setFormData({
                           ...formData,
-                          accountSize: option.value,
-                          accountBalance: option.display,
+                          accountSize: option.deposit,
+                          accountBalance: option.balance,
                         })
                       }
                       className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
-                        formData.accountSize === option.value
+                        formData.accountSize === option.deposit
                           ? "bg-secondary-700 text-white"
                           : "bg-secondary-800 hover:bg-secondary-900/60"
                       }`}
                     >
-                      {option.display}
+                      {option.balance}
                     </button>
                   ))}
                 </div>
@@ -354,8 +372,8 @@ const UserNewChallenge = () => {
                       className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">Select Leverage</option>
-                      {leverageOptions.map((value) => (
-                        <option key={value.id} value={value.value}>
+                      {filterAccountConfig?.leverage?.map((value, index) => (
+                        <option key={index} value={value.value}>
                           {value.label}
                         </option>
                       ))}
@@ -378,7 +396,6 @@ const UserNewChallenge = () => {
                   I am not a US resident or citizen.
                 </label>
               </div>
-
               <div className="mt-12 mb-8 flex flex-col items-center bg-secondary-800/80 p-6 rounded-lg">
                 <div className="flex items-center flex-col justify-between mb-4">
                   <div className="text-2xl text-center font-bold text-blue-400">
