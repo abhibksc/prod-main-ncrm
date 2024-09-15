@@ -26,8 +26,6 @@ export default function UserDashboard() {
 
   dispatch(setProfitNloss(totalNetProfit));
 
-  // console.log("calcilated net profit--", totalNetProfit);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,7 +33,7 @@ export default function UserDashboard() {
         await getAllTradeApi();
         await getUpdatePhase();
       } catch (error) {
-        console.error("Error in useEffect:", error);
+        console.error("Error in dashboard:", error);
       }
     };
 

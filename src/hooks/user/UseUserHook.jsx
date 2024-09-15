@@ -12,9 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 // -------------------
 export default function UseUserHook() {
   const currentAccount = useSelector((store) => store.user.currentAccount);
-  const isRefreshed = useSelector((store) => store.user.isRefreshed);
   const dispatch = useDispatch();
   const currentDate = new Date().toISOString().slice(0, 10);
+  const profitNloss = useSelector((store) => store.user.profitNloss);
+  const phase = useSelector((store) => store.user.phase);
+  const depositBalance = useSelector((store) => store.user.depositBalance);
+  const userInfo = useSelector((store) => store.user.userInfo);
 
   // close trade api --------------------
 
@@ -80,12 +83,6 @@ export default function UseUserHook() {
 
   // update phase ----------------
 
-  const profitNloss = useSelector((store) => store.user.profitNloss);
-  const phase = useSelector((store) => store.user.phase);
-  const depositBalance = useSelector((store) => store.user.depositBalance);
-  const userInfo = useSelector((store) => store.user.userInfo);
-
-  console.log("phase--", phase);
   const phaseLimitValues = [
     {
       phase: 1,
@@ -107,11 +104,10 @@ export default function UseUserHook() {
   const currentPhaseData = phaseLimitValues.find(
     (value) => value.phase === phase
   );
-  // console.log("currentPhase--", currentPhaseData);
 
   const phaseMinValueInNumber =
-    (currentPhaseData.min / 100) * depositBalance * -1;
-  const phaseMaxValueInNumber = (currentPhaseData.max / 100) * depositBalance;
+    (currentPhaseData?.min / 100) * depositBalance * -1;
+  const phaseMaxValueInNumber = (currentPhaseData?.max / 100) * depositBalance;
 
   console.log("calculated min values---", phaseMinValueInNumber);
   console.log("calculated max values---", phaseMaxValueInNumber);
@@ -123,7 +119,7 @@ export default function UseUserHook() {
   const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
 
   const getUpdatePhase = async () => {
-    if (testProftNloss >= phaseMaxValueInNumber && phase !== 3) {
+    if (profitNloss >= phaseMaxValueInNumber && phase !== 3) {
       console.log("max profit reached**********");
 
       try {
@@ -164,7 +160,7 @@ export default function UseUserHook() {
         console.log("error in update phase--", error);
       }
     }
-    if (testProftNloss <= phaseMinValueInNumber && phase !== 3) {
+    if (profitNloss <= phaseMinValueInNumber && phase !== 3) {
       console.log("max loss reached**********");
       try {
         await axios.get(
