@@ -21,6 +21,8 @@ import {
   setMasterPassword,
   setOpenTrades,
   setPhase,
+  setUserFormData,
+  setUserInfo,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
@@ -65,6 +67,7 @@ const UserNewChallenge = () => {
   const { getPlatforms, getPaymentMethod } = UserChallengeHook();
   const platformData = useSelector((store) => store.user.platforms);
   const paymentMethods = useSelector((store) => store.user.paymentMethods);
+  const [accountConfigurations, setAccountConfigurations] = useState([]);
 
   const filteredPlatformData = platformData.filter(
     (value) => value.status === "active"
@@ -73,9 +76,8 @@ const UserNewChallenge = () => {
     (value) => value.status === "active"
   );
 
-  console.log("all platforms data ---", filteredPlatformData);
+  // console.log("all platforms data ---", filteredPlatformData);
 
-  // ------
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -88,69 +90,15 @@ const UserNewChallenge = () => {
     }));
   };
 
-  // Add user api handler---------------
+  // api handler---------------
+  const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
 
   const apiTestHandler = async () => {
     const toastID = toast.loading("Please wait..");
     setCreatingLoading(true);
-    const randomNumber = Math.floor(
-      1000000 + Math.random() * 9000000
-    ).toString();
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
-
-        {
-          Manager_Index: 1,
-          MT5Account: randomNumber,
-          Master_Pwd: "",
-          Investor_Pwd: "",
-          Name: formData.firstName,
-          lName: formData.lastName,
-          Email: formData.email,
-          Phone: formData.phone,
-          Address: formData.address,
-          City: formData.city,
-          Country: formData.country,
-          State: formData.state,
-          Zip_Code: formData.zipCode,
-          Balance: parseInt(formData.accountBalance),
-          Leverage: parseInt(formData.leverage),
-          Group_Name: "SK GROUP\\M10\\CLASSIC",
-        }
-      );
-
-      const newChallengeDBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/new-challenge`,
-        {
-          managerIndex: 1,
-          MT5Account: randomNumber,
-          masterPass: "",
-          InvesterPass: "",
-          fName: formData.firstName,
-          lName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          country: formData.country,
-          State: formData.state,
-          zipCode: formData.zipCode,
-          balance: "0",
-          levrage: parseInt(formData.leverage),
-          groupName: "SK GROUP\\M10\\CLASSIC",
-        }
-      );
-
       setCreatingLoading(false);
-      // const depositApires = await axios.get(
-      //   `${
-      //     import.meta.env.VITE_API_END_POINT
-      //   }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
-      //     formData.accountBalance
-      //   }&Comment=TEST`
-      // );
 
       const depositDBres = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
@@ -161,22 +109,49 @@ const UserNewChallenge = () => {
           status: "pending",
           userId: "66de89ee0ab97583ae19ec9a",
           managerIndex: "1",
+          name: formData.firstName,
+          lName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          zipCode: formData.zipCode,
+          leverage: formData.leverage,
+          groupName: "SK GROUP\\M10\\CLASSIC",
+          accountType: formData.accountType,
         }
       );
 
+      const addChallengeDB = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
+        {
+          mt5Account: randomNumber,
+          type: formData.accountType,
+          deposit: formData.accountSize,
+          balance: "000",
+          accountSize: formData.accountSize,
+          phase: "1",
+          reason: "pending",
+          status: "inactive",
+          leverage: formData.leverage,
+          masterPassword: "000",
+          investarPassword: "000",
+        }
+      );
+
+      dispatch(setUserInfo(""));
+      dispatch(setUserFormData(formData));
       dispatch(setOpenTrades([]));
+
       dispatch(setCurrentAccount(randomNumber));
       dispatch(setDepositBalance(formData.accountBalance));
-      dispatch(setInvestorPassword(res.data.Investor_Pwd));
-      dispatch(setMasterPassword(res.data.Master_Pwd));
+      dispatch(setInvestorPassword("000"));
+      dispatch(setMasterPassword("000"));
       dispatch(setPhase(1));
-      GetUserInfoAPI();
-
-      // GetCloseTradeAPI();
+      await GetUserInfoAPI();
       toast.success("Created new challenge", { id: toastID });
-
-      console.log("add user api res---", res);
-      console.log("deposit DBdeposit res --", depositDBres);
       navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
@@ -194,48 +169,25 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-
-  const accountConfigurations = [
-    {
-      accountType: "basic",
-      leverage: [
-        { label: "1:100", value: "100" },
-        { label: "1:200", value: "200" },
-        { label: "1:300", value: "300" },
-      ],
-      accountSize: [
-        { deposit: "49", balance: "5000" },
-        { deposit: "99", balance: "10000" },
-      ],
-    },
-    {
-      accountType: "Standard",
-      leverage: [
-        { label: "1:400", value: "400" },
-        { label: "1:500", value: "500" },
-      ],
-      accountSize: [
-        { deposit: "149", balance: "20000" },
-        { deposit: "199", balance: "50000" },
-      ],
-    },
-    {
-      accountType: "Premium",
-      leverage: [
-        { label: "1:600", value: "400" },
-        { label: "1:500", value: "500" },
-      ],
-      accountSize: [
-        { deposit: "249", balance: "100000" },
-        { deposit: "299", balance: "200000" },
-      ],
-    },
-  ];
   const filterAccountConfig = accountConfigurations.find(
     (value) => value.accountType === formData.accountType
   );
 
-  console.log("filterAccountConfig----", filterAccountConfig);
+  // fetch Account Configurations --------------
+
+  const fetchAccountConfigurations = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/api/auth/get-account-types`
+      );
+
+      setAccountConfigurations(res.data.data);
+    } catch (error) {
+      console.log("Error fetching existing ac types data", error);
+    }
+  };
+
+  console.log("form dataaa----", formData);
 
   // use effect -----------
   useEffect(() => {
@@ -244,7 +196,8 @@ const UserNewChallenge = () => {
 
     getPlatforms();
     getPaymentMethod();
-  }, [formData.accountSize]);
+    fetchAccountConfigurations();
+  }, []);
 
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
@@ -383,7 +336,7 @@ const UserNewChallenge = () => {
                 </div>
               </div>
 
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   type="checkbox"
                   id="usResident"
@@ -395,7 +348,7 @@ const UserNewChallenge = () => {
                 <label htmlFor="usResident" className="text-sm">
                   I am not a US resident or citizen.
                 </label>
-              </div>
+              </div> */}
               <div className="mt-12 mb-8 flex flex-col items-center bg-secondary-800/80 p-6 rounded-lg">
                 <div className="flex items-center flex-col justify-between mb-4">
                   <div className="text-2xl text-center font-bold text-blue-400">

@@ -8,6 +8,8 @@ import {
   ListEndIcon,
   Menu,
   KeyRound,
+  ShieldBan,
+  BadgeCheck,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -84,12 +86,14 @@ UserSidebar;
 const UserHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
+  const userInfo = useSelector((store) => store.user.userInfo);
   const dispatch = useDispatch();
   console.log("isOpenSidebar", isSidebarOpen);
 
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
+  const balance = 0;
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
@@ -99,6 +103,22 @@ const UserHeader = () => {
             <Menu></Menu>
           </button>
           <h1 className="md:text-3xl text-xl  font-extrabold ">Forex-ZX</h1>
+        </div>
+        <div
+          className={` flex gap-1 font-bold rounded-full px-3 py-1 ${
+            userInfo.Balance > 0
+              ? " text-green-500 bg-green-500/10"
+              : "text-red-500 animate-pulse  bg-red-500/10"
+          } `}
+        >
+          <p>
+            {userInfo.Balance ? (
+              <BadgeCheck></BadgeCheck>
+            ) : (
+              <ShieldBan></ShieldBan>
+            )}
+          </p>
+          <p>{userInfo.Balance ? "Active" : "Inactive"}</p>
         </div>
         <div className="relative flex items-center">
           <span className="mr-2 text-green-500 flex items-center">

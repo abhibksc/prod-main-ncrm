@@ -165,18 +165,14 @@ export default function MethodConfiguration() {
                   />
                 </td>
                 <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    // onClick={() => deleteField(platform.id)}
-                    className="text-blue-600 mr-5 hover:text-blue-900 hover:scale-110 transition-all"
-                  >
-                    <Pencil size={20} />
-                  </button>
-                  <button
-                    onClick={() => deletePlatform(platform?._id)}
-                    className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                  <div className=" flex  justify-center ml-6">
+                    <button
+                      onClick={() => deletePlatform(platform?._id)}
+                      className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -195,7 +191,7 @@ export default function MethodConfiguration() {
           />
           <input
             type="text"
-            placeholder="Value"
+            placeholder="Details"
             value={newField.details}
             onChange={(e) =>
               setNewField({ ...newField, details: e.target.value })

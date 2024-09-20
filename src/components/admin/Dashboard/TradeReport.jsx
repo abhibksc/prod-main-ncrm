@@ -1,44 +1,74 @@
+import React from "react";
 import {
-  Users,
-  UserCheck,
-  Mail,
-  Smartphone,
-  Percent,
-  ShieldX,
-  Loader,
-  BadgeDollarSign,
   Scissors,
-  ArrowRightCircleIcon,
-  ArrowLeftCircle,
   ShoppingBasket,
+  ArrowLeftCircle,
+  ArrowRightCircle,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
-const MetricItem = ({ icon: Icon, label, value }) => (
-  <div className="flex items-center justify-between p-3 border-b last:border-b-0">
-    <div className="flex items-center">
-      <Icon className="w-5 h-4 mr-3 text-primary-200" />
-      <span className="text-xs font-medium text-white">{label}</span>
+const MetricHexagon = ({ icon: Icon, label, value, color }) => (
+  <motion.div
+    className="relative"
+    whileHover={{ scale: 1.05 }}
+    transition={{ type: "spring", stiffness: 300, damping: 10 }}
+  >
+    <svg width="120" height="140" viewBox="0 0 120 140">
+      <polygon
+        points="60,0 120,35 120,105 60,140 0,105 0,35"
+        fill={color}
+        opacity="0.1"
+      />
+      <polygon
+        points="60,0 120,35 120,105 60,140 0,105 0,35"
+        fill="none"
+        stroke={color}
+        strokeWidth="2"
+      />
+    </svg>
+    <div className="absolute inset-0 flex flex-col text-gray-200 items-center justify-center text-center p-2">
+      <Icon className="w-6 h-6 mb-1" color={color} />
+      <span className="text-xl font-bold" style={{ color }}>
+        {value}
+      </span>
+      <span className="text-xs font-medium mt-1">{label}</span>
     </div>
-    <span className="text-sm font-semibold text-white">{value}</span>
-  </div>
+  </motion.div>
 );
 
 const TradeReport = () => {
   const metrics = [
-    { icon: Scissors, label: "Total Withdrawn", value: 12 },
-    { icon: ShoppingBasket, label: "Total IB accounts", value: 9 },
-    { icon: ArrowLeftCircle, label: "Pending Withdraw", value: 4 },
-    { icon: ArrowRightCircleIcon, label: "Total MT5 Accounts", value: 24 },
+    { icon: Scissors, label: "Total Withdrawn", value: 12, color: "#14B8A6" }, // Teal
+    {
+      icon: ShoppingBasket,
+      label: "Total IB accounts",
+      value: 9,
+      color: "#6366F1",
+    }, // Indigo
+    {
+      icon: ArrowLeftCircle,
+      label: "Pending Withdraw",
+      value: 4,
+      color: "#F43F5E",
+    }, // Rose
+    {
+      icon: ArrowRightCircle,
+      label: "Total MT5 Accounts",
+      value: 24,
+      color: "#FBBF24",
+    }, // Amber
   ];
 
   return (
-    <div className=" bg-neutral-900 h-[15rem] text-white shadow rounded-md overflow-hidden max-w-lg">
-      <h2 className="text-xl font-semibold p-3 bg-primary-500">
-        Trade accounts and Withdrawal
-      </h2>
-      <div className="divide-y divide-primary-200">
+    <div className="bg-transparent text-white rounded-2xl shadow-md max-w-3xl mx-auto">
+      <div className="flex justify-between flex-col items-center">
+        <h2 className="text-lg text-center font-bold ">
+          Trade accounts and Withdrawal
+        </h2>
+      </div>
+      <div className="flex justify-between space-x-2 p-4">
         {metrics.map((metric, index) => (
-          <MetricItem key={index} {...metric} />
+          <MetricHexagon key={index} {...metric} />
         ))}
       </div>
     </div>

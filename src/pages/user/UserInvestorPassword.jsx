@@ -19,6 +19,7 @@ const UserInvesterPassword = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const currentAccount = useSelector((store) => store.user.currentAccount);
+  const userInfo = useSelector((store) => store.user.userInfo);
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -44,6 +45,13 @@ const UserInvesterPassword = () => {
           }/api/web/ChangeInvesterPassword?Manager_Index=1&Account=${currentAccount}&password=${
             passwords.confirm
           }`
+        );
+        const updateChallengeDB = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
+          {
+            mt5Account: userInfo.MT5Account,
+            investarPassword: passwords.confirm,
+          }
         );
         toast.success(res.data.MESSAGE, { id: toastId });
         dispatch(setInvestorPassword(passwords.confirm));

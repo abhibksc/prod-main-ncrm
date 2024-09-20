@@ -78,7 +78,7 @@ const WithdrawalStatus = () => {
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawals`
       );
       console.log("res all withdrawals---", res.data.data);
-      setDepositData(res.data.data);
+      setDepositData(res.data.data.reverse());
       setLoading(false);
     } catch (error) {
       setLoading(false);

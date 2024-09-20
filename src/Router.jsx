@@ -24,7 +24,6 @@ import UserOutlet from "./UserOutlet";
 import UserDashboard from "./pages/user/UserDashboard";
 import UserLogin from "./pages/user/UserLogin";
 import UserSignUp from "./pages/user/UserSignUp";
-import UserTradeAccount from "./pages/user/UserTradeAcccount";
 import UserReferal from "./pages/user/UserReferals";
 import UserWithdraw from "./pages/user/UserWithdraw";
 import UserPlatform from "./pages/user/UserPlatform";
@@ -37,10 +36,11 @@ import UserInvesterPassword from "./pages/user/UserInvestorPassword";
 import UserMasterPassword from "./pages/user/UserMasterPassword";
 import UserTransaction from "./pages/user/UserTransaction";
 import UserChallenges from "./pages/user/UserChallenges";
-import UserTradeHistory from "./pages/user/UserTradeHistory";
 import DevTest from "./pages/user/DevTest";
 import UserNewChallenge from "./components/user/UserNewChallenge";
 import AccountConfiguration from "./pages/admin/AccountConfiguration";
+import UserTradeHistory from "./pages/user/UserTradeHistory";
+import AccountChallenges from "./pages/admin/AccountChallenges";
 
 const Router = createBrowserRouter([
   {
@@ -131,6 +131,10 @@ const Router = createBrowserRouter([
         path: "/admin/account-configuration",
         element: <AccountConfiguration></AccountConfiguration>,
       },
+      {
+        path: "/admin/account-challenges",
+        element: <AccountChallenges></AccountChallenges>,
+      },
     ],
   },
   {
@@ -148,10 +152,6 @@ const Router = createBrowserRouter([
       {
         path: "/user/dashboard",
         element: <UserDashboard></UserDashboard>,
-      },
-      {
-        path: "/user/trade-account",
-        element: <UserTradeAccount></UserTradeAccount>,
       },
       {
         path: "/user/referrals",
@@ -202,12 +202,12 @@ const Router = createBrowserRouter([
         element: <UserTransaction></UserTransaction>,
       },
       {
-        path: "/user/challenges",
-        element: <UserChallenges></UserChallenges>,
-      },
-      {
         path: "/user/trade-history",
         element: <UserTradeHistory></UserTradeHistory>,
+      },
+      {
+        path: "/user/challenges",
+        element: <UserChallenges></UserChallenges>,
       },
     ],
   },

@@ -36,9 +36,8 @@ const UserSidebar2 = () => {
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
+    // { icon: Trophy, label: "Challenges", link: "/user/challenges" },
     { icon: Trophy, label: "Challenges", link: "/user/challenges" },
-    { icon: DollarSign, label: "Trade Accounts", link: "/user/trade-account" },
-    { icon: Users, label: "Referrals", link: "/user/referrals" },
     { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
     {
       icon: ArrowUpDown,
@@ -50,6 +49,8 @@ const UserSidebar2 = () => {
       label: "Trade History",
       link: "/user/trade-history",
     },
+    { icon: Users, label: "Referrals", link: "/user/referrals" },
+
     {
       icon: MessageSquare,
       label: "Support Ticket",

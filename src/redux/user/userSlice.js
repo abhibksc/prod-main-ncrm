@@ -17,6 +17,7 @@ const initialState = {
   loggedUser: "",
   platforms: [],
   paymentMethods: [],
+  userFormData: "",
 };
 
 export const UserSlice = createSlice({
@@ -71,6 +72,9 @@ export const UserSlice = createSlice({
     setPaymentMethods: (state, action) => {
       state.paymentMethods = action.payload;
     },
+    setUserFormData: (state, action) => {
+      state.userFormData = action.payload;
+    },
   },
 });
 
@@ -91,6 +95,7 @@ export const {
   setPhase,
   setPlatforms,
   setPaymentMethods,
+  setUserFormData,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

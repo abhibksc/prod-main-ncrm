@@ -34,8 +34,7 @@ const UserSidebar = () => {
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
-    { icon: Trophy, label: "Challenges", link: "/user/challenges" },
-    { icon: DollarSign, label: "Trade Accounts", link: "/user/trade-account" },
+    { icon: Trophy, label: "Challenges Account", link: "/user/trade-account" },
     { icon: Users, label: "Referrals", link: "/user/referrals" },
     { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
     {

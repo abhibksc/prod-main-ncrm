@@ -1,5 +1,5 @@
 import React from "react";
-import { BadgeDollarSign, Loader, ShieldX, Percent } from "lucide-react";
+import { Users, UserCheck, Mail, Smartphone } from "lucide-react";
 import { motion } from "framer-motion";
 
 const MetricHexagon = ({ icon: Icon, label, value, color }) => (
@@ -31,25 +31,25 @@ const MetricHexagon = ({ icon: Icon, label, value, color }) => (
   </motion.div>
 );
 
-const DepositWithdrawReport = () => {
+const CompactHexagonalMetricRow = () => {
   const metrics = [
+    { icon: Users, label: "Total Users", value: 5, color: "#3B82F6" },
+    { icon: UserCheck, label: "Active Users", value: 5, color: "#10B981" },
+    { icon: Mail, label: "Email Unverified", value: 0, color: "#F59E0B" },
     {
-      icon: BadgeDollarSign,
-      label: "Total Deposited",
-      value: 9,
-      color: "#8B5CF6", // Purple
+      icon: Smartphone,
+      label: "Mobile Unverified",
+      value: 0,
+      color: "#EF4444",
     },
-    { icon: Loader, label: "Pending Deposits", value: 4, color: "#06B6D4" }, // Cyan
-    { icon: ShieldX, label: "Rejected Deposits", value: 2, color: "#F97316" }, // Orange
-    { icon: Percent, label: "Withdrawal charge", value: 0, color: "#EC4899" }, // Pink
   ];
 
   return (
-    <div className=" bg-transparent text-white rounded-2xl shadow-md max-w-3xl mx-auto">
-      <div className="flex justify-between flex-col items-center">
-        <h2 className="text-lg text-center font-bold">Deposit & Withdrawal</h2>
+    <div className=" bg-transparent text-white  rounded-2xl shadow-md max-w-3xl mx-auto">
+      <div className="flex justify-between flex-col items-center mb-4">
+        <h2 className="text-lg text-center font-bold ">User Metrics</h2>
       </div>
-      <div className="flex justify-between space-x-2 p-4">
+      <div className="flex justify-between space-x-2">
         {metrics.map((metric, index) => (
           <MetricHexagon key={index} {...metric} />
         ))}
@@ -58,4 +58,4 @@ const DepositWithdrawReport = () => {
   );
 };
 
-export default DepositWithdrawReport;
+export default CompactHexagonalMetricRow;

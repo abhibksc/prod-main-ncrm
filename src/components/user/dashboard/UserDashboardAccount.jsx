@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const CredentialItem = ({
   icon: Icon,
@@ -50,6 +51,7 @@ const UserDashboardAccount = () => {
   const currentAccount = useSelector((store) => store.user.currentAccount);
   // console.log("userInfo-", userInfo);
 
+  useEffect(() => {}, [userInfo]);
   return (
     <motion.div
       className="bg-secondary-800/70 shadow-lg rounded-lg p-6 max-w-md"
@@ -71,9 +73,16 @@ const UserDashboardAccount = () => {
       </motion.h2>
       <div className="space-y-1">
         <CredentialItem
+          icon={CheckCircle}
+          label="Deposit Balance"
+          value="$49"
+          badgeColor="bg-indigo-100 text-indigo-800"
+          delay={0.45}
+        />
+        <CredentialItem
           icon={User}
           label="MT5 Account Id"
-          value={currentAccount}
+          value={userInfo?.MT5Account}
           badgeColor="bg-blue-100 text-blue-800"
           delay={0.15}
         />
@@ -110,20 +119,6 @@ const UserDashboardAccount = () => {
           badgeColor="bg-green-100 text-green-800"
           delay={0.4}
         />
-        <CredentialItem
-          icon={CheckCircle}
-          label="Account Status"
-          value="Passed"
-          badgeColor="bg-indigo-100 text-indigo-800"
-          delay={0.45}
-        />
-        {/* <CredentialItem
-          icon={Server}
-          label="Dropdown Status"
-          badgeColor="bg-pink-100 text-yellow-800"
-          value="In Progress"
-          delay={0.5}
-        /> */}
       </div>
     </motion.div>
   );

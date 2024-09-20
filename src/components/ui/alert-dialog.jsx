@@ -33,7 +33,7 @@ export const AlertDialog = ({ open, onOpenChange, children }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-primary-700 text-white shadow-xl rounded-2xl">
+              <Dialog.Panel className="w-full max-w-md p-6 overflow-hidden text-left align-middle transition-all transform bg-neutral-900/90 text-white shadow-xl rounded-2xl">
                 {children}
               </Dialog.Panel>
             </Transition.Child>
@@ -49,7 +49,7 @@ export const AlertDialogHeader = ({ children }) => (
   <div className="mb-4">{children}</div>
 );
 export const AlertDialogTitle = ({ children }) => (
-  <h2 className="text-lg font-bold">{children}</h2>
+  <h2 className="text-2xl mb-2 font-bold">{children}</h2>
 );
 export const AlertDialogDescription = ({ children }) => (
   <p className="text-sm">{children}</p>
@@ -59,7 +59,7 @@ export const AlertDialogFooter = ({ children }) => (
 );
 export const AlertDialogCancel = ({ children, onClick }) => (
   <button
-    className="px-4 py-2 text-black bg-gray-200 rounded-md hover:bg-gray-300"
+    className="px-4 py-2 text-black bg-gray-200 rounded-md hover:bg-gray-300/80"
     onClick={onClick}
   >
     {children}

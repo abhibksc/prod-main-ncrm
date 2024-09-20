@@ -51,7 +51,7 @@ export default function PlatformConfiguration() {
     console.log("new status--", newStatus);
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/auth/update-platform`,
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-platform`,
         {
           id: id,
           status: newStatus,
@@ -83,7 +83,9 @@ export default function PlatformConfiguration() {
     const toastId = toast.loading("Please wait...");
     try {
       const res = await axios.delete(
-        `http://localhost:5000/api/auth/delete-platform/?id=${id}`
+        `${
+          import.meta.env.VITE_BECKEND_END_POINT
+        }/api/auth/delete-platform/?id=${id}`
       );
       console.log("test delete--", res.data);
       if (res.data.status) {
@@ -103,7 +105,7 @@ export default function PlatformConfiguration() {
   const getAllPlatforms = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/auth/get-platforms`
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-platforms`
       );
       setPlatformData(res.data.data);
       console.log("getAllPlatforms", res.data);
@@ -142,7 +144,7 @@ export default function PlatformConfiguration() {
             </tr>
           </thead>
           <tbody className="bg-primary-700 divide-y text-white divide-gray-400">
-            {platformData.map((platform, index) => (
+            {platformData?.map((platform, index) => (
               <tr key={platform.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  text-white">
                   {index + 1}
@@ -162,18 +164,14 @@ export default function PlatformConfiguration() {
                   />
                 </td>
                 <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <button
-                    // onClick={() => deleteField(platform.id)}
-                    className="text-blue-600 mr-5 hover:text-blue-900 hover:scale-110 transition-all"
-                  >
-                    <Pencil size={20} />
-                  </button>
-                  <button
-                    onClick={() => deletePlatform(platform?._id)}
-                    className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                  <div className=" flex  justify-center ml-6">
+                    <button
+                      onClick={() => deletePlatform(platform?._id)}
+                      className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -19,6 +19,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useDispatch, useStore } from "react-redux";
+import { setCurrentAccount, setDepositBalance } from "@/redux/user/userSlice";
+import toast from "react-hot-toast";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -69,6 +72,10 @@ const DepositsStatus = () => {
   const [actionType, setActionType] = useState("");
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
+  const dispatch = useDispatch();
+
+  const formData = useStore((store) => store.user.userFormData);
+  const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
 
   const fetchApiData = async () => {
     setLoading(true);
@@ -77,7 +84,7 @@ const DepositsStatus = () => {
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
       );
       // console.log("res all deposits---", res.data.data);
-      setDepositData(res.data.data);
+      setDepositData(res.data.data.reverse());
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -123,8 +130,22 @@ const DepositsStatus = () => {
     setIsDialogOpen(true);
   };
   const handleConfirmAction = async (selectedDeposit) => {
+    const toastId = toast.loading("Plese wait..");
+    // console.log("selected deposits--", selectedDeposit);
     try {
       if (actionType === "approve") {
+        const addUserApi = await axios.post(
+          `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
+
+          {
+            Manager_Index: 1,
+            MT5Account: selectedDeposit.mt5Account,
+            Name: selectedDeposit.name + "" + selectedDeposit.lName,
+            Leverage: selectedDeposit.leverage,
+            Group_Name: "SK GROUP\\M10\\CLASSIC",
+          }
+        );
+
         const res = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
           {
@@ -141,6 +162,19 @@ const DepositsStatus = () => {
           }&Amount=${selectedDeposit.balance}&Comment=TEST`
         );
 
+        const updateChallengeDB = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
+          {
+            mt5Account: selectedDeposit.mt5Account,
+            status: "active",
+            balance: selectedDeposit.balance,
+          }
+        );
+        // dispatch(setCurrentAccount(randomNumber));
+        dispatch(setDepositBalance(formData.accountBalance));
+
+        console.log(" add user api---", addUserApi);
+        console.log(" add user api---", addUserApi);
         console.log("updated confirm data", res);
         console.log("deposit api res", depositApires);
 
@@ -152,8 +186,10 @@ const DepositsStatus = () => {
               }
             : deposit
         );
+
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+        toast.success("Account created", { id: toastId });
       } else if (actionType === "reject") {
         const res = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
@@ -174,9 +210,11 @@ const DepositsStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+        toast.success("Account rejected", { id: toastId });
       }
     } catch (error) {
       console.error("Error updating deposit status:", error);
+      toast.error("Something went wrong", { id: toastId });
     }
   };
   // total deposits ----------

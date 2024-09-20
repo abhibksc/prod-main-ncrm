@@ -96,8 +96,9 @@ const UserDashboardBalanceCards = () => {
     <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/60 shadow-md rounded-lg p-4 gap-4">
       <BalanceCard
         icon={Scale}
-        title="Deposit Balance"
-        value={`${depositBalance} $USD`}
+        title="Account Size"
+        value={`${userInfo?.Balance > 0 ? depositBalance : "000"} $USD`}
+        // value={`${depositBalance} $USD`}
         borderColor="#f97316"
         delay={0.2}
       />

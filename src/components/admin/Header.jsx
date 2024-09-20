@@ -75,7 +75,7 @@ const Header = () => {
                 Forex-ZX
               </h2>
             </a>
-            <form
+            {/* <form
               action="#"
               method="GET"
               className="hidden ml-20 lg:block lg:pl-2"
@@ -95,7 +95,7 @@ const Header = () => {
                   placeholder="Search here"
                 />
               </div>
-            </form>
+            </form> */}
           </div>
           <div className="flex items-center lg:order-2">
             <button
