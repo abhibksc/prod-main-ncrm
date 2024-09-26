@@ -80,10 +80,7 @@ const UserTradeAccounts = () => {
   return (
     <div className="container mx-auto p-6 ">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-white">Trade Accounts</h2>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-          New Trade Account
-        </button>
+        <h2 className="text-2xl font-bold text-white">Trade Accounts</h2>\
       </div>
       <div className="overflow-x-auto custom-scrollbar">
         <table className="min-w-full bg-primary-700 rounded-lg text-white">

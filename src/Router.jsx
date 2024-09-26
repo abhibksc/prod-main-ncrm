@@ -41,7 +41,7 @@ import UserNewChallenge from "./components/user/UserNewChallenge";
 import AccountConfiguration from "./pages/admin/AccountConfiguration";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
 import AccountChallenges from "./pages/admin/AccountChallenges";
-
+import UserVerify from "./pages/user/UserVerify";
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -215,6 +215,11 @@ const Router = createBrowserRouter([
     path: "/user/signup",
     element: <UserSignUp></UserSignUp>,
   },
+  {
+    path: "/user/verify/:id/:token",
+    element: <UserVerify></UserVerify>,
+  },
+
   {
     path: "/user/login",
     element: <UserLogin></UserLogin>,

@@ -12,7 +12,7 @@ import CompactHexagonalMetricRow from "@/components/admin/Dashboard/UserMatric2"
 
 export default function Dashboard() {
   return (
-    <div className=" container mx-auto p-5">
+    <div className=" container mx-auto">
       <h2 className=" text-neutral-300  text-3xl px-10 py-5 font-bold">
         Deshboard
       </h2>
@@ -22,10 +22,10 @@ export default function Dashboard() {
         <DepositWithdrawReport></DepositWithdrawReport>
         <InvestmentReport></InvestmentReport>
         <TradeReport></TradeReport>
-        <DepositWithdrawGraph></DepositWithdrawGraph>
-        <TransitionReportGraph></TransitionReportGraph>
+        {/* <DepositWithdrawGraph></DepositWithdrawGraph> */}
+        {/* <TransitionReportGraph></TransitionReportGraph> */}
       </div>
-      <div className=" px-5 grid grid-cols-3 my-20 gap-2">
+      <div className=" px-5 grid grid-cols-3 my-10 gap-2">
         <BrowserGraph></BrowserGraph>
         <OsGraph></OsGraph>
         <CountryGraph></CountryGraph>

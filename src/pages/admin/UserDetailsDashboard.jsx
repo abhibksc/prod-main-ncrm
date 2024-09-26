@@ -1,17 +1,10 @@
-import {
-  Wallet,
-  CreditCard,
-  ArrowLeftRight,
-  Users,
-  Ban,
-  Key,
-  LogIn,
-  TreePine,
-} from "lucide-react";
+import { Wallet, CreditCard, ArrowLeftRight, Users } from "lucide-react";
 import UserInfoForm from "@/components/admin/user-detail/UserForm";
 import { useParams } from "react-router-dom";
 import UserTradeAccounts from "@/components/admin/user-detail/UserTradeAccounts";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -31,7 +24,7 @@ const cardVariants = {
 const StatCard = ({ icon, amount, label, bgColor }) => (
   <motion.div
     variants={cardVariants}
-    className={`p-4 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl ${bgColor} text-white`}
+    className={`p-4 px-10 hover:px-5 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl ${bgColor} text-white`}
     style={{
       backgroundImage:
         "url('https://png.pngtree.com/background/20230109/original/pngtree-white-abstract-carbon-fiber-texture-background-picture-image_1996167.jpg')", // More visible pattern
@@ -55,19 +48,23 @@ const StatCard = ({ icon, amount, label, bgColor }) => (
   </motion.div>
 );
 
-const ActionButton = ({ icon, label, bgColor }) => (
-  <motion.button
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-    className={`flex items-center justify-center py-2 px-4 rounded-lg text-white ${bgColor} transition-all duration-300 hover:shadow-md hover:bg-opacity-75`}
-  >
-    {icon}
-    <span className="ml-2">{label}</span>
-  </motion.button>
-);
-
 const UserDetailDashboard = ({ username }) => {
   const { id } = useParams();
+  console.log("id---", id);
+  const [userData, setUserData] = useState();
+
+  const fetchUserData = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
+      );
+      setUserData(res.data.data);
+      console.log("user res--", res.data);
+    } catch (error) {
+      console.log("error in fetch user data", error);
+    }
+  };
+
   const stats = [
     {
       icon: <Wallet size={24} />,
@@ -91,7 +88,7 @@ const UserDetailDashboard = ({ username }) => {
       icon: <ArrowLeftRight size={24} />,
       amount: "4",
       label: "Transactions",
-      bgColor: "bg-blue-800",
+      bgColor: "bg-purple-900",
     },
     {
       icon: <Wallet size={24} />,
@@ -103,49 +100,15 @@ const UserDetailDashboard = ({ username }) => {
       icon: <Users size={24} />,
       amount: "$0.00",
       label: "Total Referral Commission",
-      bgColor: "bg-pink-600/80",
-    },
-    {
-      icon: <CreditCard size={24} />,
-      amount: "$0.00",
-      label: "Total Binary Commission",
       bgColor: "bg-yellow-900/80",
     },
-    {
-      icon: <ArrowLeftRight size={24} />,
-      amount: "0",
-      label: "Total BV",
-      bgColor: "bg-indigo-600",
-    },
   ];
 
-  const actions = [
-    { icon: <Wallet size={18} />, label: "Balance +", bgColor: "bg-green-500" },
-    { icon: <Wallet size={18} />, label: "Balance -", bgColor: "bg-red-500" },
-    { icon: <LogIn size={18} />, label: "Logins", bgColor: "bg-blue-600" },
+  // useEffect ----------------------
 
-    {
-      icon: <LogIn size={18} />,
-      label: "Login as User",
-      bgColor: "bg-green-600",
-    },
-    {
-      icon: <TreePine size={18} />,
-      label: "User Tree",
-      bgColor: "bg-green-600",
-    },
-    {
-      label: "Notifications",
-      bgColor: "bg-gray-500",
-    },
-
-    { icon: <Ban size={18} />, label: "Ban User", bgColor: "bg-red-500" },
-    {
-      icon: <Key size={18} />,
-      label: "Change Password",
-      bgColor: "bg-teal-700",
-    },
-  ];
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <div className="container mx-auto px-10 py-5 rounded-lg bg-primary-700 shadow-lg">
@@ -154,18 +117,13 @@ const UserDetailDashboard = ({ username }) => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
       >
         {stats.map((stat, index) => (
           <StatCard key={index} {...stat} />
         ))}
       </motion.div>
-      <div className="grid mx-auto whitespace-nowrap grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
-        {actions.map((action, index) => (
-          <ActionButton className="px-3" key={index} {...action} />
-        ))}
-      </div>
-      <UserInfoForm></UserInfoForm>
+      <UserInfoForm userData={userData}></UserInfoForm>
       <UserTradeAccounts></UserTradeAccounts>
     </div>
   );

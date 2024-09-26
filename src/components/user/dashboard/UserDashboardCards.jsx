@@ -112,7 +112,7 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Profit/Loss"
-        value={`${profitNloss.toFixed(2)} USD`}
+        value={`${profitNloss} USD`}
         borderColor="#facc15"
         delay={0.4}
         isProfit={isPositive}

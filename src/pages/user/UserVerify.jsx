@@ -1,0 +1,202 @@
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { CheckCircle, Mail, XCircle } from "lucide-react";
+
+const UserVerify = () => {
+  const { id, token } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [verificationStatus, setVerificationStatus] = useState(null);
+
+  //   enitial UI --------------
+
+  const [cooldownTime, setCooldownTime] = useState(5);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
+  useEffect(() => {
+    let timer;
+    if (cooldownTime > 0 && isButtonDisabled) {
+      timer = setTimeout(() => setCooldownTime(cooldownTime - 1), 1000);
+    } else if (cooldownTime === 0 && isButtonDisabled) {
+      setIsButtonDisabled(false);
+    }
+    return () => clearTimeout(timer);
+  }, [cooldownTime, isButtonDisabled]);
+
+  const resendHandler = async () => {
+    const toastId = toast.loading("Plese wait..");
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
+      );
+      await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/send-link`,
+        {
+          userId: id,
+          email: res.data.data.email,
+        }
+      );
+      setCooldownTime(60);
+      setIsButtonDisabled(true);
+      toast.success("Varification link sent", { id: toastId });
+      console.log("res user data--", res.data.data);
+    } catch (error) {
+      console.log("error in fetching user--", error);
+      toast.error("Something went wrong", { id: toastId });
+    }
+  };
+
+  useEffect(() => {
+    const verifyEmail = async () => {
+      try {
+        const res = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/verify-link`,
+          { userId: id, token: token }
+        );
+        console.log("res verify", res.data);
+        setVerificationStatus("success");
+        setTimeout(() => navigate("/user/login"), 5000); // Redirect to login after 5 seconds
+      } catch (error) {
+        setVerificationStatus("error");
+        console.log("error while verify--", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (token !== "000") {
+      verifyEmail();
+    }
+  }, [id, token, navigate]);
+  if (token === "000") {
+    return (
+      <div className="flex items-center px-5 justify-center min-h-screen bg-gray-900">
+        <Toaster></Toaster>
+        <div className="max-w-md w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
+          <div className="bg-secondary-700 p-4 flex items-center justify-center">
+            <Mail className="text-gray-100 w-12 h-12" />
+          </div>
+          <div className="p-6">
+            <h2 className="text-2xl font-semibold text-gray-100 mb-4">
+              Verify Your Email
+            </h2>
+            <p className="text-gray-300 mb-6">
+              We've sent a verification link to your email address. Please check
+              your inbox and click the link to activate your account.
+            </p>
+            <div className="bg-secondary-800/40 border-l-4 border-secondary-500 p-4 mb-6">
+              <p className="text-indigo-200 font-medium">
+                <CheckCircle className="inline-block w-5 h-5 mr-2" />
+                Link sent successfully!
+              </p>
+            </div>
+            <div className="space-y-4">
+              <button
+                className={`block w-full text-center ${
+                  isButtonDisabled
+                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    : "bg-secondary-700 hover:bg-secondary-700/60 text-gray-100"
+                } font-semibold py-2 px-4 rounded transition duration-300 ease-in-out`}
+                onClick={resendHandler}
+                disabled={isButtonDisabled}
+              >
+                {isButtonDisabled
+                  ? `Resend in ${cooldownTime}s`
+                  : "Resend Verification Email"}
+              </button>
+            </div>
+          </div>
+          <div className=" bg-gray-900/40 px-6 py-4">
+            <p className="text-sm text-gray-300">
+              Didn't receive the email? Check your spam folder or{" "}
+              <a href="#" className="text-blue-400 hover:underline">
+                contact support
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <div className="flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
+          <h2 className="mt-4 text-2xl text-white font-semibold">
+            Verifying your email...
+          </h2>
+          <p className="mt-2 text-gray-300">This may take a few moments.</p>
+        </div>
+      );
+    }
+
+    if (verificationStatus === "success") {
+      return (
+        <div className="bg-green-100 border-l-4 border-green-500 p-4 sm:p-6 md:p-8 w-full max-w-2xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center">
+            <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-4">
+              <CheckCircle className="h-6 w-6 text-green-500" />
+            </div>
+            <div className="flex-grow">
+              <p className="text-sm sm:text-base font-medium text-green-800">
+                Success! Your email has been successfully verified.
+              </p>
+              <p className="mt-2 text-sm sm:text-base text-green-700">
+                You will be redirected to the login page in 5 seconds.
+              </p>
+              <button
+                onClick={() => navigate("/login")}
+                className="mt-4 w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out text-sm sm:text-base"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-red-100 border-l-4 border-red-500 p-4 sm:p-6 md:p-8 w-full max-w-2xl mx-auto">
+        <Toaster />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center">
+          <div className="flex-shrink-0 mb-4 sm:mb-0 sm:mr-4">
+            <XCircle className="h-6 w-6 text-red-500" />
+          </div>
+          <div className="flex-grow">
+            <p className="text-sm sm:text-base font-medium text-red-800">
+              Verification Failed
+            </p>
+            <p className="mt-2 text-sm sm:text-base text-red-700">
+              The verification link may be invalid or expired. Please try again
+              or contact support.
+            </p>
+            <button
+              onClick={resendHandler}
+              className="mt-4 w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out text-sm sm:text-base"
+            >
+              Resend Verification Email
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center px-5 bg-secondary-900">
+      <div className="max-w-md w-full p-8 bg-secondary-800/40 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-center mb-6 text-white">
+          Email Verification
+        </h1>
+        {renderContent()}
+      </div>
+    </div>
+  );
+};
+
+export default UserVerify;

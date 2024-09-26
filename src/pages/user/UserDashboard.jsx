@@ -15,6 +15,8 @@ export default function UserDashboard() {
   const { GetUserInfoAPI, getAllTradeApi, getUpdatePhase } = UseUserHook();
   const openTrades = useSelector((store) => store.user.openTrades);
   const closeTrades = useSelector((store) => store.user.closeTrades);
+  const depositBalance = useSelector((store) => store.user.depositBalance);
+  const availableBalance = useSelector((store) => store.user.availableBalance);
   const dispatch = useDispatch();
 
   const allTrades = [...openTrades, ...closeTrades];
@@ -24,7 +26,7 @@ export default function UserDashboard() {
     0
   );
 
-  dispatch(setProfitNloss(totalNetProfit));
+  dispatch(setProfitNloss(availableBalance - depositBalance));
 
   useEffect(() => {
     const fetchData = async () => {

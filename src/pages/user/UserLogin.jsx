@@ -5,7 +5,8 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setLoggedUser } from "../../redux/user/userSlice";
-import { Mail, Lock, LogIn } from "lucide-react";
+import { Mail, Lock, LogIn, Rss } from "lucide-react";
+import Cookies from "js-cookie";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -15,16 +16,29 @@ const UserLogin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Please wait...");
+    const toastId = toast.loading("Please wait..");
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
         { email, password }
       );
-      toast.success("Login successful!", { id: toastId });
-      dispatch(setLoggedUser(res.data.user));
-      navigate("/user/dashboard");
+
+      if (!res.data.status) {
+        toast.error(res.data.message, { id: toastId });
+      } else {
+        toast.success("Login successful!", { id: toastId });
+        // Cookies.set("userInfo", JSON.stringify(res.data.user), {
+        //   expires: 7,
+        //   secure: true,
+        //   sameSite: "Strict",
+        // });
+
+        dispatch(setLoggedUser(res.data.user));
+        navigate("/user/dashboard");
+        console.log("login res", res.data);
+      }
     } catch (error) {
+      console.log("error in login", error);
       toast.error(error.response?.data?.message || "Login failed!", {
         id: toastId,
       });

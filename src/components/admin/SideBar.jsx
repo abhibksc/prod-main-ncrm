@@ -75,23 +75,19 @@ const Sidebar = () => {
       label: "Manage Users",
       icon: <Users />,
       nested: [
-        { label: "Active Users", route: "/admin/manage-users/active-users" },
-        { label: "Banned Users", route: "/admin/manage-users/banned-users" },
+        {
+          label: "Email Verified",
+          route: "/admin/manage-users/email-verified",
+        },
         {
           label: "Email Unverified",
           route: "/admin/manage-users/email-unverified",
         },
-        {
-          label: "Mobile Unverified",
-          route: "/admin/manage-users/mobile-unverified",
-        },
+        { label: "KYC Verified", route: "/admin/manage-users/kyc-verified" },
         {
           label: "KYC Unverified",
           route: "/admin/manage-users/kyc-unverified",
         },
-        { label: "KYC Pending", route: "/admin/manage-users/kyc-pending" },
-        { label: "With Balance", route: "/admin/manage-users/with-balance" },
-        { label: "Paid Balance", route: "/admin/manage-users/paid-balance" },
         { label: "All Users", route: "/admin/manage-users/all-users" },
       ],
     },

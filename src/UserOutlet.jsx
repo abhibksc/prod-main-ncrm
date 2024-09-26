@@ -1,11 +1,26 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import UserSidebar from "./components/user/UserSidebar";
 import UserHeader from "./components/user/UserHeader";
 import { Toaster } from "react-hot-toast";
 import UserSidebar2 from "./components/user/UserSidebar2";
+import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export default function UserOutlet() {
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const userInfoCookie = Cookies.get("userInfo");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loggedUser) {
+      navigate("/user/login");
+    }
+  }, [loggedUser, userInfoCookie, navigate]);
+
+  if (!loggedUser) {
+    return null;
+  }
   return (
     <div className="text-white h-screen overflow-hidden">
       <Toaster></Toaster>

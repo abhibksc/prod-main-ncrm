@@ -52,7 +52,7 @@ export default function UseUserHook() {
   const phaseMaxValueInNumber = (currentPhaseData?.max / 100) * depositBalance;
 
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  // const testProftNloss = -2550;
+  const testProftNloss = -50;
 
   console.log("calculated min values---", phaseMinValueInNumber);
   console.log("calculated max values---", phaseMaxValueInNumber);
@@ -140,7 +140,7 @@ export default function UseUserHook() {
 
   const getUpdatePhase = async () => {
     // console.log("form data@@@@@@@@@@@@@@@@@", userFormData);
-    if (profitNloss >= phaseMaxValueInNumber && phase !== 3) {
+    if (testProftNloss >= phaseMaxValueInNumber && phase !== 3) {
       console.log("max profit reached**********");
 
       try {
@@ -214,7 +214,7 @@ export default function UseUserHook() {
         console.log("error in update phase--", error);
       }
     }
-    if (profitNloss <= phaseMinValueInNumber && phase !== 3) {
+    if (testProftNloss <= phaseMinValueInNumber && phase !== 3) {
       console.log("max loss reached**********");
       try {
         await axios.get(
