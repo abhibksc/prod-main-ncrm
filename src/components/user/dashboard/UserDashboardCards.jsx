@@ -114,7 +114,7 @@ const UserDashboardBalanceCards = () => {
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Profit/Loss"
         value={`${
-          profitNloss && availableBalance ? profitNloss.toFixed(2) : "0"
+          profitNloss && availableBalance > 1 ? profitNloss.toFixed(2) : "0"
         } USD`}
         borderColor="#facc15"
         delay={0.4}
