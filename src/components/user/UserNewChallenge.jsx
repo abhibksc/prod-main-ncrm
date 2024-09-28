@@ -202,7 +202,7 @@ const UserNewChallenge = () => {
     }
   };
 
-  console.log("form dataaa----", formData);
+  console.log("account configg----", accountConfigurations);
 
   // use effect -----------
   useEffect(() => {
