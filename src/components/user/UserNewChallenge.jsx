@@ -193,7 +193,7 @@ const UserNewChallenge = () => {
   const fetchAccountConfigurations = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/auth/get-account-types`
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-account-types`
       );
 
       setAccountConfigurations(res.data.data);

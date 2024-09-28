@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 
 export default function UserChallengeHook() {
   const dispatch = useDispatch();
+
   const getPlatforms = async () => {
     try {
       const res = await axios.get(
@@ -15,6 +16,7 @@ export default function UserChallengeHook() {
       console.log("error in get platforms", error);
     }
   };
+
   const getPaymentMethod = async () => {
     try {
       const res = await axios.get(
