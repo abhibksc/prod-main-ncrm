@@ -18,6 +18,7 @@ const UserWithdraw = () => {
   const profitNloss = useSelector((store) => store.user.profitNloss);
 
   const userInfo = useSelector((store) => store.user.userInfo);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const { GetUserInfoAPI } = UseUserHook();
 
   const withdrawalHandler = async (e) => {
@@ -34,7 +35,7 @@ const UserWithdraw = () => {
             amount: amount,
             mt5Account: userInfo.MT5Account,
             status: "pending",
-            userId: "66de89ee0ab97583ae19ec9a",
+            userId: loggedUser._id,
             managerIndex: 1,
             pNl: "40",
           }
@@ -85,7 +86,7 @@ const UserWithdraw = () => {
                   : "text-red-500 bg-red-400/20"
               }   mt-1 rounded-full py-1  font-bold`}
             >
-              $ {profitNloss.toFixed(2)}
+              $ {profitNloss ? profitNloss.toFixed(2) : "0"}
             </p>
           </div>
         </div>

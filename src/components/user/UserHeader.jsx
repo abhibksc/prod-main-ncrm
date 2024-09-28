@@ -13,7 +13,25 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { handleToggleSidebar, setLoggedUser } from "@/redux/user/userSlice";
+import {
+  handleToggleSidebar,
+  setAvailableBalance,
+  setCloseTrades,
+  setCurrentAccount,
+  setCurrentUser,
+  setDepositBalance,
+  setInvestorPassword,
+  setLoggedUser,
+  setMasterPassword,
+  setOpenTrades,
+  setPaymentMethods,
+  setPhase,
+  setPlatforms,
+  setProfitNloss,
+  setSignUpData,
+  setUserFormData,
+  setUserInfo,
+} from "@/redux/user/userSlice";
 import UserSidebar from "./UserSidebar";
 import Hamburger from "../hamburgar/Hamburgar";
 
@@ -24,6 +42,21 @@ const UserDropdown = ({ isOpen, onClose }) => {
 
   const logoutHandler = () => {
     dispatch(setLoggedUser(""));
+    dispatch(setCurrentAccount(""));
+    dispatch(setCurrentUser(""));
+    dispatch(setDepositBalance(""));
+    dispatch(setAvailableBalance(""));
+    dispatch(setUserInfo(""));
+    dispatch(setLoggedUser(""));
+    dispatch(setInvestorPassword(""));
+    dispatch(setMasterPassword(""));
+    dispatch(setOpenTrades([]));
+    dispatch(setCloseTrades([]));
+    dispatch(setPlatforms([]));
+    dispatch(setPaymentMethods([]));
+    dispatch(setUserFormData(""));
+    dispatch(setSignUpData(""));
+    dispatch(setProfitNloss(""));
     navigate("/user/login");
   };
 
@@ -88,12 +121,13 @@ const UserHeader = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
   const userInfo = useSelector((store) => store.user.userInfo);
   const dispatch = useDispatch();
-  console.log("isOpenSidebar", isSidebarOpen);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+
+  // console.log("isOpenSidebar", isSidebarOpen);
 
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
-  const balance = 0;
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
@@ -106,27 +140,28 @@ const UserHeader = () => {
         </div>
         <div
           className={` flex gap-1 font-bold rounded-full px-3 py-1 ${
-            userInfo.Balance > 0
+            loggedUser.phase > 0
               ? " text-green-500 bg-green-500/10"
               : "text-red-500 animate-pulse  bg-red-500/10"
           } `}
         >
           <p>
-            {userInfo.Balance ? (
+            {loggedUser.phase > 0 ? (
               <BadgeCheck></BadgeCheck>
             ) : (
               <ShieldBan></ShieldBan>
             )}
           </p>
-          <p>{userInfo.Balance ? "Active" : "Inactive"}</p>
+          <p>{loggedUser.phase > 0 ? "Active" : "Inactive"}</p>
         </div>
-        <div className="relative flex items-center">
-          <span className="mr-2 text-green-500 flex items-center">
-            <CheckCircle className="w-4 h-4 mr-1" />
-            <span className="text-xs text-green-500 font-semibold">
-              Verified
-            </span>
-          </span>
+        <div className="relative flex items-center gap-2">
+          <div className=" flex gap-1 items-center">
+            <CheckCircle className=" w-4 mt-1 text-green-500  " />
+
+            <p className="text-sm text-green-500  font-semibold">
+              {loggedUser.firstName}
+            </p>
+          </div>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary-700 hover:bg-secondary-600 focus:outline-none transition-colors duration-300"

@@ -21,12 +21,12 @@ import {
   setMasterPassword,
   setOpenTrades,
   setPhase,
+  setProfitNloss,
   setUserFormData,
   setUserInfo,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
-import { countries } from "countries-list";
 import { getData } from "country-list";
 import UserChallengeHook from "@/hooks/user/UserChallengeHook";
 
@@ -65,8 +65,10 @@ const UserNewChallenge = () => {
   const navigate = useNavigate();
   const countriesArray = getData();
   const { getPlatforms, getPaymentMethod } = UserChallengeHook();
+  const { getUpdateLoggedUser } = UseUserHook();
   const platformData = useSelector((store) => store.user.platforms);
   const paymentMethods = useSelector((store) => store.user.paymentMethods);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const [accountConfigurations, setAccountConfigurations] = useState([]);
 
   const filteredPlatformData = platformData.filter(
@@ -107,7 +109,7 @@ const UserNewChallenge = () => {
           balance: formData.accountBalance,
           mt5Account: randomNumber,
           status: "pending",
-          userId: "66de89ee0ab97583ae19ec9a",
+          userId: loggedUser._id,
           managerIndex: "1",
           name: formData.firstName,
           lName: formData.lastName,
@@ -138,18 +140,31 @@ const UserNewChallenge = () => {
           leverage: formData.leverage,
           masterPassword: "000",
           investarPassword: "000",
+          userId: loggedUser._id,
+        }
+      );
+      const updateUser = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+        {
+          id: loggedUser._id,
+          mt5Account: "000",
+          depositBalance: "000",
+          accountSize: "000",
+          masterPassword: "000",
+          investorPassword: "000",
+          phase: 0,
         }
       );
 
-      dispatch(setUserInfo(""));
-      dispatch(setUserFormData(formData));
-      dispatch(setOpenTrades([]));
-
-      dispatch(setCurrentAccount(randomNumber));
-      dispatch(setDepositBalance(formData.accountBalance));
       dispatch(setInvestorPassword("000"));
+      dispatch(setProfitNloss(""));
       dispatch(setMasterPassword("000"));
-      dispatch(setPhase(1));
+      dispatch(setOpenTrades([]));
+      dispatch(setCurrentAccount(randomNumber));
+      await getUpdateLoggedUser();
+
+      // dispatch(setDepositBalance(formData.accountBalance));
+      // dispatch(setPhase(1));
       await GetUserInfoAPI();
       toast.success("Created new challenge", { id: toastID });
       navigate("/user/dashboard");

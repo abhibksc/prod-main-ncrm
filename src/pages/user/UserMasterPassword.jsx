@@ -18,8 +18,9 @@ const UserMasterPassword = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const currentAccount = useSelector((store) => store.user.currentAccount);
-  const userInfo = useSelector((store) => store.user.userInfo);
+  // const currentAccount = useSelector((store) => store.user.currentAccount);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  // const userInfo = useSelector((store) => store.user.userInfo);
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -43,22 +44,29 @@ const UserMasterPassword = () => {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/ChangeMasterPassword?Manager_Index=1&Account=${currentAccount}&password=${
-            passwords.confirm
-          }`
+          }/api/web/ChangeMasterPassword?Manager_Index=1&Account=${
+            loggedUser.mt5Account
+          }&password=${passwords.confirm}`
         );
 
         const updateChallengeDB = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
           {
-            mt5Account: userInfo.MT5Account,
+            mt5Account: loggedUser.mt5Account,
+            masterPassword: passwords.confirm,
+          }
+        );
+        const updateUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: loggedUser._id,
             masterPassword: passwords.confirm,
           }
         );
 
         console.log("update master password ---", updateChallengeDB);
         toast.success(res.data.MESSAGE, { id: toastId });
-        dispatch(setMasterPassword(passwords.confirm));
+        // dispatch(setMasterPassword(passwords.confirm));
         navigate("/user/dashboard");
       } catch (error) {
         toast.error("Please try again", { id: toastId });

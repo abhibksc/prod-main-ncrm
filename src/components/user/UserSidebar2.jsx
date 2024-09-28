@@ -38,7 +38,6 @@ const UserSidebar2 = () => {
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
     // { icon: Trophy, label: "Challenges", link: "/user/challenges" },
     { icon: Trophy, label: "Challenges", link: "/user/challenges" },
-    { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
     {
       icon: ArrowUpDown,
       label: "Transaction History",
@@ -49,6 +48,8 @@ const UserSidebar2 = () => {
       label: "Trade History",
       link: "/user/trade-history",
     },
+    { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
+
     { icon: Users, label: "Referrals", link: "/user/referrals" },
 
     {

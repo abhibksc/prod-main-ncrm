@@ -86,9 +86,11 @@ const BalanceCard = ({
 
 const UserDashboardBalanceCards = () => {
   const depositBalance = useSelector((store) => store.user.depositBalance);
+  const availableBalance = useSelector((store) => store.user.availableBalance);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const userInfo = useSelector((store) => store.user.userInfo);
   const phase = useSelector((store) => store.user.phase);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   const isPositive = parseFloat(profitNloss) >= 0;
 
@@ -97,22 +99,23 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={Scale}
         title="Account Size"
-        value={`${userInfo?.Balance > 0 ? depositBalance : "000"} $USD`}
-        // value={`${depositBalance} $USD`}
+        value={`${loggedUser.accountSize} $USD`}
         borderColor="#f97316"
         delay={0.2}
       />
       <BalanceCard
         icon={Activity}
         title="Available Balance"
-        value={`${userInfo.Balance} $USD`}
+        value={`${loggedUser.phase === 0 ? "000" : availableBalance} $USD`}
         borderColor="#3b82f6"
         delay={0.3}
       />
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Profit/Loss"
-        value={`${profitNloss} USD`}
+        value={`${
+          profitNloss && availableBalance ? profitNloss.toFixed(2) : "0"
+        } USD`}
         borderColor="#facc15"
         delay={0.4}
         isProfit={isPositive}
@@ -120,7 +123,7 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={CircleDot}
         title="Phase"
-        value={phase === 3 ? "3 & Final" : phase}
+        value={loggedUser.phase === 3 ? "3 & Final" : Number(loggedUser.phase)}
         borderColor="#a855f7"
         delay={0.5}
         isPhase={true}

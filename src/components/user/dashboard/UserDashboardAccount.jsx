@@ -49,6 +49,8 @@ const UserDashboardAccount = () => {
   const masterPassword = useSelector((store) => store.user.masterPassword);
   const investorPassword = useSelector((store) => store.user.investorPassword);
   const currentAccount = useSelector((store) => store.user.currentAccount);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+
   // console.log("userInfo-", userInfo);
 
   useEffect(() => {}, [userInfo]);
@@ -75,14 +77,14 @@ const UserDashboardAccount = () => {
         <CredentialItem
           icon={CheckCircle}
           label="Deposit Balance"
-          value="$49"
+          value={"$" + loggedUser.depositBalance}
           badgeColor="bg-indigo-100 text-indigo-800"
           delay={0.45}
         />
         <CredentialItem
           icon={User}
           label="MT5 Account Id"
-          value={userInfo?.MT5Account}
+          value={loggedUser.mt5Account}
           badgeColor="bg-blue-100 text-blue-800"
           delay={0.15}
         />
@@ -91,7 +93,7 @@ const UserDashboardAccount = () => {
           <CredentialItem
             icon={Key}
             label="Master Password"
-            value={masterPassword || "00000"}
+            value={loggedUser.masterPassword}
             badgeColor="bg-yellow-100 text-yellow-800"
             delay={0.25}
           />
@@ -100,7 +102,7 @@ const UserDashboardAccount = () => {
           <CredentialItem
             icon={Shield}
             label="Investor Password"
-            value={investorPassword || "00000"}
+            value={loggedUser.investorPassword}
             badgeColor="bg-red-100 text-red-800"
             delay={0.3}
           />

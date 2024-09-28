@@ -3,11 +3,14 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
-import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { Mail, Lock, User, Globe, Phone, Check, MapPin } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { setSignUpData } from "@/redux/user/userSlice";
+import { getData } from "country-list";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import "../../css/phone-input.css";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
@@ -43,6 +46,8 @@ const UserSignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const countries = getData();
+  // console.log("countries--", countries);
   const dispatch = useDispatch();
 
   const [error, setError] = useState("");
@@ -236,23 +241,16 @@ const UserSignUp = () => {
                   transition={{ delay: 0.4 }}
                   className="relative"
                 >
-                  <Phone
-                    className="absolute top-3 left-3 text-secondary-400 z-10"
-                    size={20}
-                  />
                   <PhoneInput
-                    country={formData.country.toLowerCase()}
+                    placeholder="Enter phone number"
                     value={formData.phone}
                     onChange={handlePhoneChange}
-                    inputProps={{
-                      required: true,
-                      className:
-                        "w-full pl-10 pr-4 py-3 bg-secondary-700  border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition",
-                    }}
-                    containerClass="react-tel-input"
+                    defaultCountry="IN"
+                    international
+                    inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="react-tel-input"
                   />
                 </motion.div>
-
                 <motion.div
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}

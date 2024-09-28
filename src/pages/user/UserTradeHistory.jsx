@@ -10,7 +10,7 @@ export default function UserTradeHistory() {
   const [tradeData, setTradeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const userInfo = useSelector((store) => store.user.userInfo);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const currentAccount = useSelector((store) => store.user.currentAccount);
   const currentDate = new Date().toISOString().slice(0, 10);
 
@@ -23,13 +23,17 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${currentAccount}&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
+          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
+            loggedUser.mt5Account
+          }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
       } else {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${currentAccount}`
+          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${
+            loggedUser.mt5Account
+          }`
         );
       }
       console.log("res trade history--", res.data);

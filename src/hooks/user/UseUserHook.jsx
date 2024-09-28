@@ -2,8 +2,10 @@ import {
   setAvailableBalance,
   setCloseTrades,
   setCurrentAccount,
+  setLoggedUser,
   setOpenTrades,
   setPhase,
+  setProfitNloss,
   setUserInfo,
 } from "@/redux/user/userSlice";
 import axios from "axios";
@@ -16,15 +18,11 @@ export default function UseUserHook() {
   const currentDate = new Date().toISOString().slice(0, 10);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const phase = useSelector((store) => store.user.phase);
-  const depositBalance = useSelector((store) => store.user.depositBalance);
   const userInfo = useSelector((store) => store.user.userInfo);
-  const userFormData = useSelector((store) => store.user.userFormData);
-  const investorPassword = useSelector((store) => store.user.investorPassword);
-  const masterPassword = useSelector((store) => store.user.masterPasswoord);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const availableBalance = useSelector((store) => store.user.availableBalance);
 
   const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
-  const ifHaveBalance = userInfo.Balance > 0 ? true : false;
-
   const phaseLimitValues = [
     {
       phase: 1,
@@ -44,15 +42,16 @@ export default function UseUserHook() {
   ];
 
   const currentPhaseData = phaseLimitValues.find(
-    (value) => value.phase === phase
+    (value) => value.phase === loggedUser.phase
   );
 
   const phaseMinValueInNumber =
-    (currentPhaseData?.min / 100) * depositBalance * -1;
-  const phaseMaxValueInNumber = (currentPhaseData?.max / 100) * depositBalance;
+    (currentPhaseData?.min / 100) * loggedUser.accountSize * -1;
+  const phaseMaxValueInNumber =
+    (currentPhaseData?.max / 100) * loggedUser.accountSize;
 
   // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  const testProftNloss = -50;
+  const testProftNloss = profitNloss;
 
   console.log("calculated min values---", phaseMinValueInNumber);
   console.log("calculated max values---", phaseMaxValueInNumber);
@@ -62,41 +61,40 @@ export default function UseUserHook() {
 
   const GetCloseTradeApi = async () => {
     try {
-      if (ifHaveBalance) {
+      if (loggedUser.phase !== 0) {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
-            userInfo?.MT5Account
+            loggedUser.mt5Account
           }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
         dispatch(setCloseTrades(res.data));
         console.log("closeTrade hook####--", res.data);
       } else {
-        console.log("undifined current ac--#####");
+        console.log("Account yet to open--xxx");
       }
     } catch (error) {
-      console.log("error while closeTrade hook--", error);
+      console.log("error while closeTrade hook-xxxx", error);
     }
   };
 
   // open trade api --------------------
 
   const GetOpenTradeApi = async () => {
-    console.log("checkk ifHaveBalance @@@@@@", ifHaveBalance);
     try {
-      if (ifHaveBalance) {
+      if (loggedUser.phase !== 0) {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${
-            userInfo?.MT5Account
+            loggedUser.mt5Account
           }`
         );
-        console.log("openTrade hook--#####", res.data);
+
         dispatch(setOpenTrades(res.data));
       } else {
-        console.log("undifined current ac--#####");
+        console.log("Account yet to open--xxxx");
       }
     } catch (error) {
       console.log("error in openTrades hook", error);
@@ -116,16 +114,19 @@ export default function UseUserHook() {
   // user info api --------------------
 
   const GetUserInfoAPI = async () => {
-    console.log("GetUserInfoAPI current account ---", currentAccount);
     try {
-      if (currentAccount > 0) {
+      if (loggedUser.phase !== 0) {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetUserInfo?Manager_Index=1&MT5Account=${currentAccount}`
+          }/api/web/GetUserInfo?Manager_Index=1&MT5Account=${
+            loggedUser.mt5Account
+          }`
         );
         dispatch(setUserInfo(res.data));
         dispatch(setAvailableBalance(res.data.Balance));
+        dispatch(setProfitNloss(res.data.Balance - loggedUser.accountSize));
+
         console.log("userInfo hook ####--", res.data);
       }
       if (currentAccount < 0) {
@@ -139,26 +140,10 @@ export default function UseUserHook() {
   // update phase ----------------
 
   const getUpdatePhase = async () => {
-    // console.log("form data@@@@@@@@@@@@@@@@@", userFormData);
-    if (testProftNloss >= phaseMaxValueInNumber && phase !== 3) {
-      console.log("max profit reached**********");
-
+    if (testProftNloss >= phaseMaxValueInNumber && loggedUser.phase !== 3) {
+      const toastId = toast.loading("Updating phase..");
       try {
-        await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
-            userInfo.MT5Account
-          }&Status=0`
-        );
-        const updateChallengeDB = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-          {
-            mt5Account: currentAccount,
-            status: "closed",
-            reason: "Profit reached",
-          }
-        );
+        console.log("max profit reached---------");
 
         const addApiRes = await axios.post(
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
@@ -166,16 +151,9 @@ export default function UseUserHook() {
           {
             Manager_Index: 1,
             MT5Account: randomNumber,
-            Name: userFormData.firstName,
-            lName: userFormData.lastName,
-            Email: userFormData.email,
-            Phone: userFormData.phone,
-            Address: userFormData.address,
-            City: userFormData.city,
-            Country: userFormData.country,
-            State: userFormData.state,
-            Zip_Code: userFormData.zipCode,
-            Leverage: userFormData.leverage,
+            Name: loggedUser.firstName + " " + loggedUser.lastName,
+            Leverage: loggedUser.leverage,
+            Country: loggedUser.country,
             Group_Name: "SK GROUP\\M10\\CLASSIC",
           }
         );
@@ -183,71 +161,76 @@ export default function UseUserHook() {
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
-            userFormData.accountBalance
+            loggedUser.accountSize
           }&Comment=TEST`
         );
-
+        const updateChallengeDB = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
+          {
+            mt5Account: loggedUser.mt5Account,
+            status: "closed",
+            reason: "Profit reached",
+          }
+        );
         const addChallengeDB = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
           {
             mt5Account: randomNumber,
-            type: userFormData.accountType,
-            deposit: userFormData.accountBalance,
-            balance: userInfo.Balance,
-            accountSize: userFormData.accountSize,
-            phase: phase + 1,
+            type: loggedUser.accountType,
+            accountSize: loggedUser.accountSize,
+            deposit: loggedUser.depositBalance,
+            phase: Number(loggedUser.phase) + 1,
             reason: "pending",
             status: "active",
-            leverage: userFormData.leverage,
-            masterPassword: "000",
-            investarPassword: "000",
+            leverage: loggedUser.leverage,
+            masterPassword: addApiRes.data.Master_Pwd,
+            investarPassword: addApiRes.data.Investor_Pwd,
+            userId: loggedUser._id,
           }
         );
-        dispatch(setCurrentAccount(randomNumber));
-        dispatch(setPhase(phase + 1));
-        toast("Maximum profit reached");
-        await GetUserInfoAPI();
-        await getAllTradeApi();
 
-        // console.log("update phase max data--", res);
+        const updateLoggedUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: loggedUser._id,
+            phase: Number(loggedUser.phase) + 1,
+            masterPassword: addApiRes.data.Master_Pwd,
+            investorPassword: addApiRes.data.Investor_Pwd,
+            mt5Account: randomNumber,
+          }
+        );
+        await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
+            loggedUser.mt5Account
+          }&Status=0`
+        );
+
+        await GetUserInfoAPI();
+        await getUpdateLoggedUser();
+        toast.success("Phase updated", { id: toastId });
+        toast("Maximum profit reached");
       } catch (error) {
+        toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);
       }
     }
     if (testProftNloss <= phaseMinValueInNumber && phase !== 3) {
       console.log("max loss reached**********");
+      const toastId = toast.loading("Updating phase..");
       try {
-        await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
-            userInfo.MT5Account
-          }&Status=0`
-        );
-        const updateChallengeDB = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-          {
-            mt5Account: currentAccount,
-            status: "closed",
-            reason: "Loss reached",
-          }
-        );
-        const addApires = await axios.post(
+        console.log("max Loss reached---------");
+
+        const addApiRes = await axios.post(
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
             Manager_Index: 1,
             MT5Account: randomNumber,
-            Name: userFormData.firstName,
-            lName: userFormData.lastName,
-            Email: userFormData.email,
-            Phone: userFormData.phone,
-            Address: userFormData.address,
-            City: userFormData.city,
-            Country: userFormData.country,
-            State: userFormData.state,
-            Zip_Code: userFormData.zipCode,
-            Leverage: userFormData.leverage,
+            Name: loggedUser.firstName + " " + loggedUser.lastName,
+            Leverage: loggedUser.leverage,
+            Country: loggedUser.country,
             Group_Name: "SK GROUP\\M10\\CLASSIC",
           }
         );
@@ -255,43 +238,70 @@ export default function UseUserHook() {
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
-            userFormData.accountBalance
+            loggedUser.accountSize
           }&Comment=TEST`
         );
-        const addChallengeDB = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
+
+        const updateChallengeDB = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
           {
-            mt5Account: randomNumber,
-            type: userFormData.accountType,
-            deposit: userFormData.accountBalance,
-            balance: userInfo.Balance,
-            accountSize: userFormData.accountSize,
-            phase: phase + 1,
-            reason: "pending",
-            status: "active",
-            leverage: userFormData.leverage,
-            masterPassword: "000",
-            investarPassword: "000",
+            mt5Account: loggedUser.mt5Account,
+            status: "closed",
+            reason: "Loss reached",
           }
         );
 
-        dispatch(setCurrentAccount(randomNumber));
-        dispatch(setPhase(phase + 1));
-        toast("Maximum loss reached");
+        const updateLoggedUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: loggedUser._id,
+            phase: Number(loggedUser.phase) + 1,
+            masterPassword: addApiRes.data.Master_Pwd,
+            investorPassword: addApiRes.data.Investor_Pwd,
+            mt5Account: randomNumber,
+          }
+        );
+
+        await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
+            loggedUser.mt5Account
+          }&Status=0`
+        );
+
         await GetUserInfoAPI();
-        await getAllTradeApi();
-        // console.log("update phase min data--", res);
+        await getUpdateLoggedUser();
+        toast.success("Phase updated", { id: toastId });
+        toast("Maximum loss reached");
       } catch (error) {
+        toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);
       }
     }
   };
 
+  // update logged user -----
+
+  const getUpdateLoggedUser = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${
+          loggedUser._id
+        }`
+      );
+      // console.log("res logged user hook ---", res.data.data);
+      dispatch(setLoggedUser(res.data.data));
+    } catch (error) {
+      console.log("error in update logedUser hook", error);
+    }
+  };
   return {
     GetOpenTradeApi,
     GetUserInfoAPI,
     GetCloseTradeApi,
     getAllTradeApi,
     getUpdatePhase,
+    getUpdateLoggedUser,
   };
 }

@@ -3,14 +3,15 @@ import { DollarSign, ArrowUpDownIcon } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import Loader from "@/components/Loader/Loader";
-import { AnimatePresence, motion } from "framer-motion"; // Import Framer Motion
+import { AnimatePresence, motion } from "framer-motion";
+import { data } from "autoprefixer";
 
 export default function UserTransaction() {
   const [activeTab, setActiveTab] = useState("withdrawal");
   const [transactionData, setTransactionData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const userInfo = useSelector((store) => store.user.userInfo);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   const fetchTransactionData = async (tradeType = "withdrawal") => {
     setLoading(true);
@@ -27,17 +28,33 @@ export default function UserTransaction() {
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
         );
       }
+      // console.log("privious data--", res.data.data);
+      const filteredData = res.data.data.reverse().filter((value) => {
+        return (
+          value.userId &&
+          value.userId._id &&
+          value.userId._id === loggedUser._id
+        );
+      });
+      console.log("filtered data--", filteredData);
 
-      setTransactionData(res.data.data);
-      setActiveTab(tradeType);
+      if (filteredData.length === 0) {
+        setError(`No ${tradeType} data available.`);
+        setTransactionData([]);
+      } else {
+        setTransactionData(filteredData);
+      }
     } catch (error) {
-      console.error("Error fetching transaction data:", error);
+      console.error(`Error fetching ${tradeType} data:`, error);
+      setError(`Failed to fetch ${tradeType} data. Please try again.`);
+      setTransactionData([]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleTabClick = (tradeType) => {
+    setActiveTab(tradeType);
     fetchTransactionData(tradeType);
   };
 
@@ -61,8 +78,9 @@ export default function UserTransaction() {
   }
 
   useEffect(() => {
-    fetchTransactionData();
-  }, []);
+    fetchTransactionData(activeTab);
+  }, [activeTab]);
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -170,7 +188,7 @@ export default function UserTransaction() {
         </motion.div>
       )}
 
-      {!loading && !error && (
+      {!loading && !error && transactionData.length > 0 && (
         <motion.div
           variants={tableVariants}
           initial="hidden"
@@ -236,7 +254,6 @@ export default function UserTransaction() {
                         : item?.balance}
                     </td>
                     <td className="py-2 px-4 text-center">99</td>
-
                     <td className="text-center py-2 px-3">
                       {formatDate(item?.createdAt)}
                     </td>

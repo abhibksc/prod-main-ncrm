@@ -11,13 +11,13 @@ import {
 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-
   const userDropdownRef = useRef(null);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccount";
@@ -10,36 +10,53 @@ import UseUserHook from "@/hooks/user/UseUserHook";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 import { setProfitNloss } from "@/redux/user/userSlice";
+import { useLocation } from "react-router-dom";
 
 export default function UserDashboard() {
-  const { GetUserInfoAPI, getAllTradeApi, getUpdatePhase } = UseUserHook();
-  const openTrades = useSelector((store) => store.user.openTrades);
+  const {
+    GetUserInfoAPI,
+    getUpdatePhase,
+    getUpdateLoggedUser,
+    GetOpenTradeApi,
+    GetCloseTradeApi,
+  } = UseUserHook();
   const closeTrades = useSelector((store) => store.user.closeTrades);
   const depositBalance = useSelector((store) => store.user.depositBalance);
-  const availableBalance = useSelector((store) => store.user.availableBalance);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
 
-  const allTrades = [...openTrades, ...closeTrades];
+  // const allTrades = [...openTrades, ...closeTrades];
 
-  const totalNetProfit = allTrades.reduce(
-    (sum, entry) => sum + entry.Profit,
-    0
-  );
+  // const totalNetProfit = allTrades.reduce(
+  //   (sum, entry) => sum + entry.Profit,
+  //   0
+  // );
 
-  dispatch(setProfitNloss(availableBalance - depositBalance));
+  const intervalId = useRef(null); // Using useRef to persist the intervalId
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await GetUserInfoAPI();
-        await getAllTradeApi();
-        await getUpdatePhase();
+        if (loggedUser.accountSize > 99) {
+          await getUpdatePhase();
+        }
+        await getUpdateLoggedUser();
+
+        await GetOpenTradeApi();
+        // await GetCloseTradeApi()
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
     };
-
     fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
   return (
     <motion.div

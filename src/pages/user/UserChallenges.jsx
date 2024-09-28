@@ -13,12 +13,14 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const UserChallenges = () => {
   const [challengesData, setChallengesData] = useState();
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loader, setLoader] = useState(false);
+  const logggedUser = useSelector((store) => store.user.loggedUser);
 
   const fetchChallengesData = async () => {
     setLoader(true);
@@ -27,7 +29,12 @@ const UserChallenges = () => {
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
       );
       // console.log("challenges res--", res.data.data);
-      setChallengesData(res.data.data.reverse());
+      const loggedUserData = res.data.data
+        .reverse()
+        .filter((value) => value.userId === logggedUser._id);
+
+      // console.log("logged user data", loggedUserData);
+      setChallengesData(loggedUserData);
       setLoader(false);
     } catch (error) {
       console.log("error in fetch user challenges", error);

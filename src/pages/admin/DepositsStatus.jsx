@@ -170,10 +170,21 @@ const DepositsStatus = () => {
             balance: selectedDeposit.balance,
           }
         );
-        // dispatch(setCurrentAccount(randomNumber));
-        dispatch(setDepositBalance(formData.accountBalance));
-
-        console.log(" add user api---", addUserApi);
+        const updateLoggedUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: selectedDeposit.userId,
+            accountSize: selectedDeposit.balance,
+            depositBalance: selectedDeposit.deposit,
+            phase: 1,
+            masterPassword: addUserApi.data.Master_Pwd,
+            investorPassword: addUserApi.data.Investor_Pwd,
+            mt5Account: selectedDeposit.mt5Account,
+            accountType: selectedDeposit.accountType,
+            leverage: selectedDeposit.leverage,
+          }
+        );
+        console.log(" add user api---", addUserApi.data);
         console.log(" add user api---", addUserApi);
         console.log("updated confirm data", res);
         console.log("deposit api res", depositApires);
@@ -420,7 +431,9 @@ const DepositsStatus = () => {
                 <tr key={item._id} className="border-b">
                   <td className="py-2 px-4">
                     <div className="font-semibold">
-                      {item?.userId?.name ? item?.userId?.name : "Not found!!"}
+                      {item?.userId?.firstName
+                        ? item?.userId?.firstName
+                        : "Not found!!"}
                     </div>
                     <div className="text-white/70 text-sm">
                       {item?.userId?.email

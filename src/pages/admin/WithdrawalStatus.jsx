@@ -124,6 +124,7 @@ const WithdrawalStatus = () => {
     setIsDialogOpen(true);
   };
   const handleConfirmAction = async (selectedDeposit) => {
+    const toastId = toast.loading("Plese wait..");
     try {
       if (actionType === "approve") {
         const res = await axios.put(
@@ -146,7 +147,7 @@ const WithdrawalStatus = () => {
         console.log("updated confirm data", res);
         console.log("updated apiWithdrawalRes data", apiWithdrwalRes);
 
-        toast.success("Withdrwal Approved");
+        toast.success("Withdrwal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -181,8 +182,10 @@ const WithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+        toast.success("Withdrwal Rejected", { id: toastId });
       }
     } catch (error) {
+      toast.success("Something went wrong", { id: toastId });
       console.error("Error updating deposit status:", error);
     }
   };
@@ -389,12 +392,12 @@ const WithdrawalStatus = () => {
                 <tr key={item._id} className="border-b">
                   <td className="py-2 px-4">
                     <div className="font-semibold">
-                      {item?.userId?.name ? item?.userId?.name : "Not found!!"}
+                      {item?.userId?.firstName
+                        ? item?.userId?.firstName
+                        : "Not found!!"}
                     </div>
                     <div className="text-white/70 text-sm">
-                      {item?.userId?.email
-                        ? item?.userId?.email
-                        : "Not found!!"}
+                      {item?.userId ? item?.userId?.email : "Not found!!"}
                     </div>
                   </td>
                   <td className="py-2 px-4">{item?.mt5Account}</td>

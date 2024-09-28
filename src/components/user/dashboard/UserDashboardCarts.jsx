@@ -7,6 +7,7 @@ import {
   TrendingDown,
   Target,
 } from "lucide-react";
+import { useSelector, useStore } from "react-redux";
 
 const BalanceCard = ({
   icon: Icon,
@@ -51,20 +52,21 @@ const UserDashboardCards = ({
   profitNloss,
 }) => {
   const isPositive = parseFloat(profitNloss) >= 0;
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-6 rounded-2xl">
       <BalanceCard
         icon={Scale}
-        title="Deposit Balance"
-        value={`${depositBalance} $USD`}
+        title="Account Size"
+        value={`${"999"} $USD`}
         gradient="#f97316, #fb923c"
         delay={0.1}
       />
       <BalanceCard
         icon={Activity}
         title="Available Balance"
-        value={`${availableBalance} $USD`}
+        value={`${availableBalance} $UkkSD`}
         gradient="#3b82f6, #60a5fa"
         delay={0.2}
       />
