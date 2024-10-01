@@ -9,35 +9,42 @@ import { setAvailableBalance, setIsRefresh } from "../../redux/user/userSlice";
 import UseUserHook from "../../hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
-  const [selectedGateway, setSelectedGateway] = useState("");
-  const [selectedAccount, setSelectedAccount] = useState("");
-  const [amount, setAmount] = useState("");
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const profitNloss = useSelector((store) => store.user.profitNloss);
+  const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectedAccount, setSelectedAccount] = useState(
+    loggedUser.accountType
+  );
+  const [amount, setAmount] = useState(profitNloss);
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const dispatch = useDispatch();
-  const profitNloss = useSelector((store) => store.user.profitNloss);
 
   const userInfo = useSelector((store) => store.user.userInfo);
-  const loggedUser = useSelector((store) => store.user.loggedUser);
   const { GetUserInfoAPI } = UseUserHook();
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     setApiLoader(true);
     setError("");
+    console.log(selectedGateway, selectedAccount, amount);
     try {
-      if (profitNloss > 0 && profitNloss >= amount) {
+      if (loggedUser.phase !== 3) {
+        setError("You have to be in 3rd phase for withdrawal !!");
+        setApiLoader(false);
+      } else if (profitNloss > 0 && profitNloss >= amount) {
         const withdrawalDBres = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
           {
-            method: selectedAccount,
-            tradeAccount: selectedGateway,
+            method: selectedGateway,
+            tradeAccount: selectedAccount,
             amount: amount,
             mt5Account: userInfo.MT5Account,
             status: "pending",
             userId: loggedUser._id,
             managerIndex: 1,
             pNl: "40",
+            phase: loggedUser.phase,
           }
         );
         setApiLoader(false);
@@ -69,12 +76,6 @@ const UserWithdraw = () => {
             <ArrowDownCircle className="w-8 h-8 mr-2" />
             Withdraw Funds
           </h2>
-          {/* <button
-            type="button"
-            className="bg-secondary-700 text-white px-4 py-2 rounded-md hover:bg-secondary-600 transition duration-300"
-          >
-            Withdraw History
-          </button> */}
           <div>
             <h1 className=" font-semibold text-sm text-neutral-100">
               Withdrawalable Balance
@@ -104,7 +105,7 @@ const UserWithdraw = () => {
               onChange={(e) => setSelectedGateway(e.target.value)}
               className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
             >
-              <option value="">Select Gateway</option>
+              {/* <option value="">Select Gateway</option> */}
               <option value="bank">Bank Transfer</option>
               <option value="paypal">PayPal</option>
               <option value="crypto">Cryptocurrency</option>
@@ -123,10 +124,7 @@ const UserWithdraw = () => {
               onChange={(e) => setSelectedAccount(e.target.value)}
               className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
             >
-              <option value="">Select Account</option>
-              <option value="main">Main Account</option>
-              <option value="savings">Savings Account</option>
-              <option value="investment">Investment Account</option>
+              <option value="">{loggedUser.accountType}</option>
             </select>
           </div>
           <div>
@@ -136,19 +134,19 @@ const UserWithdraw = () => {
             >
               Amount
             </label>
-            <div className="relative bg-secondary-700 rounded-md">
+            <div className="relative bg-secondary-700 rounded-md cursor-not-allowed">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <BadgeDollarSign className="h-6 w-6 text-white" />
               </div>
               <input
                 type="text"
                 id="amount"
-                className="w-full pl-10 py-3 bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
+                className="w-full pl-10 py-3 cursor-not-allowed bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
                 placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                value={profitNloss}
+                // onChange={(e) => setAmount(e.target.value)}
               />
-              <div className="absolute inset-y-0 right-0 flex items-center">
+              {/* <div className="absolute inset-y-0 right-0 flex items-center">
                 <select
                   id="currency"
                   name="currency"
@@ -158,13 +156,13 @@ const UserWithdraw = () => {
                   <option>EUR</option>
                   <option>GBP</option>
                 </select>
-              </div>
+              </div> */}
             </div>
           </div>
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Check, X } from "lucide-react";
+import { ArrowRight, Check, RefreshCw, X } from "lucide-react";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const UserInfoForm = ({ userData }) => {
   console.log("userData props--", userData);
@@ -16,8 +18,8 @@ const UserInfoForm = ({ userData }) => {
   });
 
   const [verificationStatuses, setVerificationStatuses] = useState({
-    email: false,
-    kyc: false,
+    email: userData?.emailVerified,
+    kyc: userData?.kycVerified,
   });
 
   useEffect(() => {
@@ -49,14 +51,31 @@ const UserInfoForm = ({ userData }) => {
     setVerificationStatuses((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement your submit logic here
-    console.log("Form submitted:", { ...formData, ...verificationStatuses });
+    const toastId = toast.loading("Plese pait..");
+
+    try {
+      const updateLoggedUser = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+        {
+          id: userData._id,
+          ...formData,
+          emailVerified: verificationStatuses.email,
+          kycVerified: verificationStatuses.kyc,
+        }
+      );
+      toast.success("User Updated", { id: toastId });
+      console.log("update logged user--", updateLoggedUser.data.data);
+      // console.log("Form submitted:", { ...formData, ...verificationStatuses });
+    } catch (error) {
+      console.log("error in updating user--", error);
+      toast.error("Updateing Failed", { id: toastId });
+    }
   };
 
   return (
-    <div className="container mx-auto p-10 rounded-lg bg-primary-700 shadow-lg text-white">
+    <div className="container mx-auto p-5 rounded-lg bg-primary-700 shadow-lg text-white">
       <h1 className="text-xl font-bold mb-6">Information of User</h1>
 
       <form
@@ -180,9 +199,15 @@ const UserInfoForm = ({ userData }) => {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="w-full mt-8 p-3 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition-colors"
+        className="group relative w-full mt-8 p-4 bg-primary-400 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 overflow-hidden"
       >
-        Update
+        <span className="relative z-10 flex items-center justify-center">
+          <span className="mr-2 group-hover:mr-4 transition-all duration-300">
+            Update
+          </span>
+          <RefreshCw className="w-5 h-5 animate-spin-slow opacity-0 group-hover:opacity-100 transition-all duration-300" />
+        </span>
+        <span className="absolute inset-0 w-full h-0 bg-purple-800 group-hover:h-full transition-all duration-300 ease-out"></span>
       </button>
     </div>
   );
@@ -191,17 +216,29 @@ const UserInfoForm = ({ userData }) => {
 const VerificationStatus = ({ label, isVerified, onToggle }) => {
   return (
     <div
-      className={`p-3 py-6 rounded ${
-        isVerified ? "bg-green-500" : "bg-red-500"
+      className={`p-4 rounded-lg shadow-md transition-all duration-300 ${
+        isVerified
+          ? "bg-gradient-to-r from-green-400 to-green-600"
+          : "bg-gradient-to-r from-red-400 to-red-600"
       } flex items-center justify-between`}
     >
-      <span>{label}</span>
-      <div className="flex items-center">
-        <span className="mr-2 capitalize">
+      <span className="text-white font-semibold text-lg">{label}</span>
+      <div className="flex items-center space-x-3">
+        <span className="text-white font-medium capitalize">
           {isVerified ? "Verified" : "Disabled"}
         </span>
-        {isVerified ? <Check size={18} /> : <X size={18} />}
-        <label className="inline-flex items-center cursor-pointer ml-2">
+        <div
+          className={`p-1 rounded-full ${
+            isVerified ? "bg-green-300" : "bg-red-300"
+          }`}
+        >
+          {isVerified ? (
+            <Check size={18} className="text-green-700" />
+          ) : (
+            <X size={18} className="text-red-700" />
+          )}
+        </div>
+        <label className="inline-flex items-center cursor-pointer">
           <div className="relative">
             <input
               type="checkbox"
@@ -209,7 +246,7 @@ const VerificationStatus = ({ label, isVerified, onToggle }) => {
               checked={isVerified}
               onChange={onToggle}
             />
-            <div className="w-11 h-6 bg-gray-200 whitespace-nowrap peer-focus:outline-none  rounded-full peer dark:bg-red-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+            <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
           </div>
         </label>
       </div>

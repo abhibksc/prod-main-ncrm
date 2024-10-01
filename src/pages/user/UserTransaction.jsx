@@ -208,7 +208,7 @@ export default function UserTransaction() {
                   Phase
                 </th>
                 <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Amount
+                  Deposit
                 </th>
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Ac size
@@ -244,16 +244,20 @@ export default function UserTransaction() {
                         className="bg-cyan-100/20 rounded-full px-2 py-1 inline-block"
                         whileHover={{ scale: 1.05 }}
                       >
-                        Silver
+                        {item?.userId.accountType}
                       </motion.div>
                     </td>
-                    <td className="py-2 px-4 text-center">1</td>
+                    <td className="py-2 px-4 text-center">
+                      {activeTab === "withdrawal" ? item?.phase : "1"}
+                    </td>
                     <td className="py-2 text-center">
                       {activeTab === "withdrawal"
-                        ? item?.amount
-                        : item?.balance}
+                        ? item?.userId?.depositBalance
+                        : item?.deposit}
                     </td>
-                    <td className="py-2 px-4 text-center">99</td>
+                    <td className="py-2 px-4 text-center">
+                      {item?.userId?.accountSize}
+                    </td>
                     <td className="text-center py-2 px-3">
                       {formatDate(item?.createdAt)}
                     </td>
@@ -268,7 +272,7 @@ export default function UserTransaction() {
                             : item?.status === "approved"
                             ? "bg-green-500/20 text-green-500"
                             : item?.status === "rejected"
-                            ? "bg-red-300/30"
+                            ? "bg-red-400/20 text-red-500"
                             : ""
                         }`}
                         whileHover={{ scale: 1.05 }}

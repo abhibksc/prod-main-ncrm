@@ -1,13 +1,18 @@
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { CircleUser, ExternalLink, Search, User, User2 } from "lucide-react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { Button } from "@headlessui/react";
+import { useDispatch } from "react-redux";
+import { setLoggedUser } from "@/redux/user/userSlice";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const ManageUsers = () => {
   const { subList } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
-
+  const dispatch = useDispatch();
+  const { getReset } = UseUserHook();
   const fetchUsersData = async () => {
     try {
       const res = await axios.get(
@@ -78,7 +83,15 @@ const ManageUsers = () => {
 
     return daysDifference + " " + "days ago";
   }
+
+  const userRedirectHandler = (user) => {
+    getReset();
+    dispatch(setLoggedUser(user));
+    window.open("/user/dashboard", "_blank");
+  };
+
   // useEfeect --------------------
+
   useEffect(() => {
     fetchUsersData();
   }, [subList]);
@@ -124,7 +137,15 @@ const ManageUsers = () => {
                 key={user?._id}
                 className="border-b bg-primary-700 hover:bg-primary-700/90 text-white"
               >
-                <td className="py-3 px-4">
+                <td className="py-3 flex items-center gap-2 px-4">
+                  {subList === "all-users" && (
+                    <Button
+                      onClick={() => userRedirectHandler(user)}
+                      className=" text-blue-400 hover:shadow-lg hover:text-blue-500 hover:scale-110 transition-all"
+                    >
+                      <User></User>
+                    </Button>
+                  )}
                   <div>
                     <div className="font-semibold">{user?.firstName}</div>
                     <Link

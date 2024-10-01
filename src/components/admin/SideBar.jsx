@@ -46,11 +46,11 @@ const Sidebar = () => {
         { label: "Withdraw", route: "/admin/withdraw" },
       ],
     },
-    {
-      label: "Setup challenges",
-      icon: <ChevronsRight />,
-      route: "/admin/setup-challenges",
-    },
+    // {
+    //   label: "Setup challenges",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/setup-challenges",
+    // },
     {
       label: "Account Configuration",
       icon: <Settings2Icon />,
@@ -61,16 +61,16 @@ const Sidebar = () => {
       icon: <ChevronsRight />,
       route: "/admin/account-challenges",
     },
-    {
-      label: "Withdrawal conditions",
-      icon: <ChevronsRight />,
-      route: "/admin/withdraw-conditions",
-    },
-    {
-      label: "Trade Accounts",
-      icon: <ChevronsRight />,
-      route: "/admin/trade-accounts",
-    },
+    // {
+    //   label: "Withdrawal conditions",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/withdraw-conditions",
+    // },
+    // {
+    //   label: "Trade Accounts",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/trade-accounts",
+    // },
     {
       label: "Manage Users",
       icon: <Users />,
@@ -91,14 +91,7 @@ const Sidebar = () => {
         { label: "All Users", route: "/admin/manage-users/all-users" },
       ],
     },
-    {
-      label: "Payment Getways",
-      icon: <CreditCard />,
-      nested: [
-        { label: "Automatic getways", route: "/admin/getway/automatic" },
-        { label: "Manual getways", route: "/admin/getway/manual" },
-      ],
-    },
+
     {
       label: "Deposits",
       icon: <LucideBadgeDollarSign />,
@@ -117,6 +110,14 @@ const Sidebar = () => {
         { label: "Approved Withdrawals", route: "/admin/withdrawal/approved" },
         { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
         { label: "All Withdrawals", route: "/admin/withdrawal/all" },
+      ],
+    },
+    {
+      label: "Payment Getways",
+      icon: <CreditCard />,
+      nested: [
+        { label: "Automatic getways", route: "/admin/getway/automatic" },
+        { label: "Manual getways", route: "/admin/getway/manual" },
       ],
     },
     {

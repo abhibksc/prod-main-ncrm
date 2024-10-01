@@ -13,7 +13,7 @@ export default function UserOutlet() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loggedUser) {
+    if (!loggedUser || loggedUser.emailVerified === false) {
       navigate("/user/login");
     }
   }, [loggedUser, userInfoCookie, navigate]);

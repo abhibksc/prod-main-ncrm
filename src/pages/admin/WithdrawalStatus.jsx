@@ -127,6 +127,13 @@ const WithdrawalStatus = () => {
     const toastId = toast.loading("Plese wait..");
     try {
       if (actionType === "approve") {
+        const apiWithdrwalRes = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${
+            selectedDeposit.mt5Account
+          }&Amount=${selectedDeposit.amount}&Comment=test`
+        );
         const res = await axios.put(
           `${
             import.meta.env.VITE_BECKEND_END_POINT
@@ -136,18 +143,10 @@ const WithdrawalStatus = () => {
             status: "approved",
           }
         );
-        const apiWithdrwalRes = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${
-            selectedDeposit.mt5Account
-          }&Amount=${selectedDeposit.amount}&Comment=test`
-        );
+        toast.success("Withdrwal Approved", { id: toastId });
 
         console.log("updated confirm data", res);
         console.log("updated apiWithdrawalRes data", apiWithdrwalRes);
-
-        toast.success("Withdrwal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id

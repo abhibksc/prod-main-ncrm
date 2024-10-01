@@ -106,14 +106,14 @@ const Header = () => {
               <span className="sr-only">Search</span>
               <Search></Search>
             </button>
-            <button
+            {/* <button
               type="button"
               onClick={toggleNotificationDropdown}
               className="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             >
               <span className="sr-only">View notifications</span>
               <Bell></Bell>
-            </button>
+            </button> */}
             {/* Notification dropdown */}
             {isNotificationDropdownOpen && (
               <div
@@ -163,13 +163,13 @@ const Header = () => {
                     <KeyRound></KeyRound>
                     <p>Password</p>
                   </Link>
-                  <Link
+                  {/* <Link
                     to={`/admin/kyc-setting`}
                     className=" hover:bg-primary-500 p-2  rounded flex gap-2"
                   >
                     <UserCheck></UserCheck>
                     <p className=" whitespace-nowrap">KYC varification</p>
-                  </Link>
+                  </Link> */}
                   <Link
                     to={"/admin/login"}
                     className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2"

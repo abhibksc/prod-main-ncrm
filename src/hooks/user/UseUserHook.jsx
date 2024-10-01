@@ -2,10 +2,18 @@ import {
   setAvailableBalance,
   setCloseTrades,
   setCurrentAccount,
+  setCurrentUser,
+  setDepositBalance,
+  setInvestorPassword,
   setLoggedUser,
+  setMasterPassword,
   setOpenTrades,
+  setPaymentMethods,
   setPhase,
+  setPlatforms,
   setProfitNloss,
+  setSignUpData,
+  setUserFormData,
   setUserInfo,
 } from "@/redux/user/userSlice";
 import axios from "axios";
@@ -296,6 +304,28 @@ export default function UseUserHook() {
       console.log("error in update logedUser hook", error);
     }
   };
+
+  // reset all details --------------
+
+  const getReset = () => {
+    dispatch(setLoggedUser(""));
+    dispatch(setCurrentAccount(""));
+    dispatch(setCurrentUser(""));
+    dispatch(setDepositBalance(""));
+    dispatch(setAvailableBalance(""));
+    dispatch(setUserInfo(""));
+    dispatch(setLoggedUser(""));
+    dispatch(setInvestorPassword(""));
+    dispatch(setMasterPassword(""));
+    dispatch(setOpenTrades([]));
+    dispatch(setCloseTrades([]));
+    dispatch(setPlatforms([]));
+    dispatch(setPaymentMethods([]));
+    dispatch(setUserFormData(""));
+    dispatch(setSignUpData(""));
+    dispatch(setProfitNloss(""));
+    // navigate("/user/login");
+  };
   return {
     GetOpenTradeApi,
     GetUserInfoAPI,
@@ -303,5 +333,6 @@ export default function UseUserHook() {
     getAllTradeApi,
     getUpdatePhase,
     getUpdateLoggedUser,
+    getReset,
   };
 }
