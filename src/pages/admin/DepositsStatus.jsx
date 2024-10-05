@@ -72,6 +72,8 @@ const DepositsStatus = () => {
   const [actionType, setActionType] = useState("");
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
+  const [apiMasterPassword, setApiMasterPassword] = useState("");
+  const [apiInvestorPassword, setApiInvestorPassword] = useState("");
   const dispatch = useDispatch();
 
   const formData = useStore((store) => store.user.userFormData);
@@ -129,6 +131,148 @@ const DepositsStatus = () => {
     setActionType(action);
     setIsDialogOpen(true);
   };
+  // console.log("selected deposit---", selectedDeposit);
+
+  const customContent = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Withdrawal Request Confirmation - Arena Trade</title>
+      <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          font-family: 'Arial', sans-serif;
+          line-height: 1.6;
+          color: #333;
+          background-color: #f4f4f4;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 8px;
+          background-color: #ffffff;
+        }
+        .header {
+          background-color: #0a2342;
+          color: #ffffff;
+          padding: 20px 15px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 22px;
+          letter-spacing: 1px;
+        }
+        .content {
+          padding: 10px 20px;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #ffa500;
+          color: #FFFFFF;
+          text-decoration: none;
+          border-radius: 5px;
+          font-weight: bold;
+          margin: 10px 0;
+        }
+        .footer {
+          background-color: #0a2342;
+          color: #ffffff;
+          text-align: center;
+          padding: 10px 15px;
+          font-size: 12px;
+          border-radius: 0 0 10px 10px;
+        }
+        .footer-info {
+          margin-top: 10px;
+          line-height: 1.8;
+        }
+        .footer-info a {
+          color: #ffa500;
+          text-decoration: none;
+        }
+
+        .withdrawal-details {
+          background-color: #f8f8f8;
+          border-left: 4px solid #ffa500;
+          padding: 15px;
+          margin: 20px 0;
+        }
+        .withdrawal-details p {
+          margin: 5px 0;
+        }
+        .highlight {
+          font-weight: bold;
+          color: #0a2342;
+        }
+        .risk-warning {
+          color: #C70039;
+          padding: 15px;
+          font-size: 12px;
+          line-height: 1.4;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Deposit success</h1>
+        </div>
+        <div class="content">
+          <p>Dear ${selectedDeposit?.name},</p>
+  <p>We are pleased to inform you that your initial deposit has been successfully credited to your account</p>
+          <div class="withdrawal-details">
+
+          <p>Account No: <span class="highlight">${
+            selectedDeposit?.mt5Account
+          }</span></p>
+            <p>Challenge Type: <span class="highlight">${
+              selectedDeposit?.accountType
+            }</span></p>
+            <p>Account Size: <span class="highlight">${
+              selectedDeposit?.balance
+            }</span></p>
+            <p>Deposit Balance: <span class="highlight">${
+              selectedDeposit?.deposit
+            }</span></p>
+            <p>Phase: <span class="highlight">${1}</span></p>
+            <p>Status: <span class="highlight">${"Active"}</span></p>
+            <p>Master Password: <span class="highlight">${apiMasterPassword}</span></p>
+            <p>Investor Password: <span class="highlight">${apiInvestorPassword}</span></p>
+            <p>Server Name: <span class="highlight">${"General"}</span></p>
+          </div>
+
+    <p>Thank you for choosing us.</p>
+
+          <p>Happy trading!</p>
+
+          <p>Best regards,<br>The Arena Trade Team</p>
+          <hr>
+     <div class="risk-warning">
+      <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
+      <br><br>
+      Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+    </div>
+
+        </div>
+        <div class="footer">
+          <div class="footer-info">
+            <p>Company License Name</p>
+
+            <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+            <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+            <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+            <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>`;
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
     // console.log("selected deposits--", selectedDeposit);
@@ -182,6 +326,17 @@ const DepositsStatus = () => {
             mt5Account: selectedDeposit.mt5Account,
             accountType: selectedDeposit.accountType,
             leverage: selectedDeposit.leverage,
+          }
+        );
+        setApiMasterPassword(addUserApi.data.Master_Pwd);
+        setApiInvestorPassword(addUserApi.data.Investor_Pwd);
+
+        const customMailRes = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+          {
+            email: selectedDeposit.email,
+            content: customContent,
+            subject: "Challenge Added",
           }
         );
         console.log(" add user api---", addUserApi.data);

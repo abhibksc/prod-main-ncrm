@@ -9,6 +9,7 @@ const UserVerify = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [verificationStatus, setVerificationStatus] = useState(null);
+  const [userData, setUserData] = useState("");
 
   //   enitial UI --------------
 
@@ -27,6 +28,7 @@ const UserVerify = () => {
 
   const resendHandler = async () => {
     const toastId = toast.loading("Plese wait..");
+
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
@@ -47,15 +49,214 @@ const UserVerify = () => {
       toast.error("Something went wrong", { id: toastId });
     }
   };
+  const customContent = `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Request Confirmation - Arena Trade</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 8px;
+        background-color: #ffffff;
+      }
+      .header {
+        background-color: #0a2342;
+        color: #ffffff;
+        padding: 20px 15px;
+        text-align: center;
+        border-radius: 10px 10px 0 0;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 1px;
+      }
+      .content {
+        padding: 10px 20px;
+      }
+      .cta-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #ffa500;
+        color: #FFFFFF;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .footer {
+        background-color: #0a2342;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 15px;
+        font-size: 12px;
+        border-radius: 0 0 10px 10px;
+      }
+      .footer-info {
+        margin-top: 10px;
+        line-height: 1.8;
+      }
+      .footer-info a {
+        color: #ffa500;
+        text-decoration: none;
+      }
+     .download-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        background-color: #f0f8ff;
+        padding: 20px;
+        border-radius: 15px;
+      }
+      .download-button {
+        display: flex;
+          flex-direction: column;
+  
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #0a2342;
+        background-color: #ffffff;
+        padding: 10px 10px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        width: 30%;
+        max-width: 80px; 
+      }
+      .download-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      }
+      .download-button img {
+        width: 24px;
+        height: 24px;
+        margin-right: 8px;
+      }
+      .download-button span {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      @media (max-width: 480px) {
+        .download-section {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+        }
+        .download-button {
+          width: 60%;
+          max-width: none;
+        }
+      }
+      .withdrawal-details {
+        background-color: #f8f8f8;
+        border-left: 4px solid #ffa500;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .withdrawal-details p {
+        margin: 5px 0;
+      }
+      .highlight {
+        font-weight: bold;
+        color: #0a2342;
+      }
+      .risk-warning {
+        color: #C70039;
+        padding: 15px;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Account Varified</h1>
+      </div>
+      <div class="content">
+        <p>Dear ${userData?.firstName + " " + userData?.lastName},</p>
+<p>Your account has been successfully verified with Arena Trade. We wish you all the best!</p>
+        <div class="withdrawal-details">
+          <p>Name: <span class="highlight">${
+            userData?.firstName + " " + userData.lastName
+          }</span></p>
+          <p>Username: <span class="highlight">${userData?.email}</span></p>
+          <p>Password: <span class="highlight">${userData?.password}</span></p>
+        </div>
+           <div class="download-section">
+          <a href="#" class="download-button">
+            <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android Icon">
+            <span>Android</span>
+          </a>
+          <a href="#" class="download-button">
+            <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS Icon">
+            <span>iOS</span>
+          </a>
+          <a href="#" class="download-button">
+            <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows Icon">
+            <span>Windows</span>
+          </a>
+        </div>
+  
+        
+  
+  
+  <p>Thank you for choosing us.</p>
+        
+        <p>Happy trading!</p>
+        
+        <p>Best regards,<br>The Arena Trade Team</p>
+        <hr>
+   <div class="risk-warning">
+    <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
+    <br><br>
+    Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+  </div>
+      
+  
+      </div>
+      <div class="footer">
+        <div class="footer-info">
+          <p>Company License Name</p>
+  
+          <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+          <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+          <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+          <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+          <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>`;
+
+  console.log("user data#######", userData);
 
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const res = await axios.post(
+        const verifyRes = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/verify-link`,
           { userId: id, token: token }
         );
-        console.log("res verify", res.data);
+        const userRes = await axios.get(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
+        );
+        setUserData(userRes.data.data);
+
         setVerificationStatus("success");
         setTimeout(() => navigate("/user/login"), 5000); // Redirect to login after 5 seconds
       } catch (error) {
@@ -65,10 +266,34 @@ const UserVerify = () => {
         setLoading(false);
       }
     };
+
     if (token !== "000") {
       verifyEmail();
     }
-  }, [id, token, navigate]);
+  }, []);
+
+  useEffect(() => {
+    if (userData) {
+      const sendCustomMail = async () => {
+        try {
+          console.log("Mail sent######################");
+          const customMailRes = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+            {
+              email: userData.email,
+              content: customContent,
+              subject: "Account Verified",
+            }
+          );
+          console.log("Mail sent successfully:", customMailRes);
+        } catch (error) {
+          console.log("Error sending custom mail:", error);
+        }
+      };
+
+      sendCustomMail();
+    }
+  }, [userData]); // Runs when userData changes
   if (token === "000") {
     return (
       <div className="flex items-center px-5 justify-center min-h-screen bg-gray-900">
@@ -104,6 +329,9 @@ const UserVerify = () => {
                 {isButtonDisabled
                   ? `Resend in ${cooldownTime}s`
                   : "Resend Verification Email"}
+              </button>
+              <button className="bg-blue-600 block w-full hover:bg-blue-700 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
+                Go to Login
               </button>
             </div>
           </div>
@@ -149,7 +377,7 @@ const UserVerify = () => {
                 You will be redirected to the login page in 5 seconds.
               </p>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/user/login")}
                 className="mt-4 w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out text-sm sm:text-base"
               >
                 Go to Login

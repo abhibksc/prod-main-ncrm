@@ -291,8 +291,8 @@ const UserNewChallenge = () => {
                       }
                       className={`p-4 flex rounded-full items-center justify-center transition-colors ${
                         formData.platform === plt.name
-                          ? "bg-secondary-700"
-                          : "bg-secondary-700/20 hover:bg-secondary-700/40"
+                          ? "bg-secondary-600/80 shadow-lg  font-semibold"
+                          : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
                       <span className="mr-2 text-2xl">{plt.logo}</span>
@@ -319,8 +319,8 @@ const UserNewChallenge = () => {
                       }
                       className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
                         formData.accountSize === option.deposit
-                          ? "bg-secondary-700 text-white"
-                          : "bg-secondary-800 hover:bg-secondary-900/60"
+                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          : "bg-secondary-800/60 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
                       {option.balance}
@@ -351,19 +351,6 @@ const UserNewChallenge = () => {
                 </div>
               </div>
 
-              {/* <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="usResident"
-                  name="isUSResident"
-                  checked={formData.isUSResident}
-                  onChange={handleInputChange}
-                  className="mr-2"
-                />
-                <label htmlFor="usResident" className="text-sm">
-                  I am not a US resident or citizen.
-                </label>
-              </div> */}
               <div className="mt-12 mb-8 flex flex-col items-center bg-secondary-800/80 p-6 rounded-lg">
                 <div className="flex items-center flex-col justify-between mb-4">
                   <div className="text-2xl text-center font-bold text-blue-400">
@@ -536,7 +523,7 @@ const UserNewChallenge = () => {
 
           {step === 3 && (
             <div className="space-y-6 text-white">
-              <h2 className="text-2xl font-bold mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
                 Your Challenge and Payment Details
               </h2>
 
@@ -544,15 +531,15 @@ const UserNewChallenge = () => {
                 <label className="block mb-2 text-sm font-medium">
                   Select Payment Method
                 </label>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredMethodsData.map((method) => (
                     <button
                       key={method.name}
                       onClick={() => setSelectedPayment(method.name)}
-                      className={`p-4 flex flex-col items-center justify-center rounded-lg transition-colors ${
+                      className={`p-4 flex flex-col items-center font-semibold justify-center rounded-lg transition-colors ${
                         selectedPayment === method.name
-                          ? "bg-secondary-600 text-white"
-                          : "bg-secondary-700/50 hover:bg-secondary-700"
+                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
                       <span className="text-2xl mb-2">{method.icon}</span>
@@ -574,17 +561,21 @@ const UserNewChallenge = () => {
                 </div>
               )}
 
-              <div className=" flex  gap-10">
-                <div className=" flex gap-5 items-center">
-                  <h1 className=" text-xl font-semibold">Deposit Balance</h1>
-                  <p className=" bg-orange-400/80 px-5 py-1 font-semibold rounded-full">
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
+                <div className="flex gap-5 items-center">
+                  <h1 className="text-lg sm:text-xl font-semibold">
+                    Deposit Balance
+                  </h1>
+                  <p className="bg-orange-400/80 px-4 sm:px-5 py-1 font-semibold rounded-full">
                     {formData.accountBalance}
                   </p>
                 </div>
 
-                <div className=" flex gap-5 items-center">
-                  <h1 className=" text-xl font-semibold">Payable Amount</h1>
-                  <p className=" bg-green-600 px-5 py-1 font-semibold rounded-full">
+                <div className="flex gap-5 items-center">
+                  <h1 className="text-lg sm:text-xl font-semibold">
+                    Payable Amount
+                  </h1>
+                  <p className="bg-green-600 px-4 sm:px-5 py-1 font-semibold rounded-full">
                     ${formData.accountSize}
                   </p>
                 </div>
@@ -594,7 +585,7 @@ const UserNewChallenge = () => {
                 <label className="block mb-2 text-sm font-medium">
                   Upload proof of payment
                 </label>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
                   <label className="cursor-pointer bg-secondary-700 hover:bg-secondary-600 transition-colors py-2 px-4 rounded-lg flex items-center">
                     <Upload className="mr-2" />
                     Choose file
@@ -637,7 +628,7 @@ const UserNewChallenge = () => {
               >
                 Submit Request
                 {creatingLoading && (
-                  <Loader2 className=" animate-spin mx-2"></Loader2>
+                  <Loader2 className="animate-spin mx-2"></Loader2>
                 )}
               </button>
             </div>

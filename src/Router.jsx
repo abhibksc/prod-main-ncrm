@@ -42,7 +42,7 @@ import AccountConfiguration from "./pages/admin/AccountConfiguration";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
 import AccountChallenges from "./pages/admin/AccountChallenges";
 import UserVerify from "./pages/user/UserVerify";
-import AccountDetails from "./pages/user/AccountDetails";
+import UserAccountDetails from "./pages/user/UserAccountDetails";
 const Router = createBrowserRouter([
   {
     path: "/",
@@ -212,7 +212,7 @@ const Router = createBrowserRouter([
       },
       {
         path: "/user/account-details",
-        element: <AccountDetails></AccountDetails>,
+        element: <UserAccountDetails></UserAccountDetails>,
       },
     ],
   },

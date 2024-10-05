@@ -1,0 +1,124 @@
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import UseUserHook from "@/hooks/user/UseUserHook";
+import toast from "react-hot-toast";
+import axios from "axios";
+
+const InputField = ({ label, placeholder, value, onChange, name }) => (
+  <div className="mb-6">
+    <label className="block text-sm font-medium text-white mb-2">{label}</label>
+    <input
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      name={name}
+      className="w-full px-4 py-3 border text-secondary-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-600 focus:border-secondary-600 transition-all duration-300"
+    />
+  </div>
+);
+
+const UserBankDetails = () => {
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const { getUpdateLoggedUser } = UseUserHook();
+
+  const [formData, setFormData] = useState({
+    bankName: loggedUser?.bankDetails?.bankName || "",
+    holderName: loggedUser?.bankDetails?.holderName || "",
+    accountNumber: loggedUser?.bankDetails?.accountNumber || "",
+    ifscCode: loggedUser?.bankDetails?.ifscCode || "",
+    swiftCode: loggedUser?.bankDetails?.swiftCode || "",
+    comment: loggedUser?.bankDetails?.comment || "",
+  });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const submitHandler = async () => {
+    const toastId = toast.loading("Plese wait..");
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/${
+          loggedUser._id
+        }/bank-details`,
+        formData
+      );
+      console.log(res);
+      getUpdateLoggedUser();
+      toast.success("Details updated", { id: toastId });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!!", { id: toastId });
+    }
+  };
+  useEffect(() => {
+    getUpdateLoggedUser();
+  }, []);
+  return (
+    <div className="p-5 bg-secondary-700/30 rounded-2xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-white">
+        <InputField
+          label="Name of Bank"
+          placeholder="Enter bank name"
+          value={formData.bankName}
+          onChange={handleInputChange}
+          name="bankName"
+        />
+        <InputField
+          label="Name of Account Holder"
+          placeholder="Enter account holder name"
+          value={formData.holderName}
+          onChange={handleInputChange}
+          name="holderName"
+        />
+        <InputField
+          label="Account Number"
+          placeholder="Enter account number"
+          value={formData.accountNumber}
+          onChange={handleInputChange}
+          name="accountNumber"
+        />
+        <InputField
+          label="IFSC Code"
+          placeholder="Enter IFSC code"
+          value={formData.ifscCode}
+          onChange={handleInputChange}
+          name="ifscCode"
+        />
+        <InputField
+          label="Swift Code"
+          placeholder="Enter Swift code"
+          value={formData.swiftCode}
+          onChange={handleInputChange}
+          name="swiftCode"
+        />
+      </div>
+      <div className="col-span-full">
+        <InputField
+          label="Comments"
+          placeholder="Enter any comments"
+          value={formData.comment}
+          onChange={handleInputChange}
+          name="comment"
+        />
+      </div>
+
+      <div className="flex items-center justify-center">
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={submitHandler}
+          className="mt-8 px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg"
+        >
+          Update Bank Details
+        </motion.button>
+      </div>
+    </div>
+  );
+};
+
+export default UserBankDetails;
