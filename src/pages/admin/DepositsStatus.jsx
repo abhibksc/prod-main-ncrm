@@ -230,13 +230,13 @@ const DepositsStatus = () => {
           <p>Account No: <span class="highlight">${
             selectedDeposit?.mt5Account
           }</span></p>
-            <p>Challenge Type: <span class="highlight">${
+            <p>Challenge Type: <span class="highlight">$ ${
               selectedDeposit?.accountType
             }</span></p>
-            <p>Account Size: <span class="highlight">${
+            <p>Account Size: <span class="highlight">$ ${
               selectedDeposit?.balance
             }</span></p>
-            <p>Deposit Balance: <span class="highlight">${
+            <p>Deposit Balance: <span class="highlight">$ ${
               selectedDeposit?.deposit
             }</span></p>
             <p>Phase: <span class="highlight">${1}</span></p>

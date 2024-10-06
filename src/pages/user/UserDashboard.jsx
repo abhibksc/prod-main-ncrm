@@ -18,10 +18,8 @@ export default function UserDashboard() {
     getUpdatePhase,
     getUpdateLoggedUser,
     GetOpenTradeApi,
-    GetCloseTradeApi,
   } = UseUserHook();
   const closeTrades = useSelector((store) => store.user.closeTrades);
-  const depositBalance = useSelector((store) => store.user.depositBalance);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
 
@@ -32,31 +30,31 @@ export default function UserDashboard() {
   //   0
   // );
 
-  const intervalId = useRef(null); // Using useRef to persist the intervalId
-  const location = useLocation();
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         await getUpdateLoggedUser();
         await GetUserInfoAPI();
         await GetOpenTradeApi();
+        await getUpdatePhase();
+        // if (loggedUser.phase <= 3) {
+        // }
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
     };
+
     fetchData();
-    if (loggedUser.phase <= 3) {
-      getUpdatePhase();
-    }
 
     const intervalId = setInterval(() => {
       fetchData();
     }, 5000);
+
     return () => {
       clearInterval(intervalId);
     };
   }, []);
+
   return (
     <motion.div
       className="pb-10"

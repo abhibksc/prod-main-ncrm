@@ -56,39 +56,112 @@ const UserVerify = () => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Withdrawal Request Confirmation - Arena Trade</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 5px;
+      background-color: #ffffff;
+    }
+    .header {
+      background-color: #19422df2;
+      color: #ffffff;
+      padding: 20px 15px;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+    .content {
+      padding: 10px 20px;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #2d6a4f;
+      color: #FFFFFF;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .footer {
+      background-color: #19422df2;
+      color: #ffffff;
+      text-align: center;
+      padding: 5px 10px;
+      font-size: 12px;
+      border-radius: 0 0 10px 10px;
+    }
+    .footer-info {
+      margin-top: 6px;
+    }
+    .footer-info a {
+      color: #B6D0E2;
+      text-decoration: none;
+    }
+
+    .withdrawal-details {
+      background-color: #f8f8f8;
+      border-left: 4px solid #2d6a4f;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    .withdrawal-details p {
+      margin: 5px 0;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #0a2342;
+    }
+    .risk-warning {
+      color: #C70039;
+      padding: 5px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4;">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-    <tr>
-      <td style="background-color: #19422df2; color: #ffffff; padding: 30px 15px; text-align: center;">
-        <h1 style="margin: 0; font-size: 28px; letter-spacing: 1px;">Account Verified</h1>
-      </td>
-    </tr>
-    <tr>
-      <td style="padding: 30px;">
-        <p style="font-size: 16px;">Dear ${
-          userData?.firstName + " " + userData?.lastName
-        },</p>
-        <p style="font-size: 16px;">We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
-        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8f8f8; border-left: 4px solid #2d6a4f; padding: 20px; margin: 30px 0;">
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Account Verified</h1>
+    </div>
+    <div class="content">
+      <p>Dear ${userData?.firstName + " " + userData?.lastName},</p>
+        <p style="font-size: 12px;">Your email has been successfully verified. You can now securely log in to your account and access all available features. If you experience any issues during login, please don't hesitate to reach out for assistance. Thank you for completing the verification process.</p>
+           <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8f8f8; border-left: 4px solid #2d6a4f; padding: 20px; margin: 30px 0;">
           <tr>
             <td>
-              <p style="margin: 10px 0; font-size: 16px;">Name: <span style="font-weight: bold; color: #0a2342;">${
+              <p style="margin: 10px 0; font-size: 13px;">Name: <span style="font-weight: bold; color: #0a2342;">${
                 userData?.firstName + " " + userData.lastName
               }</span></p>
-              <p style="margin: 10px 0; font-size: 16px;">Username: <span style="font-weight: bold; color: #0a2342;">${
+              <p style="margin: 10px 0; font-size: 13px;">Username: <span style="font-weight: bold; color: #0a2342;">${
                 userData?.email
               }</span></p>
-              <p style="margin: 10px 0; font-size: 16px;">Password: <span style="font-weight: bold; color: #0a2342;">${
+              <p style="margin: 10px 0; font-size: 13px;">Password: <span style="font-weight: bold; color: #0a2342;">${
                 userData?.password
               }</span></p>
             </td>
           </tr>
         </table>
-        <p style="font-size: 16px;">Thank you for choosing us.</p>
-        <p style="font-size: 16px;">Happy trading!</p>
-        <p style="font-size: 16px;">Best regards,<br>The Arena Trade Team</p>
-        <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
+
+<p>Thank you for choosing us.</p>
+<p>Happy trading!</p>
+
+      <p>Best regards,<br>The Arena Trade Team</p>
+  <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
           <tr>
             <td align="center" style="padding: 20px;">
@@ -117,24 +190,24 @@ const UserVerify = () => {
             </td>
           </tr>
         </table>
-        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
-        <div style="color: #C70039; padding: 10px; font-size: 14px; line-height: 1.6; background-color: #FFF3F3; border-radius: 8px;">
-          <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
-          <br><br>
-          Arena Trade's services are not for U.S. citizens or in jurisdictions where they violate local laws.
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td style="background-color: #19422df2; color: #ffffff; text-align: center; padding: 20px; font-size: 14px;">
-        <p style="margin: 5px 0;">35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
-        <p style="margin: 5px 0;">Website: <a href="http://www.capitalstreetfx.com" style="color: #B6D0E2; text-decoration: none;">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com" style="color: #B6D0E2; text-decoration: none;">support@capitalstreetfx.com</a></p>
-        <p style="margin: 5px 0;">WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
-        <p style="margin: 5px 0;">We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
-        <p style="margin: 5px 0;">&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
-      </td>
-    </tr>
-  </table>
+
+ <div class="risk-warning">
+  <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
+  <br><br>
+  Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+</div>
+
+    </div>
+    <div class="footer">
+      <div class="footer-info">
+        <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+        <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+        <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+        <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+        <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>`;
 

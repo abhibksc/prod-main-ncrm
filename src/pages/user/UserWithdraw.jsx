@@ -164,7 +164,7 @@ const UserWithdraw = () => {
     setApiLoader(true);
     setError("");
     try {
-      if (loggedUser.phase === 3) {
+      if (loggedUser.phase !== 3) {
         setError("You have to be in 3rd phase for withdrawal !!");
         setApiLoader(false);
       } else if (profitNloss > 0 && profitNloss >= amount) {
