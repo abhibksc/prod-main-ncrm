@@ -42,7 +42,7 @@ const UserChnagePassword = () => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
+      hour12: false,
     });
 
   const customContent = `<!DOCTYPE html>
@@ -63,11 +63,11 @@ const UserChnagePassword = () => {
         .container {
           max-width: 600px;
           margin: 0 auto;
-          padding: 8px;
+          padding: 5px;
           background-color: #ffffff;
         }
         .header {
-          background-color: #0a2342;
+          background-color: #19422df2;
           color: #ffffff;
           padding: 20px 15px;
           text-align: center;
@@ -84,7 +84,7 @@ const UserChnagePassword = () => {
         .cta-button {
           display: inline-block;
           padding: 12px 24px;
-          background-color: #ffa500;
+          background-color: #2d6a4f;
           color: #FFFFFF;
           text-decoration: none;
           border-radius: 5px;
@@ -92,26 +92,25 @@ const UserChnagePassword = () => {
           margin: 10px 0;
         }
         .footer {
-          background-color: #0a2342;
+          background-color: #19422df2;
           color: #ffffff;
           text-align: center;
-          padding: 10px 15px;
+          padding: 5px 10px;
           font-size: 12px;
           border-radius: 0 0 10px 10px;
         }
         .footer-info {
-          margin-top: 10px;
-          line-height: 1.8;
+          margin-top: 6px;
         }
         .footer-info a {
-          color: #ffa500;
+          color: #B6D0E2;
           text-decoration: none;
         }
         
        
         .withdrawal-details {
           background-color: #f8f8f8;
-          border-left: 4px solid #ffa500;
+          border-left: 4px solid #2d6a4f;
           padding: 15px;
           margin: 20px 0;
         }
@@ -124,7 +123,7 @@ const UserChnagePassword = () => {
         }
         .risk-warning {
           color: #C70039;
-          padding: 15px;
+          padding: 5px;
           font-size: 12px;
           line-height: 1.4;
         }
@@ -133,12 +132,12 @@ const UserChnagePassword = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Updated account password</h1>
+          <h1>Account password updated</h1>
         </div>
         <div class="content">
           <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
-  <p>Your account's password has been successfully updated.</p>
-          <div class="withdrawal-details">
+  <p>Your account password has been successfully updated.</p>
+         <div class="withdrawal-details">
           
           <p>Account No: <span class="highlight">${
             loggedUser.mt5Account
@@ -153,8 +152,7 @@ const UserChnagePassword = () => {
           </div>
     
     <p>Thank you for choosing us.</p>
-          
-          <p>Happy trading!</p>
+    <p>Happy trading!</p>
           
           <p>Best regards,<br>The Arena Trade Team</p>
           <hr>
@@ -167,9 +165,7 @@ const UserChnagePassword = () => {
     
         </div>
         <div class="footer">
-          <div class="footer-info">
-            <p>Company License Name</p>
-    
+          <div class="footer-info">    
             <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
             <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
             <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
@@ -206,7 +202,7 @@ const UserChnagePassword = () => {
           {
             email: loggedUser.email,
             content: customContent,
-            subject: "Password changed",
+            subject: "Account password changed",
           }
         );
         toast.success("Password updated", { id: toastId });

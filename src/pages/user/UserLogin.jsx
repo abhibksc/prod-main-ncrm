@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -13,9 +13,11 @@ const UserLogin = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loginData, setLoginData] = useState("");
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoginData("");
     const toastId = toast.loading("Please wait..");
     try {
       const res = await axios.post(
@@ -26,16 +28,11 @@ const UserLogin = () => {
       if (!res.data.status) {
         toast.error(res.data.message, { id: toastId });
       } else {
-        toast.success("Login successful!", { id: toastId });
-        // Cookies.set("userInfo", JSON.stringify(res.data.user), {
-        //   expires: 7,
-        //   secure: true,
-        //   sameSite: "Strict",
-        // });
-
+        toast.success("Login successfull!", { id: toastId });
         dispatch(setLoggedUser(res.data.user));
         navigate("/user/dashboard");
-        console.log("login res", res.data);
+        // console.log("login res", res.data);
+        setLoginData(res.data);
       }
     } catch (error) {
       console.log("error in login", error);
@@ -44,6 +41,173 @@ const UserLogin = () => {
       });
     }
   };
+
+  const currentDateTime = new Date();
+  const formattedDateTime =
+    currentDateTime.toLocaleDateString("en-GB") +
+    ", " +
+    currentDateTime.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // 12-hour format with AM/PM
+    });
+
+  const customContent = `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Request Confirmation - Arena Trade</title>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 5px;
+        background-color: #ffffff;
+      }
+      .header {
+        background-color: #19422df2;
+        color: #ffffff;
+        padding: 20px 15px;
+        text-align: center;
+        border-radius: 10px 10px 0 0;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 22px;
+        letter-spacing: 1px;
+      }
+      .content {
+        padding: 10px 20px;
+      }
+      .cta-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #2d6a4f;
+        color: #FFFFFF;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .footer {
+        background-color: #19422df2;
+        color: #ffffff;
+        text-align: center;
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 0 0 10px 10px;
+      }
+      .footer-info {
+        margin-top: 6px;
+      }
+      .footer-info a {
+        color: #B6D0E2;
+        text-decoration: none;
+      }
+      
+     
+      .withdrawal-details {
+        background-color: #f8f8f8;
+        border-left: 4px solid #2d6a4f;
+        padding: 15px;
+        margin: 20px 0;
+      }
+      .withdrawal-details p {
+        margin: 5px 0;
+      }
+      .highlight {
+        font-weight: bold;
+        color: #0a2342;
+      }
+      .risk-warning {
+        color: #C70039;
+        padding: 5px;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>New Login Detected</h1>
+      </div>
+      <div class="content">
+
+      <p>Dear ${
+        loginData?.user?.firstName + " " + loginData?.user?.lastName
+      },</p>
+      <p>We’re writing to inform you that a new login to your account was detected. Please review the details of this activity below: </p>
+
+              <div class="withdrawal-details">
+
+
+        <p>Country: <span class="highlight">${
+          loginData?.newUserLog?.country
+        }</span></p>
+        <p>Browser: <span class="highlight">${
+          loginData?.newUserLog?.browser
+        }</span></p>
+        <p>IP Address: <span class="highlight">${
+          loginData?.newUserLog?.ip
+        }</span></p>
+        <p>Time stamp: <span class="highlight">${formattedDateTime}</span></p>
+        </div>
+  
+        <p>Thank you for choosing us.</p>
+       <p>Happy trading!</p>
+        
+        <p>Best regards,<br>The Arena Trade Team</p>
+
+        <hr>
+   <div class="risk-warning">
+    <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
+    <br><br>
+    Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+  </div>
+      </div>
+      <div class="footer">
+        <div class="footer-info">    
+          <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+          <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+          <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+          <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+          <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+        </div>
+      </div>
+    </div>
+  </body>
+  </html>`;
+
+  useEffect(() => {
+    const sendCustomMail = async () => {
+      try {
+        const customMailRes = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+          {
+            email: loginData.user.email,
+            content: customContent,
+            subject: "Login Alert",
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (loginData) {
+      sendCustomMail();
+    }
+  }, [loginData]);
 
   return (
     <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">

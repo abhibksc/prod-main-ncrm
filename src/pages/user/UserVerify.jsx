@@ -49,201 +49,94 @@ const UserVerify = () => {
       toast.error("Something went wrong", { id: toastId });
     }
   };
-  const customContent = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdrawal Request Confirmation - Arena Trade</title>
-    <style>
-      body, html {
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background-color: #f4f4f4;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 8px;
-        background-color: #ffffff;
-      }
-      .header {
-        background-color: #0a2342;
-        color: #ffffff;
-        padding: 20px 15px;
-        text-align: center;
-        border-radius: 10px 10px 0 0;
-      }
-      .header h1 {
-        margin: 0;
-        font-size: 22px;
-        letter-spacing: 1px;
-      }
-      .content {
-        padding: 10px 20px;
-      }
-      .cta-button {
-        display: inline-block;
-        padding: 12px 24px;
-        background-color: #ffa500;
-        color: #FFFFFF;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        margin: 10px 0;
-      }
-      .footer {
-        background-color: #0a2342;
-        color: #ffffff;
-        text-align: center;
-        padding: 10px 15px;
-        font-size: 12px;
-        border-radius: 0 0 10px 10px;
-      }
-      .footer-info {
-        margin-top: 10px;
-        line-height: 1.8;
-      }
-      .footer-info a {
-        color: #ffa500;
-        text-decoration: none;
-      }
-     .download-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        background-color: #f0f8ff;
-        padding: 20px;
-        border-radius: 15px;
-      }
-      .download-button {
-        display: flex;
-          flex-direction: column;
-  
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        color: #0a2342;
-        background-color: #ffffff;
-        padding: 10px 10px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        width: 30%;
-        max-width: 80px; 
-      }
-      .download-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-      }
-      .download-button img {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-      }
-      .download-button span {
-        font-weight: bold;
-        font-size: 14px;
-      }
-      @media (max-width: 480px) {
-        .download-section {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 10px;
-        }
-        .download-button {
-          width: 60%;
-          max-width: none;
-        }
-      }
-      .withdrawal-details {
-        background-color: #f8f8f8;
-        border-left: 4px solid #ffa500;
-        padding: 15px;
-        margin: 20px 0;
-      }
-      .withdrawal-details p {
-        margin: 5px 0;
-      }
-      .highlight {
-        font-weight: bold;
-        color: #0a2342;
-      }
-      .risk-warning {
-        color: #C70039;
-        padding: 15px;
-        font-size: 12px;
-        line-height: 1.4;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>Account Varified</h1>
-      </div>
-      <div class="content">
-        <p>Dear ${userData?.firstName + " " + userData?.lastName},</p>
-<p>Your account has been successfully verified with Arena Trade. We wish you all the best!</p>
-        <div class="withdrawal-details">
-          <p>Name: <span class="highlight">${
-            userData?.firstName + " " + userData.lastName
-          }</span></p>
-          <p>Username: <span class="highlight">${userData?.email}</span></p>
-          <p>Password: <span class="highlight">${userData?.password}</span></p>
-        </div>
-           <div class="download-section">
-          <a href="#" class="download-button">
-            <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android Icon">
-            <span>Android</span>
-          </a>
-          <a href="#" class="download-button">
-            <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS Icon">
-            <span>iOS</span>
-          </a>
-          <a href="#" class="download-button">
-            <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows Icon">
-            <span>Windows</span>
-          </a>
-        </div>
-  
-        
-  
-  
-  <p>Thank you for choosing us.</p>
-        
-        <p>Happy trading!</p>
-        
-        <p>Best regards,<br>The Arena Trade Team</p>
-        <hr>
-   <div class="risk-warning">
-    <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
-    <br><br>
-    Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
-  </div>
-      
-  
-      </div>
-      <div class="footer">
-        <div class="footer-info">
-          <p>Company License Name</p>
-  
-          <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
-          <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
-          <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
-          <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
-          <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
-        </div>
-      </div>
-    </div>
-  </body>
-  </html>`;
 
-  console.log("user data#######", userData);
+  const customContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdrawal Request Confirmation - Arena Trade</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4;">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+    <tr>
+      <td style="background-color: #19422df2; color: #ffffff; padding: 30px 15px; text-align: center;">
+        <h1 style="margin: 0; font-size: 28px; letter-spacing: 1px;">Account Verified</h1>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 30px;">
+        <p style="font-size: 16px;">Dear ${
+          userData?.firstName + " " + userData?.lastName
+        },</p>
+        <p style="font-size: 16px;">We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8f8f8; border-left: 4px solid #2d6a4f; padding: 20px; margin: 30px 0;">
+          <tr>
+            <td>
+              <p style="margin: 10px 0; font-size: 16px;">Name: <span style="font-weight: bold; color: #0a2342;">${
+                userData?.firstName + " " + userData.lastName
+              }</span></p>
+              <p style="margin: 10px 0; font-size: 16px;">Username: <span style="font-weight: bold; color: #0a2342;">${
+                userData?.email
+              }</span></p>
+              <p style="margin: 10px 0; font-size: 16px;">Password: <span style="font-weight: bold; color: #0a2342;">${
+                userData?.password
+              }</span></p>
+            </td>
+          </tr>
+        </table>
+        <p style="font-size: 16px;">Thank you for choosing us.</p>
+        <p style="font-size: 16px;">Happy trading!</p>
+        <p style="font-size: 16px;">Best regards,<br>The Arena Trade Team</p>
+        <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
+          <tr>
+            <td align="center" style="padding: 20px;">
+              <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tr>
+                  <td align="center" width="33%" style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
+                      <span style="vertical-align: middle;">Android</span>
+                    </a>
+                  </td>
+                  <td align="center" width="33%" style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                      <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
+                      <span style="vertical-align: middle;">iOS</span>
+                    </a>
+                  </td>
+                  <td align="center" width="33%" style="padding: 0 10px;">
+                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                      <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
+                      <span style="vertical-align: middle;">Windows</span>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 30px 0;">
+        <div style="color: #C70039; padding: 10px; font-size: 14px; line-height: 1.6; background-color: #FFF3F3; border-radius: 8px;">
+          <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
+          <br><br>
+          Arena Trade's services are not for U.S. citizens or in jurisdictions where they violate local laws.
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color: #19422df2; color: #ffffff; text-align: center; padding: 20px; font-size: 14px;">
+        <p style="margin: 5px 0;">35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+        <p style="margin: 5px 0;">Website: <a href="http://www.capitalstreetfx.com" style="color: #B6D0E2; text-decoration: none;">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com" style="color: #B6D0E2; text-decoration: none;">support@capitalstreetfx.com</a></p>
+        <p style="margin: 5px 0;">WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+        <p style="margin: 5px 0;">We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+        <p style="margin: 5px 0;">&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 
   useEffect(() => {
     const verifyEmail = async () => {

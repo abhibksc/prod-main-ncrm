@@ -123,6 +123,157 @@ const WithdrawalStatus = () => {
     setActionType(action);
     setIsDialogOpen(true);
   };
+
+  // custom content -----------------
+
+  // console.log("selected####################", selectedDeposit);
+
+  const currentDateTime = new Date();
+  const formattedDateTime =
+    currentDateTime.toLocaleDateString("en-GB") +
+    ", " +
+    currentDateTime.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false, // 12-hour format with AM/PM
+    });
+
+  const customContent = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Withdrawal Request Confirmation - Arena Trade</title>
+      <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          font-family: 'Arial', sans-serif;
+          line-height: 1.6;
+          color: #333;
+          background-color: #f4f4f4;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 5px;
+          background-color: #ffffff;
+        }
+        .header {
+          background-color: #19422df2;
+          color: #ffffff;
+          padding: 20px 15px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 22px;
+          letter-spacing: 1px;
+        }
+        .content {
+          padding: 10px 20px;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #2d6a4f;
+          color: #FFFFFF;
+          text-decoration: none;
+          border-radius: 5px;
+          font-weight: bold;
+          margin: 10px 0;
+        }
+        .footer {
+          background-color: #19422df2;
+          color: #ffffff;
+          text-align: center;
+          padding: 5px 10px;
+          font-size: 12px;
+          border-radius: 0 0 10px 10px;
+        }
+        .footer-info {
+          margin-top: 6px;
+        }
+        .footer-info a {
+          color: #B6D0E2;
+          text-decoration: none;
+        }
+
+        .withdrawal-details {
+          background-color: #f8f8f8;
+          border-left: 4px solid #2d6a4f;
+          padding: 15px;
+          margin: 20px 0;
+        }
+        .withdrawal-details p {
+          margin: 5px 0;
+        }
+        .highlight {
+          font-weight: bold;
+          color: #0a2342;
+        }
+        .risk-warning {
+          color: #C70039;
+          padding: 5px;
+          font-size: 12px;
+          line-height: 1.4;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Withdrwal Success</h1>
+        </div>
+        <div class="content">
+          <p>Dear ${
+            selectedDeposit?.userId?.firstName +
+            " " +
+            selectedDeposit?.userId?.lastName
+          },</p>
+  <p> Your withdrawal request has been successfully processed.</p>
+        <div class="withdrawal-details">
+          <p>Account No: <span class="highlight">${
+            selectedDeposit.mt5Account
+          }</span></p>
+            <p>Amount: <span class="highlight">${
+              selectedDeposit?.amount
+            }</span></p>
+            <p>Phase: <span class="highlight">${
+              selectedDeposit?.phase
+            }</span></p>
+            <p>Account Type: <span class="highlight">${
+              selectedDeposit?.tradeAccount
+            }</span></p>
+            <p>Time Stamp: <span class="highlight">${formattedDateTime}</span></p>
+          </div>
+
+    <p>Thank you for choosing us.</p>
+    <p>Happy trading!</p>
+
+          <p>Best regards,<br>The Arena Trade Team</p>
+          <hr>
+     <div class="risk-warning">
+      <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
+      <br><br>
+      Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+    </div>
+
+        </div>
+        <div class="footer">
+          <div class="footer-info">
+            <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+            <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+            <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+            <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>`;
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
     try {
@@ -141,6 +292,14 @@ const WithdrawalStatus = () => {
           {
             _id: selectedDeposit._id,
             status: "approved",
+          }
+        );
+        const customMailRes = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+          {
+            email: selectedDeposit.userId.email,
+            content: customContent,
+            subject: "Withdrwal Success",
           }
         );
         toast.success("Withdrwal Approved", { id: toastId });

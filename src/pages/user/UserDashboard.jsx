@@ -38,19 +38,18 @@ export default function UserDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await GetUserInfoAPI();
-        if (loggedUser.accountSize > 99) {
-          await getUpdatePhase();
-        }
         await getUpdateLoggedUser();
-
+        await GetUserInfoAPI();
         await GetOpenTradeApi();
-        // await GetCloseTradeApi()
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
     };
     fetchData();
+    if (loggedUser.phase <= 3) {
+      getUpdatePhase();
+    }
+
     const intervalId = setInterval(() => {
       fetchData();
     }, 5000);

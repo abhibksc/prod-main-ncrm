@@ -245,6 +245,190 @@ const UserKycDetails = () => {
       [label]: "",
     }));
   };
+  //   const customContent = `<!DOCTYPE html>
+  //   <html lang="en">
+  //   <head>
+  //     <meta charset="UTF-8">
+  //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  //     <title>Withdrawal Request Confirmation - Arena Trade</title>
+  //     <style>
+  //       body, html {
+  //         margin: 0;
+  //         padding: 0;
+  //         font-family: 'Arial', sans-serif;
+  //         line-height: 1.6;
+  //         color: #333;
+  //         background-color: #f4f4f4;
+  //       }
+  //       .container {
+  //         max-width: 600px;
+  //         margin: 0 auto;
+  //         padding: 8px;
+  //         background-color: #ffffff;
+  //       }
+  //       .header {
+  //         background-color: #0a2342;
+  //         color: #ffffff;
+  //         padding: 20px 15px;
+  //         text-align: center;
+  //         border-radius: 10px 10px 0 0;
+  //       }
+  //       .header h1 {
+  //         margin: 0;
+  //         font-size: 22px;
+  //         letter-spacing: 1px;
+  //       }
+  //       .content {
+  //         padding: 10px 20px;
+  //       }
+  //       .cta-button {
+  //         display: inline-block;
+  //         padding: 12px 24px;
+  //         background-color: #ffa500;
+  //         color: #FFFFFF;
+  //         text-decoration: none;
+  //         border-radius: 5px;
+  //         font-weight: bold;
+  //         margin: 10px 0;
+  //       }
+  //       .footer {
+  //         background-color: #0a2342;
+  //         color: #ffffff;
+  //         text-align: center;
+  //         padding: 10px 15px;
+  //         font-size: 12px;
+  //         border-radius: 0 0 10px 10px;
+  //       }
+  //       .footer-info {
+  //         margin-top: 10px;
+  //         line-height: 1.8;
+  //       }
+  //       .footer-info a {
+  //         color: #ffa500;
+  //         text-decoration: none;
+  //       }
+  //      .download-section {
+  //         display: flex;
+  //         justify-content: space-between;
+  //         align-items: center;
+  //         margin-top: 20px;
+  //         background-color: #f0f8ff;
+  //         padding: 20px;
+  //         border-radius: 15px;
+  //       }
+  //       .download-button {
+  //         display: flex;
+  //           flex-direction: column;
+
+  //         align-items: center;
+  //         justify-content: center;
+  //         text-decoration: none;
+  //         color: #0a2342;
+  //         background-color: #ffffff;
+  //         padding: 10px 10px;
+  //         border-radius: 8px;
+  //         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  //         transition: all 0.3s ease;
+  //         width: 30%;
+  //         max-width: 80px;
+  //       }
+  //       .download-button:hover {
+  //         transform: translateY(-2px);
+  //         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  //       }
+  //       .download-button img {
+  //         width: 24px;
+  //         height: 24px;
+  //         margin-right: 8px;
+  //       }
+  //       .download-button span {
+  //         font-weight: bold;
+  //         font-size: 14px;
+  //       }
+  //       @media (max-width: 480px) {
+  //         .download-section {
+  //           flex-direction: column;
+  //           align-items: stretch;
+  //           gap: 10px;
+  //         }
+  //         .download-button {
+  //           width: 60%;
+  //           max-width: none;
+  //         }
+  //       }
+  //       .withdrawal-details {
+  //         background-color: #f8f8f8;
+  //         border-left: 4px solid #ffa500;
+  //         padding: 15px;
+  //         margin: 20px 0;
+  //       }
+  //       .withdrawal-details p {
+  //         margin: 5px 0;
+  //       }
+  //       .highlight {
+  //         font-weight: bold;
+  //         color: #0a2342;
+  //       }
+  //       .risk-warning {
+  //         color: #C70039;
+  //         padding: 15px;
+  //         font-size: 12px;
+  //         line-height: 1.4;
+  //       }
+  //     </style>
+  //   </head>
+  //   <body>
+  //     <div class="container">
+  //       <div class="header">
+  //         <h1>KYC submitted</h1>
+  //       </div>
+  //       <div class="content">
+  //         <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
+  // <p>Your KYC has been successfully submitted. We will notify you when it gets verified!</p>
+  //         <div class="withdrawal-details">
+
+  //           <p>Account No: <span class="highlight">${
+  //             loggedUser?.mt5Account
+  //           }</span></p>
+  //           <p>Document Type: <span class="highlight">${
+  //             formData?.documentType
+  //           }</span></p>
+  //           <p>Country of issue: <span class="highlight">${
+  //             formData.countryOfIssue
+  //           }</span></p>
+  //           <p>Purpose: <span class="highlight">${formData.purpose}</span></p>
+  //           <p>Occupation: <span class="highlight">${
+  //             formData.occupation
+  //           }</span></p>
+  //         </div>
+  //   <p>Thank you for choosing us.</p>
+
+  //         <p>Happy trading!</p>
+
+  //         <p>Best regards,<br>The Arena Trade Team</p>
+  //         <hr>
+  //    <div class="risk-warning">
+  //     <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
+  //     <br><br>
+  //     Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+  //   </div>
+
+  //       </div>
+  //       <div class="footer">
+  //         <div class="footer-info">
+  //           <p>Company License Name</p>
+
+  //           <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
+  //           <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
+  //           <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
+  //           <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
+  //           <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </body>
+  //   </html>`;
+
   const customContent = `<!DOCTYPE html>
   <html lang="en">
   <head>
@@ -263,11 +447,11 @@ const UserKycDetails = () => {
       .container {
         max-width: 600px;
         margin: 0 auto;
-        padding: 8px;
+        padding: 5px;
         background-color: #ffffff;
       }
       .header {
-        background-color: #0a2342;
+        background-color: #19422df2;
         color: #ffffff;
         padding: 20px 15px;
         text-align: center;
@@ -284,7 +468,7 @@ const UserKycDetails = () => {
       .cta-button {
         display: inline-block;
         padding: 12px 24px;
-        background-color: #ffa500;
+        background-color: #2d6a4f;
         color: #FFFFFF;
         text-decoration: none;
         border-radius: 5px;
@@ -292,73 +476,25 @@ const UserKycDetails = () => {
         margin: 10px 0;
       }
       .footer {
-        background-color: #0a2342;
+        background-color: #19422df2;
         color: #ffffff;
         text-align: center;
-        padding: 10px 15px;
+        padding: 5px 10px;
         font-size: 12px;
         border-radius: 0 0 10px 10px;
       }
       .footer-info {
-        margin-top: 10px;
-        line-height: 1.8;
+        margin-top: 6px;
       }
       .footer-info a {
-        color: #ffa500;
+        color: #B6D0E2;
         text-decoration: none;
       }
-     .download-section {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        background-color: #f0f8ff;
-        padding: 20px;
-        border-radius: 15px;
-      }
-      .download-button {
-        display: flex;
-          flex-direction: column;
-  
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        color: #0a2342;
-        background-color: #ffffff;
-        padding: 10px 10px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        width: 30%;
-        max-width: 80px; 
-      }
-      .download-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-      }
-      .download-button img {
-        width: 24px;
-        height: 24px;
-        margin-right: 8px;
-      }
-      .download-button span {
-        font-weight: bold;
-        font-size: 14px;
-      }
-      @media (max-width: 480px) {
-        .download-section {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 10px;
-        }
-        .download-button {
-          width: 60%;
-          max-width: none;
-        }
-      }
+      
+     
       .withdrawal-details {
         background-color: #f8f8f8;
-        border-left: 4px solid #ffa500;
+        border-left: 4px solid #2d6a4f;
         padding: 15px;
         margin: 20px 0;
       }
@@ -371,7 +507,7 @@ const UserKycDetails = () => {
       }
       .risk-warning {
         color: #C70039;
-        padding: 15px;
+        padding: 5px;
         font-size: 12px;
         line-height: 1.4;
       }
@@ -380,19 +516,16 @@ const UserKycDetails = () => {
   <body>
     <div class="container">
       <div class="header">
-        <h1>KYC submitted</h1>
+        <h1>Kyc submitted</h1>
       </div>
       <div class="content">
         <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
 <p>Your KYC has been successfully submitted. We will notify you when it gets verified!</p>
         <div class="withdrawal-details">
-         
-          <p>Account No: <span class="highlight">${
-            loggedUser?.mt5Account
-          }</span></p>
-          <p>Document Type: <span class="highlight">${
-            formData?.documentType
-          }</span></p>
+        <p>Username: <span class="highlight">${loggedUser.email}</span></p>
+         <p>Document Type: <span class="highlight">${
+           formData?.documentType
+         }</span></p>
           <p>Country of issue: <span class="highlight">${
             formData.countryOfIssue
           }</span></p>
@@ -401,9 +534,9 @@ const UserKycDetails = () => {
             formData.occupation
           }</span></p>
         </div>
+  
   <p>Thank you for choosing us.</p>
-        
-        <p>Happy trading!</p>
+  <p>Happy trading!</p>
         
         <p>Best regards,<br>The Arena Trade Team</p>
         <hr>
@@ -416,9 +549,7 @@ const UserKycDetails = () => {
   
       </div>
       <div class="footer">
-        <div class="footer-info">
-          <p>Company License Name</p>
-  
+        <div class="footer-info">    
           <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
           <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
           <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>

@@ -28,7 +28,7 @@ const UserWithdraw = () => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
+      hour12: false, // 12-hour format with AM/PM
     });
 
   const customContent = `<!DOCTYPE html>
@@ -49,11 +49,11 @@ const UserWithdraw = () => {
         .container {
           max-width: 600px;
           margin: 0 auto;
-          padding: 8px;
+          padding: 5px;
           background-color: #ffffff;
         }
         .header {
-          background-color: #0a2342;
+          background-color: #19422df2;
           color: #ffffff;
           padding: 20px 15px;
           text-align: center;
@@ -70,7 +70,7 @@ const UserWithdraw = () => {
         .cta-button {
           display: inline-block;
           padding: 12px 24px;
-          background-color: #ffa500;
+          background-color: #2d6a4f;
           color: #FFFFFF;
           text-decoration: none;
           border-radius: 5px;
@@ -78,26 +78,25 @@ const UserWithdraw = () => {
           margin: 10px 0;
         }
         .footer {
-          background-color: #0a2342;
+          background-color: #19422df2;
           color: #ffffff;
           text-align: center;
-          padding: 10px 15px;
+          padding: 5px 10px;
           font-size: 12px;
           border-radius: 0 0 10px 10px;
         }
         .footer-info {
-          margin-top: 10px;
-          line-height: 1.8;
+          margin-top: 6px;
         }
         .footer-info a {
-          color: #ffa500;
+          color: #B6D0E2;
           text-decoration: none;
         }
         
        
         .withdrawal-details {
           background-color: #f8f8f8;
-          border-left: 4px solid #ffa500;
+          border-left: 4px solid #2d6a4f;
           padding: 15px;
           margin: 20px 0;
         }
@@ -110,7 +109,7 @@ const UserWithdraw = () => {
         }
         .risk-warning {
           color: #C70039;
-          padding: 15px;
+          padding: 5px;
           font-size: 12px;
           line-height: 1.4;
         }
@@ -119,23 +118,20 @@ const UserWithdraw = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrawal Requested</h1>
+          <h1>Withdrwal requested</h1>
         </div>
         <div class="content">
           <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
   <p>  We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
-          <div class="withdrawal-details">
-          <p>Account No: <span class="highlight">${
-            loggedUser.mt5Account
-          }</span></p>
+        <div class="withdrawal-details">
+          <p>Username: <span class="highlight">${loggedUser.email}</span></p>
             <p>Amount: <span class="highlight">${amount}</span></p>
             <p>Processing time: <span class="highlight">${" 1-3 business days"}</span></p>
             <p>Updated Date: <span class="highlight">${formattedDateTime}</span></p>
           </div>
     
     <p>Thank you for choosing us.</p>
-          
-          <p>Happy trading!</p>
+    <p>Happy trading!</p>
           
           <p>Best regards,<br>The Arena Trade Team</p>
           <hr>
@@ -148,9 +144,7 @@ const UserWithdraw = () => {
     
         </div>
         <div class="footer">
-          <div class="footer-info">
-            <p>Company License Name</p>
-    
+          <div class="footer-info">    
             <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
             <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
             <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
@@ -167,20 +161,10 @@ const UserWithdraw = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
-    const customMailRes = await axios.post(
-      `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-      {
-        email: loggedUser.email,
-        content: customContent,
-        subject: "Withdrwal requested",
-      }
-    );
-    console.log(customMailRes);
     setApiLoader(true);
     setError("");
-    console.log(selectedGateway, selectedAccount, amount);
     try {
-      if (loggedUser.phase !== 3) {
+      if (loggedUser.phase === 3) {
         setError("You have to be in 3rd phase for withdrawal !!");
         setApiLoader(false);
       } else if (profitNloss > 0 && profitNloss >= amount) {
@@ -196,6 +180,14 @@ const UserWithdraw = () => {
             managerIndex: 1,
             pNl: "40",
             phase: loggedUser.phase,
+          }
+        );
+        const customMailRes = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+          {
+            email: loggedUser.email,
+            content: customContent,
+            subject: "Withdrwal requested",
           }
         );
         setApiLoader(false);
