@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setLoggedUser } from "../../redux/user/userSlice";
-import { Mail, Lock, LogIn, Rss } from "lucide-react";
+import { Mail, Lock, LogIn, Rss, Loader2 } from "lucide-react";
 import Cookies from "js-cookie";
 
 const UserLogin = () => {
@@ -14,33 +14,7 @@ const UserLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loginData, setLoginData] = useState("");
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoginData("");
-    const toastId = toast.loading("Please wait..");
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
-        { email, password }
-      );
-
-      if (!res.data.status) {
-        toast.error(res.data.message, { id: toastId });
-      } else {
-        toast.success("Login successfull!", { id: toastId });
-        dispatch(setLoggedUser(res.data.user));
-        navigate("/user/dashboard");
-        // console.log("login res", res.data);
-        setLoginData(res.data);
-      }
-    } catch (error) {
-      console.log("error in login", error);
-      toast.error(error.response?.data?.message || "Login failed!", {
-        id: toastId,
-      });
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -189,6 +163,30 @@ const UserLogin = () => {
   </body>
   </html>`;
 
+  // let toastId;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // toastId = toast.loading("Please wait..");
+    setIsLoading(true);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/login`,
+        { email, password }
+      );
+      if (!res.data.status) {
+        toast.error(res.data.message, { id: toastId });
+      } else {
+        setLoginData(res.data);
+
+        dispatch(setLoggedUser(res.data.user));
+      }
+      toast.success("Login success");
+    } catch (error) {
+      console.log("error in login", error);
+      toast.error(error.response?.data?.message || "Login failed!");
+    }
+  };
+
   useEffect(() => {
     const sendCustomMail = async () => {
       try {
@@ -200,6 +198,8 @@ const UserLogin = () => {
             subject: "Login Alert",
           }
         );
+        setIsLoading(false);
+        navigate("/user/dashboard");
       } catch (error) {
         console.log(error);
       }
@@ -305,10 +305,11 @@ const UserLogin = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 type="submit"
-                className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                className="w-full flex gap-4 items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
               >
                 <LogIn className="mr-2" size={20} />
                 Sign in
+                {isLoading && <Loader2 className=" animate-spin"></Loader2>}
               </motion.button>
             </form>
           </div>
