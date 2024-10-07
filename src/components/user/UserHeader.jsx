@@ -149,7 +149,7 @@ const UserHeader = () => {
           <h1 className="md:text-3xl text-xl  font-extrabold ">Forex-ZX</h1>
         </div>
         <div
-          className={` flex gap-1 font-bold rounded-full px-3 py-1 ${
+          className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
             loggedUser.phase > 0
               ? " text-green-500 bg-green-500/10"
               : "text-red-500 animate-pulse  bg-red-500/10"

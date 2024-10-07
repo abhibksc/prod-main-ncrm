@@ -11,6 +11,7 @@ import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 import { setProfitNloss } from "@/redux/user/userSlice";
 import { useLocation } from "react-router-dom";
+import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
 
 export default function UserDashboard() {
   const {
@@ -62,6 +63,7 @@ export default function UserDashboard() {
         await getUpdatePhase();
       }
     };
+
     fetchData();
 
     const intervalId = setInterval(() => {
@@ -90,15 +92,16 @@ export default function UserDashboard() {
       </motion.div>
 
       <motion.div
-        className="grid md:grid-cols-2 grid-cols-1 justify-between my-10"
+        className="grid md:grid-cols-2 grid-cols-1 items-center gap-5 justify-between my-5"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.0, delay: 0.0 }}
       >
         <div className="">
-          <UserLineChart />
+          {/* <UserLineChart /> */}
+          <TradingViewWidget></TradingViewWidget>
         </div>
-        <div className="md:ml-20">
+        <div className=" flex md:ml-20 flex-col">
           <UserDashboardAccount />
         </div>
       </motion.div>
