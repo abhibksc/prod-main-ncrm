@@ -95,7 +95,7 @@ const UserDashboardBalanceCards = () => {
   const isPositive = parseFloat(profitNloss) >= 0;
 
   return (
-    <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/60 shadow-md rounded-lg p-4 gap-4">
+    <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/40 shadow-md rounded-lg p-4 gap-4">
       <BalanceCard
         icon={Scale}
         title="Account Size"
