@@ -15,7 +15,7 @@ const AccountTypes = () => {
   const fetchAccountTypes = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/auth/get-custom-groups`
+        `${import.meta.env.VITE_API_END_POINT}/api/auth/get-custom-groups`
       );
       //   console.log("res account types--", res.data.data);
 
@@ -27,7 +27,7 @@ const AccountTypes = () => {
   const fetchExistingData = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/auth/get-account-types`
+        `${import.meta.env.VITE_API_END_POINT}/api/auth/get-account-types`
       );
 
       setExistingData(res.data.data);

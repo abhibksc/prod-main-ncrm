@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const fetchApiGroups = async () => {
   const res = await axios.get(
-    `https://vapi.testcrm.co.in/api/web//GetGroups?Manager_Index=1`
+    `${import.meta.env.VITE_API_END_POINT}/api/web//GetGroups?Manager_Index=1`
   );
   console.log("get api groups---", res.data.lstGroups);
   return res.data.lstGroups;
@@ -26,7 +26,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   const handleSave = async (group) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/auth/add-custom-group`,
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-custom-group`,
         {
           apiGroup: group,
           customGroup: customGroups[group] || "",
