@@ -57,7 +57,8 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (loggedUser.phase >= 2) {
+      console.log("ssuse effect 2 called");
+      if (loggedUser.phase <= 2) {
         await getUpdatePhase();
       }
     };
