@@ -11,7 +11,7 @@ export default function CustomGroupList({ refresh, setRefresh }) {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-custom-groups`
       );
-      //   console.log("fetch custom group list---", res.data.data);
+      console.log("custom group list @@---", res.data.data);
       setCustomGroups(res.data.data);
     } catch (error) {
       console.log("error in custom list group", error);

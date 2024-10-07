@@ -7,7 +7,7 @@ const fetchApiGroups = async () => {
   const res = await axios.get(
     `${import.meta.env.VITE_API_END_POINT}/api/web//GetGroups?Manager_Index=1`
   );
-  console.log("get api groups---", res.data.lstGroups);
+  console.log("get api groups@@---", res.data.lstGroups);
   return res.data.lstGroups;
 };
 
@@ -48,7 +48,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   const handleChange = (group, value) => {
     setCustomGroups((prev) => ({ ...prev, [group]: value }));
   };
-
+  console.log("api groups--", apiGroups);
   useEffect(() => {
     const loadApiGroups = async () => {
       const groups = await fetchApiGroups();
