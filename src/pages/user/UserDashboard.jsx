@@ -54,11 +54,23 @@ export default function UserDashboard() {
     };
   }, []);
 
+  // for update----phase
+
   useEffect(() => {
-    if (loggedUser.phase >= 2) {
-      getUpdatePhase();
-    }
-  }, [profitNloss]);
+    const fetchData = async () => {
+      if (loggedUser.phase >= 2) {
+        await getUpdatePhase();
+      }
+    };
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 12000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   return (
     <motion.div
