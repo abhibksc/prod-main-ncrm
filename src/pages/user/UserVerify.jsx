@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { CheckCircle, Mail, XCircle } from "lucide-react";
@@ -296,9 +296,11 @@ const UserVerify = () => {
                   ? `Resend in ${cooldownTime}s`
                   : "Resend Verification Email"}
               </button>
-              <button className="bg-blue-600 block w-full hover:bg-blue-700 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
-                Go to Login
-              </button>
+              <Link className="" to={"/user/login"}>
+                <button className="bg-blue-600 block w-full mt-5 hover:bg-blue-700 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
+                  Go to Login
+                </button>
+              </Link>
             </div>
           </div>
           <div className=" bg-gray-900/40 px-6 py-4">
