@@ -168,12 +168,12 @@ export default function UseUserHook() {
     console.log("calculated max values---", phaseMaxValueInNumber);
     console.log("current logged phase---", loggedUser.phase);
     // console.log("profit n loss#######---", profitNloss);
-    console.log("current pnl  phase update********", currentPnlRef.current);
+    console.log("phase update hook********", currentPnlRef.current);
     // console.log(
     //   " max reached ########---",
     //   currentPnlRef.current >= phaseMaxValueInNumber ? true : false
     // );
-    // console.log("current phase data---", currentPhaseData);
+    console.log("current phase data---", currentPhaseData);
     if (
       currentPnlRef.current >= phaseMaxValueInNumber &&
       loggedUser.phase <= 2

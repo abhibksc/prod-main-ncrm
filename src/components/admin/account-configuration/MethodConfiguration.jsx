@@ -104,7 +104,7 @@ export default function MethodConfiguration() {
   const getAllPlatforms = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/auth/get-payment-methods`
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-payment-methods`
       );
       setArrayData(res.data.data);
       console.log("getAllPlatforms", res.data);

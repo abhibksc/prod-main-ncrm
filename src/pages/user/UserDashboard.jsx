@@ -22,6 +22,7 @@ export default function UserDashboard() {
   const closeTrades = useSelector((store) => store.user.closeTrades);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
+  const profitNloss = useSelector((store) => store.user.profitNloss);
 
   // const allTrades = [...openTrades, ...closeTrades];
 
@@ -36,9 +37,6 @@ export default function UserDashboard() {
         await getUpdateLoggedUser();
         await GetUserInfoAPI();
         await GetOpenTradeApi();
-        await getUpdatePhase();
-        // if (loggedUser.phase <= 3) {
-        // }
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
@@ -48,12 +46,19 @@ export default function UserDashboard() {
 
     const intervalId = setInterval(() => {
       fetchData();
+      getUpdatePhase();
     }, 10000);
 
     return () => {
       clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    if (loggedUser.phase >= 2) {
+      getUpdatePhase();
+    }
+  }, [profitNloss]);
 
   return (
     <motion.div
