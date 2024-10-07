@@ -250,6 +250,7 @@ export default function UseUserHook() {
         dispatch(setAvailableBalance(""));
         // await GetUserInfoAPI();
         toast.success("Maximum profit reached", { id: toastId });
+        window.location.reload();
 
         const customContent = `<!DOCTYPE html>
         <html lang="en">
@@ -397,7 +398,6 @@ export default function UseUserHook() {
             subject: "Phase updated",
           }
         );
-        window.location.reload();
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);
