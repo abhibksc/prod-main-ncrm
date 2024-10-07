@@ -230,7 +230,7 @@ const UserWithdraw = () => {
                   : "text-red-500 bg-red-400/20"
               }   mt-1 rounded-full py-1  font-bold`}
             >
-              $ {profitNloss ? profitNloss.toFixed(2) : "0"}
+              $ {profitNloss > 0 ? profitNloss.toFixed(2) : 0}
             </p>
           </div>
         </div>
