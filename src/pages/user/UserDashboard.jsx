@@ -46,7 +46,6 @@ export default function UserDashboard() {
 
     const intervalId = setInterval(() => {
       fetchData();
-      getUpdatePhase();
     }, 10000);
 
     return () => {
@@ -62,6 +61,7 @@ export default function UserDashboard() {
         await getUpdatePhase();
       }
     };
+    fetchData();
 
     const intervalId = setInterval(() => {
       fetchData();
