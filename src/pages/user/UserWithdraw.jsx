@@ -177,7 +177,7 @@ const UserWithdraw = () => {
             mt5Account: userInfo.MT5Account,
             status: "pending",
             userId: loggedUser._id,
-            managerIndex: 1,
+            managerIndex: import.meta.env.VITE_MANAGER_INDEX,
             pNl: "40",
             phase: loggedUser.phase,
           }

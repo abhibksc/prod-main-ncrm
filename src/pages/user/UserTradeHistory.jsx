@@ -23,7 +23,9 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
+          }/api/web/GetCloseTradeAll?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Accont=${
             loggedUser.mt5Account
           }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
@@ -31,9 +33,9 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${
-            loggedUser.mt5Account
-          }`
+          }/api/web/getOpenTradeByAccount?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Accont=${loggedUser.mt5Account}`
         );
       }
       console.log("res trade history--", res.data);

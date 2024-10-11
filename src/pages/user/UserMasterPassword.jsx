@@ -187,9 +187,9 @@ const UserMasterPassword = () => {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/ChangeMasterPassword?Manager_Index=1&Account=${
-            loggedUser.mt5Account
-          }&password=${passwords.confirm}`
+          }/api/web/ChangeMasterPassword?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
         );
 
         const updateChallengeDB = await axios.put(

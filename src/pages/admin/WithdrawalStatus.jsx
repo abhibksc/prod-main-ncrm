@@ -236,7 +236,7 @@ const WithdrawalStatus = () => {
   <p> Your withdrawal request has been successfully processed.</p>
         <div class="withdrawal-details">
           <p>Account No: <span class="highlight">${
-            selectedDeposit?.mt5Account
+            selectedDeposit.mt5Account
           }</span></p>
             <p>Amount: <span class="highlight">${
               selectedDeposit?.amount
@@ -281,9 +281,11 @@ const WithdrawalStatus = () => {
         const apiWithdrwalRes = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeWithdrawBalance?Manager_Index=1&MT5Account=${
-            selectedDeposit.mt5Account
-          }&Amount=${selectedDeposit.amount}&Comment=test`
+          }/api/web/MakeWithdrawBalance?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
+            selectedDeposit.amount
+          }&Comment=test`
         );
         const res = await axios.put(
           `${

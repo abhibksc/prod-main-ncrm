@@ -3,21 +3,21 @@ import { Edit2, Check, X } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const fetchApiGroups = async () => {
-  const res = await axios.get(
-    `${import.meta.env.VITE_API_END_POINT}/api/web//GetGroups?Manager_Index=1`
-  );
-  console.log("get api groups@@---", res.data.lstGroups);
-  return res.data.lstGroups;
-};
-
 const AccountGroup = ({ refresh, setRefresh }) => {
   const [apiGroups, setApiGroups] = useState([]);
   const [customGroups, setCustomGroups] = useState({});
   const [editingId, setEditingId] = useState(null);
-  //   const [refresh, setRefresh] = useState(false);
 
-  //   console.log("custom groups----", customGroups);
+  const fetchApiGroups = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_END_POINT}/api/web//GetGroups?Manager_Index=${
+        import.meta.env.VITE_MANAGER_INDEX
+      }`
+    );
+
+    // console.log("get api groups$$$$$$---", res.data.lstGroups);
+    return res.data.lstGroups;
+  };
 
   const handleEdit = (id) => {
     setEditingId(id);
@@ -48,7 +48,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   const handleChange = (group, value) => {
     setCustomGroups((prev) => ({ ...prev, [group]: value }));
   };
-  console.log("api groups--", apiGroups);
+
   useEffect(() => {
     const loadApiGroups = async () => {
       const groups = await fetchApiGroups();

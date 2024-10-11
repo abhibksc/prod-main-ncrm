@@ -29,24 +29,23 @@ import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
 import { getData } from "country-list";
 import UserChallengeHook from "@/hooks/user/UserChallengeHook";
+import DepositsStatus from "@/pages/admin/DepositsStatus";
 
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     country: "",
     accountType: "",
+    apiGroup: "",
     platform: "",
     accountSize: "",
     accountBalance: "",
-    isUSResident: false,
-    title: "",
     firstName: "",
     lastName: "",
     address: "",
     city: "",
     zipCode: "",
     state: "",
-    dateOfBirth: "",
     leverage: "",
     email: "",
     phone: "",
@@ -83,13 +82,26 @@ const UserNewChallenge = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    const updatedValue =
-      name === "phone" ? parseInt(value.replace(/\D/g, ""), 10) || "" : value;
+    if (name === "accountType") {
+      const selectedConfig = accountConfigurations.find(
+        (config) => config.accountType === value
+      );
+      console.log("selected configgg", selectedConfig);
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : updatedValue,
-    }));
+      setFormData((prev) => ({
+        ...prev,
+        accountType: value,
+        apiGroup: selectedConfig.apiGroup,
+      }));
+    } else {
+      const updatedValue =
+        name === "phone" ? parseInt(value.replace(/\D/g, ""), 10) || "" : value;
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : updatedValue,
+      }));
+    }
   };
 
   // api handler---------------
@@ -110,7 +122,7 @@ const UserNewChallenge = () => {
           mt5Account: randomNumber,
           status: "pending",
           userId: loggedUser._id,
-          managerIndex: "1",
+          managerIndex: import.meta.env.VITE_MANAGER_INDEX,
           name: formData.firstName,
           lName: formData.lastName,
           email: formData.email,
@@ -121,10 +133,11 @@ const UserNewChallenge = () => {
           country: formData.country,
           zipCode: formData.zipCode,
           leverage: formData.leverage,
-          groupName: "SK GROUP\\M10\\CLASSIC",
+          groupName: formData.apiGroup,
           accountType: formData.accountType,
         }
       );
+      console.log("deposit db %%%%%%%%", depositDBres.data);
 
       const addChallengeDB = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
@@ -153,6 +166,8 @@ const UserNewChallenge = () => {
           masterPassword: "000",
           investorPassword: "000",
           phase: 0,
+          managerIndex: import.meta.env.VITE_MANAGER_INDEX,
+          groupName: formData.apiGroup,
         }
       );
 
@@ -197,12 +212,13 @@ const UserNewChallenge = () => {
       );
 
       setAccountConfigurations(res.data.data);
+      console.log(res.data.data);
     } catch (error) {
       console.log("Error fetching existing ac types data", error);
     }
   };
 
-  console.log("account configg----", accountConfigurations);
+  // console.log("account configg----", accountConfigurations);
 
   // use effect -----------
   useEffect(() => {
@@ -213,6 +229,7 @@ const UserNewChallenge = () => {
     getPaymentMethod();
     fetchAccountConfigurations();
   }, []);
+  console.log("account type #####", formData.accountType);
 
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
@@ -390,7 +407,6 @@ const UserNewChallenge = () => {
               </div>
             </div>
           )}
-
           {step === 2 && (
             <div className="space-y-6">
               <h2 className="text-2xl font-bold mb-6">

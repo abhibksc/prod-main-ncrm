@@ -8,6 +8,7 @@ const AccountTypes = () => {
   const [existingData, setExistingData] = useState([]);
   const [newAccountType, setNewAccountType] = useState({
     accountType: "",
+    apiGroup: "",
     leverage: [{ label: "", value: "" }],
     accountSize: [{ deposit: "", balance: "" }],
   });
@@ -17,7 +18,7 @@ const AccountTypes = () => {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-custom-groups`
       );
-      //   console.log("res account types--", res.data.data);
+      console.log("res custom ac types--", res.data.data);
 
       setAccountTypes(res.data.data);
     } catch (error) {
@@ -31,7 +32,6 @@ const AccountTypes = () => {
       );
 
       setExistingData(res.data.data);
-      //   console.log("existing data res", res.data);
     } catch (error) {
       console.log("Error fetching existing ac types data", error);
     }
@@ -43,6 +43,18 @@ const AccountTypes = () => {
       const updated = { ...prev };
       if (field) {
         updated[field][index][subfield] = value;
+      } else if (name === "accountType") {
+        const selectedType = accountTypes.find(
+          (type) => type.customGroup === value
+        );
+        console.log("selected type!!!", selectedType);
+        if (selectedType) {
+          updated.accountType = selectedType.customGroup;
+          updated.apiGroup = selectedType.apiGroup;
+        } else {
+          updated.apiGroup = "";
+          updated.customGroup = "";
+        }
       } else {
         updated[name] = value;
       }
@@ -75,12 +87,13 @@ const AccountTypes = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-account-type`,
         {
+          apiGroup: newAccountType.apiGroup,
           accountType: newAccountType.accountType,
           leverage: newAccountType.leverage,
           accountSize: newAccountType.accountSize,
         }
       );
-      //   console.log("add account type---", res.data);
+      console.log("add account type---", res.data);
 
       if (res.data.status) {
         setNewAccountType({
@@ -112,13 +125,13 @@ const AccountTypes = () => {
     fetchAccountTypes();
     fetchExistingData();
   }, []);
+  // console.log("use state new account Type", newAccountType);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-white">
         Configure Account Type
       </h1>
-
       <div className="bg-primary-700 text-white shadow-md rounded-lg p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Add New Account Type</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -126,7 +139,7 @@ const AccountTypes = () => {
             <label className="block mb-2 font-medium">Account Type</label>
             <select
               name="accountType"
-              value={newAccountType.accountType}
+              value={newAccountType.customGroup}
               onChange={(e) => handleInputChange(e)}
               required
               className="w-full px-3 text-black py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

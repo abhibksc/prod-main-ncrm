@@ -54,9 +54,9 @@ export default function UseUserHook() {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetUserInfo?Manager_Index=1&MT5Account=${
-            loggedUser.mt5Account
-          }`
+          }/api/web/GetUserInfo?Manager_Index=${
+            import.meta.env.VITE_BECKEND_END_POINT
+          }&MT5Account=${loggedUser.mt5Account}`
         );
         if (res.data.Balance > 0) {
           dispatch(setUserInfo(res.data));
@@ -65,7 +65,9 @@ export default function UseUserHook() {
           setCurrentPnlAndRef(newPnl);
           dispatch(setProfitNloss(newPnl));
         }
+        // console.log("res user ingo hook ####--", res.data);
       }
+
       if (currentAccount < 0) {
         console.log("undefined current ac--#####");
       }
@@ -88,7 +90,9 @@ export default function UseUserHook() {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=1&MT5Accont=${
+          }/api/web/GetCloseTradeAll?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Accont=${
             loggedUser.mt5Account
           }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
@@ -110,9 +114,9 @@ export default function UseUserHook() {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/getOpenTradeByAccount?Manager_Index=1&MT5Accont=${
-            loggedUser.mt5Account
-          }`
+          }/api/web/getOpenTradeByAccount?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Accont=${loggedUser.mt5Account}`
         );
 
         dispatch(setOpenTrades(res.data));
@@ -186,18 +190,20 @@ export default function UseUserHook() {
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
-            Manager_Index: 1,
+            Manager_Index: loggedUser.managerIndex,
             MT5Account: randomNumber,
             Name: loggedUser.firstName + " " + loggedUser.lastName,
             Leverage: loggedUser.leverage,
             Country: loggedUser.country,
-            Group_Name: "SK GROUP\\M10\\CLASSIC",
+            Group_Name: loggedUser.groupName,
           }
         );
         const depositApires = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
+          }/api/web/MakeDepositBalance?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${randomNumber}&Amount=${
             loggedUser.accountSize
           }&Comment=TEST`
         );
@@ -228,9 +234,9 @@ export default function UseUserHook() {
         const disableAccountRes = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
-            loggedUser.mt5Account
-          }&Status=0`
+          }/api/web/EnableProfileAccount?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${loggedUser.mt5Account}&Status=0`
         );
 
         const updateLoggedUser = await axios.put(
@@ -416,18 +422,20 @@ export default function UseUserHook() {
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
-            Manager_Index: 1,
+            Manager_Index: loggedUser.managerIndex,
             MT5Account: randomNumber,
             Name: loggedUser.firstName + " " + loggedUser.lastName,
             Leverage: loggedUser.leverage,
             Country: loggedUser.country,
-            Group_Name: "SK GROUP\\M10\\CLASSIC",
+            Group_Name: loggedUser.groupName,
           }
         );
         const depositApires = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${randomNumber}&Amount=${
+          }/api/web/MakeDepositBalance?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${randomNumber}&Amount=${
             loggedUser.accountSize
           }&Comment=TEST`
         );
@@ -455,9 +463,9 @@ export default function UseUserHook() {
         const disableAccountRes = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/EnableProfileAccount?Manager_Index=1&MT5Account=${
-            loggedUser.mt5Account
-          }&Status=0`
+          }/api/web/EnableProfileAccount?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${loggedUser.mt5Account}&Status=0`
         );
         await getUpdateLoggedUser();
         // await GetUserInfoAPI();

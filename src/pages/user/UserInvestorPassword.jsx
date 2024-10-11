@@ -185,9 +185,9 @@ const UserInvesterPassword = () => {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/ChangeInvesterPassword?Manager_Index=1&Account=${
-            loggedUser.mt5Account
-          }&password=${passwords.confirm}`
+          }/api/web/ChangeInvesterPassword?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
         );
         const updateChallengeDB = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,

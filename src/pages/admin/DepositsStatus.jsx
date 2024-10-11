@@ -20,7 +20,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useDispatch, useStore } from "react-redux";
-import { setCurrentAccount, setDepositBalance } from "@/redux/user/userSlice";
+import {
+  setCurrentAccount,
+  setDepositBalance,
+  setMasterPassword,
+} from "@/redux/user/userSlice";
 import toast from "react-hot-toast";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -131,7 +135,6 @@ const DepositsStatus = () => {
     setActionType(action);
     setIsDialogOpen(true);
   };
-  // console.log("selected deposit---", selectedDeposit);
 
   const customContent = `<!DOCTYPE html>
     <html lang="en">
@@ -230,7 +233,7 @@ const DepositsStatus = () => {
           <p>Account No: <span class="highlight">${
             selectedDeposit?.mt5Account
           }</span></p>
-            <p>Challenge Type: <span class="highlight">$ ${
+            <p>Challenge Type: <span class="highlight">${
               selectedDeposit?.accountType
             }</span></p>
             <p>Account Size: <span class="highlight">$ ${
@@ -302,6 +305,8 @@ const DepositsStatus = () => {
     </body>
     </html>`;
 
+  // console.log("selected deposit!!!!", selectedDeposit);
+
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
     // console.log("selected deposits--", selectedDeposit);
@@ -311,28 +316,32 @@ const DepositsStatus = () => {
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
-            Manager_Index: 1,
+            Manager_Index: selectedDeposit.managerIndex,
             MT5Account: selectedDeposit.mt5Account,
-            Name: selectedDeposit.name + "" + selectedDeposit.lName,
+            Name: selectedDeposit.name,
+            lName: selectedDeposit.lName,
+            Country: selectedDeposit.country,
             Leverage: selectedDeposit.leverage,
-            Group_Name: "SK GROUP\\M10\\CLASSIC",
-          }
-        );
-
-        const res = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
-          {
-            _id: selectedDeposit._id,
-            status: "approved",
+            Group_Name: selectedDeposit.groupName,
           }
         );
 
         const depositApires = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeDepositBalance?Manager_Index=1&MT5Account=${
-            selectedDeposit.mt5Account
-          }&Amount=${selectedDeposit.balance}&Comment=TEST`
+          }/api/web/MakeDepositBalance?Manager_Index=${
+            selectedDeposit.managerIndex
+          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
+            selectedDeposit.balance
+          }&Comment=TEST`
+        );
+
+        const updateDepositRes = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
+          {
+            _id: selectedDeposit._id,
+            status: "approved",
+          }
         );
 
         const updateChallengeDB = await axios.put(
@@ -357,21 +366,6 @@ const DepositsStatus = () => {
             leverage: selectedDeposit.leverage,
           }
         );
-        setApiMasterPassword(addUserApi.data.Master_Pwd);
-        setApiInvestorPassword(addUserApi.data.Investor_Pwd);
-
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: selectedDeposit.email,
-            content: customContent,
-            subject: "Challenge Added",
-          }
-        );
-        console.log(" add user api---", addUserApi.data);
-        console.log(" add user api---", addUserApi);
-        console.log("updated confirm data", res);
-        console.log("deposit api res", depositApires);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -384,7 +378,20 @@ const DepositsStatus = () => {
 
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+        setApiMasterPassword(addUserApi.data.Master_Pwd);
+        setApiInvestorPassword(addUserApi.data.Investor_Pwd);
         toast.success("Account created", { id: toastId });
+
+        console.log(" add user api---", addUserApi.data);
+
+        const customMailRes = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+          {
+            email: selectedDeposit.email,
+            content: customContent,
+            subject: "Challenge Added",
+          }
+        );
       } else if (actionType === "reject") {
         const res = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
