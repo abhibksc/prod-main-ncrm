@@ -105,8 +105,7 @@ const UserNewChallenge = () => {
   };
 
   // api handler---------------
-  const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
-
+  const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
   const apiTestHandler = async () => {
     const toastID = toast.loading("Please wait..");
     setCreatingLoading(true);

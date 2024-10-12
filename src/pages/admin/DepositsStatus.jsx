@@ -305,7 +305,7 @@ const DepositsStatus = () => {
     </body>
     </html>`;
 
-  // console.log("selected deposit!!!!", selectedDeposit);
+  console.log("selected deposit!!!!", selectedDeposit);
 
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
@@ -319,7 +319,6 @@ const DepositsStatus = () => {
             Manager_Index: selectedDeposit.managerIndex,
             MT5Account: selectedDeposit.mt5Account,
             Name: selectedDeposit.name,
-            lName: selectedDeposit.lName,
             Country: selectedDeposit.country,
             Leverage: selectedDeposit.leverage,
             Group_Name: selectedDeposit.groupName,

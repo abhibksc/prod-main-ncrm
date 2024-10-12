@@ -33,7 +33,7 @@ export default function UseUserHook() {
   const currentPnlRef = useRef(0);
   const [currentPnl, setCurrentPnl] = useState(0);
 
-  const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
+  const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
 
   console.log("initial pnl  ********", currentPnl);
 
@@ -55,7 +55,7 @@ export default function UseUserHook() {
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_BECKEND_END_POINT
+            import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUser.mt5Account}`
         );
         if (res.data.Balance > 0) {
