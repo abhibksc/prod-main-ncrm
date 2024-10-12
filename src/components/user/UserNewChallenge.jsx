@@ -6,6 +6,7 @@ import {
   Upload,
   ArrowRightCircleIcon,
   Loader2,
+  ClipboardIcon,
 } from "lucide-react";
 import CountUp from "react-countup";
 
@@ -228,8 +229,19 @@ const UserNewChallenge = () => {
     getPaymentMethod();
     fetchAccountConfigurations();
   }, []);
-  console.log("account type #####", formData.accountType);
+  // console.log("account type #####", formData.accountType);
 
+  const [copied, setCopied] = useState(false);
+  const paymentDetails = paymentMethods.find(
+    (m) => m.name === selectedPayment
+  )?.details;
+
+  const copyText = (text) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied!!");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+  };
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
       <div className="flex justify-between mb-8">
@@ -375,7 +387,7 @@ const UserNewChallenge = () => {
                 </div>
                 <div className="text-blue-400 mb-4">Account Size 5000 USD</div>
                 <button className="bg-blue-600 text-white py-2 px-4 rounded-full mb-6">
-                  MATCHTRADER
+                  Meta Trader-5
                 </button>
                 <div className="space-y-2">
                   {[
@@ -567,12 +579,34 @@ const UserNewChallenge = () => {
               {selectedPayment && (
                 <div className="bg-secondary-700/50 p-4 rounded-lg">
                   <h3 className="font-medium mb-2">Account Details</h3>
-                  <p className="text-sm">
-                    {
-                      paymentMethods.find((m) => m.name === selectedPayment)
-                        ?.details
-                    }
-                  </p>
+
+                  {paymentDetails && selectedPayment !== "Online Payment" ? (
+                    <button
+                      onClick={() => copyText(paymentDetails)}
+                      className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
+                    >
+                      <p className="text-sm text-white">
+                        {paymentDetails || "No details available"}
+                      </p>
+                      <ClipboardIcon className="h-5 w-5" />
+                      <span className="text-xs">
+                        {copied ? "Copied!" : "Copy"}
+                      </span>
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                  {selectedPayment === "Online Payment" && (
+                    <div>
+                      <a
+                        href="https://landscapetradingcompany.in/local-payment/"
+                        target="_blank"
+                        className=" bg-green-700 font-semibold  rounded-full px-6 py-2"
+                      >
+                        Pay now
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -626,9 +660,13 @@ const UserNewChallenge = () => {
                 />
                 <label htmlFor="agreeToTerms" className="text-sm">
                   I agree to{" "}
-                  <span className="text-blue-400 cursor-pointer">
+                  <a
+                    href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                    className="text-blue-400 cursor-pointer"
+                    target="_blank"
+                  >
                     Terms & Conditions
-                  </span>
+                  </a>
                 </label>
               </div>
 
