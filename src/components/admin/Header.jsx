@@ -69,17 +69,13 @@ const Header = () => {
             >
               <ChartNoAxesGantt className="md:hidden"></ChartNoAxesGantt>
             </button>
-
             <a href="/admin/dashboard" className="flex items-center mr-4">
-              {/* <h2 className="text-primary-400 text-3xl font-extrabold">
-                Forex-ZX
-              </h2> */}
               <img
                 src="/beta-funded.png"
                 alt="Forex-ZX Logo"
-                className="h-6 w-auto sm:h-8 md:h-10 lg:h-12 xl:h-14 object-contain"
+                className="h-4 w-auto sm:h-4 md:h-6 lg:h-8 xl:h-10 object-contain"
               />
-            </a>
+            </a>{" "}
             {/* <form
               action="#"
               method="GET"

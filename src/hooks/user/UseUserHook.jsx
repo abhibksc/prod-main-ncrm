@@ -76,6 +76,21 @@ export default function UseUserHook() {
     }
   }, [loggedUser, currentAccount, dispatch, setCurrentPnlAndRef]);
 
+  let phaseLimitValues;
+
+  if (loggedUser.accountType === "Beta Algo") {
+    phaseLimitValues = [
+      { phase: 1, min: 5, max: 10 },
+      { phase: 2, min: 5, max: 5 },
+      { phase: 3, min: 5, max: Infinity },
+    ];
+  } else if (loggedUser.accountType === "Beta Standard") {
+    phaseLimitValues = [
+      { phase: 1, min: 4, max: 10 },
+      { phase: 2, min: 4, max: Infinity },
+    ];
+  }
+
   const getCurrentPnl = useCallback(() => {
     return currentPnlRef.current;
   }, []);
@@ -141,24 +156,6 @@ export default function UseUserHook() {
   // update phase ----------------
 
   const getUpdatePhase = useCallback(async () => {
-    const phaseLimitValues = [
-      {
-        phase: 1,
-        min: 5,
-        max: 10,
-      },
-      {
-        phase: 2,
-        min: 10,
-        max: 15,
-      },
-      {
-        phase: 3,
-        min: 15,
-        max: 20,
-      },
-    ];
-
     const currentPhaseData = phaseLimitValues.find(
       (value) => value.phase === loggedUser.phase
     );
@@ -168,16 +165,10 @@ export default function UseUserHook() {
     const phaseMaxValueInNumber =
       (currentPhaseData?.max / 100) * loggedUser.accountSize;
 
+    console.log("current phase data---", currentPhaseData);
     console.log("calculated min values---", phaseMinValueInNumber);
     console.log("calculated max values---", phaseMaxValueInNumber);
-    console.log("current logged phase---", loggedUser.phase);
-    // console.log("profit n loss#######---", profitNloss);
     console.log("phase update hook********", currentPnlRef.current);
-    // console.log(
-    //   " max reached ########---",
-    //   currentPnlRef.current >= phaseMaxValueInNumber ? true : false
-    // );
-    console.log("current phase data---", currentPhaseData);
     if (
       currentPnlRef.current >= phaseMaxValueInNumber &&
       loggedUser.phase <= 2

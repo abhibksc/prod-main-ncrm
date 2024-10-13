@@ -599,7 +599,6 @@ const DepositsStatus = () => {
               <th className="py-2 px-4 text-left">Plan</th>
               <th className="py-2 px-4 text-left">Deposit</th>
               <th className="py-2 px-4 text-left">Ac Size</th>
-              <th className="py-2 px-4 text-left">Balance</th>
               <th className="py-2 px-4 text-left">Requested Date</th>
               <th className="py-2 px-4 text-left">Status</th>
               <th className="py-2 px-4 text-left">Action</th>
@@ -633,12 +632,11 @@ const DepositsStatus = () => {
                   </td>
                   <td className="py-2 px-4">{item?.mt5Account}</td>
                   <td className="py-2 px-4">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                      {"Silver"}
+                    <span className="bg-primary-400/20 whitespace-nowrap text-white px-2 py-1 rounded-full text-sm">
+                      {item?.accountType}
                     </span>
                   </td>
                   <td className="py-2 px-4">{item?.deposit}</td>
-                  <td className="py-2 px-4">5000</td>
                   <td className="py-2 px-4">{item?.balance}</td>
                   <td className="py-2 px-4">{formatDate(item?.createdAt)}</td>
                   <td className="py-2 px-4">
@@ -686,7 +684,12 @@ const DepositsStatus = () => {
             <AlertDialogDescription>
               {selectedDeposit && (
                 <div>
-                  <p>User: {selectedDeposit.userId?.name}</p>
+                  <p>
+                    User:{" "}
+                    {selectedDeposit.userId?.firstName +
+                      " " +
+                      selectedDeposit.userId?.lastName}
+                  </p>
                   <p>Email: {selectedDeposit.userId?.email}</p>
                   <p>Deposit Amount: ${selectedDeposit.deposit}</p>
                   <p>Account: {selectedDeposit.mt5Account}</p>

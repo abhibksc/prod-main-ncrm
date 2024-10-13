@@ -45,13 +45,9 @@ import UserVerify from "./pages/user/UserVerify";
 import UserAccountDetails from "./pages/user/UserAccountDetails";
 const Router = createBrowserRouter([
   {
-    path: "/",
+    path: "/admin",
     element: <App></App>,
     children: [
-      {
-        path: "/",
-        element: <Dashboard></Dashboard>,
-      },
       {
         path: "/admin/dashboard",
         element: <Dashboard></Dashboard>,
@@ -138,17 +134,18 @@ const Router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: "/admin/login",
     element: <Login></Login>,
   },
   {
-    path: "/user",
+    path: "/",
     element: <UserOutlet></UserOutlet>,
     children: [
       {
-        path: "/user/",
-        element: <h1>User Home Page</h1>,
+        path: "/",
+        element: <UserDashboard></UserDashboard>,
       },
       {
         path: "/user/dashboard",

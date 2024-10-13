@@ -69,8 +69,7 @@ const UserDashboardAccount = () => {
       >
         Server -{" "}
         <span className=" bg-yellow-600/20 text-xl rounded-full py-1 px-3">
-          {" "}
-          Rpw7gT
+          BizzTrade LTD
         </span>
       </motion.h2>
       <div className="space-y-1">
