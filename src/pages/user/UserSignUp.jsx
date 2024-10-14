@@ -49,6 +49,7 @@ const UserSignUp = () => {
   const countries = getData();
   // console.log("countries--", countries);
   const dispatch = useDispatch();
+  const countriesArray = getData();
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -268,10 +269,11 @@ const UserSignUp = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value="">Select a country</option>
-                    <option value="IN">India</option>
-                    <option value="US">United States</option>
-                    {/* Add more countries as needed */}
+                    {countriesArray.map((c) => (
+                      <option key={c.code} value={c.name}>
+                        {c?.name}
+                      </option>
+                    ))}
                   </select>
                 </motion.div>
                 <motion.div
@@ -291,7 +293,6 @@ const UserSignUp = () => {
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleChange}
-                    required
                   />
                 </motion.div>
                 <motion.div
@@ -311,7 +312,6 @@ const UserSignUp = () => {
                     placeholder="State"
                     value={formData.state}
                     onChange={handleChange}
-                    required
                   />
                 </motion.div>
 
@@ -332,7 +332,6 @@ const UserSignUp = () => {
                     placeholder="City"
                     value={formData.city}
                     onChange={handleChange}
-                    required
                   />
                 </motion.div>
                 <motion.div
@@ -352,7 +351,6 @@ const UserSignUp = () => {
                     placeholder="Zip code"
                     value={formData.zipCode}
                     onChange={handleChange}
-                    required
                   />
                 </motion.div>
                 <motion.div
@@ -412,17 +410,19 @@ const UserSignUp = () => {
                     <span className="text-sm text-secondary-300">
                       I agree with the{" "}
                       <a
-                        href="#"
-                        className="text-green-500 hover:text-green-400 transition"
+                        href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                        className="text-blue-400 cursor-pointer"
+                        target="_blank"
                       >
-                        Privacy Policy
-                      </a>{" "}
+                        Privacy policy
+                      </a>
                       and{" "}
                       <a
-                        href="#"
-                        className="text-green-500 hover:text-green-400 transition"
+                        href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                        className="text-blue-400 cursor-pointer"
+                        target="_blank"
                       >
-                        Terms of Service
+                        Terms & Conditions
                       </a>
                     </span>
                   </label>

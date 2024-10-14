@@ -23,8 +23,6 @@ import {
   setOpenTrades,
   setPhase,
   setProfitNloss,
-  setUserFormData,
-  setUserInfo,
 } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
