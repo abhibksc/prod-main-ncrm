@@ -78,18 +78,22 @@ export default function UseUserHook() {
 
   let phaseLimitValues;
 
-  if (loggedUser.accountType === "Beta Algo") {
+  if (loggedUser.accountType === "Beta Standard") {
     phaseLimitValues = [
       { phase: 1, min: 5, max: 10 },
       { phase: 2, min: 5, max: 5 },
       { phase: 3, min: 5, max: Infinity },
     ];
-  } else if (loggedUser.accountType === "Beta Standard") {
+  } else if (loggedUser.accountType === "Beta Algo") {
     phaseLimitValues = [
       { phase: 1, min: 4, max: 10 },
       { phase: 2, min: 4, max: Infinity },
     ];
   }
+
+  const phaseLength = phaseLimitValues.length;
+
+  console.log("Phase length--", phaseLength);
 
   const getCurrentPnl = useCallback(() => {
     return currentPnlRef.current;
@@ -171,7 +175,7 @@ export default function UseUserHook() {
     console.log("phase update hook********", currentPnlRef.current);
     if (
       currentPnlRef.current >= phaseMaxValueInNumber &&
-      loggedUser.phase <= 2
+      loggedUser.phase <= phaseLength
     ) {
       const toastId = toast.loading("Updating phase..");
       try {

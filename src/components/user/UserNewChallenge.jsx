@@ -171,8 +171,8 @@ const UserNewChallenge = () => {
         }
       );
 
+      dispatch(setProfitNloss(0));
       dispatch(setInvestorPassword("000"));
-      dispatch(setProfitNloss(""));
       dispatch(setMasterPassword("000"));
       dispatch(setOpenTrades([]));
       dispatch(setCurrentAccount(randomNumber));
