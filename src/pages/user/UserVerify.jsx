@@ -160,7 +160,7 @@ const UserVerify = () => {
 <p>Thank you for choosing us.</p>
 <p>Happy trading!</p>
 
-      <p>Best regards,<br>The Arena Trade Team</p>
+      <p>Best regards,<br>The Beta Funded Team</p>
   <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
           <tr>
@@ -194,19 +194,18 @@ const UserVerify = () => {
  <div class="risk-warning">
   <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
   <br><br>
-  Arena Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+  Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
 </div>
 
     </div>
     <div class="footer">
-      <div class="footer-info">
-        <p>35-37, Ludgate Hill, London Post Box: EC4M7JN United Kingdom | P.O. Box 151</p>
-        <p>Website: <a href="http://www.capitalstreetfx.com">www.capitalstreetfx.com</a> | E-mail: <a href="mailto:support@capitalstreetfx.com">support@capitalstreetfx.com</a></p>
-        <p>WHATSAPP US: +760-7500-0197 | SKYPE US: dfhhgffdfdgfgx.support</p>
-        <p>We sent out this message to all existing Alena Traders. Please visit this page to know more about our Privacy Policy.</p>
-        <p>&copy; 2024 Arena Trade 2012-2021. All Rights Reserved</p>
-      </div>
-    </div>
+          <div class="footer-info">    
+            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
+            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
+            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+          </div>
+        </div>
   </div>
 </body>
 </html>`;
