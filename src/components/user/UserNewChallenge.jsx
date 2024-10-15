@@ -611,23 +611,29 @@ const UserNewChallenge = () => {
               <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
                 <div className="flex gap-5 items-center">
                   <h1 className="text-lg sm:text-xl font-semibold">
-                    Deposit Balance
+                    Account Size
                   </h1>
                   <p className="bg-orange-400/80 px-4 sm:px-5 py-1 font-semibold rounded-full">
-                    {formData.accountBalance}
+                    $ {formData.accountBalance}
                   </p>
                 </div>
-
                 <div className="flex gap-5 items-center">
                   <h1 className="text-lg sm:text-xl font-semibold">
-                    Payable Amount
+                    Deposit Amount
                   </h1>
                   <p className="bg-green-600 px-4 sm:px-5 py-1 font-semibold rounded-full">
-                    ${formData.accountSize}
+                    $ {formData.accountSize}
                   </p>
                 </div>
               </div>
-
+              <div className="flex gap-3 items-center">
+                <h1 className="sm:text-sm font-semibold text-gray-300">
+                  INR Figure
+                </h1>
+                <p className="bg-green-600/10 px-4 sm:px-5 py-1 font-semibold rounded-full">
+                  &#8377; {formData.accountSize * 84}
+                </p>
+              </div>
               <div>
                 <label className="block mb-2 text-sm font-medium">
                   Upload proof of payment

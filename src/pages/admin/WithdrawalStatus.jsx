@@ -236,7 +236,7 @@ const WithdrawalStatus = () => {
   <p> Your withdrawal request has been successfully processed.</p>
         <div class="withdrawal-details">
           <p>Account No: <span class="highlight">${
-            selectedDeposit.mt5Account
+            selectedDeposit?.mt5Account
           }</span></p>
             <p>Amount: <span class="highlight">${
               selectedDeposit?.amount
@@ -616,9 +616,9 @@ const WithdrawalStatus = () => {
                 <div>
                   <p>User: {selectedDeposit.userId?.name}</p>
                   <p>Email: {selectedDeposit.userId?.email}</p>
-                  <p>Deposit Amount: ${selectedDeposit.amount}</p>
-                  <p>Account: {selectedDeposit.mt5Account}</p>
-                  <p>Date: {formatDate(selectedDeposit.updatedAt)}</p>
+                  <p>Deposit Amount: ${selectedDeposit?.amount}</p>
+                  <p>Account: {selectedDeposit?.mt5Account}</p>
+                  <p>Date: {formatDate(selectedDeposit?.updatedAt)}</p>
                 </div>
               )}
               <p className="mt-2">

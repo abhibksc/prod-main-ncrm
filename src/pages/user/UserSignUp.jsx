@@ -157,7 +157,7 @@ const UserSignUp = () => {
                   Create Your Account
                 </h2>
                 <p className="text-secondary-300 mb-8">
-                  Join Forex-ZX and start your trading journey today.
+                  Join Beta Funded and start your trading journey today.
                 </p>
               </motion.div>
 
@@ -416,7 +416,7 @@ const UserSignUp = () => {
                       >
                         Privacy policy
                       </a>
-                      and{" "}
+                      and
                       <a
                         href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
                         className="text-blue-400 cursor-pointer"

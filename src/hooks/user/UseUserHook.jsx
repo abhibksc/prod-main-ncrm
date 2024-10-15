@@ -89,6 +89,11 @@ export default function UseUserHook() {
       { phase: 1, min: 4, max: 10 },
       { phase: 2, min: 4, max: Infinity },
     ];
+  } else {
+    phaseLimitValues = [
+      { phase: 1, min: 4, max: 10 },
+      { phase: 2, min: 4, max: Infinity },
+    ];
   }
 
   const phaseLength = phaseLimitValues.length;
