@@ -4,6 +4,9 @@ import {
   setDepositBalance,
   setLoggedUser,
   setOpenTrades,
+  setPaymentMethods,
+  setPhaseMaxLength,
+  setPlatforms,
   setProfitNloss,
   setUserInfo,
 } from "@/redux/user/userSlice";
@@ -83,6 +86,7 @@ export default function UseUserHook() {
   }
 
   const phaseLength = phaseLimitValues.length;
+  dispatch(setPhaseMaxLength(phaseLength));
 
   console.log("Phase length--", phaseLength);
 
@@ -1100,13 +1104,15 @@ export default function UseUserHook() {
   // reset all details --------------
 
   const getReset = () => {
-    // dispatch(setLoggedUser(""));
-    // dispatch(setUserInfo(""));
-    // dispatch(setDepositBalance(""));
-    // dispatch(setAvailableBalance(""));
-    // dispatch(setProfitNloss(""));
-    // dispatch(setOpenTrades([]));
-    // dispatch(setCloseTrades([]));
+    dispatch(setLoggedUser(""));
+    dispatch(setUserInfo(""));
+    dispatch(setDepositBalance(""));
+    dispatch(setAvailableBalance(""));
+    dispatch(setProfitNloss(""));
+    dispatch(setOpenTrades([]));
+    dispatch(setCloseTrades([]));
+    dispatch(setPlatforms([]));
+    dispatch(setPaymentMethods([]));
   };
   return {
     GetOpenTradeApi,

@@ -183,7 +183,7 @@ const UserNewChallenge = () => {
       await getUpdateLoggedUser();
       await GetUserInfoAPI();
       toast.success("Created new challenge", { id: toastID });
-      // navigate("/user/dashboard");
+      navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
       toast.error("Plese try again", { id: toastID });

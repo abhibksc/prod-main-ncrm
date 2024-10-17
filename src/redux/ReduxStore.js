@@ -18,13 +18,13 @@ import adminSlice from "./adminSlice";
 const userPersistConfig = {
   key: "user",
   storage,
-  whitelist: ["user"], // Persist only user slice state
+  whitelist: ["userInfo", "loggedUser"], // Persist only user data
 };
 
 const adminPersistConfig = {
   key: "admin",
   storage,
-  whitelist: ["admin"], // Persist only admin slice state
+  whitelist: ["adminUser"], // Persist only admin data
 };
 
 // Apply persistReducer to each slice separately
@@ -41,10 +41,11 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
       },
     }),
 });
 
 export const persistor = persistStore(store);
+
 export default store;

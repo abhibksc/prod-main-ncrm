@@ -107,7 +107,7 @@ const UserHeader = () => {
     <nav className="bg-secondary-900 p-4 w-full h-16">
       <div className=" px-5 mx-auto flex justify-between items-center">
         <div className=" flex gap-2">
-          <button className=" md:hidden" onClick={sidebarHandler}>
+          <button className=" lg:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
           </button>
           <a href="/user/dashboard" className="flex items-center mr-4">

@@ -5,7 +5,7 @@ const initialState = {
 };
 
 export const adminSlice = createSlice({
-  name: "adminSlice",
+  name: "admin",
   initialState,
   reducers: {
     setAdminUser: (state, action) => {

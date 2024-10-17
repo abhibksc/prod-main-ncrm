@@ -9,13 +9,11 @@ import Cookies from "js-cookie";
 
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  console.log("user outlet ########--", loggedUser);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!loggedUser || !loggedUser.emailVerified) {
-      // navigate("/user/login");
-      console.log("user outlet ########--", "logouttttt");
+      navigate("/user/login");
     }
   }, [navigate, loggedUser]);
 

@@ -2,23 +2,24 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isSidebarOpen: false,
-  depositBalance: "",
-  availableBalance: "00",
-  profitNloss: "00",
+  depositBalance: 0, // As number
+  availableBalance: 0, // As number
+  profitNloss: 0, // As number
   openTrades: [],
   closeTrades: [],
   userInfo: "",
   loggedUser: "",
   platforms: [],
   paymentMethods: [],
+  phaseMaxLength: 0,
 };
 
-export const UserSlice = createSlice({
+export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    handleToggleSidebar: (state, action) => {
-      state.isSidebarOpen = action.payload;
+    handleToggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen; // Toggle between true/false
     },
     setDepositBalance: (state, action) => {
       state.depositBalance = action.payload;
@@ -47,6 +48,9 @@ export const UserSlice = createSlice({
     setPaymentMethods: (state, action) => {
       state.paymentMethods = action.payload;
     },
+    setPhaseMaxLength: (state, action) => {
+      state.phaseMaxLength = action.payload;
+    },
   },
 });
 
@@ -61,6 +65,7 @@ export const {
   setCloseTrades,
   setPlatforms,
   setPaymentMethods,
-} = UserSlice.actions;
+  setPhaseMaxLength,
+} = userSlice.actions;
 
-export default UserSlice.reducer;
+export default userSlice.reducer;

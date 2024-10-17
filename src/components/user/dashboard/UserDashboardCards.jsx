@@ -17,15 +17,15 @@ const BalanceCard = ({
   delay,
   isProfit,
   isPhase,
+  isMax,
 }) => {
-  const getPhaseColor = (phase) => {
+  const getPhaseColor = (phase, isMax) => {
+    if (isMax) return "text-red-500";
     switch (phase) {
       case 1:
         return "text-green-500";
       case 2:
         return "text-yellow-500";
-      case "3 & Final":
-        return "text-red-500";
       default:
         return "";
     }
@@ -72,7 +72,7 @@ const BalanceCard = ({
                   ? "text-green-500"
                   : "text-red-500"
                 : isPhase
-                ? getPhaseColor(value)
+                ? getPhaseColor(value, isMax)
                 : ""
             }`}
           >
@@ -85,14 +85,13 @@ const BalanceCard = ({
 };
 
 const UserDashboardBalanceCards = () => {
-  const depositBalance = useSelector((store) => store.user.depositBalance);
   const availableBalance = useSelector((store) => store.user.availableBalance);
   const profitNloss = useSelector((store) => store.user.profitNloss);
-  const userInfo = useSelector((store) => store.user.userInfo);
-  const phase = useSelector((store) => store.user.phase);
+  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
   const loggedUser = useSelector((store) => store.user.loggedUser);
 
   const isPositive = parseFloat(profitNloss) >= 0;
+  const isMax = phaseMaxLength === loggedUser.phase;
 
   return (
     <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/40 shadow-md rounded-lg p-4 gap-4">
@@ -123,9 +122,10 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={CircleDot}
         title="Phase"
-        value={loggedUser.phase === 3 ? "3 & Final" : Number(loggedUser.phase)}
+        value={isMax ? `Live Account` : loggedUser.phase}
         borderColor="#a855f7"
         delay={0.5}
+        isMax={isMax}
         isPhase={true}
       />
     </div>
