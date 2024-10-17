@@ -74,10 +74,14 @@ const DepositsStatus = () => {
   const [apiMasterPassword, setApiMasterPassword] = useState("");
   const [apiInvestorPassword, setApiInvestorPassword] = useState("");
   const dispatch = useDispatch();
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
 
-  const formData = useStore((store) => store.user.userFormData);
-  const randomNumber = Math.floor(1000000 + Math.random() * 9000000).toString();
-
+  console.log("selected deposit!!!!", selectedDeposit);
+  const togglePreview = (item) => {
+    setShowPreview(!showPreview);
+    setSelectedDeposit(item);
+  };
   const fetchApiData = async () => {
     setLoading(true);
     try {
@@ -245,7 +249,9 @@ const DepositsStatus = () => {
             <p>Investor Password: <span class="highlight">${
               apiInvestorPassword || "000"
             }</span></p>
-            <p>Server Name: <span class="highlight">${"General"}</span></p>
+            <p>Server Name: <span class="highlight">${
+              import.meta.env.VITE_SERVER_NAME
+            }</span></p>
           </div>
     
     <p>Thank you for choosing us.</p>
@@ -593,6 +599,7 @@ const DepositsStatus = () => {
               <th className="py-2 px-4 text-left">Deposit</th>
               <th className="py-2 px-4 text-left">Ac Size</th>
               <th className="py-2 px-4 text-left">Requested Date</th>
+              <th className="py-2 px-4 text-left">Proof</th>
               <th className="py-2 px-4 text-left">Status</th>
               <th className="py-2 px-4 text-left">Action</th>
             </tr>
@@ -633,11 +640,42 @@ const DepositsStatus = () => {
                   <td className="py-2 px-4">{item?.balance}</td>
                   <td className="py-2 px-4">{formatDate(item?.createdAt)}</td>
                   <td className="py-2 px-4">
+                    <button
+                      className=" text-blue-400"
+                      onClick={() => togglePreview(item)}
+                    >
+                      view
+                    </button>
+                    {showPreview && (
+                      <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-primary-800 p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
+                          <img
+                            src={
+                              import.meta.env.VITE_BECKEND_END_POINT +
+                              "/" +
+                              selectedDeposit?.depositSS
+                            }
+                            alt="Preview"
+                            className="max-w-full rounded-md h-auto"
+                          />
+                          <button
+                            onClick={togglePreview}
+                            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </td>
+
+                  <td className="py-2 px-4">
                     <span className="bg-gray-200 first-letter:capitalize text-gray-800 px-2 py-1 rounded-full text-sm">
                       {item.status.charAt(0).toUpperCase() +
                         item.status.slice(1)}
                     </span>
                   </td>
+
                   <td className="py-2 px-4">
                     {item.status === "pending" && (
                       <div className="flex items-center gap-5">

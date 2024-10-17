@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import Sidebar from "./components/admin/SideBar";
 import Header from "./components/admin/Header";
 import { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
 export default function App() {
@@ -15,9 +15,9 @@ export default function App() {
     }
   }, [adminUser, navigate]);
 
-  if (!adminUser) {
-    return null;
-  }
+  // if (!adminUser) {
+  //   return null;
+  // }
 
   return (
     <div className="h-screen flex flex-col">

@@ -3,10 +3,9 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setLoggedUser } from "../../redux/user/userSlice";
-import { Mail, Lock, LogIn, Rss, Loader2 } from "lucide-react";
-import Cookies from "js-cookie";
+import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
 
 const UserLogin = () => {
   const [email, setEmail] = useState("");
@@ -162,10 +161,8 @@ const UserLogin = () => {
   </body>
   </html>`;
 
-  // let toastId;
   const handleLogin = async (e) => {
     e.preventDefault();
-    // toastId = toast.loading("Please wait..");
     setIsLoading(true);
     try {
       const res = await axios.post(
@@ -207,6 +204,16 @@ const UserLogin = () => {
       sendCustomMail();
     }
   }, [loginData]);
+
+  // // redirect-----
+  // const loggedUser = useSelector((store) => store.user.loggedUser);
+
+  // useEffect(() => {
+  //   if (!loggedUser || !loggedUser.emailVerified) {
+  //     navigate("/user/dashboard");
+  //     console.log("user login ########--", "login");
+  //   }
+  // }, [navigate, loggedUser]);
 
   return (
     <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">

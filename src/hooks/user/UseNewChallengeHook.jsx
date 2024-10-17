@@ -1,7 +1,8 @@
+import { setPaymentMethods, setPlatforms } from "@/redux/user/userSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-export default function UserChallengeHook() {
+export default function UserNewChallengeHook() {
   const dispatch = useDispatch();
 
   const getPlatforms = async () => {

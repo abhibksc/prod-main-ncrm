@@ -1100,15 +1100,13 @@ export default function UseUserHook() {
   // reset all details --------------
 
   const getReset = () => {
-    dispatch(setLoggedUser(""));
-    dispatch(setCurrentUser(""));
-    dispatch(setDepositBalance(""));
-    dispatch(setAvailableBalance(""));
-    dispatch(setUserInfo(""));
-    dispatch(setLoggedUser(""));
-    dispatch(setOpenTrades([]));
-    dispatch(setCloseTrades([]));
-    dispatch(setProfitNloss(""));
+    // dispatch(setLoggedUser(""));
+    // dispatch(setUserInfo(""));
+    // dispatch(setDepositBalance(""));
+    // dispatch(setAvailableBalance(""));
+    // dispatch(setProfitNloss(""));
+    // dispatch(setOpenTrades([]));
+    // dispatch(setCloseTrades([]));
   };
   return {
     GetOpenTradeApi,

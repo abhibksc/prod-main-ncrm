@@ -9,10 +9,12 @@ const initialState = {
   closeTrades: [],
   userInfo: "",
   loggedUser: "",
+  platforms: [],
+  paymentMethods: [],
 };
 
 export const UserSlice = createSlice({
-  name: "userSlice",
+  name: "user",
   initialState,
   reducers: {
     handleToggleSidebar: (state, action) => {
@@ -39,6 +41,12 @@ export const UserSlice = createSlice({
     setLoggedUser: (state, action) => {
       state.loggedUser = action.payload;
     },
+    setPlatforms: (state, action) => {
+      state.platforms = action.payload;
+    },
+    setPaymentMethods: (state, action) => {
+      state.paymentMethods = action.payload;
+    },
   },
 });
 
@@ -51,6 +59,8 @@ export const {
   setLoggedUser,
   setOpenTrades,
   setCloseTrades,
+  setPlatforms,
+  setPaymentMethods,
 } = UserSlice.actions;
 
 export default UserSlice.reducer;

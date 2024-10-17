@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   ChevronDown,
   Check,
@@ -7,9 +7,11 @@ import {
   ArrowRightCircleIcon,
   Loader2,
   ClipboardIcon,
+  UploadCloudIcon,
+  X,
+  Eye,
 } from "lucide-react";
 import CountUp from "react-countup";
-
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -18,9 +20,7 @@ import { setOpenTrades, setProfitNloss } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
 import { getData } from "country-list";
-import UserChallengeHook from "@/hooks/user/UserChallengeHook";
-import DepositsStatus from "@/pages/admin/DepositsStatus";
-
+import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -41,34 +41,34 @@ const UserNewChallenge = () => {
     phone: "",
   });
 
-  console.log("formm data----", formData);
+  // console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
   const { GetUserInfoAPI } = UseUserHook();
   const [selectedPayment, setSelectedPayment] = useState("");
-  const [file, setFile] = useState(null);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const dispatch = useDispatch();
   const [direction, setDirection] = useState(1);
   const navigate = useNavigate();
   const countriesArray = getData();
-  const { getPlatforms, getPaymentMethod } = UserChallengeHook();
+  const { getPlatforms, getPaymentMethod } = UserNewChallengeHook();
   const { getUpdateLoggedUser } = UseUserHook();
-  const platformData = useSelector((store) => store.user.platforms);
-  const paymentMethods = useSelector((store) => store.user.paymentMethods);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [accountConfigurations, setAccountConfigurations] = useState([]);
+  const platformData = useSelector((store) => store.user.platforms);
+  const paymentMethods = useSelector((store) => store.user.paymentMethods);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const fileInputRef = useRef(null);
 
-  const filteredPlatformData = platformData.filter(
+  const filteredPlatformData = platformData?.filter(
     (value) => value.status === "active"
   );
-  const filteredMethodsData = paymentMethods.filter(
+  const filteredMethodsData = paymentMethods?.filter(
     (value) => value.status === "active"
   );
-
-  // console.log("all platforms data ---", filteredPlatformData);
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -94,7 +94,7 @@ const UserNewChallenge = () => {
     }
   };
 
-  // api handler---------------
+  // add changlange api handler---------------
   const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
   const apiTestHandler = async () => {
     const toastID = toast.loading("Please wait..");
@@ -102,31 +102,49 @@ const UserNewChallenge = () => {
 
     try {
       setCreatingLoading(false);
+      // Store all form values in a separate object
+      const formValues = {
+        deposit: formData.accountSize,
+        balance: formData.accountBalance,
+        mt5Account: randomNumber,
+        status: "pending",
+        userId: loggedUser._id,
+        managerIndex: import.meta.env.VITE_MANAGER_INDEX,
+        name: formData.firstName,
+        lName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        zipCode: formData.zipCode,
+        leverage: formData.leverage,
+        groupName: formData.apiGroup,
+        accountType: formData.accountType,
+      };
+
+      // Create FormData object
+      const formDataObj = new FormData();
+
+      // Append all key-value pairs from the formValues object to FormData
+      for (const key in formValues) {
+        formDataObj.append(key, formValues[key]);
+      }
+
+      // Also append the image file to the FormData object
+      formDataObj.append("depositSS", file); // Assuming 'file' is the image file you want to upload
 
       const depositDBres = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
+        formDataObj, // Pass FormData object
         {
-          deposit: formData.accountSize,
-          balance: formData.accountBalance,
-          mt5Account: randomNumber,
-          status: "pending",
-          userId: loggedUser._id,
-          managerIndex: import.meta.env.VITE_MANAGER_INDEX,
-          name: formData.firstName,
-          lName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          country: formData.country,
-          zipCode: formData.zipCode,
-          leverage: formData.leverage,
-          groupName: formData.apiGroup,
-          accountType: formData.accountType,
+          headers: {
+            "Content-Type": "multipart/form-data", // Important for file upload
+          },
         }
       );
-      console.log("deposit db %%%%%%%%", depositDBres.data);
+      console.log("deposit db---", depositDBres.data);
 
       const addChallengeDB = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
@@ -161,17 +179,11 @@ const UserNewChallenge = () => {
       );
 
       dispatch(setProfitNloss(0));
-      dispatch(setInvestorPassword("000"));
-      dispatch(setMasterPassword("000"));
       dispatch(setOpenTrades([]));
-      dispatch(setCurrentAccount(randomNumber));
       await getUpdateLoggedUser();
-
-      // dispatch(setDepositBalance(formData.accountBalance));
-      // dispatch(setPhase(1));
       await GetUserInfoAPI();
       toast.success("Created new challenge", { id: toastID });
-      navigate("/user/dashboard");
+      // navigate("/user/dashboard");
     } catch (error) {
       setCreatingLoading(false);
       toast.error("Plese try again", { id: toastID });
@@ -201,14 +213,11 @@ const UserNewChallenge = () => {
       );
 
       setAccountConfigurations(res.data.data);
-      console.log(res.data.data);
+      console.log("userNewchallenge-- fetch ac details", res.data.data);
     } catch (error) {
       console.log("Error fetching existing ac types data", error);
     }
   };
-
-  // console.log("account configg----", accountConfigurations);
-
   // use effect -----------
   useEffect(() => {
     setStartAnimation(false);
@@ -218,10 +227,8 @@ const UserNewChallenge = () => {
     getPaymentMethod();
     fetchAccountConfigurations();
   }, []);
-  // console.log("account type #####", formData.accountType);
-
   const [copied, setCopied] = useState(false);
-  const paymentDetails = paymentMethods.find(
+  const paymentDetails = paymentMethods?.find(
     (m) => m.name === selectedPayment
   )?.details;
 
@@ -230,6 +237,35 @@ const UserNewChallenge = () => {
     toast.success("Copied!!");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+  };
+
+  // file upload----
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreviewUrl(null);
+    }
+  };
+
+  const handleRemoveFile = () => {
+    setFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const togglePreview = () => {
+    setShowPreview(!showPreview);
   };
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
@@ -300,7 +336,7 @@ const UserNewChallenge = () => {
                   2. Choose your platform
                 </label>
                 <div className="grid grid-cols-2 gap-4">
-                  {filteredPlatformData.map((plt) => (
+                  {filteredPlatformData?.map((plt) => (
                     <button
                       key={plt.name}
                       onClick={() =>
@@ -636,15 +672,51 @@ const UserNewChallenge = () => {
                     <input
                       type="file"
                       className="hidden"
-                      onChange={(e) => setFile(e.target.files[0])}
+                      onChange={handleFileChange}
+                      ref={fileInputRef}
+                      accept="image/*"
                     />
                   </label>
-                  <span className="text-sm">
-                    {file ? file.name : "No file chosen"}
-                  </span>
+                  {file ? (
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm">{file.name}</span>
+                      <button
+                        onClick={handleRemoveFile}
+                        className="text-red-500 hover:text-red-600"
+                      >
+                        <X size={20} />
+                      </button>
+                      {previewUrl && (
+                        <button
+                          onClick={togglePreview}
+                          className="text-blue-500 hover:text-blue-600"
+                        >
+                          <Eye size={20} />
+                        </button>
+                      )}
+                    </div>
+                  ) : (
+                    <span className="text-sm">No file chosen</span>
+                  )}
                 </div>
               </div>
-
+              {showPreview && previewUrl && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
+                    <img
+                      src={previewUrl}
+                      alt="Preview"
+                      className="max-w-full h-auto"
+                    />
+                    <button
+                      onClick={togglePreview}
+                      className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="flex items-center">
                 <input
                   type="checkbox"

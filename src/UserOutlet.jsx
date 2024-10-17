@@ -9,18 +9,20 @@ import Cookies from "js-cookie";
 
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const userInfoCookie = Cookies.get("userInfo");
+  console.log("user outlet ########--", loggedUser);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loggedUser || loggedUser.emailVerified === false) {
-      navigate("/user/login");
+    if (!loggedUser || !loggedUser.emailVerified) {
+      // navigate("/user/login");
+      console.log("user outlet ########--", "logouttttt");
     }
-  }, [loggedUser, userInfoCookie, navigate]);
+  }, [navigate, loggedUser]);
 
-  if (!loggedUser) {
-    return null;
-  }
+  // if (!loggedUser) {
+  //   return null;
+  // }
+
   return (
     <div className="text-white h-screen overflow-hidden">
       <Toaster></Toaster>
