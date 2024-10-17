@@ -57,14 +57,10 @@ export default function UseUserHook() {
         }
         // console.log("res user ingo hook ####--", res.data);
       }
-
-      if (currentAccount < 0) {
-        console.log("undefined current ac--#####");
-      }
     } catch (error) {
       console.log("error while userInfo hook--", error.data);
     }
-  }, [loggedUser, currentAccount, dispatch, setCurrentPnlAndRef]);
+  }, [loggedUser, dispatch, setCurrentPnlAndRef]);
 
   let phaseLimitValues;
 
@@ -611,7 +607,7 @@ export default function UseUserHook() {
         console.log("error in update phase--", error);
       }
     }
-  }, [loggedUser, currentAccount, dispatch, setCurrentPnl]);
+  }, [loggedUser, dispatch, setCurrentPnl]);
 
   //   const getUpdatePhase = async () => {
   //     const phaseLimitValues = [
