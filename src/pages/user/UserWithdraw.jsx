@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowDownCircle, BadgeDollarSign, Loader2 } from "lucide-react";
 import axios from "axios";
-import Loader from "../../components/Loader/Loader";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setAvailableBalance, setIsRefresh } from "../../redux/user/userSlice";
 import UseUserHook from "../../hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
@@ -18,7 +16,6 @@ const UserWithdraw = () => {
   const [amount, setAmount] = useState(profitNloss);
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -156,8 +153,6 @@ const UserWithdraw = () => {
     </html>`;
 
   const userInfo = useSelector((store) => store.user.userInfo);
-  const { GetUserInfoAPI } = UseUserHook();
-
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     setApiLoader(true);

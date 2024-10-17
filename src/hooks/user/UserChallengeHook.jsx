@@ -1,4 +1,3 @@
-import { setPaymentMethods, setPlatforms } from "@/redux/user/userSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 

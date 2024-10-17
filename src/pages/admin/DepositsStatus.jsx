@@ -20,11 +20,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useDispatch, useStore } from "react-redux";
-import {
-  setCurrentAccount,
-  setDepositBalance,
-  setMasterPassword,
-} from "@/redux/user/userSlice";
 import toast from "react-hot-toast";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },

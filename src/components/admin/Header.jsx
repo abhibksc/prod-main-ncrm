@@ -10,8 +10,9 @@ import {
   UserCheck,
 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoggedUser } from "@/redux/user/userSlice";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,6 +20,8 @@ const Header = () => {
     useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
   const userDropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const toggleNotificationDropdown = () =>
@@ -27,6 +30,11 @@ const Header = () => {
 
   // Animation control
   const controls = useAnimation();
+
+  const logoutHandler = () => {
+    dispatch(setLoggedUser(""));
+    navigate("/admin/login");
+  };
 
   // Effect to control animation
   useEffect(() => {
@@ -174,6 +182,7 @@ const Header = () => {
                   <Link
                     to={"/admin/login"}
                     className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2"
+                    onClick={logoutHandler}
                   >
                     <LogOut></LogOut>
                     <p>Logout</p>

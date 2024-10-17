@@ -2,9 +2,7 @@ import { useState } from "react";
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setInvestorPassword } from "../../redux/user/userSlice";
 import { motion } from "framer-motion";
 
 const UserInvesterPassword = () => {
@@ -20,7 +18,6 @@ const UserInvesterPassword = () => {
   const navigate = useNavigate();
   const loggedUser = useSelector((store) => store.user.loggedUser);
   // const userInfo = useSelector((store) => store.user.userInfo);
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });

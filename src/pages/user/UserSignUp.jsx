@@ -6,7 +6,6 @@ import { toast, Toaster } from "react-hot-toast";
 import "react-phone-input-2/lib/style.css";
 import { Mail, Lock, User, Globe, Phone, Check, MapPin } from "lucide-react";
 import { useDispatch } from "react-redux";
-import { setSignUpData } from "@/redux/user/userSlice";
 import { getData } from "country-list";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";

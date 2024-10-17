@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setMasterPassword } from "../../redux/user/userSlice";
 import { motion } from "framer-motion";
 
 const UserMasterPassword = () => {
@@ -30,8 +29,6 @@ const UserMasterPassword = () => {
   const togglePasswordVisibility = (field) => {
     setShowPasswords({ ...showPasswords, [field]: !showPasswords[field] });
   };
-
-  const dispatch = useDispatch();
 
   const currentDateTime = new Date();
   const formattedDateTime =

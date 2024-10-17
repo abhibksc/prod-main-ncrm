@@ -13,17 +13,8 @@ import CountUp from "react-countup";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector, useStore } from "react-redux";
-import {
-  setAvailableBalance,
-  setCurrentAccount,
-  setDepositBalance,
-  setInvestorPassword,
-  setMasterPassword,
-  setOpenTrades,
-  setPhase,
-  setProfitNloss,
-} from "../../redux/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setOpenTrades, setProfitNloss } from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
 import { getData } from "country-list";

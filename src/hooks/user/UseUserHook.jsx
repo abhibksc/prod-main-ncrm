@@ -1,18 +1,10 @@
 import {
   setAvailableBalance,
   setCloseTrades,
-  setCurrentAccount,
-  setCurrentUser,
   setDepositBalance,
-  setInvestorPassword,
   setLoggedUser,
-  setMasterPassword,
   setOpenTrades,
-  setPaymentMethods,
-  setPlatforms,
   setProfitNloss,
-  setSignUpData,
-  setUserFormData,
   setUserInfo,
 } from "@/redux/user/userSlice";
 import axios from "axios";
@@ -21,11 +13,9 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UseUserHook() {
-  const currentAccount = useSelector((store) => store.user.currentAccount);
   const dispatch = useDispatch();
   const currentDate = new Date().toISOString().slice(0, 10);
   const profitNloss = useSelector((store) => store.user.profitNloss);
-  const phase = useSelector((store) => store.user.phase);
   const userInfo = useSelector((store) => store.user.userInfo);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const availableBalance = useSelector((store) => store.user.availableBalance);
@@ -1115,22 +1105,14 @@ export default function UseUserHook() {
 
   const getReset = () => {
     dispatch(setLoggedUser(""));
-    dispatch(setCurrentAccount(""));
     dispatch(setCurrentUser(""));
     dispatch(setDepositBalance(""));
     dispatch(setAvailableBalance(""));
     dispatch(setUserInfo(""));
     dispatch(setLoggedUser(""));
-    dispatch(setInvestorPassword(""));
-    dispatch(setMasterPassword(""));
     dispatch(setOpenTrades([]));
     dispatch(setCloseTrades([]));
-    dispatch(setPlatforms([]));
-    dispatch(setPaymentMethods([]));
-    dispatch(setUserFormData(""));
-    dispatch(setSignUpData(""));
     dispatch(setProfitNloss(""));
-    // navigate("/user/login");
   };
   return {
     GetOpenTradeApi,

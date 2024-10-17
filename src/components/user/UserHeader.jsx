@@ -2,10 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   User,
   LogOut,
-  Settings,
   UserCircle,
   CheckCircle,
-  ListEndIcon,
   Menu,
   KeyRound,
   ShieldBan,
@@ -14,50 +12,17 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  handleToggleSidebar,
-  setAvailableBalance,
-  setCloseTrades,
-  setCurrentAccount,
-  setCurrentUser,
-  setDepositBalance,
-  setInvestorPassword,
-  setLoggedUser,
-  setMasterPassword,
-  setOpenTrades,
-  setPaymentMethods,
-  setPhase,
-  setPlatforms,
-  setProfitNloss,
-  setSignUpData,
-  setUserFormData,
-  setUserInfo,
-} from "@/redux/user/userSlice";
 import UserSidebar from "./UserSidebar";
-import Hamburger from "../hamburgar/Hamburgar";
+import UseUserHook from "@/hooks/user/UseUserHook";
+import { handleToggleSidebar } from "@/redux/user/userSlice";
 
 const UserDropdown = ({ isOpen, onClose }) => {
   const dropdownRef = useRef(null);
-  const dispatch = useDispatch();
+  const { getReset } = UseUserHook();
   const navigate = useNavigate();
 
   const logoutHandler = () => {
-    dispatch(setLoggedUser(""));
-    dispatch(setCurrentAccount(""));
-    dispatch(setCurrentUser(""));
-    dispatch(setDepositBalance(""));
-    dispatch(setAvailableBalance(""));
-    dispatch(setUserInfo(""));
-    dispatch(setLoggedUser(""));
-    dispatch(setInvestorPassword(""));
-    dispatch(setMasterPassword(""));
-    dispatch(setOpenTrades([]));
-    dispatch(setCloseTrades([]));
-    dispatch(setPlatforms([]));
-    dispatch(setPaymentMethods([]));
-    dispatch(setUserFormData(""));
-    dispatch(setSignUpData(""));
-    dispatch(setProfitNloss(""));
+    getReset();
     navigate("/user/login");
   };
 
@@ -129,7 +94,6 @@ UserSidebar;
 const UserHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
-  const userInfo = useSelector((store) => store.user.userInfo);
   const dispatch = useDispatch();
   const loggedUser = useSelector((store) => store.user.loggedUser);
 
