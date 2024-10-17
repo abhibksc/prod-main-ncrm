@@ -12,6 +12,7 @@ const initialState = {
   platforms: [],
   paymentMethods: [],
   phaseMaxLength: 0,
+  totalFinalPnL: 0,
 };
 
 export const userSlice = createSlice({
@@ -51,6 +52,9 @@ export const userSlice = createSlice({
     setPhaseMaxLength: (state, action) => {
       state.phaseMaxLength = action.payload;
     },
+    setTotalFinalPnL: (state, action) => {
+      state.totalFinalPnL = action.payload;
+    },
   },
 });
 
@@ -66,6 +70,7 @@ export const {
   setPlatforms,
   setPaymentMethods,
   setPhaseMaxLength,
+  setTotalFinalPnL,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -179,6 +179,7 @@ const UserNewChallenge = () => {
       );
 
       dispatch(setProfitNloss(0));
+
       dispatch(setOpenTrades([]));
       await getUpdateLoggedUser();
       await GetUserInfoAPI();

@@ -8,6 +8,7 @@ import {
   setPhaseMaxLength,
   setPlatforms,
   setProfitNloss,
+  setTotalFinalPnL,
   setUserInfo,
 } from "@/redux/user/userSlice";
 import axios from "axios";
@@ -22,6 +23,8 @@ export default function UseUserHook() {
   const userInfo = useSelector((store) => store.user.userInfo);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const availableBalance = useSelector((store) => store.user.availableBalance);
+  const openTrades = useSelector((store) => store.user.openTrades);
+  const storeTotalPnL = useSelector((store) => store.user.totalFinalPnL);
 
   const currentPnlRef = useRef(0);
   const [currentPnl, setCurrentPnl] = useState(0);
@@ -39,31 +42,31 @@ export default function UseUserHook() {
     currentPnlRef.current = currentPnl;
   }, [currentPnl]);
 
-  const GetUserInfoAPI = useCallback(async () => {
-    // console.log("current pnl after update ********", currentPnlRef.current);
+  const totalFinalPnLRef = useRef(0);
 
-    try {
-      if (loggedUser.phase !== 0) {
-        const res = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${loggedUser.mt5Account}`
-        );
-        if (res.data.Balance > 0) {
-          dispatch(setUserInfo(res.data));
-          dispatch(setAvailableBalance(res.data.Balance));
-          const newPnl = res.data.Balance - loggedUser.accountSize;
-          setCurrentPnlAndRef(newPnl);
-          dispatch(setProfitNloss(newPnl));
-        }
-        // console.log("res user ingo hook ####--", res.data);
-      }
-    } catch (error) {
-      console.log("error while userInfo hook--", error.data);
-    }
-  }, [loggedUser, dispatch, setCurrentPnlAndRef]);
+  useEffect(() => {
+    const calculateTotalNetProfit = () => {
+      return openTrades.reduce((sum, entry) => sum + entry.Profit, 0);
+    };
+
+    const newTotalFinalPnL = currentPnl + calculateTotalNetProfit();
+    totalFinalPnLRef.current = newTotalFinalPnL;
+    // dispatch(setTotalFinalPnL(newTotalFinalPnL));
+  }, [openTrades]);
+
+  console.log(" final pnl @@@@@@@@@@@@@@@@@", totalFinalPnLRef.current);
+
+  // total final pnl ------
+  const calculateTotalNetProfit = () => {
+    const totalNetProfit = openTrades.reduce(
+      (sum, entry) => sum + entry.Profit,
+      0
+    );
+
+    return totalNetProfit;
+  };
+  const totalFinalPnL = currentPnl + calculateTotalNetProfit();
+  dispatch(setTotalFinalPnL(totalFinalPnL));
 
   let phaseLimitValues;
 
@@ -95,6 +98,34 @@ export default function UseUserHook() {
   }, []);
 
   const testProftNloss = currentPnlRef.current;
+
+  // get user info api-----------------
+
+  const GetUserInfoAPI = useCallback(async () => {
+    // console.log("current pnl after update ********", currentPnlRef.current);
+
+    try {
+      if (loggedUser.phase !== 0) {
+        const res = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/GetUserInfo?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${loggedUser.mt5Account}`
+        );
+        if (res.data.Balance > 0) {
+          dispatch(setUserInfo(res.data));
+          dispatch(setAvailableBalance(res.data.Balance));
+          const newPnl = res.data.Balance - loggedUser.accountSize;
+          setCurrentPnlAndRef(newPnl);
+          dispatch(setProfitNloss(newPnl));
+        }
+        // console.log("res user ingo hook ####--", res.data);
+      }
+    } catch (error) {
+      console.log("error while userInfo hook--", error.data);
+    }
+  }, [loggedUser, dispatch, setCurrentPnlAndRef]);
 
   // close trade api --------------------
 
@@ -161,6 +192,7 @@ export default function UseUserHook() {
 
     const phaseMinValueInNumber =
       (currentPhaseData?.min / 100) * loggedUser.accountSize * -1;
+
     const phaseMaxValueInNumber =
       (currentPhaseData?.max / 100) * loggedUser.accountSize;
 
@@ -168,8 +200,9 @@ export default function UseUserHook() {
     console.log("calculated min values---", phaseMinValueInNumber);
     console.log("calculated max values---", phaseMaxValueInNumber);
     console.log("phase update hook********", currentPnlRef.current);
+    console.log("store final pnl ##############", totalFinalPnLRef.current);
     if (
-      currentPnlRef.current >= phaseMaxValueInNumber &&
+      totalFinalPnLRef.current >= phaseMaxValueInNumber &&
       loggedUser.phase <= phaseLength
     ) {
       const toastId = toast.loading("Updating phase..");
@@ -399,7 +432,7 @@ export default function UseUserHook() {
       }
     }
     if (
-      currentPnlRef.current <= phaseMinValueInNumber &&
+      totalFinalPnLRef.current <= phaseMinValueInNumber &&
       loggedUser.phase <= phaseLength
     ) {
       console.log("max loss reached**********");

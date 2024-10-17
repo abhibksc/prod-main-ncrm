@@ -68,7 +68,7 @@ export default function UserDashboard() {
 
     const intervalId = setInterval(() => {
       fetchData();
-    }, 12000);
+    }, 10000);
 
     return () => {
       clearInterval(intervalId);
