@@ -108,6 +108,20 @@ const UserDashboardAccount = () => {
         </Link>
         <CredentialItem
           icon={AlertTriangle}
+          label="Account Type"
+          value="Algo"
+          badgeColor="bg-orange-100 text-orange-800"
+          delay={0.35}
+        />
+        <CredentialItem
+          icon={Info}
+          label="Kyc Verified"
+          value="Active"
+          badgeColor="bg-green-100 text-green-800"
+          delay={0.4}
+        />
+        {/* <CredentialItem
+          icon={AlertTriangle}
           label="Hard Rule"
           value="Breached"
           badgeColor="bg-orange-100 text-orange-800"
@@ -119,7 +133,7 @@ const UserDashboardAccount = () => {
           value="Active"
           badgeColor="bg-green-100 text-green-800"
           delay={0.4}
-        />
+        /> */}
       </div>
     </motion.div>
   );

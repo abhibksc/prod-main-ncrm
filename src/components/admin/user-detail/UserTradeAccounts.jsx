@@ -16,7 +16,7 @@ const UserTradeAccounts = ({ challengesData }) => {
               <th className="py-3 px-6 text-left">Account Type</th>
               <th className="py-3 px-6 text-left">Deposit</th>
               <th className="py-3 px-6 text-left">Account Size</th>
-              <th className="py-3 px-6 text-left">Balance</th>
+              {/* <th className="py-3 px-6 text-left">Balance</th> */}
               <th className="py-3 px-6 text-left">Leverage</th>
               <th className="py-3 px-6 text-left">Phase</th>
               <th className="py-3 px-6 text-left">Dropdown status</th>
@@ -35,7 +35,7 @@ const UserTradeAccounts = ({ challengesData }) => {
                 <td className="py-3 px-6 text-left">{account?.type}</td>
                 <td className="py-3 px-6 text-left">{account?.deposit}</td>
                 <td className="py-3 px-6 text-left">{account?.accountSize}</td>
-                <td className="py-3 px-6 text-left">{account?.balance}</td>
+                {/* <td className="py-3 px-6 text-left">{account?.balance}</td> */}
                 <td className="py-3 px-6 text-left">{account?.leverage}</td>
                 <td className="py-3 px-6 text-left">{account?.phase}</td>
                 <td className="py-3 px-6 text-left whitespace-nowrap">

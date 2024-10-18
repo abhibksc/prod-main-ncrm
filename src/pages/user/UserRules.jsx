@@ -60,31 +60,38 @@ const UserRules = () => {
           <ul className="space-y-3">
             <li className="flex items-start">
               <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-red-500 rounded-full"></div>
-              <p className="ml-2">Hard Rules - Account Closed</p>
-            </li>
-            <li className="flex items-start">
-              <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-yellow-500 rounded-full"></div>
               <p className="ml-2">
-                Do not breach our daily drawdown limit of 4%
+                Beta funded don’t have any IP address related issues ,like other
+                firms have. You can trade with multiple devices and from
+                multiple locations.
               </p>
             </li>
             <li className="flex items-start">
               <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-yellow-500 rounded-full"></div>
               <p className="ml-2">
-                Do not breach our total drawdown limit of 6%
+                You may hold trades over the weekend during the Challenge
+                phases. You cannot hold over the weekend once your account has
+                been funded. If you do not close your trades by Friday and post
+                market closing, you will face a hard breach and forfeit your
+                funded account.
               </p>
+            </li>
+            <li className="flex items-start">
+              <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-yellow-500 rounded-full"></div>
+              <p className="ml-2">You can hold overnight trades.</p>
             </li>
             <li className="flex items-start">
               <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-green-500 rounded-full"></div>
               <p className="ml-2">
-                Note: Drawdown each day remains the same % but the price of a
-                breach moves up as the equity in the account moves up.
+                Beta funded does not impose any restriction on using Stop-Loss
+                (SL) on challenges and live accounts.
               </p>
             </li>
             <li className="flex items-start">
               <div className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 bg-blue-600 rounded-full"></div>
               <p className="ml-2">
-                See details of program on program page of the website.
+                Base leverage on all evaluation accounts is set at 1:200. During
+                the experienced trader/funded stage, leverage is 1:100{" "}
               </p>
             </li>
           </ul>

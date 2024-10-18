@@ -411,12 +411,10 @@ const UserNewChallenge = () => {
               </div>
 
               <div className="mt-12 mb-8 flex flex-col items-center bg-secondary-800/80 p-6 rounded-lg">
-                <div className="flex items-center flex-col justify-between mb-4">
-                  <div className="text-2xl text-center font-bold text-blue-400">
-                    5K Two Step X Student
-                  </div>
+                <div className="flex items-center flex-col justify-between mb-4"></div>
+                <div className="text-blue-400 mb-4 text-2xl font-bold drop-shadow-xl">
+                  Account Size ${formData.accountBalance}
                 </div>
-                <div className="text-blue-400 mb-4">Account Size 5000 USD</div>
                 <button className="bg-blue-600 text-white py-2 px-4 rounded-full mb-6">
                   Meta Trader-5
                 </button>

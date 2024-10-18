@@ -1,6 +1,7 @@
 import React from "react";
 import { Wallet, WalletCards, HandCoins, TreePine } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const MetricHexagon = ({ icon: Icon, label, value, color }) => (
   <motion.div
@@ -32,24 +33,36 @@ const MetricHexagon = ({ icon: Icon, label, value, color }) => (
 );
 
 const InvestmentReport = () => {
+  const deposits = useSelector((store) => store.admin.deposits);
+
+  const totalInvest = deposits
+    ?.filter((value) => value.deposit)
+    .reduce((total, value) => total + Number(value.deposit), 0);
+
+  // console.log("total invest dashboard ---", totalInvest);
   const metrics = [
-    { icon: Wallet, label: "Total Invest", value: 43, color: "#22C55E" }, // Green
+    {
+      icon: Wallet,
+      label: "Total Invest",
+      value: totalInvest,
+      color: "#22C55E",
+    }, // Green
     {
       icon: WalletCards,
       label: "Last 7 days Invest",
-      value: 9,
+      value: 0,
       color: "#3B82F6",
     }, // Blue
     {
       icon: HandCoins,
       label: "Total Referal Commission",
-      value: 25,
+      value: 0,
       color: "#F59E0B",
     }, // Amber
     {
       icon: TreePine,
       label: "Total Binary Commission",
-      value: 55,
+      value: 0,
       color: "#EF4444",
     }, // Red
   ];

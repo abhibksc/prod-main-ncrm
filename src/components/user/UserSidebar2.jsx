@@ -124,11 +124,11 @@ const UserSidebar2 = () => {
     { icon: BarChart2, label: "Trade History", link: "/user/trade-history" },
     { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
     { icon: Users, label: "Referrals", link: "/user/referrals" },
-    {
-      icon: MessageSquare,
-      label: "Support Ticket",
-      link: "/user/support-ticket",
-    },
+    // {
+    //   icon: MessageSquare,
+    //   label: "Support Ticket",
+    //   link: "/user/support-ticket",
+    // },
     {
       icon: ShieldAlertIcon,
       label: "Rules & definitions",

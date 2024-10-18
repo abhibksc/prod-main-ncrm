@@ -38,23 +38,23 @@ const MetricHexagon = ({ icon: Icon, label, value, color }) => (
 
 const TradeReport = () => {
   const metrics = [
-    { icon: Scissors, label: "Total Withdrawn", value: 12, color: "#14B8A6" }, // Teal
+    { icon: Scissors, label: "Total Withdrawn", value: 0, color: "#14B8A6" }, // Teal
     {
       icon: ShoppingBasket,
       label: "Total IB accounts",
-      value: 9,
+      value: 0,
       color: "#6366F1",
     }, // Indigo
     {
       icon: ArrowLeftCircle,
       label: "Pending Withdraw",
-      value: 4,
+      value: 0,
       color: "#F43F5E",
     }, // Rose
     {
       icon: ArrowRightCircle,
       label: "Total MT5 Accounts",
-      value: 24,
+      value: 0,
       color: "#FBBF24",
     }, // Amber
   ];
