@@ -24,6 +24,9 @@ export default function UserDashboard() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
   const profitNloss = useSelector((store) => store.user.profitNloss);
+  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+
+  const isMax = phaseMaxLength === loggedUser.phase;
 
   // const allTrades = [...openTrades, ...closeTrades];
 
@@ -58,13 +61,13 @@ export default function UserDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("ssuse effect 2 called");
-      if (loggedUser.phase <= 2) {
+      if (!isMax) {
         await getUpdatePhase();
       }
     };
-
-    fetchData();
+    if (!isMax) {
+      getUpdatePhase();
+    }
 
     const intervalId = setInterval(() => {
       fetchData();

@@ -30,8 +30,7 @@ export default function UseUserHook() {
   const [currentPnl, setCurrentPnl] = useState(0);
 
   const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
-
-  console.log("initial pnl  ********", currentPnl);
+  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
 
   const setCurrentPnlAndRef = useCallback((newValue) => {
     currentPnlRef.current = newValue;
@@ -92,6 +91,7 @@ export default function UseUserHook() {
   dispatch(setPhaseMaxLength(phaseLength));
 
   console.log("Phase length--", phaseLength);
+  const isMax = phaseLength === loggedUser.phase + 1;
 
   const getCurrentPnl = useCallback(() => {
     return currentPnlRef.current;
@@ -200,7 +200,7 @@ export default function UseUserHook() {
     console.log("calculated min values---", phaseMinValueInNumber);
     console.log("calculated max values---", phaseMaxValueInNumber);
     console.log("phase update hook********", currentPnlRef.current);
-    console.log("store final pnl ##############", totalFinalPnLRef.current);
+    console.log("is max ##############", isMax);
     if (
       totalFinalPnLRef.current >= phaseMaxValueInNumber &&
       loggedUser.phase <= phaseLength
@@ -382,8 +382,7 @@ export default function UseUserHook() {
               <p>Account No: <span class="highlight">${randomNumber}
                 </span></p>
               <p>Phase : <span class="highlight">
-              ${loggedUser.phase + 1}
-                </span></p>
+${isMax ? "Live Account" : loggedUser.phase}                </span></p>
               <p>Master Password : <span class="highlight">
               ${addApiRes.data.Master_Pwd}
                 </span></p>
@@ -587,7 +586,7 @@ export default function UseUserHook() {
 <p>We regret to inform you that your account ID: <strong>${
           loggedUser.mt5Account
         }</strong> has been blocked due to reaching <strong> Maximum Loss Limit</strong> from phase <strong>${
-          loggedUser.phase
+          isMax ? "Live Account" : loggedUser.phase
         }</strong>.</p>
 <br>
 <p>We are pleased to inform you that a new account has been successfully opened with the following details given below</p>

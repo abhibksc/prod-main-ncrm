@@ -232,6 +232,9 @@ const UserNewChallenge = () => {
   const paymentDetails = paymentMethods?.find(
     (m) => m.name === selectedPayment
   )?.details;
+  const paymentImage = paymentMethods?.find(
+    (m) => m.name === selectedPayment
+  )?.image;
 
   const copyText = (text) => {
     navigator.clipboard.writeText(text);
@@ -268,6 +271,8 @@ const UserNewChallenge = () => {
   const togglePreview = () => {
     setShowPreview(!showPreview);
   };
+
+  // console.log("selecteddd-- data###---", paymentImage);
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
       <div className="flex justify-between mb-8">
@@ -633,6 +638,18 @@ const UserNewChallenge = () => {
                       </a>
                     </div>
                   )}
+
+                  {paymentImage && (
+                    <div className=" w-full flex flex-col justify-center items-center rounded-md">
+                      <img
+                        src={`${
+                          import.meta.env.VITE_BECKEND_END_POINT
+                        }/${paymentImage}`}
+                        alt=""
+                        className=" rounded-md w-[20%]"
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -727,7 +744,7 @@ const UserNewChallenge = () => {
                   className="mr-2"
                 />
                 <label htmlFor="agreeToTerms" className="text-sm">
-                  I agree to{" "}
+                  I agree to
                   <a
                     href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
                     className="text-blue-400 cursor-pointer"
@@ -737,7 +754,6 @@ const UserNewChallenge = () => {
                   </a>
                 </label>
               </div>
-
               <button
                 onClick={apiTestHandler}
                 disabled={!agreeToTerms}
@@ -756,7 +772,6 @@ const UserNewChallenge = () => {
           )}
         </motion.div>
       </AnimatePresence>
-
       <div className="flex relative justify-between mt-8">
         {step > 1 && (
           <button
