@@ -23,7 +23,26 @@ export default function UserOutlet() {
 
   return (
     <div className="text-white h-screen overflow-hidden">
-      <Toaster></Toaster>
+      <Toaster
+        toastOptions={{
+          // Define default options
+          style: {
+            background: "#1b4332", // Dark background for toast
+            color: "#fff", // White text color
+          },
+          success: {
+            style: {
+              background: "#1b4332", // Green background for success
+              border: "#fff",
+            },
+          },
+          error: {
+            style: {
+              background: "#1b4332", // Red background for error
+            },
+          },
+        }}
+      />
       <UserHeader className="fixed top-0 w-full z-10" />
       <div className="flex">
         {/* <UserSidebar className="fixed top-15 left-0 h-full z-10" /> */}

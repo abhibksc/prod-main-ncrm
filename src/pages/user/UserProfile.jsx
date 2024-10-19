@@ -1,8 +1,64 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { User, Mail, Phone, MapPin, Flag } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import UseUserHook from "@/hooks/user/UseUserHook";
+import toast from "react-hot-toast";
 
 const UserProfile = () => {
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const [formData, setFormData] = useState({
+    firstName: loggedUser.firstName || "",
+    lastName: loggedUser.lastName || "",
+    email: loggedUser.email || "",
+    mobileNumber: loggedUser.phone || "",
+    address: loggedUser.address || "",
+    state: loggedUser.state || "",
+    zipCode: loggedUser.zipCode || "",
+    city: loggedUser.city || "",
+    country: loggedUser.country || "",
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { getUpdateLoggedUser } = UseUserHook();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const toastID = toast.loading("Updating..");
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+        {
+          id: loggedUser._id,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          address: formData.address,
+          state: formData.state,
+          city: formData.city,
+          zipCode: formData.zipCode,
+        }
+      );
+      console.log(res);
+      setIsLoading(false);
+      toast.success("Updated", { id: toastID });
+      getUpdateLoggedUser();
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("Something went wrong", { id: toastID });
+      console.error("Error updating user data:", error);
+    }
+  };
+
   return (
     <motion.div
       className="max-w-4xl mx-auto p-8 bg-gradient-to-br bg-secondary-800/60 rounded-xl shadow-lg"
@@ -17,41 +73,42 @@ const UserProfile = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ staggerChildren: 0.1 }}
+        onSubmit={handleSubmit}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
+              name: "firstName",
               label: "First Name",
               icon: <User />,
-              value: "Awais",
               required: true,
             },
             {
+              name: "lastName",
               label: "Last Name",
               icon: <User />,
-              value: "Sharif",
               required: true,
             },
             {
+              name: "email",
               label: "E-mail Address",
               icon: <Mail />,
-              value: "awaissharif17@gmail.com",
               readOnly: true,
             },
             {
+              name: "mobileNumber",
               label: "Mobile Number",
               icon: <Phone />,
-              value: "923048077771",
               readOnly: true,
             },
-            { label: "Address", icon: <MapPin />, value: "Test" },
-            { label: "State", icon: <MapPin />, value: "Punjab" },
-            { label: "Zip Code", icon: <MapPin />, value: "54000" },
-            { label: "City", icon: <MapPin />, value: "Lahore" },
+            { name: "address", label: "Address", icon: <MapPin /> },
+            { name: "state", label: "State", icon: <MapPin /> },
+            { name: "zipCode", label: "Zip Code", icon: <MapPin /> },
+            { name: "city", label: "City", icon: <MapPin /> },
             {
+              name: "country",
               label: "Country",
               icon: <Flag />,
-              value: "Pakistan",
               readOnly: true,
             },
           ].map((field, index) => (
@@ -66,13 +123,15 @@ const UserProfile = () => {
                 <ReadOnlyField
                   label={field.label}
                   icon={field.icon}
-                  value={field.value}
+                  value={formData[field.name]}
                 />
               ) : (
                 <InputField
                   label={field.label}
                   icon={field.icon}
-                  value={field.value}
+                  value={formData[field.name]}
+                  onChange={handleInputChange}
+                  name={field.name}
                   required={field.required}
                 />
               )}
@@ -86,15 +145,23 @@ const UserProfile = () => {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
+          disabled={isLoading}
         >
-          Update Profile
+          {isLoading ? "Updating..." : "Update Profile"}
         </motion.button>
       </motion.form>
     </motion.div>
   );
 };
 
-const InputField = ({ label, icon, value, required = false }) => (
+const InputField = ({
+  label,
+  icon,
+  value,
+  onChange,
+  name,
+  required = false,
+}) => (
   <motion.div
     className="relative"
     initial={{ opacity: 0, y: 10 }}
@@ -112,7 +179,9 @@ const InputField = ({ label, icon, value, required = false }) => (
       <input
         type="text"
         className="block w-full pl-10 pr-3 py-3 rounded-md leading-5 bg-secondary-700 outline-none sm:text-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-        defaultValue={value}
+        value={value}
+        onChange={onChange}
+        name={name}
         required={required}
       />
     </div>
