@@ -94,7 +94,8 @@ const UserNewChallenge = () => {
     }
   };
 
-  // add changlange api handler---------------
+  // add main changlange api handler---------------
+
   const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
   const apiTestHandler = async () => {
     const toastID = toast.loading("Please wait..");
