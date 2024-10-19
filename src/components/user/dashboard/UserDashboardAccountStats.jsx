@@ -64,7 +64,10 @@ const UserDashboardAccountStats = () => {
       </h2>
       <div className="space-y-2">
         {stats.map((stat) => (
-          <div key={stat.id} className="border rounded-md overflow-hidden">
+          <div
+            key={stat.id}
+            className=" border border-secondary-600/30 rounded-md overflow-hidden"
+          >
             <div
               className="flex justify-between items-center p-3 cursor-pointer text-sm sm:text-base"
               onClick={() => toggleDropdown(stat.id)}

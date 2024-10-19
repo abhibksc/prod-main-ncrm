@@ -306,6 +306,8 @@ const DepositsStatus = () => {
 
   console.log("selected deposit!!!!", selectedDeposit);
 
+  // on confirm api handler  ------------------------------
+
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
     // console.log("selected deposits--", selectedDeposit);
@@ -334,7 +336,7 @@ const DepositsStatus = () => {
           }&Comment=TEST`
         );
 
-        const updateDepositRes = await axios.put(
+        const updateDbDepositRes = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
           {
             _id: selectedDeposit._id,

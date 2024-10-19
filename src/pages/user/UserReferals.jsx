@@ -7,7 +7,7 @@ const UserReferal = () => {
   const [level, setLevel] = useState("Level 1");
   const [isCopied, setIsCopied] = useState(false);
 
-  const referralLink = "https://portal.fundedltd.com?ref=rdDU6k";
+  const referralLink = "https://user.betafunded.com";
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button

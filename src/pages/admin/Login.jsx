@@ -99,7 +99,7 @@ const Login = () => {
             }}
           />
           <div className="relative z-10">
-            <h1 className="text-4xl font-bold mb-4">Forex CRM</h1>
+            <h1 className="text-4xl font-bold mb-4">Beta Funded CRM</h1>
             <p className="text-xl mb-8">Admin Portal</p>
             <ul className="space-y-2">
               <li className="flex items-center">

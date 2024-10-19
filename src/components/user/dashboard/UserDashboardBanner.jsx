@@ -23,11 +23,13 @@ const UserDashboardBanner = () => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
-        <Link to={"/user/new-challenge"}>
-          <button className="bg-white text-secondary-600 py-2 px-4 rounded-full font-medium hover:bg-opacity-90 transition-colors">
-            New Challenge
-          </button>
-        </Link>
+        {loggedUser.phase === 0 && (
+          <Link to={"/user/new-challenge"}>
+            <button className="bg-white text-secondary-600 py-2 px-4 rounded-full font-medium hover:bg-opacity-90 transition-colors">
+              New Challenge
+            </button>
+          </Link>
+        )}
         <Link to={"/user/rules"}>
           <button className="bg-secondary-600 py-2 px-4 rounded-full font-medium hover:bg-secondary-600/80 transition-colors">
             Trading Rules

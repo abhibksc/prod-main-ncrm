@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Info,
   CheckCircle,
+  PanelTopInactiveIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -102,38 +103,34 @@ const UserDashboardAccount = () => {
             icon={Shield}
             label="Investor Password"
             value={loggedUser.investorPassword}
-            badgeColor="bg-red-100 text-red-800"
+            badgeColor="bg-yellow-100 text-yellow-800"
             delay={0.3}
           />
         </Link>
         <CredentialItem
-          icon={AlertTriangle}
+          icon={PanelTopInactiveIcon}
           label="Account Type"
-          value="Algo"
+          value={loggedUser.phase > 0 ? loggedUser?.accountType : "Null"}
           badgeColor="bg-orange-100 text-orange-800"
           delay={0.35}
         />
         <CredentialItem
           icon={Info}
-          label="Kyc Verified"
-          value="Active"
-          badgeColor="bg-green-100 text-green-800"
+          label="Kyc Status"
+          value={
+            loggedUser.phase > 0
+              ? loggedUser?.kycVerified
+                ? "Active"
+                : "Inactive"
+              : "Null"
+          }
+          badgeColor={`${
+            loggedUser?.kycVerified
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-700"
+          }`}
           delay={0.4}
         />
-        {/* <CredentialItem
-          icon={AlertTriangle}
-          label="Hard Rule"
-          value="Breached"
-          badgeColor="bg-orange-100 text-orange-800"
-          delay={0.35}
-        />
-        <CredentialItem
-          icon={Info}
-          label="Soft Rule"
-          value="Active"
-          badgeColor="bg-green-100 text-green-800"
-          delay={0.4}
-        /> */}
       </div>
     </motion.div>
   );

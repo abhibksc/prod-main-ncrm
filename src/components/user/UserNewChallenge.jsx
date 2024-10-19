@@ -23,25 +23,26 @@ import { getData } from "country-list";
 import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const [formData, setFormData] = useState({
-    country: "",
     accountType: "",
     apiGroup: "",
     platform: "",
     accountSize: "",
     accountBalance: "",
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    zipCode: "",
-    state: "",
     leverage: "",
-    email: "",
-    phone: "",
+    firstName: loggedUser.firstName || "",
+    lastName: loggedUser.lastName || "",
+    address: loggedUser.address || "",
+    country: loggedUser.country || "",
+    city: loggedUser.city || "",
+    zipCode: loggedUser.zipCode || "",
+    state: loggedUser.state || "",
+    email: loggedUser.email || "",
+    phone: loggedUser.phone || "",
   });
 
-  // console.log("formm data----", formData);
+  console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
@@ -54,7 +55,6 @@ const UserNewChallenge = () => {
   const countriesArray = getData();
   const { getPlatforms, getPaymentMethod } = UserNewChallengeHook();
   const { getUpdateLoggedUser } = UseUserHook();
-  const loggedUser = useSelector((store) => store.user.loggedUser);
   const [accountConfigurations, setAccountConfigurations] = useState([]);
   const platformData = useSelector((store) => store.user.platforms);
   const paymentMethods = useSelector((store) => store.user.paymentMethods);
@@ -272,6 +272,23 @@ const UserNewChallenge = () => {
   const togglePreview = () => {
     setShowPreview(!showPreview);
   };
+  // target stacks ---------------
+
+  let targetStaks;
+
+  if (formData.accountType === "Beta Standard") {
+    targetStaks = [
+      "8% Profit Target*",
+      "10% Max Overall Loss*",
+      "5% Max Daily Loss*",
+    ];
+  } else if (formData.accountType === "Beta Algo") {
+    targetStaks = [
+      "10% Profit Target*",
+      "8% Max Overall Loss*",
+      "4% Max Daily Loss*",
+    ];
+  }
 
   // console.log("selecteddd-- data###---", paymentImage);
   return (
@@ -412,19 +429,20 @@ const UserNewChallenge = () => {
               </div>
 
               <div className="mt-12 mb-8 flex flex-col items-center bg-secondary-800/80 p-6 rounded-lg">
-                <div className="flex items-center flex-col justify-between mb-4"></div>
-                <div className="text-blue-400 mb-4 text-2xl font-bold drop-shadow-xl">
+                <div className="flex items-center flex-col justify-between mb-2">
+                  <div className="text-2xl text-center font-bold text-blue-400">
+                    {formData.accountType}
+                  </div>
+                </div>
+                <div className="text-blue-400 mb-2">
                   Account Size ${formData.accountBalance}
                 </div>
+
                 <button className="bg-blue-600 text-white py-2 px-4 rounded-full mb-6">
-                  Meta Trader-5
+                  {formData.platform}
                 </button>
                 <div className="space-y-2">
-                  {[
-                    "10% Profit Target*",
-                    "8% Max Overall Loss*",
-                    "4% Max Daily Loss*",
-                  ].map((item, index) => (
+                  {targetStaks?.map((item, index) => (
                     <div key={index} className="flex items-center">
                       <Check className="text-green-500 mr-2" />
                       <span>{item}</span>
@@ -520,6 +538,7 @@ const UserNewChallenge = () => {
                 <input
                   type="tel"
                   name="phone"
+                  defaultValue={loggedUser?.mobile}
                   value={formData.phone}
                   onChange={handleInputChange}
                   className="w-full bg-secondary-800 p-3 rounded focus:ring-2 focus:ring-blue-500"
@@ -776,7 +795,7 @@ const UserNewChallenge = () => {
           <button
             onClick={prevStep}
             disabled={step === 1}
-            className="bg-gray-500 text-white px-4 py-2  rounded-full disabled:opacity-50"
+            className="bg-gray-500/30 hover:px-6 transition-all text-white px-4 py-2  rounded-full disabled:opacity-50"
           >
             <ArrowLeft className="inline-block mr-2" />
             Back
@@ -787,10 +806,10 @@ const UserNewChallenge = () => {
           <div className="  absolute top-[-10px] right-0">
             <button
               onClick={nextStep}
-              className="bg-blue-500 text-white px-4 py-2  rounded-full"
+              className="bg-secondary-700/80  hover:px-6 transition-all text-white px-4 py-2  rounded-full"
             >
               Next
-              <ArrowRightCircleIcon className="inline-block ml-2" />
+              <ArrowRightCircleIcon className="inline-block ml-2 animate-bounce" />
             </button>
           </div>
         ) : (

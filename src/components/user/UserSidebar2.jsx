@@ -13,6 +13,8 @@ import {
   ShieldAlertIcon,
   Settings,
   ReceiptPoundSterlingIcon,
+  LucideDownload,
+  HardDriveDownloadIcon,
 } from "lucide-react";
 
 const MenuItem = ({ icon: Icon, label, link }) => (
@@ -134,14 +136,14 @@ const UserSidebar2 = () => {
       label: "Rules & definitions",
       link: "/user/rules",
     },
-    { icon: Settings, label: "Platform", link: "/user/platform" },
+    { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {
       icon: ReceiptPoundSterlingIcon,
       label: "Economic Calendar",
       link: "/user/economic-calendar",
     },
   ];
-
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   return (
     <>
       {isOpen && !isLargeScreen && (
@@ -164,13 +166,18 @@ const UserSidebar2 = () => {
           variants={contentVariants}
         >
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link to={"/user/new-challenge"}>
-                <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-700/90 w-full transition-all duration-300 hover:bg-secondary-600">
-                  New challenge
-                </button>
-              </Link>
-            </motion.div>
+            {loggedUser.phase === 0 && (
+              <motion.div
+                className=" hover:py-2 transition-all"
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link to={"/user/new-challenge"}>
+                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-700/90 w-full transition-all duration-300 hover:bg-secondary-600">
+                    New challenge
+                  </button>
+                </Link>
+              </motion.div>
+            )}
             <AnimatePresence>
               {(isOpen || isLargeScreen) &&
                 menuItems.map((item) => (
