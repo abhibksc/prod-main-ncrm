@@ -120,10 +120,10 @@ const UserSidebar2 = () => {
     { icon: Trophy, label: "Challenges", link: "/user/challenges" },
     {
       icon: ArrowUpDown,
-      label: "Transaction History",
+      label: "Transactions",
       link: "/user/transaction",
     },
-    { icon: BarChart2, label: "Trade History", link: "/user/trade-history" },
+    { icon: BarChart2, label: "Trades", link: "/user/trade-history" },
     { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
     { icon: Users, label: "Referrals", link: "/user/referrals" },
     // {
@@ -144,6 +144,10 @@ const UserSidebar2 = () => {
     },
   ];
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+
+  const isMax = phaseMaxLength === loggedUser.phase;
+
   return (
     <>
       {isOpen && !isLargeScreen && (
@@ -166,7 +170,7 @@ const UserSidebar2 = () => {
           variants={contentVariants}
         >
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
-            {loggedUser.phase === 0 && (
+            {(loggedUser.phase === 0 || isMax) && (
               <motion.div
                 className=" hover:py-2 transition-all"
                 whileTap={{ scale: 0.95 }}

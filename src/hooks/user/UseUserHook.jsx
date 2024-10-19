@@ -6,6 +6,7 @@ import {
   setOpenTrades,
   setPaymentMethods,
   setPhaseMaxLength,
+  setPhaseStats,
   setPlatforms,
   setProfitNloss,
   setTotalFinalPnL,
@@ -88,7 +89,11 @@ export default function UseUserHook() {
   }
 
   const phaseLength = phaseLimitValues.length;
+  const currentPhaseData = phaseLimitValues.find(
+    (value) => value.phase === loggedUser.phase
+  );
   dispatch(setPhaseMaxLength(phaseLength));
+  dispatch(setPhaseStats(currentPhaseData));
 
   console.log("Phase length--", phaseLength);
   const isMax = phaseLength === loggedUser.phase + 1;
@@ -186,10 +191,6 @@ export default function UseUserHook() {
   // update phase ----------------
 
   const getUpdatePhase = useCallback(async () => {
-    const currentPhaseData = phaseLimitValues.find(
-      (value) => value.phase === loggedUser.phase
-    );
-
     const phaseMinValueInNumber =
       (currentPhaseData?.min / 100) * loggedUser.accountSize * -1;
 

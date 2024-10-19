@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { Copy, Check, ChevronDown, Smile } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
   const [level, setLevel] = useState("Level 1");
   const [isCopied, setIsCopied] = useState(false);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
-  const referralLink = "https://user.betafunded.com";
+  const currentUrl = window.location.href;
 
+  const extractedUrl = new URL(currentUrl).origin;
+
+  const referralLink = `${extractedUrl}/user/signup/${loggedUser._id}`;
+  console.log(referralLink);
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
       whileHover={{ scale: 1.05 }}
@@ -127,7 +133,7 @@ const UserReferal = () => {
             onClick={() => setActiveTab("commission")}
           />
         </div>
-        <div className="relative">
+        {/* <div className="relative">
           <motion.select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
@@ -143,7 +149,7 @@ const UserReferal = () => {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
             size={20}
           />
-        </div>
+        </div> */}
       </div>
       <h1 className="text-3xl font-bold mb-8">Affiliate Portal</h1>
       <AnimatePresence mode="wait">

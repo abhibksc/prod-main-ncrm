@@ -39,7 +39,7 @@ const UserDashboardCountdown = () => {
   }, []);
 
   return (
-    <div className="bg-secondary-800 shadow-lg rounded-xl p-4 sm:p-6 max-w-full sm:max-w-md mx-auto">
+    <div className="bg-secondary-800 mt-5 shadow-lg rounded-xl p-4 sm:p-6 max-w-full sm:max-w-md mx-auto">
       <h2 className="text-base sm:text-lg font-semibold mb-4 text-center sm:text-left">
         Today's permitted loss will reset in
       </h2>

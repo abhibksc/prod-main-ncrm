@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const UserDashboardAccountStats = () => {
   const [openDropdowns, setOpenDropdowns] = useState({});
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const phaseStats = useSelector((store) => store.user.phaseStats);
+  const phaseMinValueInNumber =
+    (phaseStats?.min / 100) * loggedUser.accountSize;
+
+  const phaseMaxValueInNumber =
+    (phaseStats?.max / 100) * loggedUser.accountSize;
+
+  // console.log("phase max value##--", phaseMaxValueInNumber);
+  // console.log("phase max value##--", phaseMinValueInNumber);
 
   const toggleDropdown = (id) => {
     setOpenDropdowns((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -10,35 +21,43 @@ const UserDashboardAccountStats = () => {
 
   const stats = [
     {
-      id: "dailyLoss",
-      label: "Daily Loss",
-      value: "1,500.00 USD",
+      id: "Max Profit",
+      label: "Max Profit",
+      value: `${
+        phaseMaxValueInNumber === Infinity ? "No Limit" : phaseMaxValueInNumber
+      }`,
       status: "Reached",
       description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
+        "Maximize your trading potential with our advanced CRM. Track your trades, manage accounts, and secure Max Profit on every move!",
     },
     {
-      id: "maxLoss",
+      id: "Max Loss",
       label: "Max Loss",
-      value: "3,000.00 USD",
+      value: `${
+        phaseMinValueInNumber === Infinity ? "No Limit" : phaseMinValueInNumber
+      }`,
       status: "Passing",
       description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
+        "Keep your losses in check! Our CRM gives you the power to monitor positions and avoid reaching your Max Loss limit.",
     },
     {
-      id: "growth",
+      id: "Growth",
       label: "Growth",
-      value: "14.45%",
+      value: `${phaseStats.max === Infinity ? "No Limit" : phaseStats.max} ${
+        phaseStats.max === Infinity ? "" : "%"
+      }`,
       status: "Passed",
       description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
+        "Achieve sustainable Growth in your Forex trading with our CRM’s powerful analytics and account management tools at your fingertips.",
     },
     {
-      id: "profitTarget",
-      label: "Profit Target",
-      value: "$7,225.00/$6000",
+      id: "Decline",
+      label: "Decline",
+      value: `${phaseStats.min === Infinity ? "No Limit" : phaseStats.min} ${
+        phaseStats.min === Infinity ? "" : "%"
+      }`,
       description:
-        "Daily loss is the maximum amount you are allowed to lose in a single trading day. Breaching this limit results in the termination of the account.",
+        "Stay ahead of the curve and avoid Decline in your trades with real-time insights and risk management tools from our Forex CRM.",
     },
   ];
 
@@ -60,7 +79,7 @@ const UserDashboardAccountStats = () => {
   return (
     <div className="bg-secondary-800/70 shadow-md rounded-lg p-4 sm:p-6 max-w-full sm:max-w-4xl mx-auto">
       <h2 className="text-lg sm:text-xl text-center font-semibold mb-4">
-        Account Stats - ONE STEP EVALUATION
+        Account Stats - {loggedUser.accountType}
       </h2>
       <div className="space-y-2">
         {stats.map((stat) => (
@@ -75,7 +94,7 @@ const UserDashboardAccountStats = () => {
               <span className="font-medium">{stat.label}</span>
               <div className="flex items-center">
                 <span className="mr-2">{stat.value}</span>
-                {stat.status && (
+                {/* {stat.status && (
                   <span
                     className={`px-2 py-1 rounded-full text-xs sm:text-xs text-white ${getStatusColor(
                       stat.status
@@ -83,7 +102,7 @@ const UserDashboardAccountStats = () => {
                   >
                     {stat.status}
                   </span>
-                )}
+                )} */}
                 {openDropdowns[stat.id] ? (
                   <ChevronUp size={20} />
                 ) : (
