@@ -242,7 +242,15 @@ const WithdrawalStatus = () => {
               selectedDeposit?.amount
             }</span></p>
             <p>Phase: <span class="highlight">${
-              selectedDeposit?.phase
+              selectedDeposit?.tradeAccount === "Beta Standard"
+                ? selectedDeposit.phase === 3
+                  ? "Live Account"
+                  : selectedDeposit?.phase
+                : selectedDeposit?.tradeAccount === "Beta Algo"
+                ? selectedDeposit.phase === 2
+                  ? "Live Account"
+                  : selectedDeposit?.phase
+                : null
             }</span></p>
             <p>Account Type: <span class="highlight">${
               selectedDeposit?.tradeAccount
