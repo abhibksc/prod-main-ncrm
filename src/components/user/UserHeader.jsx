@@ -63,7 +63,7 @@ const UserDropdown = ({ isOpen, onClose }) => {
       >
         <Link to={"/user/account-details"} className="flex items-center">
           <UserRoundCog className="w-4 h-4 mr-2" />
-          Account Details
+          Account
         </Link>
       </a>
       <a
