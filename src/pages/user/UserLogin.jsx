@@ -210,15 +210,15 @@ const UserLogin = () => {
     }
   }, [loginData]);
 
-  // // redirect-----
-  // const loggedUser = useSelector((store) => store.user.loggedUser);
+  // redirect-----
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
-  // useEffect(() => {
-  //   if (!loggedUser || !loggedUser.emailVerified) {
-  //     navigate("/user/dashboard");
-  //     console.log("user login ########--", "login");
-  //   }
-  // }, [navigate, loggedUser]);
+  useEffect(() => {
+    if (loggedUser) {
+      navigate("/user/dashboard");
+      // console.log("user login ########--", "login");
+    }
+  }, [navigate, loggedUser]);
 
   return (
     <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">
