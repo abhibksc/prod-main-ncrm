@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isSidebarOpen: false,
-  depositBalance: 0, // As number
-  availableBalance: 0, // As number
-  profitNloss: 0, // As number
+  depositBalance: 0,
+  availableBalance: 0,
+  profitNloss: 0,
   openTrades: [],
   closeTrades: [],
   userInfo: "",
@@ -21,7 +21,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     handleToggleSidebar: (state) => {
-      state.isSidebarOpen = !state.isSidebarOpen; // Toggle between true/false
+      state.isSidebarOpen = !state.isSidebarOpen;
     },
     setDepositBalance: (state, action) => {
       state.depositBalance = action.payload;

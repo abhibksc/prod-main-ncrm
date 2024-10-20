@@ -10,16 +10,25 @@ import Cookies from "js-cookie";
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const navigate = useNavigate();
-
-  useEffect(() => {
+  const verifyUser = () => {
+    // console.log("beforeee use effect ____________________", loggedUser);
     if (!loggedUser || !loggedUser.emailVerified) {
+      // console.log("Log out ____________________");
       navigate("/user/login");
     }
+  };
+
+  useEffect(() => {
+    verifyUser();
+
+    // setTimeout(() => {
+    //   verifyUser();
+    // }, 2000);
   }, [navigate, loggedUser]);
 
-  // if (!loggedUser) {
-  //   return null;
-  // }
+  if (!loggedUser) {
+    return null;
+  }
 
   return (
     <div className="text-white h-screen overflow-hidden">

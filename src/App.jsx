@@ -16,9 +16,9 @@ export default function App() {
   }, [adminUser, navigate]);
   console.log("object");
 
-  // if (!adminUser) {
-  //   return null;
-  // }
+  if (!adminUser) {
+    return null;
+  }
 
   return (
     <div className="h-screen flex flex-col">

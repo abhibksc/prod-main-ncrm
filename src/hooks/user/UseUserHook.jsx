@@ -70,13 +70,13 @@ export default function UseUserHook() {
 
   let phaseLimitValues;
 
-  if (loggedUser.accountType === "Beta Standard") {
+  if (loggedUser?.accountType === "Beta Standard") {
     phaseLimitValues = [
       { phase: 1, min: 5, max: 10 },
       { phase: 2, min: 5, max: 5 },
       { phase: 3, min: 5, max: Infinity },
     ];
-  } else if (loggedUser.accountType === "Beta Algo") {
+  } else if (loggedUser?.accountType === "Beta Algo") {
     phaseLimitValues = [
       { phase: 1, min: 4, max: 10 },
       { phase: 2, min: 4, max: Infinity },

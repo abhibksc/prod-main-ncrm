@@ -175,16 +175,20 @@ const UserLogin = () => {
         setLoginData(res.data);
 
         dispatch(setLoggedUser(res.data.user));
+        setIsLoading(false);
       }
       toast.success("Login success");
     } catch (error) {
       console.log("error in login", error);
+      setIsLoading(false);
+
       toast.error(error.response?.data?.message || "Login failed!");
     }
   };
 
   useEffect(() => {
     const sendCustomMail = async () => {
+      setIsLoading(true);
       try {
         const customMailRes = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
@@ -198,6 +202,7 @@ const UserLogin = () => {
         navigate("/user/dashboard");
       } catch (error) {
         console.log(error);
+        setIsLoading(true);
       }
     };
     if (loginData) {
@@ -311,10 +316,12 @@ const UserLogin = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 type="submit"
-                className="w-full flex gap-4 items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
               >
-                <LogIn className="mr-2" size={20} />
-                Sign in
+                <LogIn className="mr-1" size={20} />
+                <p className=" group-hover:animate-pulse transition-all">
+                  Sign in
+                </p>
                 {isLoading && <Loader2 className=" animate-spin"></Loader2>}
               </motion.button>
             </form>

@@ -168,19 +168,19 @@ const UserVerify = () => {
               <table cellpadding="0" cellspacing="0" border="0" width="100%">
                 <tr>
                   <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                    <a href="https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5&pcampaignid=web_share" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
                       <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
                       <span style="vertical-align: middle;">Android</span>
                     </a>
                   </td>
                   <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                    <a href="https://apps.apple.com/us/app/metatrader-5/id413251709?platform=ipad" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
                       <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
                       <span style="vertical-align: middle;">iOS</span>
                     </a>
                   </td>
                   <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="#" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
+                    <a href="https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_source=www.metatrader5.com&utm_campaign=download" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
                       <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
                       <span style="vertical-align: middle;">Windows</span>
                     </a>
@@ -236,12 +236,12 @@ const UserVerify = () => {
       verifyEmail();
     }
   }, []);
-
+  // console.log("userdata---", userData);
   useEffect(() => {
     if (userData) {
       const sendCustomMail = async () => {
         try {
-          console.log("Mail sent######################");
+          // console.log("Mail sent######################");
           const customMailRes = await axios.post(
             `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
             {

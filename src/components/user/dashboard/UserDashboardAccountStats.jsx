@@ -24,7 +24,9 @@ const UserDashboardAccountStats = () => {
       id: "Max Profit",
       label: "Max Profit",
       value: `${
-        phaseMaxValueInNumber === Infinity ? "No Limit" : phaseMaxValueInNumber
+        phaseMaxValueInNumber === Infinity
+          ? "No Limit" || null
+          : phaseMaxValueInNumber || null
       }`,
       status: "Reached",
       description:
@@ -34,7 +36,9 @@ const UserDashboardAccountStats = () => {
       id: "Max Loss",
       label: "Max Loss",
       value: `${
-        phaseMinValueInNumber === Infinity ? "No Limit" : phaseMinValueInNumber
+        phaseMinValueInNumber === Infinity
+          ? "No Limit" || null
+          : phaseMinValueInNumber || null
       }`,
       status: "Passing",
       description:
@@ -43,9 +47,11 @@ const UserDashboardAccountStats = () => {
     {
       id: "Growth",
       label: "Growth",
-      value: `${phaseStats.max === Infinity ? "No Limit" : phaseStats.max} ${
-        phaseStats.max === Infinity ? "" : "%"
-      }`,
+      value: `${
+        phaseStats?.max === Infinity || null
+          ? "No Limit"
+          : phaseStats?.max || null
+      } ${phaseStats?.max === Infinity ? "" : "%"}`,
       status: "Passed",
       description:
         "Achieve sustainable Growth in your Forex trading with our CRM’s powerful analytics and account management tools at your fingertips.",
@@ -53,9 +59,9 @@ const UserDashboardAccountStats = () => {
     {
       id: "Decline",
       label: "Decline",
-      value: `${phaseStats.min === Infinity ? "No Limit" : phaseStats.min} ${
-        phaseStats.min === Infinity ? "" : "%"
-      }`,
+      value: `${
+        phaseStats?.min === Infinity ? "No Limit" || null : phaseStats?.min
+      } ${phaseStats?.min === Infinity ? "" : "%"}`,
       description:
         "Stay ahead of the curve and avoid Decline in your trades with real-time insights and risk management tools from our Forex CRM.",
     },

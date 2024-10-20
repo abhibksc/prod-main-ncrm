@@ -14,34 +14,25 @@ import { combineReducers } from "redux";
 import userSlice from "./user/userSlice";
 import adminSlice from "./adminSlice";
 
-// Separate persist configs for user and admin
-const userPersistConfig = {
-  key: "user",
+const rootPersistConfig = {
+  key: "root",
   storage,
-  whitelist: ["userInfo", "loggedUser"], // Persist only user data
+  version: 1,
 };
-
-const adminPersistConfig = {
-  key: "admin",
-  storage,
-  whitelist: ["adminUser"], // Persist only admin data
-};
-
-// Apply persistReducer to each slice separately
-const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
-const persistedAdminReducer = persistReducer(adminPersistConfig, adminSlice);
 
 const rootReducer = combineReducers({
-  user: persistedUserReducer,
-  admin: persistedAdminReducer,
+  user: userSlice,
+  admin: adminSlice,
 });
 
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });
