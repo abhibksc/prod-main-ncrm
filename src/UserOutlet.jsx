@@ -19,11 +19,11 @@ export default function UserOutlet() {
   };
 
   useEffect(() => {
-    verifyUser();
+    // verifyUser();
 
-    // setTimeout(() => {
-    //   verifyUser();
-    // }, 2000);
+    setTimeout(() => {
+      verifyUser();
+    }, 2000);
   }, [navigate, loggedUser]);
 
   if (!loggedUser) {
