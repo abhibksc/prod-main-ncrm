@@ -14,6 +14,7 @@ export default function App() {
       navigate("/admin/login");
     }
   }, [adminUser, navigate]);
+  console.log("object");
 
   // if (!adminUser) {
   //   return null;
