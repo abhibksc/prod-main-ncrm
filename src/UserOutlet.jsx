@@ -10,11 +10,18 @@ import Cookies from "js-cookie";
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const navigate = useNavigate();
+  const verifyUser = () => {
+    console.log("beforeee use effect ____________________", loggedUser);
+    if (!loggedUser || !loggedUser.emailVerified) {
+      console.log("Log out ____________________");
+      // navigate("/user/login");
+    }
+  };
 
   useEffect(() => {
-    if (!loggedUser || !loggedUser.emailVerified) {
-      navigate("/user/login");
-    }
+    setTimeout(() => {
+      verifyUser();
+    }, 3000);
   }, [navigate, loggedUser]);
 
   // if (!loggedUser) {

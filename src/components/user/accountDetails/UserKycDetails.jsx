@@ -467,7 +467,7 @@ const UserKycDetails = () => {
       onSubmit={handleSubmit}
       className="max-w-7xl mx-auto bg-secondary-700/30 rounded-2xl"
     >
-      {loggedUser?.kycDetails.documentType && (
+      {loggedUser?.kycDetails?.documentType && (
         <div className=" flex gap-2  font-semibold pt-5 items-center justify-center">
           <h1 className=" text-lg">Status :</h1>
           {loggedUser?.kycVerified === false ? (

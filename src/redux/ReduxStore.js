@@ -14,20 +14,20 @@ import { combineReducers } from "redux";
 import userSlice from "./user/userSlice";
 import adminSlice from "./adminSlice";
 
-// Separate persist configs for user and admin
+// Persist configs for user and admin (now persisting everything)
 const userPersistConfig = {
   key: "user",
   storage,
-  whitelist: ["userInfo", "loggedUser"], // Persist only user data
+  // Remove the whitelist to persist everything in the user slice
 };
 
 const adminPersistConfig = {
   key: "admin",
   storage,
-  whitelist: ["adminUser"], // Persist only admin data
+  // Remove the whitelist to persist everything in the admin slice
 };
 
-// Apply persistReducer to each slice separately
+// Apply persistReducer to each slice
 const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
 const persistedAdminReducer = persistReducer(adminPersistConfig, adminSlice);
 
@@ -41,7 +41,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER], // Ignore redux-persist actions
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 });
