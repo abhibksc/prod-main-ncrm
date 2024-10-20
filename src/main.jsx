@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/ReduxStore.js";
 
+document.title = import.meta.env.VITE_WEBSITE_NAME || "Forex CRM";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <RouterProvider router={Router}>
