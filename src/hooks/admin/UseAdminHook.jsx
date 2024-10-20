@@ -1,4 +1,9 @@
-import { setDbUsers, setDeposits, setWithdrawals } from "@/redux/adminSlice";
+import {
+  setAdminUser,
+  setDbUsers,
+  setDeposits,
+  setWithdrawals,
+} from "@/redux/adminSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
@@ -43,6 +48,12 @@ export default function UseAdminHook() {
       console.log(error);
     }
   };
+  const getResetAdmin = () => {
+    dispatch(setAdminUser(""));
+    dispatch(setDbUsers([]));
+    dispatch(setDeposits([]));
+    dispatch(setWithdrawals([]));
+  };
 
-  return { getUsers, getDeposits, getWithdrawals };
+  return { getUsers, getDeposits, getWithdrawals, getResetAdmin };
 }

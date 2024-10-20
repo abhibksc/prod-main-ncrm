@@ -7,15 +7,16 @@ import UserKycDetails from "@/components/user/accountDetails/UserKycDetails";
 
 const TabButton = ({ active, onClick, children, icon: Icon }) => (
   <motion.button
-    whileTap={{ scale: 0.95 }}
-    className={`flex items-center px-4 sm:px-6 hover:shadow-2xl py-2 sm:py-3 font-semibold transition-all duration-300 ${
+    className={`flex items-center justify-center p-2 sm:p-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
       active
-        ? "bg-secondary-500/50 text-white shadow-lg"
-        : "bg-secondary-800/60 text-gray-300 hover:bg-secondary-800/70"
-    } rounded-full mr-2`}
+        ? "bg-secondary-600 text-white shadow-lg"
+        : "text-gray-400 hover:text-white hover:bg-secondary-700"
+    }`}
     onClick={onClick}
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
   >
-    <Icon className="mr-2" size={18} />
+    <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
     {children}
   </motion.button>
 );
@@ -30,11 +31,11 @@ const UserAccountDetails = () => {
   ];
 
   return (
-    <div className="max-w-full sm:max-w-5xl lg:max-w-7xl mx-auto p-4 sm:p-8 bg-secondary-800/30 rounded-2xl shadow-2xl">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-8 text-white">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center sm:text-left">
         Account Details
       </h1>
-      <div className="flex overflow-x-auto pb-2">
+      <div className="flex flex-col sm:flex-row justify-start sm:justify-center mb-6 space-y-2 sm:space-y-0 sm:space-x-4">
         {tabs.map((tab) => (
           <TabButton
             key={tab.id}
@@ -46,27 +47,15 @@ const UserAccountDetails = () => {
           </TabButton>
         ))}
       </div>
-
       <motion.div
-        key={activeTab}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="text-white p-4 sm:p-6 rounded-xl shadow-inner"
+        transition={{ duration: 0.5 }}
+        className="bg-secondary-800 rounded-xl p-4 sm:p-6 shadow-lg"
       >
-        {activeTab === "personal" && (
-          <div>
-            <UserKycDetails />
-          </div>
-        )}
-
+        {activeTab === "personal" && <UserKycDetails />}
         {activeTab === "account" && <UserBankDetails />}
-
-        {activeTab === "wallet" && (
-          <div>
-            <UserWalletDetails />
-          </div>
-        )}
+        {activeTab === "wallet" && <UserWalletDetails />}
       </motion.div>
     </div>
   );

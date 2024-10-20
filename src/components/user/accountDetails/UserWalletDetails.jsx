@@ -64,8 +64,8 @@ const UserWalletDetails = () => {
     getUpdateLoggedUser();
   }, []);
   return (
-    <div className="max-w-7xl mx-auto p-8 bg-secondary-700/30 rounded-2xl ">
-      <div className=" text-black p-6 rounded-xl ">
+    <div className="max-w-7xl mx-auto bg-secondary-700/30 rounded-2xl ">
+      <div className=" text-black p-4 rounded-xl ">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField
             label="Tether Wallet Address"
@@ -102,7 +102,7 @@ const UserWalletDetails = () => {
             onClick={submitHandler}
             className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg"
           >
-            Update Account Details
+            Update Account
           </motion.button>
         </div>
       </div>

@@ -15,9 +15,9 @@ export default function App() {
     }
   }, [adminUser, navigate]);
 
-  // if (!adminUser) {
-  //   return null;
-  // }
+  if (!adminUser) {
+    return null;
+  }
 
   return (
     <div className="h-screen flex flex-col">

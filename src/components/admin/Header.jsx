@@ -13,6 +13,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedUser } from "@/redux/user/userSlice";
+import UseAdminHook from "@/hooks/admin/UseAdminHook";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -30,9 +31,10 @@ const Header = () => {
 
   // Animation control
   const controls = useAnimation();
+  const { getResetAdmin } = UseAdminHook();
 
   const logoutHandler = () => {
-    dispatch(setLoggedUser(""));
+    getResetAdmin();
     navigate("/admin/login");
   };
 

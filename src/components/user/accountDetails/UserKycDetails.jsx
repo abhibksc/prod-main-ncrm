@@ -434,6 +434,7 @@ const UserKycDetails = () => {
   };
 
   useEffect(() => {
+    // getUpdateLoggedUser();
     const getFullImageUrl = (path) => {
       if (!path) return "";
       return path.startsWith("http")
@@ -457,12 +458,16 @@ const UserKycDetails = () => {
     });
   }, [loggedUser]);
 
+  useEffect(() => {
+    getUpdateLoggedUser();
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit}
       className="max-w-7xl mx-auto bg-secondary-700/30 rounded-2xl"
     >
-      {loggedUser.kycDetails && (
+      {loggedUser?.kycDetails.documentType && (
         <div className=" flex gap-2  font-semibold pt-5 items-center justify-center">
           <h1 className=" text-lg">Status :</h1>
           {loggedUser?.kycVerified === false ? (
@@ -543,7 +548,7 @@ const UserKycDetails = () => {
             whileTap={{ scale: 0.95 }}
             className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg"
           >
-            Update KYC Verification
+            Update KYC
           </motion.button>
         </div>
       </div>
