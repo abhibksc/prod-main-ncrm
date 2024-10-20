@@ -11,22 +11,24 @@ export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const navigate = useNavigate();
   const verifyUser = () => {
-    console.log("beforeee use effect ____________________", loggedUser);
+    // console.log("beforeee use effect ____________________", loggedUser);
     if (!loggedUser || !loggedUser.emailVerified) {
-      console.log("Log out ____________________");
-      // navigate("/user/login");
+      // console.log("Log out ____________________");
+      navigate("/user/login");
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      verifyUser();
-    }, 3000);
+    verifyUser();
+
+    // setTimeout(() => {
+    //   verifyUser();
+    // }, 2000);
   }, [navigate, loggedUser]);
 
-  // if (!loggedUser) {
-  //   return null;
-  // }
+  if (!loggedUser) {
+    return null;
+  }
 
   return (
     <div className="text-white h-screen overflow-hidden">

@@ -14,30 +14,21 @@ import { combineReducers } from "redux";
 import userSlice from "./user/userSlice";
 import adminSlice from "./adminSlice";
 
-// Persist configs for user and admin (now persisting everything)
-const userPersistConfig = {
-  key: "user",
+const rootPersistConfig = {
+  key: "root",
   storage,
-  // Remove the whitelist to persist everything in the user slice
+  version: 1,
 };
-
-const adminPersistConfig = {
-  key: "admin",
-  storage,
-  // Remove the whitelist to persist everything in the admin slice
-};
-
-// Apply persistReducer to each slice
-const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
-const persistedAdminReducer = persistReducer(adminPersistConfig, adminSlice);
 
 const rootReducer = combineReducers({
-  user: persistedUserReducer,
-  admin: persistedAdminReducer,
+  user: userSlice,
+  admin: adminSlice,
 });
 
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
