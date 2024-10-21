@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Copy, Check, ChevronDown, Smile } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
   const [level, setLevel] = useState("Level 1");
   const [isCopied, setIsCopied] = useState(false);
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const { getUpdateLoggedUser } = UseUserHook();
 
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
@@ -34,6 +37,42 @@ const UserReferal = () => {
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
+
+  // generate handler ------------
+
+  const generateHandler = async () => {
+    const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
+    try {
+      const generateMtId = await axios.post(
+        `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
+        {
+          Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
+          MT5Account: randomNumber,
+          Name: loggedUser.firstName,
+          Leverage: "200",
+          Group_Name: "contest.Promo11",
+        }
+      );
+      const updateLoggedUser = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+        {
+          id: loggedUser._id,
+          referalId: generateMtId.data.MT5Account,
+        }
+      );
+      getUpdateLoggedUser();
+      // console.log("generate mt id ---", generateMtId.data.MT5Account);
+      // console.log("updateLoggedUser---", updateLoggedUser.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // use effect ---------------
+
+  useEffect(() => {
+    getUpdateLoggedUser();
+  }, []);
 
   const ReferralsView = () => (
     <motion.div
@@ -141,10 +180,16 @@ const UserReferal = () => {
             onClick={() => setActiveTab("commission")}
           />
         </div>
+        {loggedUser.referalId && (
+          <div className=" my-5 mb-10 ml-3 px-4 py-2  inline bg-secondary-600/70 hover:px-6 transition-all hover:bg-secondary-600/40 rounded-full">
+            <button onClick={generateHandler}>Generate IB account</button>
+          </div>
+        )}
+        {/* <div>
+          <p>Hlo</p>
+        </div> */}
       </div>
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">
-        Affiliate Portal
-      </h1>
+
       <AnimatePresence mode="wait">
         {activeTab === "referrals" ? (
           <ReferralsView key="referrals" />

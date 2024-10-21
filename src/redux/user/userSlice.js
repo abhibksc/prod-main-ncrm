@@ -13,7 +13,7 @@ const initialState = {
   paymentMethods: [],
   phaseMaxLength: 0,
   totalFinalPnL: 0,
-  phaseStats: [],
+  phaseStats: "",
 };
 
 export const userSlice = createSlice({

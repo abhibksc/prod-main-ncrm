@@ -6,7 +6,6 @@ import { toast, Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedUser } from "../../redux/user/userSlice";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
-
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

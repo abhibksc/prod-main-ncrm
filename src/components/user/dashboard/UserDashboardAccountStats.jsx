@@ -6,6 +6,7 @@ const UserDashboardAccountStats = () => {
   const [openDropdowns, setOpenDropdowns] = useState({});
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const phaseStats = useSelector((store) => store.user.phaseStats);
+  // console.log("phase stats account stats dashboard--", phaseStats);
   const phaseMinValueInNumber =
     (phaseStats?.min / 100) * loggedUser.accountSize;
 

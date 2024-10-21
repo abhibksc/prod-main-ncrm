@@ -1,6 +1,6 @@
 import { setAdminUser } from "@/redux/adminSlice";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,8 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // browser info--------------
 
   const handleChange = (e) => {
     const { name, value } = e.target;
