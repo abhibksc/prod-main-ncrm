@@ -81,7 +81,7 @@ export default function UserDashboard() {
 
     if (loggedUser?.accountType === "Beta Standard") {
       phaseLimitValues = [
-        { phase: 1, min: 5, max: 10 },
+        { phase: 1, min: 5, max: 8 },
         { phase: 2, min: 5, max: 5 },
         { phase: 3, min: 5, max: Infinity },
       ];

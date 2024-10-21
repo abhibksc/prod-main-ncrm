@@ -14,7 +14,7 @@ const UserReferal = () => {
 
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
-  const referralLink = `${extractedUrl}/user/signup/${loggedUser._id}`;
+  const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referalId}`;
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
@@ -168,35 +168,44 @@ const UserReferal = () => {
       className="max-w-5xl mx-auto p-4 sm:p-8 rounded-xl bg-secondary-800/60"
     >
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8 space-y-4 sm:space-y-0">
-        <div className="space-x-2 sm:space-x-4 flex">
-          <TabButton
-            label="Referrals"
-            isActive={activeTab === "referrals"}
-            onClick={() => setActiveTab("referrals")}
-          />
-          <TabButton
-            label="Commission"
-            isActive={activeTab === "commission"}
-            onClick={() => setActiveTab("commission")}
-          />
-        </div>
-        {loggedUser.referalId && (
-          <div className=" my-5 mb-10 ml-3 px-4 py-2  inline bg-secondary-600/70 hover:px-6 transition-all hover:bg-secondary-600/40 rounded-full">
-            <button onClick={generateHandler}>Generate IB account</button>
+        {!loggedUser.referalId ? (
+          ""
+        ) : (
+          <div className="space-x-2 sm:space-x-4 flex">
+            <TabButton
+              label="Referrals"
+              isActive={activeTab === "referrals"}
+              onClick={() => setActiveTab("referrals")}
+            />
+            <TabButton
+              label="Commission"
+              isActive={activeTab === "commission"}
+              onClick={() => setActiveTab("commission")}
+            />
           </div>
         )}
         {/* <div>
           <p>Hlo</p>
         </div> */}
       </div>
-
-      <AnimatePresence mode="wait">
-        {activeTab === "referrals" ? (
-          <ReferralsView key="referrals" />
-        ) : (
-          <CommissionView key="commission" />
-        )}
-      </AnimatePresence>
+      {loggedUser.referalId ? (
+        <AnimatePresence mode="wait">
+          {activeTab === "referrals" ? (
+            <ReferralsView key="referrals" />
+          ) : (
+            <CommissionView key="commission" />
+          )}
+        </AnimatePresence>
+      ) : (
+        <div className=" flex justify-center items-center my-5 mb-10 ml-3">
+          <button
+            className="  px-4 py-2  bg-secondary-600/70 hover:px-6 transition-all hover:bg-secondary-600/40 rounded-full"
+            onClick={generateHandler}
+          >
+            Generate IB account
+          </button>
+        </div>
+      )}
     </motion.div>
   );
 };
