@@ -57,7 +57,6 @@ export default function UserDashboard() {
   // for update phase---------------
 
   useEffect(() => {
-    // update fnction-----------
     const fetchData = async () => {
       if (!isMax && loggedUser.phase !== 0) {
         await getUpdatePhase();
@@ -69,15 +68,15 @@ export default function UserDashboard() {
 
     const intervalId = setInterval(() => {
       fetchData();
-    }, 7000);
+    }, 8000);
 
     return () => {
       clearInterval(intervalId);
     };
   }, []);
-  useEffect(() => {
-    // group phase-------------
 
+  // group phase-------------
+  useEffect(() => {
     let phaseLimitValues;
 
     if (loggedUser?.accountType === "Beta Standard") {

@@ -31,7 +31,7 @@ export default function UserOutlet() {
   }
 
   return (
-    <div className="text-white h-screen overflow-hidden">
+    <div className="text-white h-screen overflow-hidden o">
       <Toaster
         toastOptions={{
           // Define default options
