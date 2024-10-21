@@ -16,7 +16,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenTrades, setProfitNloss } from "../../redux/user/userSlice";
+import {
+  setAvailableBalance,
+  setOpenTrades,
+  setProfitNloss,
+} from "../../redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { useNavigate } from "react-router-dom";
 import { getData } from "country-list";
@@ -42,7 +46,7 @@ const UserNewChallenge = () => {
     phone: loggedUser.phone || "",
   });
 
-  console.log("formm data----", formData);
+  // console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
@@ -182,6 +186,8 @@ const UserNewChallenge = () => {
       dispatch(setProfitNloss(0));
 
       dispatch(setOpenTrades([]));
+      dispatch(setAvailableBalance(0));
+      dispatch(setProfitNloss(0));
       await getUpdateLoggedUser();
       await GetUserInfoAPI();
       toast.success("Created new challenge", { id: toastID });

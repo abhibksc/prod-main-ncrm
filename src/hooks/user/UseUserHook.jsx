@@ -307,8 +307,8 @@ export default function UseUserHook() {
 
         dispatch(setLoggedUser(updateLoggedUser.data.data));
         // await getUpdateLoggedUser();
-        dispatch(setProfitNloss(""));
-        dispatch(setAvailableBalance(""));
+        dispatch(setProfitNloss(0));
+        dispatch(setAvailableBalance(0));
         // await GetUserInfoAPI();
         toast.success("Maximum profit reached", { id: toastId });
         window.location.reload();
@@ -522,7 +522,8 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
         );
         await getUpdateLoggedUser();
         // await GetUserInfoAPI();
-        dispatch(setProfitNloss(""));
+        dispatch(setProfitNloss(0));
+        dispatch(setAvailableBalance(0));
         toast.success("Maximum loss reached", { id: toastId });
 
         const customContent = `<!DOCTYPE html>

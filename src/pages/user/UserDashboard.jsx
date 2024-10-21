@@ -54,22 +54,22 @@ export default function UserDashboard() {
     };
   }, []);
 
-  // for update----phase
+  // for update phase---------------
 
   useEffect(() => {
     // update fnction-----------
     const fetchData = async () => {
-      if (!isMax) {
+      if (!isMax && loggedUser.phase !== 0) {
         await getUpdatePhase();
       }
     };
-    if (!isMax) {
+    if (!isMax && loggedUser.phase !== 0) {
       getUpdatePhase();
     }
 
     const intervalId = setInterval(() => {
       fetchData();
-    }, 10000);
+    }, 7000);
 
     return () => {
       clearInterval(intervalId);
