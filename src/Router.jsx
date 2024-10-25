@@ -36,7 +36,6 @@ import UserInvesterPassword from "./pages/user/UserInvestorPassword";
 import UserMasterPassword from "./pages/user/UserMasterPassword";
 import UserTransaction from "./pages/user/UserTransaction";
 import UserChallenges from "./pages/user/UserChallenges";
-import DevTest from "./pages/user/DevTest";
 import UserNewChallenge from "./components/user/UserNewChallenge";
 import AccountConfiguration from "./pages/admin/AccountConfiguration";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
@@ -229,10 +228,6 @@ const Router = createBrowserRouter([
   {
     path: "/user/login",
     element: <UserLogin></UserLogin>,
-  },
-  {
-    path: "/user/dev",
-    element: <DevTest></DevTest>,
   },
 ]);
 

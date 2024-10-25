@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserSidebar from "./UserSidebar";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { handleToggleSidebar } from "@/redux/user/userSlice";
+import { AnimatePresence, motion } from "framer-motion";
 
 const UserDropdown = ({ isOpen, onClose }) => {
   const dropdownRef = useRef(null);
@@ -39,54 +40,81 @@ const UserDropdown = ({ isOpen, onClose }) => {
     };
   }, [onClose]);
 
+  const menuItems = [
+    {
+      to: "/user/profile",
+      icon: <UserCircle className="w-4 h-4" />,
+      label: "Profile",
+    },
+    {
+      to: "/user/account-details",
+      icon: <UserRoundCog className="w-4 h-4" />,
+      label: "Account Details",
+    },
+    {
+      to: "/user/change-password",
+      icon: <KeyRound className="w-4 h-4" />,
+      label: "Change Password",
+    },
+  ];
+
   return (
-    <div
-      ref={dropdownRef}
-      className={`absolute z-10 right-0 top-10 mt-2 w-48 bg-secondary-800 rounded-md shadow-lg py-1 transition-all duration-300 ease-in-out ${
-        isOpen
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 -translate-y-2 pointer-events-none"
-      }`}
-    >
-      <a
-        href="#"
-        className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
-      >
-        <Link to={"/user/profile"} className="flex items-center">
-          <UserCircle className="w-4 h-4 mr-2" />
-          Profile
-        </Link>
-      </a>
-      <a
-        href="#"
-        className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
-      >
-        <Link to={"/user/account-details"} className="flex items-center">
-          <UserRoundCog className="w-4 h-4 mr-2" />
-          Account
-        </Link>
-      </a>
-      <a
-        href="#"
-        className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
-      >
-        <Link to={"/user/change-password"} className="flex items-center">
-          <KeyRound className="w-4 h-4 mr-2" />
-          Change Password
-        </Link>
-      </a>
-      <a
-        href="#"
-        className="block px-4 py-2 text-sm text-white hover:bg-secondary-700"
-      >
-        <Link
-          onClick={logoutHandler}
-          className="flex text-red-500 font-semibold items-center"
-        >
-          <LogOut className="w-4 h-4 mr-2" />
-          Logout
-        </Link>
-      </a>
+    <div ref={dropdownRef} className="relative">
+      <AnimatePresence>
+        {isOpen && (
+          <div className="absolute z-10 right-0 top-10 w-48">
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="bg-secondary-800 rounded-xl shadow-lg overflow-hidden"
+            >
+              <motion.div className="py-1">
+                {menuItems.map((item, index) => (
+                  <motion.div
+                    key={item.to}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: index * 0.1, duration: 0.2 }}
+                    whileHover={{
+                      scale: 1.02,
+                      backgroundColor: "rgba(255,255,255,0.1)",
+                    }}
+                    className="block"
+                  >
+                    <Link
+                      to={item.to}
+                      className="flex items-center px-4 py-2 text-sm text-white hover:bg-secondary-700 hover:pl-6 transition-all"
+                    >
+                      <span className="mr-2">{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+                <motion.div
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.2 }}
+                  whileHover={{
+                    scale: 1.02,
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                  }}
+                  className="block"
+                >
+                  <Link
+                    onClick={logoutHandler}
+                    className="flex items-center px-4 py-2 text-sm text-red-500 font-semibold hover:bg-secondary-700 transition-colors duration-150"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Link>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -105,16 +133,19 @@ const UserHeader = () => {
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
-      <div className=" px-5 mx-auto flex justify-between items-center">
+      <div className=" px-5  flex justify-between items-center">
         <div className=" flex gap-2">
           <button className=" lg:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
           </button>
-          <a href="/user/dashboard" className="flex items-center mr-4">
+          <a
+            href="/user/dashboard"
+            className=" mt-[-4px] md:mt-[-12px] sm:mt-[-10px] items-center mr-4"
+          >
             <img
-              src="/beta-funded.png"
+              src="/beta-funded-logo.png"
               alt="Forex-ZX Logo"
-              className="h-4 w-auto sm:h-4 md:h-6 lg:h-8 xl:h-10 object-contain"
+              className=" object-contain w-auto h-10 md:h-14 sm:h-12"
             />
           </a>{" "}
         </div>

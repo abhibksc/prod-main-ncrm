@@ -7,10 +7,10 @@ import UserKycDetails from "@/components/user/accountDetails/UserKycDetails";
 
 const TabButton = ({ active, onClick, children, icon: Icon }) => (
   <motion.button
-    className={`flex items-center justify-center p-2 sm:p-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${
+    className={`flex items-center justify-center px-3 p-2 sm:p-3 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
       active
-        ? "bg-secondary-600 text-white shadow-lg"
-        : "text-gray-400 hover:text-white hover:bg-secondary-700"
+        ? "bg-secondary-700/80 text-white shadow-lg"
+        : "text-gray-400 hover:text-white hover:bg-secondary-700/20 hover:px-4"
     }`}
     onClick={onClick}
     whileHover={{ scale: 1.05 }}
@@ -31,7 +31,7 @@ const UserAccountDetails = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 md:p-8">
+    <div className="max-w-full mx-auto p-4 sm:p-6 md:p-8">
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center sm:text-left">
         Account Details
       </h1>
@@ -51,7 +51,7 @@ const UserAccountDetails = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-secondary-800 rounded-xl p-4 pb-5 sm:p-6 shadow-lg"
+        className="rounded-xl mb-10 shadow-lg"
       >
         {activeTab === "personal" && <UserKycDetails />}
         {activeTab === "account" && <UserBankDetails />}

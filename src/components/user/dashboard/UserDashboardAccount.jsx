@@ -89,24 +89,20 @@ const UserDashboardAccount = () => {
           delay={0.15}
         />
 
-        <Link to="/user/master-password" className="block">
-          <CredentialItem
-            icon={Key}
-            label="Master Password"
-            value={loggedUser.masterPassword}
-            badgeColor="bg-yellow-100 text-yellow-800"
-            delay={0.25}
-          />
-        </Link>
-        <Link to="/user/investor-password" className="block">
-          <CredentialItem
-            icon={Shield}
-            label="Investor Password"
-            value={loggedUser.investorPassword}
-            badgeColor="bg-yellow-100 text-yellow-800"
-            delay={0.3}
-          />
-        </Link>
+        <CredentialItem
+          icon={Key}
+          label="Master Password"
+          value={loggedUser.masterPassword}
+          badgeColor="bg-yellow-100 text-yellow-800"
+          delay={0.25}
+        />
+        <CredentialItem
+          icon={Shield}
+          label="Investor Password"
+          value={loggedUser.investorPassword}
+          badgeColor="bg-yellow-100 text-yellow-800"
+          delay={0.3}
+        />
         <CredentialItem
           icon={PanelTopInactiveIcon}
           label="Account Type"

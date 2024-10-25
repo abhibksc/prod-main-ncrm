@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoggedUser } from "../../redux/user/userSlice";
-import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
-
+import { Mail, Lock, LogIn, Loader2, ArrowLeft } from "lucide-react";
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [isResetLoading, setIsResetLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loginData, setLoginData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sentmail, setSentmail] = useState(false);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -27,139 +31,162 @@ const UserLogin = () => {
     });
 
   const customContent = `<!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdrawal Request Confirmation - Arena Trade</title>
-    <style>
-      body, html {
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background-color: #f4f4f4;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 5px;
-        background-color: #ffffff;
-      }
-      .header {
-        background-color: #19422df2;
-        color: #ffffff;
-        padding: 20px 15px;
-        text-align: center;
-        border-radius: 10px 10px 0 0;
-      }
-      .header h1 {
-        margin: 0;
-        font-size: 22px;
-        letter-spacing: 1px;
-      }
-      .content {
-        padding: 10px 20px;
-      }
-      .cta-button {
-        display: inline-block;
-        padding: 12px 24px;
-        background-color: #2d6a4f;
-        color: #FFFFFF;
-        text-decoration: none;
-        border-radius: 5px;
-        font-weight: bold;
-        margin: 10px 0;
-      }
-      .footer {
-        background-color: #19422df2;
-        color: #ffffff;
-        text-align: center;
-        padding: 5px 10px;
-        font-size: 12px;
-        border-radius: 0 0 10px 10px;
-      }
-      .footer-info {
-        margin-top: 6px;
-      }
-      .footer-info a {
-        color: #B6D0E2;
-        text-decoration: none;
-      }
-      
-     
-      .withdrawal-details {
-        background-color: #f8f8f8;
-        border-left: 4px solid #2d6a4f;
-        padding: 15px;
-        margin: 20px 0;
-      }
-      .withdrawal-details p {
-        margin: 5px 0;
-      }
-      .highlight {
-        font-weight: bold;
-        color: #0a2342;
-      }
-      .risk-warning {
-        color: #C70039;
-        padding: 5px;
-        font-size: 12px;
-        line-height: 1.4;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>New Login Detected</h1>
-      </div>
-      <div class="content">
-
-      <p>Dear ${
-        loginData?.user?.firstName + " " + loginData?.user?.lastName
-      },</p>
-      <p>We’re writing to inform you that a new login to your account was detected. Please review the details of this activity below: </p>
-
-              <div class="withdrawal-details">
-
-
-        <p>Country: <span class="highlight">${
-          loginData?.newUserLog?.country
-        }</span></p>
-        <p>Browser: <span class="highlight">${
-          loginData?.newUserLog?.browser
-        }</span></p>
-        <p>IP Address: <span class="highlight">${
-          loginData?.newUserLog?.ip
-        }</span></p>
-        <p>Time stamp: <span class="highlight">${formattedDateTime}</span></p>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Withdrawal Request Confirmation - Arena Trade</title>
+      <style>
+        body, html {
+          margin: 0;
+          padding: 0;
+          font-family: 'Arial', sans-serif;
+          line-height: 1.6;
+          color: #333;
+          background-color: #f4f4f4;
+        }
+        .container {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 5px;
+          background-color: #ffffff;
+        }
+        .header {
+          background-color: #19422df2;
+          color: #ffffff;
+          padding: 20px 15px;
+          text-align: center;
+          border-radius: 10px 10px 0 0;
+        }
+        .header h1 {
+          margin: 0;
+          font-size: 22px;
+          letter-spacing: 1px;
+        }
+        .content {
+          padding: 10px 20px;
+        }
+        .cta-button {
+          display: inline-block;
+          padding: 12px 24px;
+          background-color: #2d6a4f;
+          color: #FFFFFF;
+          text-decoration: none;
+          border-radius: 5px;
+          font-weight: bold;
+          margin: 10px 0;
+        }
+        .footer {
+          background-color: #19422df2;
+          color: #ffffff;
+          text-align: center;
+          padding: 5px 10px;
+          font-size: 12px;
+          border-radius: 0 0 10px 10px;
+        }
+        .footer-info {
+          margin-top: 6px;
+        }
+        .footer-info a {
+          color: #B6D0E2;
+          text-decoration: none;
+        }
+        .withdrawal-details {
+          background-color: #f8f8f8;
+          border-left: 4px solid #2d6a4f;
+          padding: 15px;
+          margin: 20px 0;
+        }
+        .withdrawal-details p {
+          margin: 5px 0;
+        }
+        .highlight {
+          font-weight: bold;
+          color: #0a2342;
+        }
+        .risk-warning {
+          color: #C70039;
+          padding: 5px;
+          font-size: 12px;
+          line-height: 1.4;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>${
+            showForgotPassword ? "Forgot Password" : "New Login Detected"
+          }</h1>
         </div>
-  
-        <p>Thank you for choosing us.</p>
-       <p>Happy trading!</p>
-        
-        <p>Best regards,<br>The Beta Funded Team</p>
-
-        <hr>
-   <div class="risk-warning">
-    <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
-    <br><br>
-    Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
-  </div>
-      </div>
-       <div class="footer">
-          <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
+        <div class="content">
+          <p>Dear ${
+            showForgotPassword
+              ? loginData?.firstName + " " + loginData?.lastName
+              : loginData?.user?.firstName + " " + loginData?.user?.lastName ||
+                ""
+          } ,</p>
+          ${
+            showForgotPassword
+              ? `<p>Your Beta Funded login details are below. Please use them to access your account securely.</p>`
+              : `<p>We’re writing to inform you that a new login to your account was detected. Please review the details of this activity below:</p>`
+          }
+          ${
+            showForgotPassword
+              ? `<div class="withdrawal-details">
+                
+                  <p>Email: <span class="highlight"> ${
+                    loginData?.email || ""
+                  } </span></p>
+                  <p>Password: <span class="highlight">${
+                    loginData?.password || ""
+                  }</span></p>
+                  <p>Time stamp: <span class="highlight">${
+                    formattedDateTime || ""
+                  }</span></p>
+                </div>`
+              : `<div class="withdrawal-details">
+                  <p>Email: <span class="highlight">${
+                    loginData?.user?.email
+                  }</span></p>
+                  <p>IP: <span class="highlight">${
+                    loginData?.newUserLog?.ip
+                  }</span></p>
+                  <p>OS: <span class="highlight">${
+                    loginData?.newUserLog?.os
+                  }</span></p>
+                  <p>Browser: <span class="highlight">${
+                    loginData?.newUserLog?.browser
+                  }</span></p>
+                    <p>Time stamp: <span class="highlight">${
+                      formattedDateTime || ""
+                    }</span></p>
+                
+                </div>`
+          }
+          <p>Thank you for choosing us.</p>
+          <p>Happy trading!</p>
+          <p>Best regards,<br>The Beta Funded Team</p>
+          <hr>
+          <div class="risk-warning">
+            <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks. 
+            <br><br>
+            Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+          </div>
+        </div>
+        <div class="footer">
+          <div class="footer-info">
+            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
             <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
             <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
             <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
           </div>
         </div>
-    </div>
-  </body>
-  </html>`;
+      </div>
+    </body>
+    </html>`;
+
+  // login handler ----------------
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -170,10 +197,9 @@ const UserLogin = () => {
         { email, password }
       );
       if (!res.data.status) {
-        toast.error(res.data.message, { id: toastId });
+        toast.error(res.data.message);
       } else {
         setLoginData(res.data);
-
         dispatch(setLoggedUser(res.data.user));
         setIsLoading(false);
       }
@@ -185,40 +211,90 @@ const UserLogin = () => {
       toast.error(error.response?.data?.message || "Login failed!");
     }
   };
+  console.log("login data login ---", loginData);
+
+  // forgot password-------------------
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setIsResetLoading(true);
+    try {
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_BECKEND_END_POINT
+        }/api/auth/forgot-password?email=${resetEmail}`
+      );
+      setLoginData(res.data.data);
+      // console.log("login data---", loginData);
+
+      // console.log(res.data)
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "Failed to send reset email!"
+      );
+    }
+    setIsResetLoading(false);
+  };
+
+  // send login alert and forgot password email --------
 
   useEffect(() => {
-    const sendCustomMail = async () => {
-      setIsLoading(true);
-      try {
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: loginData.user.email,
-            content: customContent,
-            subject: "Login Alert",
-          }
-        );
-        setIsLoading(false);
-        navigate("/user/dashboard");
-      } catch (error) {
-        console.log(error);
+    if (!showForgotPassword) {
+      const sendCustomMail = async () => {
         setIsLoading(true);
+        try {
+          const customMailRes = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+            {
+              email: loginData?.user?.email,
+              content: customContent,
+              subject: "Login Alert",
+            }
+          );
+          setIsLoading(false);
+          setSentmail(true);
+          navigate("/user/dashboard");
+        } catch (error) {
+          console.log(error);
+          setIsLoading(true);
+        }
+      };
+      if (loginData) {
+        sendCustomMail();
       }
-    };
-    if (loginData) {
-      sendCustomMail();
+    } else if (showForgotPassword) {
+      const sendCustomMailRes = async () => {
+        setIsResetLoading(true);
+
+        try {
+          const customMailRes = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+            {
+              email: resetEmail,
+              content: customContent,
+              subject: "Reset Password",
+            }
+          );
+          setIsResetLoading(false);
+          toast.success(`Password sent to ${resetEmail}`);
+          // setShowForgotPassword(false); //for redirect---
+          setResetEmail("");
+        } catch (error) {
+          setIsResetLoading(false);
+
+          console.log(error);
+        }
+      };
+      sendCustomMailRes();
     }
   }, [loginData]);
 
-  // // redirect-----
-  // const loggedUser = useSelector((store) => store.user.loggedUser);
-
-  // useEffect(() => {
-  //   if (!loggedUser || !loggedUser.emailVerified) {
-  //     navigate("/user/dashboard");
-  //     console.log("user login ########--", "login");
-  //   }
-  // }, [navigate, loggedUser]);
+  // redirect to user dashboard --------
+  useEffect(() => {
+    if (loggedUser && sentmail) {
+      navigate("/user/dashboard");
+    }
+  }, [navigate, loggedUser]);
 
   return (
     <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -257,91 +333,175 @@ const UserLogin = () => {
         className="w-full max-w-md md:max-w-lg relative z-10"
       >
         <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
-          <div className="p-8 md:p-12">
-            <motion.div
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h2 className="text-4xl font-bold mb-2 text-white">
-                Welcome back
-              </h2>
-              <p className="text-secondary-300 mb-8">
-                Enter your credentials to access your account
-              </p>
-            </motion.div>
-            <form onSubmit={handleLogin} className="space-y-6">
+          <AnimatePresence mode="wait">
+            {!showForgotPassword ? (
               <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="relative"
+                key="login"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
               >
-                <Mail
-                  className="absolute top-3 left-3 text-secondary-400"
-                  size={20}
-                />
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+                <div className="p-8 md:p-12">
+                  <motion.div
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <h2 className="text-4xl font-bold mb-2 text-white">
+                      Welcome back
+                    </h2>
+                    <p className="text-secondary-300 mb-8">
+                      Enter your credentials to access your account
+                    </p>
+                  </motion.div>
+                  <form onSubmit={handleLogin} className="space-y-6">
+                    <motion.div
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                      className="relative"
+                    >
+                      <Mail
+                        className="absolute top-3 left-3 text-secondary-400"
+                        size={20}
+                      />
+                      <input
+                        type="email"
+                        id="email"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        placeholder="Email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </motion.div>
+                    <motion.div
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="relative"
+                    >
+                      <Lock
+                        className="absolute top-3 left-3 text-secondary-400"
+                        size={20}
+                      />
+                      <input
+                        type="password"
+                        id="password"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                    </motion.div>
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => setShowForgotPassword(true)}
+                        className="text-sm text-green-500 hover:text-white hover:  transition-all"
+                      >
+                        Forgot password?
+                      </button>
+                    </div>
+                    <motion.button
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                      type="submit"
+                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                    >
+                      <LogIn className="mr-1" size={20} />
+                      <p className="group-hover:animate-pulse transition-all">
+                        Sign in
+                      </p>
+                      {isLoading && <Loader2 className="animate-spin" />}
+                    </motion.button>
+                  </form>
+                </div>
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="px-8 py-4 bg-secondary-700/30 bg-opacity-50 border-t border-secondary-600"
+                >
+                  <p className="text-center text-sm text-secondary-300">
+                    Don't have an account?{" "}
+                    <Link
+                      to="/user/signup"
+                      className="font-medium text-green-500 hover:text-green-400 transition"
+                    >
+                      Sign up
+                    </Link>
+                  </p>
+                </motion.div>
               </motion.div>
+            ) : (
               <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="relative"
+                key="forgot"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="p-8 md:p-12"
               >
-                <Lock
-                  className="absolute top-3 left-3 text-secondary-400"
-                  size={20}
-                />
-                <input
-                  type="password"
-                  id="password"
-                  className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <button
+                  onClick={() => setShowForgotPassword(false)}
+                  className="flex items-center text-secondary-300 hover:text-white transition mb-6"
+                >
+                  <ArrowLeft size={20} className="mr-2" />
+                  Back to login
+                </button>
+                <motion.div
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <h2 className="text-4xl font-bold mb-2 text-white">
+                    Reset Password
+                  </h2>
+                  <p className="text-secondary-300 mb-8">
+                    Please enter your email address, and we'll send your
+                    password directly to your inbox.
+                  </p>
+                </motion.div>
+                <form onSubmit={handleForgotPassword} className="space-y-6">
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="relative"
+                  >
+                    <Mail
+                      className="absolute top-3 left-3 text-secondary-400"
+                      size={20}
+                    />
+                    <input
+                      type="email"
+                      className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                      placeholder="Email address"
+                      value={resetEmail}
+                      onChange={(e) => setResetEmail(e.target.value)}
+                      required
+                    />
+                  </motion.div>
+                  <motion.button
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    type="submit"
+                    className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                  >
+                    Send Reset Password
+                    {isResetLoading && (
+                      <Loader2 className="ml-2 animate-spin" />
+                    )}
+                  </motion.button>
+                </form>
               </motion.div>
-              <motion.button
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                type="submit"
-                className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
-              >
-                <LogIn className="mr-1" size={20} />
-                <p className=" group-hover:animate-pulse transition-all">
-                  Sign in
-                </p>
-                {isLoading && <Loader2 className=" animate-spin"></Loader2>}
-              </motion.button>
-            </form>
-          </div>
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="px-8 py-4 bg-secondary-700/30 bg-opacity-50 border-t border-secondary-600"
-          >
-            <p className="text-center text-sm text-secondary-300">
-              Don't have an account?{" "}
-              <Link
-                to="/user/signup"
-                className="font-medium text-green-500 hover:text-green-400 transition"
-              >
-                Sign up
-              </Link>
-            </p>
-          </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     </div>

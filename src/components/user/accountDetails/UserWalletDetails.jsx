@@ -64,7 +64,7 @@ const UserWalletDetails = () => {
     getUpdateLoggedUser();
   }, []);
   return (
-    <div className="max-w-7xl mx-auto bg-secondary-700/30 rounded-2xl ">
+    <div className="mx-auto p-4 bg-secondary-800/60 rounded-2xl ">
       <div className=" text-black p-4 rounded-xl ">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField
@@ -100,9 +100,9 @@ const UserWalletDetails = () => {
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={submitHandler}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg"
+            className="px-6 py-3 bg-secondary-700 text-white font-semibold rounded-full hover:bg-secondary-700/60 hover:px-8 transition-all shadow-lg"
           >
-            Update Account
+            Update Details
           </motion.button>
         </div>
       </div>
