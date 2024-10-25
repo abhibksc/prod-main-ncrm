@@ -122,62 +122,6 @@ export default function PlatformConfiguration() {
   return (
     <div className="container mx-auto px-6 py-8">
       <h2 className="text-3xl font-bold mb-6 text-white">List of Platforms</h2>
-      <div className="bg-primary-800 rounded-lg shadow-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-primary-400 text-white">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                S.No.
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                Value
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                STATUS
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-primary-700 divide-y text-white divide-gray-400">
-            {platformData?.map((platform, index) => (
-              <tr key={platform.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  text-white">
-                  {index + 1}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                  {platform.value}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                  {platform.name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                  <Switch
-                    checked={platform.status === "active" ? true : false}
-                    onCheckedChange={() =>
-                      toggleActive(platform._id, platform.status)
-                    }
-                  />
-                </td>
-                <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className=" flex  justify-center ml-6">
-                    <button
-                      onClick={() => deletePlatform(platform?._id)}
-                      className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
-                    >
-                      <Trash2 size={20} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
       <div className="mt-6 bg-primary-700 text-white rounded-lg shadow-lg p-6">
         <h3 className="text-lg font-semibold mb-4">Add New Field</h3>
         <div className="flex space-x-4">
@@ -208,6 +152,65 @@ export default function PlatformConfiguration() {
           >
             <Plus size={18} />
           </button>
+        </div>
+      </div>
+
+      <div className=" my-4">
+        <div className="bg-primary-800 rounded-lg shadow-lg overflow-hidden">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-primary-400 text-white">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  S.No.
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Value
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Name
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  STATUS
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-primary-700 divide-y text-white divide-gray-400">
+              {platformData?.map((platform, index) => (
+                <tr key={platform.id}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  text-white">
+                    {index + 1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                    {platform.value}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                    {platform.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                    <Switch
+                      checked={platform.status === "active" ? true : false}
+                      onCheckedChange={() =>
+                        toggleActive(platform._id, platform.status)
+                      }
+                    />
+                  </td>
+                  <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className=" flex  justify-center ml-6">
+                      <button
+                        onClick={() => deletePlatform(platform?._id)}
+                        className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import UserSidebar from "./components/user/UserSidebar";
 import UserHeader from "./components/user/UserHeader";
 import { Toaster } from "react-hot-toast";
-import UserSidebar2 from "./components/user/UserSidebar2";
 import { useSelector } from "react-redux";
-import Cookies from "js-cookie";
+import UserSidebar from "./components/user/UserSidebar";
 
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -19,8 +17,6 @@ export default function UserOutlet() {
   };
 
   useEffect(() => {
-    // verifyUser();
-
     setTimeout(() => {
       verifyUser();
     }, 2000);
@@ -34,7 +30,6 @@ export default function UserOutlet() {
     <div className="text-white h-screen overflow-hidden o">
       <Toaster
         toastOptions={{
-          // Define default options
           style: {
             background: "#1b4332", // Dark background for toast
             color: "#fff", // White text color
@@ -54,8 +49,7 @@ export default function UserOutlet() {
       />
       <UserHeader className="fixed top-0 w-full z-10" />
       <div className="flex">
-        {/* <UserSidebar className="fixed top-15 left-0 h-full z-10" /> */}
-        <UserSidebar2 className="fixed top-15 left-0 h-full z-10" />
+        <UserSidebar className="fixed top-15 left-0 h-full z-10" />
         <div className="flex-1 user-custom-scrollbar pb-20 overflow-y-auto p-5 bg-secondary-800/50 h-screen">
           <Outlet />
         </div>

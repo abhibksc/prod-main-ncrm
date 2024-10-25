@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlusCircle, Trash, Trash2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { MainDivider } from "@/lib/MainDevider";
 
 const AccountTypes = () => {
   const [accountTypes, setAccountTypes] = useState([]);

@@ -37,7 +37,7 @@ export default function CustomGroupList({ refresh, setRefresh }) {
   }, [refresh]);
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-white text-3xl font-bold mb-4">List of Groups</h2>
+      <h2 className="text-white text-3xl font-bold mb-4">Lists</h2>
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full table-auto">
           <thead>

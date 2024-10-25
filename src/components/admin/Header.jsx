@@ -12,11 +12,12 @@ import {
 import { motion, useAnimation } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoggedUser } from "@/redux/user/userSlice";
+import { handleToggleSidebar, setLoggedUser } from "@/redux/user/userSlice";
 import UseAdminHook from "@/hooks/admin/UseAdminHook";
 
 const Header = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
+  // const isSidebarOpen = false;
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
@@ -24,7 +25,12 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  // handle toggle bar ------------------
+  const toggleSidebar = () => {
+    dispatch(handleToggleSidebar(!isSidebarOpen));
+  };
+  // console.log("isSidebarOpen headerrr---", isSidebarOpen);
+
   const toggleNotificationDropdown = () =>
     setIsNotificationDropdownOpen(!isNotificationDropdownOpen);
   const toggleUserDropdown = () => setIsUserDropdownOpen(!isUserDropdownOpen);
@@ -79,34 +85,13 @@ const Header = () => {
             >
               <ChartNoAxesGantt className="md:hidden"></ChartNoAxesGantt>
             </button>
-            <a href="/admin/dashboard" className="flex items-center mr-4">
+            <a href="/admin/dashboard" className=" items-center mr-4">
               <img
-                src="/beta-funded.png"
+                src="/test-crm-logo.png"
                 alt="Forex-ZX Logo"
-                className="h-4 w-auto sm:h-4 md:h-6 lg:h-8 xl:h-10 object-contain"
+                className=" object-contain w-32"
               />
-            </a>{" "}
-            {/* <form
-              action="#"
-              method="GET"
-              className="hidden ml-20 lg:block lg:pl-2"
-            >
-              <label htmlFor="topbar-search" className="sr-only">
-                Search here...
-              </label>
-              <div className="relative mt-1 lg:w-96">
-                <div className="flex text-neutral-200 absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <Search className=""></Search>
-                </div>
-                <input
-                  type="text"
-                  name="email"
-                  id="topbar-search"
-                  className="border px-3 bg-primary-700 text-white outline-none border-white/10 sm:text-sm rounded-lg block w-full pl-9 p-2.5 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="Search here"
-                />
-              </div>
-            </form> */}
+            </a>
           </div>
           <div className="flex items-center lg:order-2">
             <button
