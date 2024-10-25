@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import toast from "react-hot-toast";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -52,10 +53,11 @@ const UserReferal = () => {
     });
   };
 
-  // generate handler ------------
+  // generate IB account handler ------------
 
   const generateHandler = async () => {
     const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
+    const toastId = toast.loading("Gerating..");
 
     try {
       const generateMtId = await axios.post(
@@ -75,11 +77,13 @@ const UserReferal = () => {
           referalId: generateMtId.data.MT5Account,
         }
       );
+      toast.success("IB account created", { id: toastId });
       getUpdateLoggedUser();
       // console.log("generate mt id ---", generateMtId.data.MT5Account);
       // console.log("updateLoggedUser---", updateLoggedUser.data);
     } catch (error) {
       console.log(error);
+      toast.error(" Something went wrong", { id: toastId });
     }
   };
   // fetch all users handler ------------
