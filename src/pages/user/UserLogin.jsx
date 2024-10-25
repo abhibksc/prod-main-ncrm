@@ -291,7 +291,7 @@ const UserLogin = () => {
 
   // redirect to user dashboard --------
   useEffect(() => {
-    if (loggedUser && sentmail) {
+    if (loggedUser && !isLoading) {
       navigate("/user/dashboard");
     }
   }, [navigate, loggedUser]);
