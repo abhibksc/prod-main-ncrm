@@ -133,7 +133,7 @@ const UserHeader = () => {
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
-      <div className=" px-5 mt-[-28px] md:mt-[-50px] sm:mt-[-40px]   flex justify-between items-center">
+      <div className=" px-5  flex justify-between items-center">
         <div className=" flex gap-2">
           <button className=" lg:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
@@ -142,7 +142,7 @@ const UserHeader = () => {
             <img
               src="/test-crm-logo.png"
               alt="Forex-ZX Logo"
-              className=" object-contain w-auto h-20 md:h-36 sm:h-28"
+              className=" object-contain w-32"
             />
           </a>{" "}
         </div>
