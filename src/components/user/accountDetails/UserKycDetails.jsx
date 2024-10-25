@@ -465,7 +465,7 @@ const UserKycDetails = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-7xl mx-auto bg-secondary-700/30 rounded-2xl"
+      className=" mx-auto p-2 bg-secondary-800/60 rounded-2xl"
     >
       {loggedUser?.kycDetails?.documentType && (
         <div className=" flex gap-2  font-semibold pt-5 items-center justify-center">
@@ -546,9 +546,9 @@ const UserKycDetails = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-full hover:bg-blue-700 transition-colors duration-300 shadow-lg"
+            className="px-6 py-3 bg-secondary-700 text-white font-semibold rounded-full hover:bg-secondary-700/60 hover:px-8 transition-all shadow-lg"
           >
-            Update KYC
+            Update Details
           </motion.button>
         </div>
       </div>

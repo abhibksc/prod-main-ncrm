@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import "react-phone-input-2/lib/style.css";
@@ -45,8 +45,10 @@ const UserSignUp = () => {
     password: "",
     confirmPassword: "",
   });
+  const { id } = useParams();
+  console.log("params id ----", id);
+
   const countries = getData();
-  // console.log("countries--", countries);
   const dispatch = useDispatch();
   const countriesArray = getData();
 
@@ -77,7 +79,7 @@ const UserSignUp = () => {
     const toastId = toast.loading("Creating account..");
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/signup`,
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/signup/${id}`,
         formData
       );
       if (res.data.status) {
@@ -407,10 +409,10 @@ const UserSignUp = () => {
                       required
                     />
                     <span className="text-sm text-secondary-300">
-                      I agree with the{" "}
+                      I agree with the
                       <a
                         href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
-                        className="text-blue-400 cursor-pointer"
+                        className="text-blue-400 mx-1 cursor-pointer"
                         target="_blank"
                       >
                         Privacy policy
@@ -418,7 +420,7 @@ const UserSignUp = () => {
                       and
                       <a
                         href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
-                        className="text-blue-400 cursor-pointer"
+                        className="text-blue-400 mx-1 cursor-pointer"
                         target="_blank"
                       >
                         Terms & Conditions

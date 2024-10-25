@@ -4,7 +4,6 @@ import Header from "./components/admin/Header";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-
 export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
   const navigate = useNavigate();

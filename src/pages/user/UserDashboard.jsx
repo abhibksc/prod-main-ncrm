@@ -30,7 +30,10 @@ export default function UserDashboard() {
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
 
-  const isMax = phaseMaxLength === loggedUser.phase;
+  const isMax = phaseMaxLength === loggedUser.phase - 1;
+
+  // console.log("is max length__________", loggedUser.phase + 1);
+  // console.log("is max__________", isMax);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,7 +57,7 @@ export default function UserDashboard() {
     };
   }, []);
 
-  // for update phase---------------
+  // for update phase ---------------
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,18 +65,20 @@ export default function UserDashboard() {
         await getUpdatePhase();
       }
     };
+
     if (!isMax && loggedUser.phase !== 0) {
       getUpdatePhase();
     }
 
     const intervalId = setInterval(() => {
       fetchData();
-    }, 8000);
+      console.log("getUpdatePhase");
+    }, 7000);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [loggedUser]);
 
   // group phase-------------
   useEffect(() => {

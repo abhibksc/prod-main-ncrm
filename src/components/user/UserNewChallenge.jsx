@@ -771,7 +771,7 @@ const UserNewChallenge = () => {
                   I agree to
                   <a
                     href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
-                    className="text-blue-400 cursor-pointer"
+                    className="text-blue-400 mx-1 cursor-pointer"
                     target="_blank"
                   >
                     Terms & Conditions
@@ -780,11 +780,11 @@ const UserNewChallenge = () => {
               </div>
               <button
                 onClick={apiTestHandler}
-                disabled={!agreeToTerms}
+                disabled={!agreeToTerms || !selectedPayment || !file}
                 className={`w-full flex mx-auto justify-center items-center py-3 px-4 rounded-lg text-white transition-colors ${
-                  selectedPayment && agreeToTerms
-                    ? "bg-green-700 hover:bg-green-800"
-                    : "bg-gray-600 cursor-not-allowed"
+                  selectedPayment && agreeToTerms && file
+                    ? "bg-green-700 hover:bg-green-800 "
+                    : "bg-gray-600  pointer-events-none"
                 }`}
               >
                 Submit Request
