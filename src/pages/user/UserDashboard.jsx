@@ -73,7 +73,7 @@ export default function UserDashboard() {
     const intervalId = setInterval(() => {
       fetchData();
       console.log("getUpdatePhase");
-    }, 7000);
+    }, 9000);
 
     return () => {
       clearInterval(intervalId);
