@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   User,
   LogOut,
@@ -133,19 +133,16 @@ const UserHeader = () => {
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
-      <div className=" px-5  flex justify-between items-center">
+      <div className=" px-5 mt-[-28px] md:mt-[-50px] sm:mt-[-40px]   flex justify-between items-center">
         <div className=" flex gap-2">
           <button className=" lg:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
           </button>
-          <a
-            href="/user/dashboard"
-            className=" mt-[-4px] md:mt-[-12px] sm:mt-[-10px] items-center mr-4"
-          >
+          <a href="/user/dashboard" className=" items-center mr-4">
             <img
-              src="/beta-funded-logo.png"
+              src="/test-crm-logo.png"
               alt="Forex-ZX Logo"
-              className=" object-contain w-auto h-10 md:h-14 sm:h-12"
+              className=" object-contain w-auto h-20 md:h-36 sm:h-28"
             />
           </a>{" "}
         </div>
