@@ -36,6 +36,7 @@ export default function UserDashboard() {
   // console.log("is max__________", isMax);
 
   // for fetch data----
+  console.log("hello");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +48,6 @@ export default function UserDashboard() {
         console.error("Error in dashboard:", error);
       }
     };
-
     // fetchData();
 
     const intervalId = setInterval(() => {
