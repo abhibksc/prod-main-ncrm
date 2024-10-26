@@ -43,8 +43,8 @@ const ManageUsers = () => {
   const filteredUsers = searchTerm
     ? users?.filter(
         (user) =>
-          user?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user?.email.toLowerCase().includes(searchTerm.toLowerCase())
+          user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : users;
 
@@ -71,17 +71,41 @@ const ManageUsers = () => {
     return `${formattedDate}, ${formattedTime}`;
   }
 
-  function calculateDaysSinceJoined(isoDateString) {
+  function calculateTimeSinceJoined(isoDateString) {
     const joinDate = new Date(isoDateString);
     const today = new Date();
 
     // Calculate the difference in time (in milliseconds)
     const timeDifference = today - joinDate;
 
-    // Convert the difference from milliseconds to days
-    const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    // Calculate different time units
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
 
-    return daysDifference + " " + "days ago";
+    // Build the time string
+    let timeString = [];
+
+    if (days > 0) {
+      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
+    }
+    if (hours > 0) {
+      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+    }
+    if (minutes > 0) {
+      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+    }
+
+    // Handle case when less than a minute
+    if (timeString.length === 0) {
+      return "less than a minute ago";
+    }
+
+    return timeString.join(", ") + " ago";
   }
 
   const userRedirectHandler = (user) => {
@@ -126,8 +150,8 @@ const ManageUsers = () => {
               <th className="py-3 px-4 text-left">Country</th>
               <th className="py-3 px-4 text-left">Email Verified</th>
               <th className="py-3 px-4 text-left">Kyc Verified</th>
-              <th className="py-3 px-4 text-left">Balance</th>
-              <th className="py-3 px-4 text-left">Joined At</th>
+              <th className="py-3 px-4 text-left">MT5 account</th>
+              <th className="py-3 px-4 pl-10 text-left">Joined At</th>
               <th className="py-3 px-4 text-left">Action</th>
             </tr>
           </thead>
@@ -165,11 +189,11 @@ const ManageUsers = () => {
                 <td className="py-3 px-4">
                   {user?.kycVerified ? "Active" : "Inactive"}
                 </td>
-                <td className="py-3 px-4">{user.balance}</td>
+                <td className="py-3 px-4 text-center">{user?.mt5Account}</td>
                 <td className="py-3 px-4">
                   <div>{formatDate(user?.createdAt)}</div>
                   <div className="text-sm text-gray-400">
-                    {calculateDaysSinceJoined(user?.createdAt)}
+                    {calculateTimeSinceJoined(user?.createdAt)}
                   </div>
                 </td>
                 <td className="py-3 px-4">
