@@ -35,6 +35,8 @@ export default function UserDashboard() {
   // console.log("is max length__________", loggedUser.phase + 1);
   // console.log("is max__________", isMax);
 
+  // for fetch data----
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -46,7 +48,7 @@ export default function UserDashboard() {
       }
     };
 
-    fetchData();
+    // fetchData();
 
     const intervalId = setInterval(() => {
       fetchData();
