@@ -55,7 +55,6 @@ const AccountChallenges = () => {
                 Account No
               </th>
               <th className="p-3 text-center font-semibold">Account Type</th>
-              <th className="p-3 text-center font-semibold">Deposit</th>
               <th className="p-3 text-center font-semibold">Account Size</th>
               <th className="p-3 text-center font-semibold">Balance</th>
               <th className="p-3 text-center font-semibold rounded-tr-lg">
@@ -83,7 +82,6 @@ const AccountChallenges = () => {
                 >
                   <td className="p-3 text-sm">{value?.mt5Account}</td>
                   <td className="p-3 text-sm text-center">{value?.type}</td>
-                  <td className="p-3 text-sm text-center">{value?.deposit}</td>
                   <td className="p-3 text-sm text-center">
                     {value?.accountSize}
                   </td>

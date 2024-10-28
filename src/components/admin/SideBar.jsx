@@ -38,14 +38,14 @@ const Sidebar = () => {
 
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
-    {
-      label: "Commission Levels",
-      icon: <ContactIcon />,
-      nested: [
-        { label: "Deposit", route: "/admin/deposit" },
-        { label: "Withdraw", route: "/admin/withdraw" },
-      ],
-    },
+    // {
+    //   label: "Commission Levels",
+    //   icon: <ContactIcon />,
+    //   nested: [
+    //     { label: "Deposit", route: "/admin/deposit" },
+    //     { label: "Withdraw", route: "/admin/withdraw" },
+    //   ],
+    // },
     // {
     //   label: "Setup challenges",
     //   icon: <ChevronsRight />,
@@ -116,39 +116,39 @@ const Sidebar = () => {
       label: "Payment Getways",
       icon: <CreditCard />,
       nested: [
-        { label: "Automatic getways", route: "/admin/getway/automatic" },
+        // { label: "Automatic getways", route: "/admin/getway/automatic" },
         { label: "Manual getways", route: "/admin/getway/manual" },
       ],
     },
-    {
-      label: "Support Ticket",
-      icon: <Ticket></Ticket>,
-      nested: [
-        { label: "Pending Ticket", route: "/admin/ticket/pending" },
-        { label: "Closed Ticket", route: "/admin/ticket/close" },
-        { label: "Answered Ticket", route: "/admin/ticket/answer" },
-        { label: "All Ticket", route: "/admin/ticket/all" },
-      ],
-    },
-    {
-      label: "Report",
-      icon: <ListCollapseIcon></ListCollapseIcon>,
-      nested: [
-        { label: "Transition Log", route: "/admin/report/transaction" },
-        { label: "Invest Log", route: "/admin/report/invest" },
-        { label: "Refral Commision", route: "/admin/report/refral" },
-        { label: "Login History", route: "/admin/report/login" },
-      ],
-    },
-    {
-      label: "Settings",
-      icon: <Settings />,
-      nested: [
-        { label: "KYC Varification", route: "/admin/kyc-setting" },
-        { label: "Profile Update", route: "/admin/profile-setting" },
-        { label: "Password Update", route: "/admin/password-setting" },
-      ],
-    },
+    // {
+    //   label: "Support Ticket",
+    //   icon: <Ticket></Ticket>,
+    //   nested: [
+    //     { label: "Pending Ticket", route: "/admin/ticket/pending" },
+    //     { label: "Closed Ticket", route: "/admin/ticket/close" },
+    //     { label: "Answered Ticket", route: "/admin/ticket/answer" },
+    //     { label: "All Ticket", route: "/admin/ticket/all" },
+    //   ],
+    // },
+    // {
+    //   label: "Report",
+    //   icon: <ListCollapseIcon></ListCollapseIcon>,
+    //   nested: [
+    //     { label: "Transition Log", route: "/admin/report/transaction" },
+    //     { label: "Invest Log", route: "/admin/report/invest" },
+    //     { label: "Refral Commision", route: "/admin/report/refral" },
+    //     { label: "Login History", route: "/admin/report/login" },
+    //   ],
+    // },
+    // {
+    //   label: "Settings",
+    //   icon: <Settings />,
+    //   nested: [
+    //     // { label: "KYC Varification", route: "/admin/kyc-setting" },
+    //     // { label: "Profile Update", route: "/admin/profile-setting" },
+    //     // { label: "Password Update", route: "/admin/password-setting" },
+    //   ],
+    // },
     { label: "Logout", icon: <LogOut />, route: "/admin/login" },
   ];
 

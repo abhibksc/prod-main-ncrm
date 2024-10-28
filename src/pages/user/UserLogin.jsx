@@ -128,7 +128,9 @@ const UserLogin = () => {
           } ,</p>
           ${
             showForgotPassword
-              ? `<p>Your Beta Funded login details are below. Please use them to access your account securely.</p>`
+              ? `<p>Your ${
+                  import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+                } login details are below. Please use them to access your account securely.</p>`
               : `<p>We’re writing to inform you that a new login to your account was detected. Please review the details of this activity below:</p>`
           }
           ${
@@ -166,20 +168,32 @@ const UserLogin = () => {
           }
           <p>Thank you for choosing us.</p>
           <p>Happy trading!</p>
-          <p>Best regards,<br>The Beta Funded Team</p>
+          <p>Best regards,<br>${
+            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+          } Team</p>
           <hr>
           <div class="risk-warning">
             <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks. 
             <br><br>
-            Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+            Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
           </div>
         </div>
         <div class="footer">
           <div class="footer-info">
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+            <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+            <p>Website: <a href="https://${
+              import.meta.env.VITE_EMAIL_WEBSITE
+            }"> ${
+    import.meta.env.VITE_EMAIL_WEBSITE
+  } </a> | E-mail: <a href="mailto:${
+    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
+  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+            <p>We sent out this message to all existing ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            } traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            }. All Rights Reserved</p>
           </div>
         </div>
       </div>
@@ -198,17 +212,18 @@ const UserLogin = () => {
       );
       if (!res.data.status) {
         toast.error(res.data.message);
+        setIsLoading(false);
       } else {
         setLoginData(res.data);
         dispatch(setLoggedUser(res.data.user));
         setIsLoading(false);
+        toast.success("Login success");
       }
-      toast.success("Login success");
     } catch (error) {
       console.log("error in login", error);
-      setIsLoading(false);
 
       toast.error(error.response?.data?.message || "Login failed!");
+      setIsLoading(false);
     }
   };
   console.log("login data login ---", loginData);
@@ -459,7 +474,7 @@ const UserLogin = () => {
                   transition={{ delay: 0.2 }}
                 >
                   <h2 className="text-4xl font-bold mb-2 text-white">
-                    Reset Password
+                    Forgot Password
                   </h2>
                   <p className="text-secondary-300 mb-8">
                     Please enter your email address, and we'll send your
@@ -493,7 +508,7 @@ const UserLogin = () => {
                     type="submit"
                     className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
                   >
-                    Send Reset Password
+                    Send Password
                     {isResetLoading && (
                       <Loader2 className="ml-2 animate-spin" />
                     )}

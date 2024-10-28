@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlusCircle, Trash, Trash2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Divider } from "../Divider";
 
 const AccountTypes = () => {
   const [accountTypes, setAccountTypes] = useState([]);
@@ -260,7 +261,7 @@ const AccountTypes = () => {
             </thead>
             <tbody>
               {existingData?.map((type) => (
-                <tr key={type._id} className="border-t">
+                <tr key={type._id} className="border-t border-gray-500">
                   <td className="px-4 py-2">{type?.accountType}</td>
                   <td className="px-4 py-2">
                     {type?.leverage?.map((leverage) => (
