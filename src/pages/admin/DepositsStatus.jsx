@@ -281,12 +281,6 @@ const DepositsStatus = () => {
             }</span></p>
             <p>Phase: <span class="highlight">${1}</span></p>
             <p>Status: <span class="highlight">${"Active"}</span></p>
-            <p>Master Password: <span class="highlight">${
-              apiMasterPassword || "000"
-            }</span></p>
-            <p>Investor Password: <span class="highlight">${
-              apiInvestorPassword || "000"
-            }</span></p>
             <p>Server Name: <span class="highlight">${
               import.meta.env.VITE_SERVER_NAME
             }</span></p>
@@ -435,7 +429,6 @@ const DepositsStatus = () => {
             }
           );
           console.log("addCommissionDB---------", addCommissionDB);
-          toast("commison section ");
         }
 
         const updatedDepositData = depositData.map((deposit) =>

@@ -35,9 +35,7 @@ export default function UserDashboard() {
   // console.log("is max length__________", loggedUser.phase + 1);
   // console.log("is max__________", isMax);
 
-  // for fetch data----
-  console.log("hello");
-
+  // for fetch logged user data-------------
   useEffect(() => {
     const fetchData = async () => {
       try {

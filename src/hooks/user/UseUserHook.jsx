@@ -52,7 +52,7 @@ export default function UseUserHook() {
 
   // console.log("final pnl !!!!!!!!!!!!!!!!!!1", totalFinalPnLRef.current);
 
-  // total final pnl ------
+  // total final pnl ------------------
   const calculateTotalNetProfit = () => {
     const totalNetProfit = openTrades.reduce(
       (sum, entry) => sum + entry.Profit,
@@ -65,6 +65,9 @@ export default function UseUserHook() {
 
   // console.log("Phase length--", phaseMaxLength);
   const isMax = phaseMaxLength === loggedUser.phase + 1;
+  const isLastPhase = phaseMaxLength === loggedUser.phase;
+
+  console.log("is max--------", isMax);
 
   const getCurrentPnl = useCallback(() => {
     return currentPnlRef.current;
@@ -408,6 +411,13 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
       console.log("max loss reached**********");
       const toastId = toast.loading("Updating...");
       try {
+        const disableAccountRes = await axios.get(
+          `${
+            import.meta.env.VITE_API_END_POINT
+          }/api/web/EnableProfileAccount?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${loggedUserHook.current.mt5Account}&Status=0`
+        );
         const updateChallengeDB = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
           {
@@ -416,7 +426,6 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
             reason: "Loss reached",
           }
         );
-
         const updateLoggedUser = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
           {
@@ -433,21 +442,6 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
             leverage: "000",
           }
         );
-
-        const disableAccountRes = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/EnableProfileAccount?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${loggedUserHook.current.mt5Account}&Status=0`
-        );
-        await getUpdateLoggedUser();
-        dispatch(setProfitNloss(0));
-        dispatch(setAvailableBalance(0));
-        dispatch(setPhaseStats(""));
-        await GetUserInfoAPI();
-        toast.success("Account Closed", { id: toastId });
-
         const customContent = `<!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -534,27 +528,25 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
                 <body>
                   <div class="container">
                     <div class="header">
-                      <h1>Phase Updated</h1>
+                      <h1>Account Closed</h1>
                     </div>
                     <div class="content">
                       <p>Dear ${
                         loggedUser?.firstName + " " + loggedUser?.lastName
                       },</p>
-        <p>We regret to inform you that your account ID: <strong>${
-          loggedUser.mt5Account
-        }</strong> has been blocked due to reaching <strong> Maximum Loss Limit</strong> from phase <strong>${
-          isMax ? "Live Account" : loggedUser.phase
-        }</strong>.</p>
+        <p>We regret to inform you that your account has been closed due to reaching Maximum Loss Limit.</p>
         <br>
-                    <div class="withdrawal-details">
-                      <p>Account No: <span class="highlight">${randomNumber}
-                        </span></p>
-                      <p>Phase : <span class="highlight">
-                      ${loggedUser.phase + 1}
-                        </span>
-                        </p>
-                      </div>
-
+       <div class="withdrawal-details">
+         <p>
+           Account No: <span class="highlight">${loggedUser.mt5Account}</span>
+         </p>
+         <p>
+           Phase : <span class="highlight">${
+             isLastPhase ? "Live Account" : loggedUser.phase
+           }  </span>
+         </p>
+       </div>
+  
                 <p>Thank you for choosing us.</p>
                 <p>Happy trading!</p>
 
@@ -586,7 +578,14 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
             subject: "Account Closed ",
           }
         );
-        // window.location.reload();
+
+        await getUpdateLoggedUser();
+        dispatch(setProfitNloss(0));
+        dispatch(setAvailableBalance(0));
+        dispatch(setPhaseStats(""));
+        await GetUserInfoAPI();
+        toast.success("Account Closed", { id: toastId });
+        window.location.reload();
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);

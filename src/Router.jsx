@@ -42,6 +42,7 @@ import UserTradeHistory from "./pages/user/UserTradeHistory";
 import AccountChallenges from "./pages/admin/AccountChallenges";
 import UserVerify from "./pages/user/UserVerify";
 import UserAccountDetails from "./pages/user/UserAccountDetails";
+import UserReferralPendingDeposit from "./pages/user/UserReferralPendingDeposit";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -153,6 +154,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/referrals",
         element: <UserReferal></UserReferal>,
+      },
+      {
+        path: "/user/referrals/pending-deposits",
+        element: <UserReferralPendingDeposit></UserReferralPendingDeposit>,
       },
       {
         path: "/user/withdraw",

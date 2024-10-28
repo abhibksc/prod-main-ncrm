@@ -1,5 +1,3 @@
-import React from "react";
-
 const UserIBcards = ({ commissionsData }) => {
   const totalCommissionLength = commissionsData.length;
   const totalCommissionValue = commissionsData.reduce(
@@ -24,7 +22,7 @@ const UserIBcards = ({ commissionsData }) => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Total IBs
+                Total Affiliates
               </span>
               <span className="text-2xl font-bold text-gray-100">
                 {stats.totalIBs}
@@ -61,7 +59,7 @@ const UserIBcards = ({ commissionsData }) => {
                 Total Commission
               </span>
               <span className="text-2xl font-bold text-gray-100">
-                ${stats.totalCommission}
+                ${Number(stats?.totalCommission || 0).toFixed(2)}
               </span>
             </div>
 
@@ -96,7 +94,7 @@ const UserIBcards = ({ commissionsData }) => {
                 Available Commission
               </span>
               <span className="text-2xl font-bold text-gray-100">
-                ${stats.availableCommission}
+                ${Number(stats?.availableCommission || 0).toFixed(2)}
               </span>
             </div>
             <div className="p-3 bg-purple-100 rounded-full">

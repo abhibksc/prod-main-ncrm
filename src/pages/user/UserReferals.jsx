@@ -347,7 +347,7 @@ const UserReferal = () => {
               onClick={() => setActiveTab("referrals")}
             />
             <TabButton
-              label="IB Dashboard"
+              label="Affliate Dashboard"
               isActive={activeTab === "commission"}
               onClick={() => setActiveTab("commission")}
             />
@@ -357,7 +357,7 @@ const UserReferal = () => {
           <div>
             <div className=" flex font-semibold gap-2">
               <HandCoins className=" text-yellow-500"></HandCoins>
-              <p>IB Account</p>
+              <p>Affliate ID</p>
             </div>
             <div className=" bg-yellow-500/10 ml-4 shadow-2xl px-2 my-1 py-1 rounded-full text-center">
               <p className=" text-gray-200  font-semibold  text-lg">
