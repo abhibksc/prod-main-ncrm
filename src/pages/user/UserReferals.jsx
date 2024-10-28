@@ -18,10 +18,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
-<<<<<<< HEAD
-=======
 import UserIBcards from "@/components/user/UserIBCards";
->>>>>>> origin/main
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -57,11 +54,7 @@ const UserReferal = () => {
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
-<<<<<<< HEAD
-
-=======
   console.log(commissionsData);
->>>>>>> origin/main
   // generate IB account handler ------------
 
   const generateHandler = async () => {

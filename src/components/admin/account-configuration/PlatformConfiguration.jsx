@@ -122,12 +122,8 @@ export default function PlatformConfiguration() {
   return (
     <div className="container mx-auto px-6 py-8">
       <h2 className="text-3xl font-bold mb-6 text-white">List of Platforms</h2>
-<<<<<<< HEAD
-      <div className="mt-6 bg-primary-700 text-white rounded-lg shadow-lg p-6">
-=======
 
       <div className="mt-6 bg-primary-700/40 text-white rounded-lg shadow-lg p-6">
->>>>>>> origin/main
         <h3 className="text-lg font-semibold mb-4">Add New Field</h3>
         <div className="flex space-x-4">
           <input

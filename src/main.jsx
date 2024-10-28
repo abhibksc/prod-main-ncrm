@@ -7,9 +7,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./redux/ReduxStore.js";
 
-<<<<<<< HEAD
-// document.title = import.meta.env.VITE_WEBSITE_NAME || "Forex CRM";
-=======
 document.title = import.meta.env.VITE_WEBSITE_NAME || "Forex Funding";
 
 // Function to dynamically set the favicon
@@ -25,7 +22,6 @@ const setFavicon = (url) => {
 };
 // Set the favicon when the app starts
 setFavicon(import.meta.env.VITE_FAVICON_LINK || "/login-illu.jpg");
->>>>>>> origin/main
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

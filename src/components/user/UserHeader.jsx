@@ -141,17 +141,11 @@ const UserHeader = () => {
           </button>
           <a href="/user/dashboard" className=" items-center mr-4">
             <img
-<<<<<<< HEAD
-              src="/test-crm-logo.png"
-              alt="Forex-ZX Logo"
-              className=" object-contain w-32"
-=======
               src={import.meta.env.VITE_LOGO_LINK}
               alt="Forex Funding Logo"
-              className=" object-contain w-auto h-10 md:h-14 sm:h-12"
->>>>>>> origin/main
+              className=" object-contain w-auto h-10 md:h-12 sm:h-10"
             />
-          </a>{" "}
+          </a>
         </div>
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${

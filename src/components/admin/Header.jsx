@@ -87,13 +87,6 @@ const Header = () => {
             </button>
             <a href="/admin/dashboard" className=" items-center mr-4">
               <img
-<<<<<<< HEAD
-                src="/test-crm-logo.png"
-                alt="Forex-ZX Logo"
-                className=" object-contain w-32"
-              />
-            </a>
-=======
                 src={import.meta.env.VITE_LOGO_LINK}
                 alt="Forex-ZX Logo"
                 className=" object-contain w-auto h-10 md:h-12 sm:h-10"
@@ -120,7 +113,6 @@ const Header = () => {
                 />
               </div>
             </form> */}
->>>>>>> origin/main
           </div>
           <div className="flex items-center lg:order-2">
             <button

@@ -11,15 +11,6 @@ export default function AccountConfiguration() {
   return (
     <div>
       <PlatformConfiguration></PlatformConfiguration>
-<<<<<<< HEAD
-      <MainDivider></MainDivider>
-      <AccountGroup refresh={refresh} setRefresh={setRefresh}></AccountGroup>
-      <CustomGroupList
-        refresh={refresh}
-        setRefresh={setRefresh}
-      ></CustomGroupList>
-      <MainDivider></MainDivider>
-=======
       <Divider></Divider>
       <div className=" bg-primary-700/40  shadow-2xl">
         <AccountGroup refresh={refresh} setRefresh={setRefresh}></AccountGroup>
@@ -29,7 +20,6 @@ export default function AccountConfiguration() {
         ></CustomGroupList>
       </div>
       <Divider></Divider>
->>>>>>> origin/main
 
       <AccountTypes></AccountTypes>
     </div>
