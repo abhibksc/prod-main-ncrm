@@ -128,6 +128,44 @@ const DepositsStatus = () => {
 
     return `${formattedDate}, ${formattedTime}`;
   }
+  // since joined ---------------
+
+  function calculateTimeSinceJoined(isoDateString) {
+    const joinDate = new Date(isoDateString);
+    const today = new Date();
+
+    // Calculate the difference in time (in milliseconds)
+    const timeDifference = today - joinDate;
+
+    // Calculate different time units
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+
+    // Build the time string
+    let timeString = [];
+
+    if (days > 0) {
+      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
+    }
+    if (hours > 0) {
+      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+    }
+    if (minutes > 0) {
+      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+    }
+
+    // Handle case when less than a minute
+    if (timeString.length === 0) {
+      return "less than a minute ago";
+    }
+
+    return timeString.join(", ") + " ago";
+  }
 
   const handleActionClick = (deposit, action) => {
     setSelectedDeposit(deposit);
@@ -317,7 +355,7 @@ const DepositsStatus = () => {
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
-            Manager_Index: selectedDeposit.managerIndex,
+            Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
             MT5Account: selectedDeposit.mt5Account,
             Name: selectedDeposit.name,
             Country: selectedDeposit.country,
@@ -330,7 +368,7 @@ const DepositsStatus = () => {
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/MakeDepositBalance?Manager_Index=${
-            selectedDeposit.managerIndex
+            import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.balance
           }&Comment=TEST`
@@ -366,6 +404,39 @@ const DepositsStatus = () => {
             leverage: selectedDeposit.leverage,
           }
         );
+        // add refferal commission ----------
+
+        if (selectedDeposit?.userId?.referalFromId) {
+          const addCommisonMt5Api = await axios.get(
+            `${
+              import.meta.env.VITE_API_END_POINT
+            }/api/web/MakeDepositBalance?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
+              selectedDeposit.deposit *
+              (import.meta.env.VITE_IB_COMMISSION / 100)
+            }&Comment=commission`
+          );
+
+          const addCommissionDB = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-commission`,
+            {
+              mt5Account: selectedDeposit.mt5Account,
+              referralId: selectedDeposit?.userId?.referalFromId,
+              depositBalance: selectedDeposit.balance,
+              accountSize: selectedDeposit.deposit,
+              commission:
+                selectedDeposit.deposit *
+                (import.meta.env.VITE_IB_COMMISSION / 100),
+              accountType: selectedDeposit.accountType,
+              level: 1,
+              referralFrom: selectedDeposit.userId.referralFromUserId,
+              currentReferral: selectedDeposit.userId._id,
+            }
+          );
+          console.log("addCommissionDB---------", addCommissionDB);
+          toast("commison section ");
+        }
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -543,7 +614,7 @@ const DepositsStatus = () => {
           <input
             type="text"
             placeholder="User/Email/Account"
-            className="border p-2 rounded-l"
+            className="border outline-none p-2 rounded-l"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -557,7 +628,7 @@ const DepositsStatus = () => {
         <form onSubmit={handleDateRangeSearch} className="flex">
           <input
             type="date"
-            className="border p-2 rounded-l"
+            className="border outline-none p-2 rounded-l"
             value={dateRange.start}
             onChange={(e) =>
               setDateRange({ ...dateRange, start: e.target.value })
@@ -565,7 +636,7 @@ const DepositsStatus = () => {
           />
           <input
             type="date"
-            className="border p-2"
+            className="borde outline-none p-2"
             value={dateRange.end}
             onChange={(e) =>
               setDateRange({ ...dateRange, end: e.target.value })
@@ -640,7 +711,12 @@ const DepositsStatus = () => {
                   </td>
                   <td className="py-2 px-4">{item?.deposit}</td>
                   <td className="py-2 px-4">{item?.balance}</td>
-                  <td className="py-2 px-4">{formatDate(item?.createdAt)}</td>
+                  <td className="py-3 px-4">
+                    <div>{formatDate(item?.createdAt)}</div>
+                    <div className="text-sm text-gray-400">
+                      {calculateTimeSinceJoined(item?.createdAt)}
+                    </div>
+                  </td>
                   <td className="py-2 px-4">
                     <button
                       className=" text-blue-400"
@@ -670,14 +746,12 @@ const DepositsStatus = () => {
                       </div>
                     )}
                   </td>
-
                   <td className="py-2 px-4">
                     <span className="bg-gray-200 first-letter:capitalize text-gray-800 px-2 py-1 rounded-full text-sm">
                       {item.status.charAt(0).toUpperCase() +
                         item.status.slice(1)}
                     </span>
                   </td>
-
                   <td className="py-2 px-4">
                     {item.status === "pending" && (
                       <div className="flex items-center gap-5">

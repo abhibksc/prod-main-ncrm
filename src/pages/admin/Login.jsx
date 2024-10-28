@@ -100,9 +100,14 @@ const Login = () => {
               backgroundPosition: "center",
             }}
           />
+
           <div className="relative z-10">
             <h1 className="text-4xl font-bold mb-4">
+<<<<<<< HEAD
               {import.meta.env.VITE_WEBSITE_NAME} CRM
+=======
+              {import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"} CRM
+>>>>>>> origin/main
             </h1>
             <p className="text-xl mb-8">Admin Portal</p>
             <ul className="space-y-2">

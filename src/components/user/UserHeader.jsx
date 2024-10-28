@@ -130,6 +130,7 @@ const UserHeader = () => {
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
+  console.log(import.meta.env.VITE_LOGO_LINK);
 
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
@@ -140,9 +141,15 @@ const UserHeader = () => {
           </button>
           <a href="/user/dashboard" className=" items-center mr-4">
             <img
+<<<<<<< HEAD
               src="/test-crm-logo.png"
               alt="Forex-ZX Logo"
               className=" object-contain w-32"
+=======
+              src={import.meta.env.VITE_LOGO_LINK}
+              alt="Forex Funding Logo"
+              className=" object-contain w-auto h-10 md:h-14 sm:h-12"
+>>>>>>> origin/main
             />
           </a>{" "}
         </div>

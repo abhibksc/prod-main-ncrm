@@ -72,8 +72,8 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="antialiased w-full border-neutral-700 border-b-[0.1px]">
-      <nav className="border-gray-200 px-4 lg:px-6 py-2.5 bg-primary-800">
+    <header className="antialiased w-full">
+      <nav className="border-gray-200 px-4 lg:px-6 py-2 bg-primary-800">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center">
             <button
@@ -87,11 +87,40 @@ const Header = () => {
             </button>
             <a href="/admin/dashboard" className=" items-center mr-4">
               <img
+<<<<<<< HEAD
                 src="/test-crm-logo.png"
                 alt="Forex-ZX Logo"
                 className=" object-contain w-32"
               />
             </a>
+=======
+                src={import.meta.env.VITE_LOGO_LINK}
+                alt="Forex-ZX Logo"
+                className=" object-contain w-auto h-10 md:h-12 sm:h-10"
+              />
+            </a>
+            {/* <form
+              action="#"
+              method="GET"
+              className="hidden ml-20 lg:block lg:pl-2"
+            >
+              <label htmlFor="topbar-search" className="sr-only">
+                Search here...
+              </label>
+              <div className="relative mt-1 lg:w-96">
+                <div className="flex text-neutral-200 absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <Search className=""></Search>
+                </div>
+                <input
+                  type="text"
+                  name="email"
+                  id="topbar-search"
+                  className="border px-3 bg-primary-700 text-white outline-none border-white/10 sm:text-sm rounded-lg block w-full pl-9 p-2.5 focus:ring-primary-500 focus:border-primary-500"
+                  placeholder="Search here"
+                />
+              </div>
+            </form> */}
+>>>>>>> origin/main
           </div>
           <div className="flex items-center lg:order-2">
             <button
@@ -145,20 +174,20 @@ const Header = () => {
             >
               {isUserDropdownOpen && (
                 <>
-                  <Link
+                  {/* <Link
                     to={"/admin/profile-setting"}
                     className="flex hover:bg-primary-500 p-2  rounded gap-2"
                   >
                     <User></User>
                     <p>Profile</p>
-                  </Link>
-                  <Link
+                  </Link> */}
+                  {/* <Link
                     to={`/admin/password-setting`}
                     className="flex hover:bg-primary-500 p-2  rounded  gap-2"
                   >
                     <KeyRound></KeyRound>
                     <p>Password</p>
-                  </Link>
+                  </Link> */}
                   {/* <Link
                     to={`/admin/kyc-setting`}
                     className=" hover:bg-primary-500 p-2  rounded flex gap-2"

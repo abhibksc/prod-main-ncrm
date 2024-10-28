@@ -201,7 +201,7 @@ export default function MethodConfiguration() {
         </div>
       </div>
 
-      <div className="bg-primary-800 mt-5 rounded-lg shadow-lg overflow-x-scroll">
+      <div className="bg-primary-800 mt-5 rounded-lg shadow-lg">
         <table className="min-w-full divide-y divide-gray-200 overflow-hidden">
           <thead className="bg-primary-400 text-white">
             <tr>
