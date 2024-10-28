@@ -65,7 +65,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
 
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-white text-3xl font-bold mb-4">Add Group</h2>
+      <h2 className="text-white text-3xl font-bold mb-4">Add group</h2>
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full table-auto">
           <thead>

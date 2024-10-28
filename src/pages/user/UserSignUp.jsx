@@ -76,6 +76,10 @@ const UserSignUp = () => {
       setError("Passwords do not match");
       return;
     }
+    if (!formData.phone || formData.phone.trim() === "") {
+      setError("Phone number is required");
+      return;
+    }
     const toastId = toast.loading("Creating account..");
     try {
       const res = await axios.post(
@@ -158,7 +162,8 @@ const UserSignUp = () => {
                   Create Your Account
                 </h2>
                 <p className="text-secondary-300 mb-8">
-                  Join Beta Funded and start your trading journey today.
+                  Join {import.meta.env.VITE_WEBSITE_NAME} and start your
+                  trading journey today.
                 </p>
               </motion.div>
 
@@ -251,6 +256,7 @@ const UserSignUp = () => {
                     international
                     inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     className="react-tel-input"
+                    required={true}
                   />
                 </motion.div>
                 <motion.div
@@ -411,15 +417,7 @@ const UserSignUp = () => {
                     <span className="text-sm text-secondary-300">
                       I agree with the
                       <a
-                        href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
-                        className="text-blue-400 mx-1 cursor-pointer"
-                        target="_blank"
-                      >
-                        Privacy policy
-                      </a>
-                      and
-                      <a
-                        href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                        href={import.meta.env.VITE_TAC_LINK}
                         className="text-blue-400 mx-1 cursor-pointer"
                         target="_blank"
                       >

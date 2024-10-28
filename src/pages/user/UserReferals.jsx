@@ -11,12 +11,14 @@ import {
   Gift,
   Wallet2,
   RotateCwIcon,
+  HandCoins,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
+import UserIBcards from "@/components/user/UserIBCards";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("referrals");
@@ -29,7 +31,7 @@ const UserReferal = () => {
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
   const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referalId}`;
-  const [referralUsers, setReferralsUsers] = useState([]);
+  const [commissionsData, setCommissionsData] = useState([]);
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
@@ -52,7 +54,7 @@ const UserReferal = () => {
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
-
+  console.log(commissionsData);
   // generate IB account handler ------------
 
   const generateHandler = async () => {
@@ -66,8 +68,8 @@ const UserReferal = () => {
           Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
           MT5Account: randomNumber,
           Name: loggedUser.firstName,
-          Leverage: "200",
-          Group_Name: "contest.Promo11",
+          Leverage: import.meta.env.VITE_IB_LEVERAGE || "200",
+          Group_Name: import.meta.env.VITE_IB_GROUP_NAME,
         }
       );
       const updateLoggedUser = await axios.put(
@@ -86,35 +88,89 @@ const UserReferal = () => {
       toast.error(" Something went wrong", { id: toastId });
     }
   };
-  // fetch all users handler ------------
+  // fetch all commissions data------------
 
-  const fetchJoinedUsers = async () => {
+  const fetchCommissions = async () => {
     try {
       setIsRefreshLoading(true);
       const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-users`
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-commissions`
       );
-      const joinedUsers = res.data.data.filter(
-        (value) => value?.referralBy === loggedUser._id
+
+      const commissions = res.data.data.filter(
+        (value) => value?.referralId === loggedUser.referalId
       );
-      setReferralsUsers(joinedUsers);
+      setCommissionsData(commissions);
       setIsRefreshLoading(false);
     } catch (error) {
       console.log(error);
       setIsRefreshLoading(false);
     }
   };
+  // formate date -----------------
+
+  function formatDate(isoDateString) {
+    const date = new Date(isoDateString);
+
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // 12-hour format with AM/PM
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  }
+  // since joined ---------------
+
+  function calculateTimeSinceJoined(isoDateString) {
+    const joinDate = new Date(isoDateString);
+    const today = new Date();
+
+    // Calculate the difference in time (in milliseconds)
+    const timeDifference = today - joinDate;
+
+    // Calculate different time units
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+
+    // Build the time string
+    let timeString = [];
+
+    if (days > 0) {
+      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
+    }
+    if (hours > 0) {
+      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+    }
+    if (minutes > 0) {
+      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+    }
+
+    // Handle case when less than a minute
+    if (timeString.length === 0) {
+      return "less than a minute ago";
+    }
+
+    return timeString.join(", ") + " ago";
+  }
+
   // reresh handler -----------
 
   const refreshHandler = () => {
-    fetchJoinedUsers();
+    fetchCommissions();
   };
-  // use effect ---------------
-
-  useEffect(() => {
-    getUpdateLoggedUser();
-    fetchJoinedUsers();
-  }, []);
 
   const ReferralsView = () => (
     <motion.div
@@ -163,11 +219,11 @@ const UserReferal = () => {
       transition={{ duration: 0.6 }}
       className="space-y-4 sm:space-y-6"
     >
-      <h2 className="text-xl sm:text-2xl font-bold">Total Commission: 0</h2>
+      <UserIBcards commissionsData={commissionsData}></UserIBcards>
       <div className="bg-secondary-800/60 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         <div className=" flex justify-between items-center px-5">
           <h3 className="font-semibold text-base sm:text-xl p-4 sm:px-3 sm:py-6 ">
-            Referrals Details
+            Referral Details
           </h3>
           <div
             onClick={refreshHandler}
@@ -185,39 +241,77 @@ const UserReferal = () => {
             <thead className="bg-secondary-700/60 text-white">
               <tr>
                 <th className="p-3 sm:p-4 text-left text-sm sm:text-base">
-                  Client Name
+                  Name/Email
                 </th>
-                <th className="p-3 sm:p-4 text-left text-sm sm:text-base">
-                  Email
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  AC NO:
                 </th>
-                <th className="p-3 sm:p-4 text-left text-sm sm:text-base">
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  AC Type
+                </th>
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  Country
+                </th>
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
                   Deposit
                 </th>
-                <th className="p-3 sm:p-4 text-left text-sm sm:text-base">
-                  Comision
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  Account Size
                 </th>
-                <th className="p-3 sm:p-4 text-left text-sm sm:text-base">
-                  Status
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  Commission
+                </th>
+                <th className="p-3 sm:p-4 text-center text-sm sm:text-base">
+                  Time Stamp
                 </th>
               </tr>
             </thead>
             <tbody>
-              {!referralUsers && (
+              {!commissionsData && (
                 <tr className="text-gray-400 text-center">
                   <td colSpan="4" className="p-3 sm:p-4 text-sm sm:text-base">
                     No commission data available
                   </td>
                 </tr>
               )}
-              {referralUsers?.map((value) => (
-                <tr key={value._id} className="text-gray-200">
+              {commissionsData?.map((value) => (
+                <tr
+                  key={value._id}
+                  className="text-gray-200 border-b border-secondary-800"
+                >
                   <td className="pl-6 py-3 text-sm sm:text-base">
-                    {value?.firstName}
+                    <div>
+                      <p> {value?.currentReferral?.firstName} </p>
+                      <p className=" text-gray-400">
+                        {" "}
+                        {value?.currentReferral?.email}
+                      </p>
+                    </div>
                   </td>
-                  <td className="pl-2 text-sm sm:text-base">{value?.email}</td>
-                  <td className="pl-6 text-sm sm:text-base">000</td>
-                  <td className="pl-6 text-sm sm:text-base">000</td>
-                  <td className="pl-6 text-sm sm:text-base">Joined</td>
+                  <td className="text-sm text-center sm:text-base">
+                    {value?.mt5Account}
+                  </td>
+                  <td className=" text-center text-sm sm:text-base">
+                    {value?.accountType}
+                  </td>
+                  <td className=" text-center text-sm sm:text-base">
+                    {value?.currentReferral?.country || "null"}
+                  </td>
+                  <td className=" text-center text-sm sm:text-base">
+                    ${value?.depositBalance}
+                  </td>
+                  <td className=" text-center text-sm sm:text-base">
+                    ${value?.accountSize}
+                  </td>
+                  <td className=" text-center text-sm sm:text-base">
+                    ${value?.commission}
+                  </td>
+                  <td className="py-3 text-center px-4">
+                    <div>{formatDate(value?.createdAt)}</div>
+                    <div className="text-sm text-gray-400">
+                      {calculateTimeSinceJoined(value?.createdAt)}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -227,10 +321,12 @@ const UserReferal = () => {
     </motion.div>
   );
 
-  // is visible use effect -------
+  // use effect -------
 
   useEffect(() => {
     setIsVisible(true);
+    getUpdateLoggedUser();
+    fetchCommissions();
   }, []);
 
   return (
@@ -246,12 +342,12 @@ const UserReferal = () => {
         ) : (
           <div className="space-x-2 sm:space-x-4 flex">
             <TabButton
-              label="Referrals"
+              label="Referral"
               isActive={activeTab === "referrals"}
               onClick={() => setActiveTab("referrals")}
             />
             <TabButton
-              label="Commission"
+              label="IB Dashboard"
               isActive={activeTab === "commission"}
               onClick={() => setActiveTab("commission")}
             />
@@ -259,12 +355,14 @@ const UserReferal = () => {
         )}
         {loggedUser.referalId && (
           <div>
-            <div className=" flex gap-2">
-              <Wallet2 className=""></Wallet2>
-              <p>Wallet Balance</p>
+            <div className=" flex font-semibold gap-2">
+              <HandCoins className=" text-yellow-500"></HandCoins>
+              <p>IB Account</p>
             </div>
-            <div className=" bg-secondary-600/10 shadow-2xl font-semibold text-green-500 px-2 my-2 py-1 rounded-full text-center">
-              <p>$0</p>
+            <div className=" bg-yellow-500/10 ml-4 shadow-2xl px-2 my-1 py-1 rounded-full text-center">
+              <p className=" text-gray-200  font-semibold  text-lg">
+                {loggedUser?.referalId}
+              </p>
             </div>
           </div>
         )}

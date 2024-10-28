@@ -48,7 +48,7 @@ const UserRules = () => {
   const rules = [
     {
       color: "bg-red-500",
-      text: "Beta funded don't have any IP address related issues ,like other firms have. You can trade with multiple devices and from multiple locations.",
+      text: "Our platform don't have any IP address related issues ,like other firms have. You can trade with multiple devices and from multiple locations.",
     },
     {
       color: "bg-yellow-500",
@@ -60,7 +60,7 @@ const UserRules = () => {
     },
     {
       color: "bg-green-500",
-      text: "Beta funded does not impose any restriction on using Stop-Loss (SL) on challenges and live accounts.",
+      text: "Our platform does not impose any restriction on using Stop-Loss (SL) on challenges and live accounts.",
     },
     {
       color: "bg-blue-600",

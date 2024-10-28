@@ -67,6 +67,11 @@ const UserNewChallenge = () => {
   const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef(null);
 
+  const calculateCommissionValue =
+    formData.accountSize * (import.meta.env.VITE_IB_COMMISSION / 100);
+
+  console.log("calculateCommissionValue------------", calculateCommissionValue);
+
   const filteredPlatformData = platformData?.filter(
     (value) => value.status === "active"
   );
@@ -173,8 +178,8 @@ const UserNewChallenge = () => {
         {
           id: loggedUser._id,
           mt5Account: "000",
-          depositBalance: "000",
-          accountSize: "000",
+          depositBalance: 0,
+          accountSize: 0,
           masterPassword: "000",
           investorPassword: "000",
           phase: 0,
@@ -184,7 +189,6 @@ const UserNewChallenge = () => {
       );
 
       dispatch(setProfitNloss(0));
-
       dispatch(setOpenTrades([]));
       dispatch(setAvailableBalance(0));
       dispatch(setProfitNloss(0));

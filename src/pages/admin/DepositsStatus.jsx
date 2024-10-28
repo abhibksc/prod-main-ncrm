@@ -355,7 +355,7 @@ const DepositsStatus = () => {
           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
 
           {
-            Manager_Index: selectedDeposit.managerIndex,
+            Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
             MT5Account: selectedDeposit.mt5Account,
             Name: selectedDeposit.name,
             Country: selectedDeposit.country,
@@ -368,7 +368,7 @@ const DepositsStatus = () => {
           `${
             import.meta.env.VITE_API_END_POINT
           }/api/web/MakeDepositBalance?Manager_Index=${
-            selectedDeposit.managerIndex
+            import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.balance
           }&Comment=TEST`
@@ -404,6 +404,39 @@ const DepositsStatus = () => {
             leverage: selectedDeposit.leverage,
           }
         );
+        // add refferal commission ----------
+
+        if (selectedDeposit?.userId?.referalFromId) {
+          const addCommisonMt5Api = await axios.get(
+            `${
+              import.meta.env.VITE_API_END_POINT
+            }/api/web/MakeDepositBalance?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
+              selectedDeposit.deposit *
+              (import.meta.env.VITE_IB_COMMISSION / 100)
+            }&Comment=commission`
+          );
+
+          const addCommissionDB = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-commission`,
+            {
+              mt5Account: selectedDeposit.mt5Account,
+              referralId: selectedDeposit?.userId?.referalFromId,
+              depositBalance: selectedDeposit.balance,
+              accountSize: selectedDeposit.deposit,
+              commission:
+                selectedDeposit.deposit *
+                (import.meta.env.VITE_IB_COMMISSION / 100),
+              accountType: selectedDeposit.accountType,
+              level: 1,
+              referralFrom: selectedDeposit.userId.referralFromUserId,
+              currentReferral: selectedDeposit.userId._id,
+            }
+          );
+          console.log("addCommissionDB---------", addCommissionDB);
+          toast("commison section ");
+        }
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -683,7 +716,7 @@ const DepositsStatus = () => {
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(item?.createdAt)}
                     </div>
-                  </td>{" "}
+                  </td>
                   <td className="py-2 px-4">
                     <button
                       className=" text-blue-400"

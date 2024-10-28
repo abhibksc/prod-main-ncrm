@@ -66,8 +66,8 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="antialiased w-full border-neutral-700 border-b-[0.1px]">
-      <nav className="border-gray-200 px-4 lg:px-6 py-2.5 bg-primary-800">
+    <header className="antialiased w-full">
+      <nav className="border-gray-200 px-4 lg:px-6 py-2 bg-primary-800">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center">
             <button
@@ -81,11 +81,11 @@ const Header = () => {
             </button>
             <a href="/admin/dashboard" className="flex items-center mr-4">
               <img
-                src="/beta-funded.png"
+                src={import.meta.env.VITE_LOGO_LINK}
                 alt="Forex-ZX Logo"
-                className="h-4 w-auto sm:h-4 md:h-6 lg:h-8 xl:h-10 object-contain"
+                className=" object-contain w-auto h-10 md:h-12 sm:h-10"
               />
-            </a>{" "}
+            </a>
             {/* <form
               action="#"
               method="GET"
@@ -160,20 +160,20 @@ const Header = () => {
             >
               {isUserDropdownOpen && (
                 <>
-                  <Link
+                  {/* <Link
                     to={"/admin/profile-setting"}
                     className="flex hover:bg-primary-500 p-2  rounded gap-2"
                   >
                     <User></User>
                     <p>Profile</p>
-                  </Link>
-                  <Link
+                  </Link> */}
+                  {/* <Link
                     to={`/admin/password-setting`}
                     className="flex hover:bg-primary-500 p-2  rounded  gap-2"
                   >
                     <KeyRound></KeyRound>
                     <p>Password</p>
-                  </Link>
+                  </Link> */}
                   {/* <Link
                     to={`/admin/kyc-setting`}
                     className=" hover:bg-primary-500 p-2  rounded flex gap-2"
