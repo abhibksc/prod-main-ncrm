@@ -30,7 +30,7 @@ export default function UserDashboard() {
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
 
-  const isMax = phaseMaxLength === loggedUser.phase;
+  const isMax = phaseMaxLength === loggedUser.phase - 1;
   // const isOnLast = phaseMaxLength - 1 === phaseMaxLength - 1 ? true : false;
   console.log("is max dashboard ---", isMax);
 
