@@ -63,9 +63,9 @@ const UserChallenges = () => {
             <th className="p-2 sm:p-3 text-center font-semibold">
               Account Type
             </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">
+            {/* <th className="p-2 sm:p-3 text-center font-semibold">
               Deposit amount
-            </th>
+            </th> */}
             <th className="p-2 sm:p-3 text-center font-semibold">
               Account Size
             </th>
@@ -102,9 +102,9 @@ const UserChallenges = () => {
               <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
                 {value?.type}
               </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+              {/* <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.deposit}
-              </td>
+              </td> */}
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.accountSize}
               </td>

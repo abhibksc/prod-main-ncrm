@@ -175,7 +175,7 @@ export default function UseUserHook() {
   // update phase ----------------
 
   const getUpdatePhase = async () => {
-    console.log(" final pnl__________________", totalFinalPnLRef.current);
+    // console.log(" final pnl__________________", totalFinalPnLRef.current);
 
     const phaseMinValueInNumber =
       (phaseStats?.min / 100) * loggedUserHook.current.accountSize * -1;
@@ -264,7 +264,7 @@ export default function UseUserHook() {
         dispatch(setAvailableBalance(0));
         // await GetUserInfoAPI();
         toast.success("Maximum profit reached", { id: toastId });
-        window.location.reload();
+        // window.location.reload();
 
         const customContent = `<!DOCTYPE html>
         <html lang="en">
@@ -596,7 +596,7 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
         dispatch(setPhaseStats(""));
         await GetUserInfoAPI();
         toast.success("Account Closed", { id: toastId });
-        window.location.reload();
+        // window.location.reload();
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);
