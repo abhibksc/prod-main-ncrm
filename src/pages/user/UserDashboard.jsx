@@ -46,7 +46,7 @@ export default function UserDashboard() {
         console.error("Error in dashboard:", error);
       }
     };
-    // fetchData();
+    fetchData();
     const intervalId = setInterval(() => {
       fetchData();
     }, 6000);

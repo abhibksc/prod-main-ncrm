@@ -31,6 +31,7 @@ export default function UseUserHook() {
   const phaseHook = useRef(0);
   const loggedUserHook = useRef("");
   const totalFinalPnLRef = useRef(0);
+  const [isToRefresh, setIsToRefresh] = useState(false);
 
   const isMax = phaseMaxLength === loggedUser.phase + 1;
   const isLastPhase = phaseMaxLength === loggedUser.phase;
@@ -54,6 +55,7 @@ export default function UseUserHook() {
     };
     const newTotalFinalPnL = currentPnl + calculateTotalNetProfit();
     totalFinalPnLRef.current = newTotalFinalPnL;
+    console.log("total final rnf-------", totalFinalPnLRef);
     dispatch(setProfitNloss(newTotalFinalPnL));
   }, [openTrades, loggedUser, userInfo]);
 
@@ -71,19 +73,23 @@ export default function UseUserHook() {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUserHook.current.mt5Account}`
         );
-        dispatch(setUserInfo(res.data));
-        dispatch(setAvailableBalance(res.data.Balance));
-        const newPnl = res.data.Balance - loggedUserHook.current.accountSize;
-        setCurrentPnlAndRef(newPnl);
-        // console.log("inse get user info hook - new pnl ---", newPnl);
-        // dispatch(setProfitNloss(newPnl));
-        // console.log("profit n loss hook---", newPnl);
-        // console.log("acount size---", newPnl);
+        if (res.data.Balance) {
+          dispatch(setUserInfo(res.data));
+          dispatch(setAvailableBalance(res.data.Balance));
+          const balance = Number(res.data.Balance);
+          const accountSize = Number(loggedUserHook.current.accountSize);
+          console.log("Balance:~~~~~~~~~~~~~~~~~~~~", balance);
+          console.log("Account Size~~~~~~~~~~~~~~~~~~~~~~~~`:", accountSize);
+
+          const newPnl = balance - accountSize;
+          setCurrentPnlAndRef(newPnl);
+        }
       }
     } catch (error) {
-      console.log("error while userInfo hook--", error.data);
+      console.error("Error in GetUserInfoAPI:", error);
     }
   };
+
   // // get user info api-----------------
 
   // const GetUserInfoAPI = useCallback(async () => {
@@ -177,7 +183,7 @@ export default function UseUserHook() {
     const phaseMaxValueInNumber =
       (phaseStats?.max / 100) * loggedUserHook.current.accountSize;
 
-    console.log("current phase stats___________________", phaseStats);
+    // console.log("current phase stats___________________", phaseStats);
     // console.log("phase update hook********", currentPnlRef.current);
     // console.log("is max ##############", isMax);
     if (
