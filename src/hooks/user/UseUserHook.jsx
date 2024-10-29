@@ -32,6 +32,11 @@ export default function UseUserHook() {
   const loggedUserHook = useRef("");
   const totalFinalPnLRef = useRef(0);
 
+  const isMax = phaseMaxLength === loggedUser.phase + 1;
+  const isLastPhase = phaseMaxLength === loggedUser.phase;
+
+  // without including open trade price pnl ----------
+
   const setCurrentPnlAndRef = useCallback((newValue) => {
     currentPnlRef.current = newValue;
     setCurrentPnl(newValue);
@@ -41,45 +46,22 @@ export default function UseUserHook() {
     currentPnlRef.current = currentPnl;
   }, [currentPnl]);
 
+  // final pnl -----------------
+
   useEffect(() => {
     const calculateTotalNetProfit = () => {
       return openTrades.reduce((sum, entry) => sum + entry.Profit, 0);
     };
-
     const newTotalFinalPnL = currentPnl + calculateTotalNetProfit();
     totalFinalPnLRef.current = newTotalFinalPnL;
+    dispatch(setProfitNloss(newTotalFinalPnL));
   }, [openTrades, loggedUser, userInfo]);
 
   // console.log("final pnl !!!!!!!!!!!!!!!!!!1", totalFinalPnLRef.current);
 
-  // total final pnl ------------------
-  const calculateTotalNetProfit = () => {
-    const totalNetProfit = openTrades.reduce(
-      (sum, entry) => sum + entry.Profit,
-      0
-    );
-
-    return totalNetProfit;
-  };
-  const totalFinalPnL = currentPnl + calculateTotalNetProfit();
-
-  // console.log("Phase length--", phaseMaxLength);
-  const isMax = phaseMaxLength === loggedUser.phase + 1;
-  const isLastPhase = phaseMaxLength === loggedUser.phase;
-
-  console.log("is max--------", isMax);
-
-  const getCurrentPnl = useCallback(() => {
-    return currentPnlRef.current;
-  }, []);
-
-  const testProftNloss = currentPnlRef.current;
-
   // get user info api-----------------
 
-  const GetUserInfoAPI = useCallback(async () => {
-    // console.log("logged user in get user info --", loggedUser);
-    // console.log("Phase hook value --", phaseHok.current);
+  const GetUserInfoAPI = async () => {
     try {
       if (phaseHook.current !== 0) {
         const res = await axios.get(
@@ -89,21 +71,44 @@ export default function UseUserHook() {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUserHook.current.mt5Account}`
         );
-        // console.log("get userInfo called ---", res.data);
         dispatch(setUserInfo(res.data));
         dispatch(setAvailableBalance(res.data.Balance));
         const newPnl = res.data.Balance - loggedUserHook.current.accountSize;
-        dispatch(setProfitNloss(newPnl));
         setCurrentPnlAndRef(newPnl);
+        // console.log("inse get user info hook - new pnl ---", newPnl);
+        // dispatch(setProfitNloss(newPnl));
         // console.log("profit n loss hook---", newPnl);
         // console.log("acount size---", newPnl);
-      } else {
-        console.log("Phase hook--", phaseHook);
       }
     } catch (error) {
       console.log("error while userInfo hook--", error.data);
     }
-  }, [dispatch, setCurrentPnlAndRef]);
+  };
+  // // get user info api-----------------
+
+  // const GetUserInfoAPI = useCallback(async () => {
+  //   try {
+  //     if (phaseHook.current !== 0) {
+  //       const res = await axios.get(
+  //         `${
+  //           import.meta.env.VITE_API_END_POINT
+  //         }/api/web/GetUserInfo?Manager_Index=${
+  //           import.meta.env.VITE_MANAGER_INDEX
+  //         }&MT5Account=${loggedUserHook.current.mt5Account}`
+  //       );
+  //       // console.log("get userInfo called ---", res.data);
+  //       dispatch(setUserInfo(res.data));
+  //       dispatch(setAvailableBalance(res.data.Balance));
+  //       const newPnl = res.data.Balance - loggedUserHook.current.accountSize;
+  //       setCurrentPnlAndRef(newPnl);
+  //       // dispatch(setProfitNloss(newPnl));
+  //       // console.log("profit n loss hook---", newPnl);
+  //       // console.log("acount size---", newPnl);
+  //     }
+  //   } catch (error) {
+  //     console.log("error while userInfo hook--", error.data);
+  //   }
+  // }, [dispatch, setCurrentPnlAndRef]);
 
   // close trade api --------------------
 

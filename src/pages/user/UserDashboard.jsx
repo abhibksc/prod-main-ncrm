@@ -47,7 +47,6 @@ export default function UserDashboard() {
       }
     };
     // fetchData();
-
     const intervalId = setInterval(() => {
       fetchData();
     }, 6000);
@@ -86,19 +85,19 @@ export default function UserDashboard() {
 
     if (loggedUser?.accountType === "Beta Standard") {
       phaseLimitValues = [
-        { phase: 1, min: 5, max: 8 },
-        { phase: 2, min: 5, max: 5 },
-        { phase: 3, min: 5, max: Infinity },
+        { phase: 1, min: 10, max: 8 },
+        { phase: 2, min: 10, max: 5 },
+        { phase: 3, min: 10, max: Infinity },
       ];
     } else if (loggedUser?.accountType === "Beta Algo") {
       phaseLimitValues = [
-        { phase: 1, min: 4, max: 10 },
-        { phase: 2, min: 4, max: Infinity },
+        { phase: 1, min: 8, max: 10 },
+        { phase: 2, min: 8, max: Infinity },
       ];
     } else {
       phaseLimitValues = [
-        { phase: 1, min: 4, max: 10 },
-        { phase: 2, min: 4, max: Infinity },
+        { phase: 1, min: 8, max: 10 },
+        { phase: 2, min: 8, max: Infinity },
       ];
     }
     const currentPhaseData = phaseLimitValues.find(

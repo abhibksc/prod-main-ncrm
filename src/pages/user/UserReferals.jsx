@@ -386,7 +386,7 @@ const UserReferal = () => {
             }`}
           >
             <div className="bg-secondary-600/10 px-4 py-1 rounded-full text-sm font-medium text-secondary-600 mb-4 hover:bg-secondary-600/20 transition-colors">
-              Earn $5 Per Lot Traded
+              Earn 15% Per referral commission{" "}
             </div>
             <h2 className="text-3xl font-bold mb-4">
               Transform Your Network Into <br />
@@ -395,8 +395,8 @@ const UserReferal = () => {
               </span>
             </h2>
             <p className="text-gray-300 max-w-xl mb-6">
-              Join our IB program and earn a fixed $5 commission for every lot
-              your referrals trade. No complicated tiers, just straightforward
+              Join our Affiliate program and earn a fixed 15% commission for
+              every account purchase. No complicated tiers, just straightforward
               earnings.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">
@@ -405,25 +405,15 @@ const UserReferal = () => {
                 onClick={generateHandler}
               >
                 <Users className="animate-pulse" size={20} />
-                Generate IB Account
+                Generate Affiliate Account
               </button>
-              <a
-                href="#learn-more"
-                className="group flex items-center gap-2 text-secondary-600 transition-all duration-300"
-              >
-                Learn More
-                <ArrowRight
-                  className="transform transition-transform group-hover:translate-x-2"
-                  size={16}
-                />
-              </a>
             </div>
           </div>
 
           {/* Stats Section with Stagger Animation */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[
-              { value: "$5", label: "Per Lot Commission" },
+              { value: "15%", label: "Referral Commission" },
               { value: "24/7", label: "Instant Payouts" },
               { value: "100%", label: "Transparent Terms" },
               { value: "∞", label: "Unlimited Referrals" },
@@ -452,7 +442,7 @@ const UserReferal = () => {
                 icon: Gift,
                 title: "Easy Registration",
                 description:
-                  "Generate your IB account instantly with one click. No lengthy forms or waiting periods.",
+                  "Generate your affiliate account instantly with one click. No lengthy forms or waiting periods.",
               },
               {
                 icon: ChartBar,
@@ -502,7 +492,7 @@ const UserReferal = () => {
                   step: "1",
                   title: "Generate Account",
                   description:
-                    "Click the button to instantly create your IB account",
+                    "Click the button to instantly create your affiliate account",
                 },
                 {
                   step: "2",
@@ -512,7 +502,7 @@ const UserReferal = () => {
                 {
                   step: "3",
                   title: "Earn Commission",
-                  description: "Get $5 for every lot your referrals trade",
+                  description: "Get 15% for every referral",
                 },
               ].map((step, index) => (
                 <div
@@ -543,17 +533,17 @@ const UserReferal = () => {
             }`}
           >
             <h3 className="text-2xl font-bold mb-4">
-              Ready to Start Your IB Journey?
+              Ready to Start Your affiliate Journey?
             </h3>
             <p className="text-gray-300 mb-6">
-              Join our growing community of successful IBs today
+              Join our community of dedicated and successful affiliates.{" "}
             </p>
             <button
               className="px-8 py-4 bg-secondary-600/70 hover:bg-secondary-600/40 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
               onClick={generateHandler}
             >
               <Users className="animate-pulse" size={20} />
-              Generate IB Account
+              Generate affiliate Account
               <ArrowRight
                 className="transform transition-transform group-hover:translate-x-2"
                 size={20}
