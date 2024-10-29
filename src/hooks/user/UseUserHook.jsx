@@ -36,6 +36,9 @@ export default function UseUserHook() {
   const isMax = phaseMaxLength === loggedUser.phase + 1;
   const isLastPhase = phaseMaxLength === loggedUser.phase;
 
+  console.log("isLastPhase hook ----", isLastPhase);
+  console.log("is phaseMaxLength hook----", phaseMaxLength);
+
   // without including open trade price pnl ----------
 
   const setCurrentPnlAndRef = useCallback((newValue) => {
@@ -172,6 +175,23 @@ export default function UseUserHook() {
     }
   };
 
+  // update logged user -----
+
+  const getUpdateLoggedUser = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${
+          loggedUser._id
+        }`
+      );
+      dispatch(setLoggedUser(res.data.data));
+      phaseHook.current = res.data.data.phase;
+      loggedUserHook.current = res.data.data;
+    } catch (error) {
+      console.log("error in update logedUser hook", error);
+    }
+  };
+
   // update phase ----------------
 
   const getUpdatePhase = async () => {
@@ -251,7 +271,7 @@ export default function UseUserHook() {
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
           {
             id: loggedUser._id,
-            phase: Number(loggedUser.phase) + 1,
+            phase: isLastPhase ? phaseMaxLength : Number(loggedUser.phase) + 1,
             masterPassword: addApiRes.data.Master_Pwd,
             investorPassword: addApiRes.data.Investor_Pwd,
             mt5Account: randomNumber,
@@ -259,13 +279,12 @@ export default function UseUserHook() {
         );
 
         dispatch(setLoggedUser(updateLoggedUser.data.data));
-        // await getUpdateLoggedUser();
+        getUpdateLoggedUser();
         dispatch(setProfitNloss(0));
         dispatch(setAvailableBalance(0));
-        // await GetUserInfoAPI();
+        GetUserInfoAPI();
         toast.success("Maximum profit reached", { id: toastId });
-        // window.location.reload();
-
+        window.location.reload();
         const customContent = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -596,28 +615,11 @@ ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
         dispatch(setPhaseStats(""));
         await GetUserInfoAPI();
         toast.success("Account Closed", { id: toastId });
-        // window.location.reload();
+        window.location.reload();
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in update phase--", error);
       }
-    }
-  };
-
-  // update logged user -----
-
-  const getUpdateLoggedUser = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${
-          loggedUser._id
-        }`
-      );
-      dispatch(setLoggedUser(res.data.data));
-      phaseHook.current = res.data.data.phase;
-      loggedUserHook.current = res.data.data;
-    } catch (error) {
-      console.log("error in update logedUser hook", error);
     }
   };
 

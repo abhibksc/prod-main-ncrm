@@ -30,7 +30,11 @@ export default function UserDashboard() {
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
 
-  const isMax = phaseMaxLength === loggedUser.phase - 1;
+  const isMax = phaseMaxLength === loggedUser.phase;
+  // const isOnLast = phaseMaxLength - 1 === phaseMaxLength - 1 ? true : false;
+  console.log("is max dashboard ---", isMax);
+
+  // console.log("isOnLast dashboard ----", isOnLast);
 
   // console.log("is max length__________", loggedUser.phase + 1);
   // console.log("is max__________", isMax);
@@ -72,7 +76,7 @@ export default function UserDashboard() {
     const intervalId = setInterval(() => {
       fetchData();
       console.log("getUpdatePhase");
-    }, 9000);
+    }, 10000);
 
     return () => {
       clearInterval(intervalId);
