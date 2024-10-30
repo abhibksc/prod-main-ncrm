@@ -21,7 +21,7 @@ import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
 
 const UserReferal = () => {
-  const [activeTab, setActiveTab] = useState("referrals");
+  const [activeTab, setActiveTab] = useState("commission");
   const [isCopied, setIsCopied] = useState(false);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();

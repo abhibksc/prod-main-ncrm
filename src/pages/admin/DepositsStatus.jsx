@@ -400,7 +400,10 @@ const DepositsStatus = () => {
         );
         // add refferal commission ----------
 
-        if (selectedDeposit?.userId?.referalFromId) {
+        if (
+          selectedDeposit?.userId?.referralFromUserId &&
+          selectedDeposit?.userId?.referalFromId
+        ) {
           const addCommisonMt5Api = await axios.get(
             `${
               import.meta.env.VITE_API_END_POINT

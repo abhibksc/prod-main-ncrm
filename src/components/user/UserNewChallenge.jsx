@@ -28,11 +28,12 @@ import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
   const loggedUser = useSelector((store) => store.user.loggedUser);
+
   const [formData, setFormData] = useState({
     accountType: "",
     apiGroup: "",
     platform: "",
-    accountSize: "",
+    accountSize: "" || "",
     accountBalance: "",
     leverage: "",
     firstName: loggedUser.firstName || "",
@@ -46,7 +47,13 @@ const UserNewChallenge = () => {
     phone: loggedUser.phone || "",
   });
 
-  // console.log("formm data----", formData);
+  const [accountConfigurations, setAccountConfigurations] = useState([]);
+
+  const filterAccountConfig = accountConfigurations.find(
+    (value) => value.accountType === formData.accountType
+  );
+
+  console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
@@ -59,7 +66,6 @@ const UserNewChallenge = () => {
   const countriesArray = getData();
   const { getPlatforms, getPaymentMethod } = UserNewChallengeHook();
   const { getUpdateLoggedUser } = UseUserHook();
-  const [accountConfigurations, setAccountConfigurations] = useState([]);
   const platformData = useSelector((store) => store.user.platforms);
   const paymentMethods = useSelector((store) => store.user.paymentMethods);
   const [file, setFile] = useState(null);
@@ -212,9 +218,6 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-  const filterAccountConfig = accountConfigurations.find(
-    (value) => value.accountType === formData.accountType
-  );
 
   // fetch Account Configurations --------------
 
@@ -230,6 +233,21 @@ const UserNewChallenge = () => {
       console.log("Error fetching existing ac types data", error);
     }
   };
+  // Set default leverage
+  useEffect(() => {
+    const filterAccountConfig = accountConfigurations.find(
+      (value) => value.accountType === formData.accountType
+    );
+    console.log("filter--", filterAccountConfig);
+
+    if (filterAccountConfig?.leverage) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        leverage: filterAccountConfig.leverage[0]?.value || "",
+      }));
+    }
+  }, [accountConfigurations, formData.accountType]);
+
   // use effect -----------
   useEffect(() => {
     setStartAnimation(false);

@@ -1,3 +1,6 @@
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const UserIBcards = ({ commissionsData }) => {
   const totalCommissionLength = commissionsData.length;
   const totalCommissionValue = commissionsData.reduce(
@@ -85,47 +88,12 @@ const UserIBcards = ({ commissionsData }) => {
             </div>
           </div>
         </div>
-
-        {/* Available Commission Card */}
+        {/* Withdrawal Hisstory Card */}
         <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Available Commission
-              </span>
-              <span className="text-2xl font-bold text-gray-100">
-                ${Number(stats?.availableCommission || 0).toFixed(2)}
-              </span>
-            </div>
-            <div className="p-3 bg-purple-100 rounded-full">
-              <svg
-                className="w-6 h-6 text-purple-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="text-sm text-purple-300/80 flex items-center">
-              <span>Available for withdrawal</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Withdrawal Card */}
-        <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col space-y-1">
-              <span className="text-sm font-medium text-gray-300">
-                Pending Withdrawals
+                Withdrawals History
               </span>
               <span className="text-2xl font-bold text-gray-100">
                 {stats.pendingWithdrawals}
@@ -148,12 +116,51 @@ const UserIBcards = ({ commissionsData }) => {
             </div>
           </div>
           <div className="mt-4">
-            <button
-              className="w-full bg-green-600/80 hover:bg-green-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
-              onClick={() => console.log("Withdraw clicked")}
-            >
-              Withdraw
-            </button>
+            <Link to={"/user/referrals/withdrawal-history"}>
+              <div className="text-sm text-blue-400 hover:text-blue-500 hover:pl-1  transition-all flex gap-1 items-center">
+                <span>Withdrwal History </span>
+                <ArrowRight></ArrowRight>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Available Commission Card */}
+        <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col space-y-1">
+              <span className="text-sm font-medium text-gray-300">
+                Available Commission
+              </span>
+              <span className="text-2xl font-bold text-green-500/70">
+                ${Number(stats?.availableCommission || 0).toFixed(2)}
+              </span>
+            </div>
+            <div className="p-3 bg-purple-100 rounded-full">
+              <svg
+                className="w-6 h-6 text-purple-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                />
+              </svg>
+            </div>
+          </div>
+          <div className="mt-4">
+            <Link to={"/user/referrals/withdraw"}>
+              <button
+                className="w-full bg-green-600/80 hover:bg-green-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
+                onClick={() => console.log("Withdraw clicked")}
+              >
+                Withdraw
+              </button>
+            </Link>
           </div>
         </div>
 
