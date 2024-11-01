@@ -266,6 +266,7 @@ const UserLogin = () => {
               subject: "Login Alert",
             }
           );
+          console.log("customMailRes", customMailRes);
           setIsLoading(false);
           setSentmail(true);
           navigate("/user/dashboard");
