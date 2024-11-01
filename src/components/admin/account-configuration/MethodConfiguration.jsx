@@ -17,7 +17,7 @@ export default function MethodConfiguration() {
 
   const addField = async () => {
     const toastId = toast.loading("Please wait...");
-    if (newField.name && newField.details && newField.image) {
+    if (newField.name && newField.details) {
       try {
         const formData = new FormData();
         formData.append("name", newField.name);
@@ -137,8 +137,7 @@ export default function MethodConfiguration() {
     getAllPlatforms();
   }, []);
 
-  const isAddButtonDisabled =
-    !newField.name || !newField.details || !newField.image;
+  const isAddButtonDisabled = !newField.name || !newField.details;
 
   return (
     <div className="container mx-auto px-6 py-8">

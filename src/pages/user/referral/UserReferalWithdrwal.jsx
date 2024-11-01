@@ -1,31 +1,24 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowDownCircle,
   BadgeDollarSign,
+  BadgeInfoIcon,
   Loader2,
   WalletCardsIcon,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import UseUserHook from "../../hooks/user/UseUserHook";
+import { useSelector } from "react-redux";
+import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
 
-const UserWithdraw = () => {
+export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const profitNloss = useSelector((store) => store.user.profitNloss);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
-  const [selectedAccount, setSelectedAccount] = useState(
-    loggedUser.accountType
-  );
-  const [amount, setAmount] = useState(profitNloss);
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
-  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
-
-  // functions------------
-  const isLastPhase = phaseMaxLength === loggedUser.phase;
-  // console.log("isLastPhase---", isLastPhase);
+  const [balance, userInfoData] = UseCommissionBalance();
+  const [amount, setAmount] = useState("");
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -125,14 +118,16 @@ const UserWithdraw = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrwal requested</h1>
+          <h1>Commission Withdrwal Requested</h1>
         </div>
         <div class="content">
           <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
-  <p>  We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
+  <p>  We have received your Commision withdrawal request and are currently processing it.       <br><br>
+ Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
         <div class="withdrawal-details">
           <p>Username: <span class="highlight">${loggedUser.email}</span></p>
-            <p>Amount: <span class="highlight">${amount}</span></p>
+            <p>Total Amount: <span class="highlight">${balance}</span></p>
+            <p>Withdrwal Amount: <span class="highlight">${amount}</span></p>
             <p>Processing time: <span class="highlight">${" 1-3 business days"}</span></p>
             <p>Updated Date: <span class="highlight">${formattedDateTime}</span></p>
           </div>
@@ -140,50 +135,68 @@ const UserWithdraw = () => {
     <p>Thank you for choosing us.</p>
     <p>Happy trading!</p>
           
-          <p>Best regards,<br>The Beta Funded Team</p>
+          <p>Best regards,<br>The ${
+            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+          } Team</p>
           <hr>
      <div class="risk-warning">
       <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
       <br><br>
-      Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+      Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
     </div>
         
     
         </div>
           <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+          <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+           <p>Website: <a href="https://${
+             import.meta.env.VITE_EMAIL_WEBSITE
+           }"> ${
+    import.meta.env.VITE_EMAIL_WEBSITE
+  } </a> | E-mail: <a href="mailto:${
+    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
+  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+            <p>We sent out this message to all existing ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            } traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            }. All Rights Reserved</p>
           </div>
         </div>
       </div>
     </body>
     </html>`;
+  const check = false;
 
-  const userInfo = useSelector((store) => store.user.userInfo);
+  //    main withdrwal handler ---------------------
+
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     setApiLoader(true);
     setError("");
     try {
-      if (!isLastPhase) {
-        setError("You have to be in Final phase for withdrawal !!");
+      if (balance <= 0) {
+        setError(`You don't have sufficient balance for withdrawal.`);
         setApiLoader(false);
-      } else if (profitNloss > 0 && profitNloss >= amount) {
+      } else if (amount > balance) {
+        setError(`Amount must be less then or equal to $${balance}`);
+        setApiLoader(false);
+      } else if (amount <= balance && amount > 0) {
         const withdrawalDBres = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
+          `${
+            import.meta.env.VITE_BECKEND_END_POINT
+          }/api/auth/add-referral-withdrawal`,
           {
+            referralId: loggedUser.referalId,
             method: selectedGateway,
-            tradeAccount: selectedAccount,
             amount: amount,
-            mt5Account: userInfo.MT5Account,
             status: "pending",
             userId: loggedUser._id,
             managerIndex: import.meta.env.VITE_MANAGER_INDEX,
-            pNl: "40",
-            phase: loggedUser.phase,
+            totalBalance: balance,
+            level: 1,
           }
         );
         const customMailRes = await axios.post(
@@ -191,25 +204,29 @@ const UserWithdraw = () => {
           {
             email: loggedUser.email,
             content: customContent,
-            subject: "Withdrwal requested",
+            subject: "Commission Withdrwal requested",
           }
         );
-        setApiLoader(false);
-        toast.success("Withdawal requested");
-        // GetUserInfoAPI();
 
-        console.log("withdrawal DB res--", withdrawalDBres.data.data);
-      } else {
-        setError("You don't have sufficient funds for withdrawal !!");
         setApiLoader(false);
+        toast.success("Withdawal Requested");
       }
+      setApiLoader(false);
     } catch (error) {
       setApiLoader(false);
-      toast.error("Withdawal Failed");
+      toast.error("Something went wrong!!");
       console.log("error while withdraw", error);
     }
   };
-  // console.log(selectedGateway);
+
+  useEffect(() => {
+    if (balance) {
+      console.log("User Balance:", balance);
+    }
+    if (userInfoData) {
+      //   console.log("User Info:", userInfoData);
+    }
+  }, [balance, userInfoData]);
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
@@ -222,28 +239,24 @@ const UserWithdraw = () => {
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center">
             <ArrowDownCircle className="w-8 h-8 mr-2" />
-            Withdraw Funds
+            Withdraw Commision
           </h2>
           <div>
             <h1 className=" font-semibold text-sm text-neutral-100">
-              Withdrawalable Balance
+              Withdrawalable amount
             </h1>
             <p
-              className={` text-center ${
-                profitNloss > 0
-                  ? "text-green-500 bg-secondary-700/30"
-                  : "text-red-500 bg-red-400/30"
+              className={` text-center 
+                text-green-500 bg-secondary-600/20 "
               }   mt-1 rounded-full py-1  font-bold`}
             >
-              {Number(profitNloss) > 0
-                ? Number(profitNloss).toFixed(2)
-                : "0.00"}
+              ${Number(balance)}
             </p>
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
           {/* method and account type -- */}
-          <div className=" grid grid-cols-1 md:grid-cols-2 items-center   gap-6">
+          <div className=" grid grid-cols-1  items-center   gap-6">
             <div className=" w-full">
               <label
                 htmlFor="gateway"
@@ -260,22 +273,6 @@ const UserWithdraw = () => {
                 {/* <option value="">Select Gateway</option> */}
                 <option value="Bank Transfer">Bank Transfer</option>
                 <option value="Wallet Transfer">Wallet Transfer</option>
-              </select>
-            </div>
-            <div className=" w-full">
-              <label
-                htmlFor="account"
-                className="block text-sm font-medium text-white mb-2"
-              >
-                Trade Account
-              </label>
-              <select
-                id="account"
-                value={selectedAccount}
-                onChange={(e) => setSelectedAccount(e.target.value)}
-                className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
-              >
-                <option value="">{loggedUser.accountType}</option>
               </select>
             </div>
           </div>
@@ -378,16 +375,17 @@ const UserWithdraw = () => {
             >
               Amount
             </label>
-            <div className="relative bg-secondary-700 rounded-md cursor-not-allowed">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="relative bg-secondary-700 rounded-md ">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center ">
                 <BadgeDollarSign className="h-6 w-6 text-white" />
               </div>
               <input
                 type="text"
                 id="amount"
-                className="w-full pl-10 py-3 cursor-not-allowed bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
+                className="w-full pl-10 py-3  bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
                 placeholder="0.00"
-                value={profitNloss}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
               />
             </div>
           </div>
@@ -407,5 +405,3 @@ const UserWithdraw = () => {
     </div>
   );
 };
-
-export default UserWithdraw;

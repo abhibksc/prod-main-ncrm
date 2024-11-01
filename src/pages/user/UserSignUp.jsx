@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import "react-phone-input-2/lib/style.css";
-import { Mail, Lock, User, Globe, Phone, Check, MapPin } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { Mail, Lock, User, Globe, Check, MapPin } from "lucide-react";
 import { getData } from "country-list";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -46,10 +45,7 @@ const UserSignUp = () => {
     confirmPassword: "",
   });
   const { id } = useParams();
-  console.log("params id ----", id);
-
-  const countries = getData();
-  const dispatch = useDispatch();
+  // console.log("params id ----", id);
   const countriesArray = getData();
 
   const [error, setError] = useState("");

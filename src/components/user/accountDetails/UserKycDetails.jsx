@@ -5,7 +5,6 @@ import {
   X,
   Maximize,
   Minimize,
-  Images,
   Loader,
   CheckCircle2,
 } from "lucide-react";
@@ -13,6 +12,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
+import { getCountryDataList } from "countries-list";
+import { getData } from "country-list";
 
 // Dropdown Field Component
 const DropdownField = ({ label, options, value, onChange }) => (
@@ -157,6 +158,10 @@ const UserKycDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();
 
+  const countriesArray = getData();
+
+  // console.log("countriesArray---", countriesArray);
+
   // Form Data State
   const [formData, setFormData] = useState({
     documentType: loggedUser?.kycDetails?.documentType || "",
@@ -188,17 +193,9 @@ const UserKycDetails = () => {
 
   const [fullScreenImage, setFullScreenImage] = useState(null);
 
-  // Options for dropdown fields
+  // Options for dropdown fields -----------------
   const documentTypes = ["Passport", "Driver's License", "National ID"];
-  const countries = [
-    "United States",
-    "United Kingdom",
-    "Canada",
-    "Australia",
-    "Germany",
-    "France",
-    "Japan",
-  ];
+  const countries = countriesArray?.map((value) => value.name);
   const purposes = ["Personal", "Business", "Investment"];
   const occupations = [
     "Employee",
@@ -208,7 +205,7 @@ const UserKycDetails = () => {
     "Unemployed",
   ];
 
-  // Handlers
+  // Handlers --------------
   const handleDropdownChange = (field, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -355,22 +352,34 @@ const UserKycDetails = () => {
   <p>Thank you for choosing us.</p>
   <p>Happy trading!</p>
         
-        <p>Best regards,<br>The Beta Funded Team</p>
+        <p>Best regards,<br>The ${
+          import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+        } Team</p>
         <hr>
    <div class="risk-warning">
     <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
     <br><br>
-    Beta Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+    Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
   </div>
       
   
       </div>
        <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+     <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+            <p>Website: <a href="https://${
+              import.meta.env.VITE_EMAIL_WEBSITE
+            }"> ${
+    import.meta.env.VITE_EMAIL_WEBSITE
+  } </a> | E-mail: <a href="mailto:${
+    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
+  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+            <p>We sent out this message to all existing ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            } traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            }. All Rights Reserved</p>
           </div>
         </div>
     </div>
@@ -434,7 +443,6 @@ const UserKycDetails = () => {
   };
 
   useEffect(() => {
-    // getUpdateLoggedUser();
     const getFullImageUrl = (path) => {
       if (!path) return "";
       return path.startsWith("http")

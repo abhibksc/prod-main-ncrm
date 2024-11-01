@@ -133,7 +133,7 @@ const UserSidebar = () => {
     // },
     {
       icon: ShieldAlertIcon,
-      label: "Rules & definitions",
+      label: "Rules",
       link: "/user/rules",
     },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },

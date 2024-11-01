@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CheckCircle, Edit, Info } from "lucide-react";
+import { ArrowUpDown, CheckCircle, Edit, Info } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-const UserChallenges = () => {
+const UserReferalWithdrwalHistory = () => {
   const [challengesData, setChallengesData] = useState();
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -85,13 +85,16 @@ const UserChallenges = () => {
     setLoader(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
+        `${
+          import.meta.env.VITE_BECKEND_END_POINT
+        }/api/auth/referral-withdrawals`
       );
       // console.log("challenges res--", res.data.data);
       const loggedUserData = res.data.data
         .reverse()
-        .filter((value) => value?.userId?._id === logggedUser?._id);
+        .filter((value) => value.userId === logggedUser._id);
 
+      // console.log("logged user data", loggedUserData);
       setChallengesData(loggedUserData);
       setLoader(false);
     } catch (error) {
@@ -105,33 +108,31 @@ const UserChallenges = () => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
   };
+  console.log("challenges data--------", challengesData);
+
   useEffect(() => {
     fetchChallengesData();
   }, []);
 
   return (
     <div className=" mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+      <div className=" flex items-center gap-2 mb-6 text-3xl font-bold">
+        <ArrowUpDown></ArrowUpDown>
+
+        <h1 className=" ">Referral Withdrwal History</h1>
+      </div>
       <table className="w-full border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-700 rounded text-white">
+          <tr className="bg-secondary-700/80 rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
-              AC NO:
+              Total Amount
             </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Type</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Deposit</th>
             <th className="p-2 sm:p-3 text-center font-semibold">
-              Account Size
+              Withdrawal Amount
             </th>
-            {/* <th className="p-2 sm:p-3 text-center font-semibold">Balance</th> */}
-            <th className="p-2 sm:p-3 text-center font-semibold">Phase</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">
-              Dropdown status
-            </th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Method</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Updated At</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Status</th>
-            <th className="p-2 sm:p-3 text-left font-semibold rounded-tr-lg">
-              Action
-            </th>
           </tr>
         </thead>
         <tbody>
@@ -148,28 +149,16 @@ const UserChallenges = () => {
           {challengesData?.map((value, index) => (
             <tr
               key={index}
-              className="border-b border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
+              className="border-b border-secondary-700/50 hover:bg-secondary-700/30 transition-colors"
             >
-              <td className="p-2 sm:p-3 text-sm sm:text-base">
-                {value?.mt5Account}
+              <td className="p-2 pl-4 sm:p-3 text-sm sm:text-base">
+                ${value?.totalBalance}
               </td>
               <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
-                {value?.type}
+                ${value?.amount}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.deposit}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.accountSize}
-              </td>
-              {/* <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.balance}
-              </td> */}
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.phase}
-              </td>
-              <td className="p-2 first-letter:capitalize text-center whitespace-nowrap sm:p-3 text-sm sm:text-base">
-                {value?.reason}
+                {value?.method}
               </td>
               <td className="py-3 text-center px-4">
                 <div>{formatDate(value?.updatedAt)}</div>
@@ -180,22 +169,18 @@ const UserChallenges = () => {
               <td className="text-center py-2 px-2">
                 <div
                   className={`inline-block px-2 py-1 font-semibold rounded-full ${
-                    value?.status === "active"
+                    value?.status === "pending"
+                      ? "bg-yellow-500/20 text-yellow-500"
+                      : value?.status === "accepted"
                       ? "bg-green-500/20 text-green-500"
-                      : " bg-red-500/20  text-red-400"
-                  }`}
+                      : value?.status === "rejected"
+                      ? " bg-red-500/20  text-red-400"
+                      : ""
+                  } `}
                 >
                   <p className="first-letter:capitalize">{value?.status}</p>
                 </div>
               </td>{" "}
-              <td className="p-2 sm:p-3 text-center">
-                <button
-                  onClick={() => handleMoreInfo(value)}
-                  className="text-blue-500 hover:text-blue-600 transition-colors"
-                >
-                  <Info></Info>
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>
@@ -264,4 +249,4 @@ const UserChallenges = () => {
   );
 };
 
-export default UserChallenges;
+export default UserReferalWithdrwalHistory;

@@ -281,12 +281,6 @@ const DepositsStatus = () => {
             }</span></p>
             <p>Phase: <span class="highlight">${1}</span></p>
             <p>Status: <span class="highlight">${"Active"}</span></p>
-            <p>Master Password: <span class="highlight">${
-              apiMasterPassword || "000"
-            }</span></p>
-            <p>Investor Password: <span class="highlight">${
-              apiInvestorPassword || "000"
-            }</span></p>
             <p>Server Name: <span class="highlight">${
               import.meta.env.VITE_SERVER_NAME
             }</span></p>
@@ -294,7 +288,9 @@ const DepositsStatus = () => {
     
     <p>Thank you for choosing us.</p>
     <p>Happy trading!</p>
-          <p>Best regards,<br>The Beta Funded Team</p>
+          <p>Best regards,<br>The ${
+            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+          } Team</p>
 
            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
           <tr>
@@ -325,17 +321,27 @@ const DepositsStatus = () => {
      <div class="risk-warning">
       <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
       <br><br>
-      Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+      Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
     </div>
         
     
         </div>
          <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+     <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+            <p>Website: <a href="https://${
+              import.meta.env.VITE_EMAIL_WEBSITE
+            }"> ${
+    import.meta.env.VITE_EMAIL_WEBSITE
+  } </a> | E-mail: <a href="mailto:${
+    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
+  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+            <p>We sent out this message to all existing ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            } traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            }. All Rights Reserved</p>
           </div>
         </div>
       </div>
@@ -406,7 +412,10 @@ const DepositsStatus = () => {
         );
         // add refferal commission ----------
 
-        if (selectedDeposit?.userId?.referalFromId) {
+        if (
+          selectedDeposit?.userId?.referralFromUserId &&
+          selectedDeposit?.userId?.referalFromId
+        ) {
           const addCommisonMt5Api = await axios.get(
             `${
               import.meta.env.VITE_API_END_POINT
@@ -435,7 +444,6 @@ const DepositsStatus = () => {
             }
           );
           console.log("addCommissionDB---------", addCommissionDB);
-          toast("commison section ");
         }
 
         const updatedDepositData = depositData.map((deposit) =>
@@ -493,29 +501,30 @@ const DepositsStatus = () => {
   // total deposits ----------
 
   const TotalDeposits = depositData.reduce(
-    (total, item) => total + parseFloat(item.deposit),
+    (total, item) => total + Number(item.deposit),
     0
   );
   // console.log("total deposits", TotalDeposits);
   // total pending deposits ----------
+  console.log(depositData);
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + item.deposit, 0);
   // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
   const TotalSuccessfullDeposits = depositData
     .filter((item) => item.status === "approved")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + Number(item.deposit), 0);
   // console.log("total successfull", TotalSuccessfullDeposits);
 
   // total rejected deposits ----------
 
   const TotalRejectedDeposits = depositData
     .filter((item) => item.status === "rejected")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + Number(item.deposit), 0);
   // console.log("Total rejected", TotalRejectedDeposits);
 
   // stats data------------
@@ -726,7 +735,7 @@ const DepositsStatus = () => {
                     </button>
                     {showPreview && (
                       <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-primary-800 p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
+                        <div className="bg-primary-800 p-4  rounded-lg w-[30%] overflow-auto">
                           <img
                             src={
                               import.meta.env.VITE_BECKEND_END_POINT +
@@ -734,7 +743,7 @@ const DepositsStatus = () => {
                               selectedDeposit?.depositSS
                             }
                             alt="Preview"
-                            className="max-w-full rounded-md h-auto"
+                            className=" w-full rounded-md h-auto"
                           />
                           <button
                             onClick={togglePreview}

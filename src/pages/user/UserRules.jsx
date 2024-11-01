@@ -77,7 +77,7 @@ const UserRules = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-secondary-800/40 to-secondary-800/30 rounded-xl shadow-lg">
+    <div className=" mx-auto p-6 rounded-xl shadow-lg">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -93,7 +93,7 @@ const UserRules = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-secondary-700/40 rounded-lg shadow-md p-6"
+          className="bg-secondary-700/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
             <Shield className="mr-2" />
@@ -124,7 +124,7 @@ const UserRules = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-secondary-700/40 rounded-lg shadow-md p-6"
+          className="bg-secondary-700/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
             <BookOpenIcon className="mr-2 text-white" />

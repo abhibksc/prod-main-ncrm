@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import UserSidebar from "./UserSidebar";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { handleToggleSidebar } from "@/redux/user/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
@@ -118,7 +117,6 @@ const UserDropdown = ({ isOpen, onClose }) => {
     </div>
   );
 };
-UserSidebar;
 const UserHeader = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
@@ -130,8 +128,6 @@ const UserHeader = () => {
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
-  console.log(import.meta.env.VITE_LOGO_LINK);
-
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
       <div className=" px-5  flex justify-between items-center">
@@ -143,7 +139,7 @@ const UserHeader = () => {
             <img
               src={import.meta.env.VITE_LOGO_LINK}
               alt="Forex Funding Logo"
-              className=" object-contain w-auto h-10 md:h-12 sm:h-10"
+              className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
           </a>
         </div>

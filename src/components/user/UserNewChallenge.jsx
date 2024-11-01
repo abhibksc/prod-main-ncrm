@@ -28,11 +28,12 @@ import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 const UserNewChallenge = () => {
   const [step, setStep] = useState(1);
   const loggedUser = useSelector((store) => store.user.loggedUser);
+
   const [formData, setFormData] = useState({
     accountType: "",
     apiGroup: "",
     platform: "",
-    accountSize: "",
+    accountSize: "" || "",
     accountBalance: "",
     leverage: "",
     firstName: loggedUser.firstName || "",
@@ -46,7 +47,13 @@ const UserNewChallenge = () => {
     phone: loggedUser.phone || "",
   });
 
-  // console.log("formm data----", formData);
+  const [accountConfigurations, setAccountConfigurations] = useState([]);
+
+  const filterAccountConfig = accountConfigurations.find(
+    (value) => value.accountType === formData.accountType
+  );
+
+  console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
@@ -59,7 +66,6 @@ const UserNewChallenge = () => {
   const countriesArray = getData();
   const { getPlatforms, getPaymentMethod } = UserNewChallengeHook();
   const { getUpdateLoggedUser } = UseUserHook();
-  const [accountConfigurations, setAccountConfigurations] = useState([]);
   const platformData = useSelector((store) => store.user.platforms);
   const paymentMethods = useSelector((store) => store.user.paymentMethods);
   const [file, setFile] = useState(null);
@@ -67,17 +73,13 @@ const UserNewChallenge = () => {
   const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef(null);
 
-  const calculateCommissionValue =
-    formData.accountSize * (import.meta.env.VITE_IB_COMMISSION / 100);
-
-  console.log("calculateCommissionValue------------", calculateCommissionValue);
-
   const filteredPlatformData = platformData?.filter(
     (value) => value.status === "active"
   );
   const filteredMethodsData = paymentMethods?.filter(
     (value) => value.status === "active"
   );
+  // console.log("filteredMethodsData-----", filteredMethodsData);
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -154,8 +156,6 @@ const UserNewChallenge = () => {
           },
         }
       );
-      console.log("deposit db---", depositDBres.data);
-
       const addChallengeDB = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
         {
@@ -212,9 +212,6 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-  const filterAccountConfig = accountConfigurations.find(
-    (value) => value.accountType === formData.accountType
-  );
 
   // fetch Account Configurations --------------
 
@@ -230,6 +227,21 @@ const UserNewChallenge = () => {
       console.log("Error fetching existing ac types data", error);
     }
   };
+  // Set default leverage
+  useEffect(() => {
+    const filterAccountConfig = accountConfigurations.find(
+      (value) => value.accountType === formData.accountType
+    );
+    console.log("filter--", filterAccountConfig);
+
+    if (filterAccountConfig?.leverage) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        leverage: filterAccountConfig.leverage[0]?.value || "",
+      }));
+    }
+  }, [accountConfigurations, formData.accountType]);
+
   // use effect -----------
   useEffect(() => {
     setStartAnimation(false);
@@ -300,7 +312,7 @@ const UserNewChallenge = () => {
     ];
   }
 
-  // console.log("selecteddd-- data###---", paymentImage);
+  // console.log("selecteddd-- data###---", selectedPayment);
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
       <div className="flex justify-between mb-8">
@@ -656,11 +668,11 @@ const UserNewChallenge = () => {
                     ""
                   )}
                   {selectedPayment === "Online Payment" && (
-                    <div>
+                    <div className=" mt-6 my-4">
                       <a
-                        href="https://landscapetradingcompany.in/local-payment/"
+                        href={paymentDetails}
                         target="_blank"
-                        className=" bg-green-700 font-semibold  rounded-full px-6 py-2"
+                        className=" bg-green-700 hover:bg-green-700/80 transition-all font-semibold  rounded-full px-6 py-2"
                       >
                         Pay now
                       </a>
@@ -668,7 +680,7 @@ const UserNewChallenge = () => {
                   )}
 
                   {paymentImage && (
-                    <div className=" w-full flex flex-col justify-center items-center rounded-md">
+                    <div className="  mt-6 my-4 w-full flex flex-col justify-center items-center rounded-md">
                       <img
                         src={`${
                           import.meta.env.VITE_BECKEND_END_POINT
