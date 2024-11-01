@@ -160,10 +160,10 @@ const UserChallenges = () => {
                 {value?.type}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.accountSize}
+                {value?.deposit}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.balance}
+                {value?.accountSize}
               </td>
               {/* <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.balance}

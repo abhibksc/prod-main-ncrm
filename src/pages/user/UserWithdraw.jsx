@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDownCircle, BadgeDollarSign, Loader2 } from "lucide-react";
+import {
+  ArrowDownCircle,
+  BadgeDollarSign,
+  Loader2,
+  WalletCardsIcon,
+} from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +21,11 @@ const UserWithdraw = () => {
   const [amount, setAmount] = useState(profitNloss);
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
+  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+
+  // functions------------
+  const isLastPhase = phaseMaxLength === loggedUser.phase;
+  // console.log("isLastPhase---", isLastPhase);
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -158,8 +168,8 @@ const UserWithdraw = () => {
     setApiLoader(true);
     setError("");
     try {
-      if (loggedUser.phase !== 3) {
-        setError("You have to be in 3rd phase for withdrawal !!");
+      if (!isLastPhase) {
+        setError("You have to be in Final phase for withdrawal !!");
         setApiLoader(false);
       } else if (profitNloss > 0 && profitNloss >= amount) {
         const withdrawalDBres = await axios.post(
@@ -199,6 +209,7 @@ const UserWithdraw = () => {
       console.log("error while withdraw", error);
     }
   };
+  // console.log(selectedGateway);
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
@@ -220,11 +231,10 @@ const UserWithdraw = () => {
             <p
               className={` text-center ${
                 profitNloss > 0
-                  ? "text-green-500 bg-secondary-700/70"
-                  : "text-red-500 bg-red-400/20"
+                  ? "text-green-500 bg-secondary-700/30"
+                  : "text-red-500 bg-red-400/30"
               }   mt-1 rounded-full py-1  font-bold`}
             >
-              ${" "}
               {Number(profitNloss) > 0
                 ? Number(profitNloss).toFixed(2)
                 : "0.00"}
@@ -232,41 +242,135 @@ const UserWithdraw = () => {
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          <div>
-            <label
-              htmlFor="gateway"
-              className="block text-sm font-medium text-white mb-2"
-            >
-              Method
-            </label>
-            <select
-              id="gateway"
-              value={selectedGateway}
-              onChange={(e) => setSelectedGateway(e.target.value)}
-              className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
-            >
-              {/* <option value="">Select Gateway</option> */}
-              <option value="bank">Bank Transfer</option>
-              <option value="paypal">PayPal</option>
-              <option value="crypto">Cryptocurrency</option>
-            </select>
+          {/* method and account type -- */}
+          <div className=" grid grid-cols-1 md:grid-cols-2 items-center   gap-6">
+            <div className=" w-full">
+              <label
+                htmlFor="gateway"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Method
+              </label>
+              <select
+                id="gateway"
+                value={selectedGateway}
+                onChange={(e) => setSelectedGateway(e.target.value)}
+                className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
+              >
+                {/* <option value="">Select Gateway</option> */}
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Wallet Transfer">Wallet Transfer</option>
+              </select>
+            </div>
+            <div className=" w-full">
+              <label
+                htmlFor="account"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Trade Account
+              </label>
+              <select
+                id="account"
+                value={selectedAccount}
+                onChange={(e) => setSelectedAccount(e.target.value)}
+                className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
+              >
+                <option value="">{loggedUser.accountType}</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="account"
-              className="block text-sm font-medium text-white mb-2"
-            >
-              Trade Account
-            </label>
-            <select
-              id="account"
-              value={selectedAccount}
-              onChange={(e) => setSelectedAccount(e.target.value)}
-              className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
-            >
-              <option value="">{loggedUser.accountType}</option>
-            </select>
-          </div>
+          {/* account details -- */}
+
+          {selectedGateway === "Bank Transfer" ? (
+            <div>
+              <div className=" flex items-center gap-2 mb-3">
+                <WalletCardsIcon></WalletCardsIcon>
+                <h1 className=" text-lg font-bold">Account details</h1>
+              </div>
+              <div>
+                <p>
+                  Bank Name -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.bankName}{" "}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Holder Name -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.holderName}
+                  </span>{" "}
+                </p>
+              </div>
+              <div>
+                <p>
+                  Account Number -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.accountNumber}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  IFSC Code -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.ifscCode}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Swift Code -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.swiftCode}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  UPI ID -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.upiId}
+                  </span>
+                </p>
+              </div>
+            </div>
+          ) : selectedGateway === "Wallet Transfer" ? (
+            <div>
+              <div className=" flex items-center gap-2 mb-3">
+                <WalletCardsIcon></WalletCardsIcon>
+                <h1 className=" text-lg font-bold">Account details</h1>
+              </div>{" "}
+              <div>
+                <p>
+                  Thether Address -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.tetherAddress}{" "}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Ethereum Address -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.ethAddress}
+                  </span>{" "}
+                </p>
+              </div>
+              <div>
+                <p>
+                  TRX Address -
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.trxAddress}
+                  </span>
+                </p>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
           <div>
             <label
               htmlFor="amount"
@@ -284,19 +388,7 @@ const UserWithdraw = () => {
                 className="w-full pl-10 py-3 cursor-not-allowed bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
                 placeholder="0.00"
                 value={profitNloss}
-                // onChange={(e) => setAmount(e.target.value)}
               />
-              {/* <div className="absolute inset-y-0 right-0 flex items-center">
-                <select
-                  id="currency"
-                  name="currency"
-                  className="bg-secondary-700 text-white border border-secondary-600 rounded-md py-2 px-3"
-                >
-                  <option>USD</option>
-                  <option>EUR</option>
-                  <option>GBP</option>
-                </select>
-              </div> */}
             </div>
           </div>
           <button

@@ -29,6 +29,7 @@ const UserBankDetails = () => {
     accountNumber: loggedUser?.bankDetails?.accountNumber || "",
     ifscCode: loggedUser?.bankDetails?.ifscCode || "",
     swiftCode: loggedUser?.bankDetails?.swiftCode || "",
+    upiId: loggedUser?.bankDetails?.upiId || "",
     comment: loggedUser?.bankDetails?.comment || "",
   });
   const handleInputChange = (e) => {
@@ -96,6 +97,13 @@ const UserBankDetails = () => {
           value={formData.swiftCode}
           onChange={handleInputChange}
           name="swiftCode"
+        />
+        <InputField
+          label="UPI ID"
+          placeholder="Enter UPI ID"
+          value={formData.upiId}
+          onChange={handleInputChange}
+          name="upiId"
         />
       </div>
       <div className="col-span-full">

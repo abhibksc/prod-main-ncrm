@@ -489,29 +489,30 @@ const DepositsStatus = () => {
   // total deposits ----------
 
   const TotalDeposits = depositData.reduce(
-    (total, item) => total + parseFloat(item.deposit),
+    (total, item) => total + Number(item.deposit),
     0
   );
   // console.log("total deposits", TotalDeposits);
   // total pending deposits ----------
+  console.log(depositData);
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + item.deposit, 0);
   // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
   const TotalSuccessfullDeposits = depositData
     .filter((item) => item.status === "approved")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + Number(item.deposit), 0);
   // console.log("total successfull", TotalSuccessfullDeposits);
 
   // total rejected deposits ----------
 
   const TotalRejectedDeposits = depositData
     .filter((item) => item.status === "rejected")
-    .reduce((total, item) => total + parseFloat(item.deposit), 0);
+    .reduce((total, item) => total + Number(item.deposit), 0);
   // console.log("Total rejected", TotalRejectedDeposits);
 
   // stats data------------
@@ -722,7 +723,7 @@ const DepositsStatus = () => {
                     </button>
                     {showPreview && (
                       <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-primary-800 p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
+                        <div className="bg-primary-800 p-4  rounded-lg w-[30%] overflow-auto">
                           <img
                             src={
                               import.meta.env.VITE_BECKEND_END_POINT +
@@ -730,7 +731,7 @@ const DepositsStatus = () => {
                               selectedDeposit?.depositSS
                             }
                             alt="Preview"
-                            className="max-w-full rounded-md h-auto"
+                            className=" w-full rounded-md h-auto"
                           />
                           <button
                             onClick={togglePreview}

@@ -5,6 +5,7 @@ import {
   BadgeDollarSign,
   BadgeInfoIcon,
   Loader2,
+  WalletCardsIcon,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -242,25 +243,119 @@ export const UserReferralWithdrawal = () => {
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          <div>
-            <label
-              htmlFor="gateway"
-              className="block text-sm font-medium text-white mb-2"
-            >
-              Method
-            </label>
-            <select
-              id="gateway"
-              value={selectedGateway}
-              onChange={(e) => setSelectedGateway(e.target.value)}
-              className="block w-full rounded-xl p-3 px-4 text-base bg-secondary-700 outline-none border-none text-white  "
-            >
-              {/* <option value="">Select Gateway</option> */}
-              <option value="bank">Bank Transfer</option>
-              <option value="paypal">PayPal</option>
-              <option value="crypto">Cryptocurrency</option>
-            </select>
+          {/* method and account type -- */}
+          <div className=" grid grid-cols-1  items-center   gap-6">
+            <div className=" w-full">
+              <label
+                htmlFor="gateway"
+                className="block text-sm font-medium text-white mb-2"
+              >
+                Method
+              </label>
+              <select
+                id="gateway"
+                value={selectedGateway}
+                onChange={(e) => setSelectedGateway(e.target.value)}
+                className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
+              >
+                {/* <option value="">Select Gateway</option> */}
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Wallet Transfer">Wallet Transfer</option>
+              </select>
+            </div>
           </div>
+          {/* account details -- */}
+
+          {selectedGateway === "Bank Transfer" ? (
+            <div>
+              <div className=" flex items-center gap-2 mb-3">
+                <WalletCardsIcon></WalletCardsIcon>
+                <h1 className=" text-lg font-bold">Account details</h1>
+              </div>
+              <div>
+                <p>
+                  Bank Name -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.bankName}{" "}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Holder Name -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.holderName}
+                  </span>{" "}
+                </p>
+              </div>
+              <div>
+                <p>
+                  Account Number -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.accountNumber}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  IFSC Code -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.ifscCode}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Swift Code -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.swiftCode}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  UPI ID -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.bankDetails?.upiId}
+                  </span>
+                </p>
+              </div>
+            </div>
+          ) : selectedGateway === "Wallet Transfer" ? (
+            <div>
+              <div className=" flex items-center gap-2 mb-3">
+                <WalletCardsIcon></WalletCardsIcon>
+                <h1 className=" text-lg font-bold">Account details</h1>
+              </div>{" "}
+              <div>
+                <p>
+                  Thether Address -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.tetherAddress}{" "}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <p>
+                  Ethereum Address -{" "}
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.ethAddress}
+                  </span>{" "}
+                </p>
+              </div>
+              <div>
+                <p>
+                  TRX Address -
+                  <span className=" font-bold">
+                    {loggedUser?.walletDetails?.trxAddress}
+                  </span>
+                </p>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
           <div>
             <label
               htmlFor="amount"
@@ -268,14 +363,14 @@ export const UserReferralWithdrawal = () => {
             >
               Amount
             </label>
-            <div className="relative bg-secondary-700  rounded-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
+            <div className="relative bg-secondary-700 rounded-md ">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center ">
                 <BadgeDollarSign className="h-6 w-6 text-white" />
               </div>
               <input
                 type="text"
                 id="amount"
-                className="w-full pl-10 py-3 px-8 bg-secondary-700 text-white border-none outline-none rounded-xl placeholder-gray-300 "
+                className="w-full pl-10 py-3  bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
@@ -290,12 +385,9 @@ export const UserReferralWithdrawal = () => {
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
           </button>
-          {error && (
-            <div className=" my-2 text-red-500 flex items-center justify-center gap-2 text-center">
-              <BadgeInfoIcon></BadgeInfoIcon>
-              <p> {error}</p>
-            </div>
-          )}
+          <div className=" my-2 text-red-500 text-center">
+            <p>{error}</p>
+          </div>
         </form>
       </motion.div>
     </div>

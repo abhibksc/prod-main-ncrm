@@ -5,6 +5,7 @@ import {
   CircleX,
   Loader,
   Search,
+  WalletCardsIcon,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -126,7 +127,7 @@ const WithdrawalStatus = () => {
 
   // custom content -----------------
 
-  // console.log("selected####################", selectedDeposit);
+  console.log("selected withdrawal####################", selectedDeposit);
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -660,21 +661,141 @@ const WithdrawalStatus = () => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {actionType === "approve" ? "Approve Deposit" : "Reject Deposit"}
+              {actionType === "approve"
+                ? "Approve Withdrawal"
+                : "Reject Withdrawal"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {selectedDeposit && (
                 <div>
-                  <p>User: {selectedDeposit.userId?.name}</p>
-                  <p>Email: {selectedDeposit.userId?.email}</p>
-                  <p>Deposit Amount: ${selectedDeposit?.amount}</p>
-                  <p>Account: {selectedDeposit?.mt5Account}</p>
-                  <p>Date: {formatDate(selectedDeposit?.updatedAt)}</p>
+                  <div>
+                    {/* <li className=" text-lg font-semibold mb-1">User Info</li> */}
+                    <p>
+                      User:{" "}
+                      {selectedDeposit.userId?.firstName +
+                        " " +
+                        selectedDeposit.userId?.lastName}
+                    </p>
+                    <p>Email: {selectedDeposit.userId?.email}</p>
+                    <p>Withdrwal Amount: ${selectedDeposit?.amount}</p>
+                    <p>Account: {selectedDeposit?.mt5Account}</p>
+                    <p>Date: {formatDate(selectedDeposit?.updatedAt)}</p>
+                  </div>
+                  <div>
+                    <li className=" text-lg my-4 font-semibold mb-1">
+                      Payment Info
+                    </li>
+                    {selectedDeposit.method === "Bank Transfer" ? (
+                      <div>
+                        <div className=" flex items-center gap-2 my-2">
+                          <WalletCardsIcon size={20}></WalletCardsIcon>
+                          <h1 className=" font-bold">
+                            {selectedDeposit?.method}
+                          </h1>
+                        </div>{" "}
+                        <div>
+                          <p>
+                            Bank Name -{" "}
+                            <span className=" font-bold">
+                              {selectedDeposit?.userId?.bankDetails?.bankName}
+                            </span>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            Holder Name -{" "}
+                            <span className=" font-bold">
+                              {selectedDeposit?.userId?.bankDetails?.holderName}
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            Account Number -{" "}
+                            <span className=" font-bold">
+                              {
+                                selectedDeposit?.userId?.bankDetails
+                                  ?.accountNumber
+                              }
+                            </span>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            IFSC Code -{" "}
+                            <span className=" font-bold">
+                              {selectedDeposit?.userId?.bankDetails?.ifscCode}
+                            </span>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            Swift Code -{" "}
+                            <span className=" font-bold">
+                              {selectedDeposit?.userId?.bankDetails?.swiftCode}
+                            </span>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            UPI ID -{" "}
+                            <span className=" font-bold">
+                              {selectedDeposit?.userId?.bankDetails?.upiId}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    ) : selectedDeposit?.method === "Wallet Transfer" ? (
+                      <div>
+                        <div className=" flex items-center gap-2 my-2">
+                          <WalletCardsIcon size={20}></WalletCardsIcon>
+                          <h1 className=" font-bold">
+                            {selectedDeposit?.method}
+                          </h1>
+                        </div>{" "}
+                        <div>
+                          <p>
+                            Thether Address -{" "}
+                            <span className=" font-bold">
+                              {
+                                selectedDeposit?.userId?.walletDetails
+                                  ?.tetherAddress
+                              }{" "}
+                            </span>
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            Ethereum Address -{" "}
+                            <span className=" font-bold">
+                              {
+                                selectedDeposit?.userId?.walletDetails
+                                  ?.ethAddress
+                              }
+                            </span>{" "}
+                          </p>
+                        </div>
+                        <div>
+                          <p>
+                            TRX Address -
+                            <span className=" font-bold">
+                              {
+                                selectedDeposit?.userId?.walletDetails
+                                  ?.trxAddress
+                              }
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               )}
               <p className="mt-2">
                 Are you sure you want to{" "}
-                {actionType === "approve" ? "approve" : "reject"} this deposit?
+                {actionType === "approve" ? "approve" : "reject"} this Withdraw?
               </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
