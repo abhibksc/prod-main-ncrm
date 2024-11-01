@@ -5,7 +5,6 @@ import {
   X,
   Maximize,
   Minimize,
-  Images,
   Loader,
   CheckCircle2,
 } from "lucide-react";
@@ -13,6 +12,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
+import { getCountryDataList } from "countries-list";
+import { getData } from "country-list";
 
 // Dropdown Field Component
 const DropdownField = ({ label, options, value, onChange }) => (
@@ -157,6 +158,10 @@ const UserKycDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();
 
+  const countriesArray = getData();
+
+  // console.log("countriesArray---", countriesArray);
+
   // Form Data State
   const [formData, setFormData] = useState({
     documentType: loggedUser?.kycDetails?.documentType || "",
@@ -188,17 +193,10 @@ const UserKycDetails = () => {
 
   const [fullScreenImage, setFullScreenImage] = useState(null);
 
-  // Options for dropdown fields
+  // Options for dropdown fields -----------------
   const documentTypes = ["Passport", "Driver's License", "National ID"];
-  const countries = [
-    "United States",
-    "United Kingdom",
-    "Canada",
-    "Australia",
-    "Germany",
-    "France",
-    "Japan",
-  ];
+  const countries = countriesArray?.map((value) => value.name);
+  console.log("countries", countries);
   const purposes = ["Personal", "Business", "Investment"];
   const occupations = [
     "Employee",
