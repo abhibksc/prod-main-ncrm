@@ -90,9 +90,8 @@ const UserChallenges = () => {
       // console.log("challenges res--", res.data.data);
       const loggedUserData = res.data.data
         .reverse()
-        .filter((value) => value.userId === logggedUser._id);
+        .filter((value) => value?.userId?._id === logggedUser?._id);
 
-      // console.log("logged user data", loggedUserData);
       setChallengesData(loggedUserData);
       setLoader(false);
     } catch (error) {
@@ -106,8 +105,6 @@ const UserChallenges = () => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
   };
-  console.log("challenges data--------", challengesData);
-
   useEffect(() => {
     fetchChallengesData();
   }, []);
