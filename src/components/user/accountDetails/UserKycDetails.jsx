@@ -196,7 +196,6 @@ const UserKycDetails = () => {
   // Options for dropdown fields -----------------
   const documentTypes = ["Passport", "Driver's License", "National ID"];
   const countries = countriesArray?.map((value) => value.name);
-  console.log("countries", countries);
   const purposes = ["Personal", "Business", "Investment"];
   const occupations = [
     "Employee",
@@ -206,7 +205,7 @@ const UserKycDetails = () => {
     "Unemployed",
   ];
 
-  // Handlers
+  // Handlers --------------
   const handleDropdownChange = (field, value) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -432,7 +431,6 @@ const UserKycDetails = () => {
   };
 
   useEffect(() => {
-    // getUpdateLoggedUser();
     const getFullImageUrl = (path) => {
       if (!path) return "";
       return path.startsWith("http")

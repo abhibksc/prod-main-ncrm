@@ -73,17 +73,13 @@ const UserNewChallenge = () => {
   const [showPreview, setShowPreview] = useState(false);
   const fileInputRef = useRef(null);
 
-  const calculateCommissionValue =
-    formData.accountSize * (import.meta.env.VITE_IB_COMMISSION / 100);
-
-  console.log("calculateCommissionValue------------", calculateCommissionValue);
-
   const filteredPlatformData = platformData?.filter(
     (value) => value.status === "active"
   );
   const filteredMethodsData = paymentMethods?.filter(
     (value) => value.status === "active"
   );
+  // console.log("filteredMethodsData-----", filteredMethodsData);
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -160,8 +156,6 @@ const UserNewChallenge = () => {
           },
         }
       );
-      console.log("deposit db---", depositDBres.data);
-
       const addChallengeDB = await axios.post(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
         {
@@ -318,7 +312,7 @@ const UserNewChallenge = () => {
     ];
   }
 
-  // console.log("selecteddd-- data###---", paymentImage);
+  // console.log("selecteddd-- data###---", selectedPayment);
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
       <div className="flex justify-between mb-8">
@@ -674,11 +668,11 @@ const UserNewChallenge = () => {
                     ""
                   )}
                   {selectedPayment === "Online Payment" && (
-                    <div>
+                    <div className=" mt-6 my-4">
                       <a
-                        href="https://landscapetradingcompany.in/local-payment/"
+                        href={paymentDetails}
                         target="_blank"
-                        className=" bg-green-700 font-semibold  rounded-full px-6 py-2"
+                        className=" bg-green-700 hover:bg-green-700/80 transition-all font-semibold  rounded-full px-6 py-2"
                       >
                         Pay now
                       </a>
@@ -686,7 +680,7 @@ const UserNewChallenge = () => {
                   )}
 
                   {paymentImage && (
-                    <div className=" w-full flex flex-col justify-center items-center rounded-md">
+                    <div className="  mt-6 my-4 w-full flex flex-col justify-center items-center rounded-md">
                       <img
                         src={`${
                           import.meta.env.VITE_BECKEND_END_POINT
