@@ -1,6 +1,9 @@
+import Loader from "@/components/Loader/Loader";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpenIcon, ChevronDown, ChevronUp, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const DefinitionAccordion = ({ title, content, isOpen, toggle }) => {
   return (
@@ -38,6 +41,8 @@ const UserRules = () => {
     "What is Forex Trading?"
   );
   const [visibleRules, setVisibleRules] = useState([]);
+  const [rules, setRules] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const toggleDefinition = (definition) => {
     setExpandedDefinition(
@@ -45,43 +50,43 @@ const UserRules = () => {
     );
   };
 
-  const rules = [
-    {
-      color: "bg-red-500",
-      text: "Our platform don't have any IP address related issues ,like other firms have. You can trade with multiple devices and from multiple locations.",
-    },
-    {
-      color: "bg-yellow-500",
-      text: "You may hold trades over the weekend during the Challenge phases. You cannot hold over the weekend once your account has been funded. If you do not close your trades by Friday and post market closing, you will face a hard breach and forfeit your funded account.",
-    },
-    {
-      color: "bg-yellow-500",
-      text: "You can hold overnight trades.",
-    },
-    {
-      color: "bg-green-500",
-      text: "Our platform does not impose any restriction on using Stop-Loss (SL) on challenges and live accounts.",
-    },
-    {
-      color: "bg-blue-600",
-      text: "Base leverage on all evaluation accounts is set at 1:200. During the experienced trader/funded stage, leverage is 1:100",
-    },
-    {
-      color: "bg-teal-600",
-      text: "For more detailed rules, please visit to our trading rules section on https://www.betafunded.com/trading-rules",
-    },
-  ];
+  // Fetch rules ---------------
+  const fetchRules = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-rules`
+      );
+      const filterData = response.data.data.filter(
+        (value) => value.status === true
+      );
+      setRules(filterData);
+    } catch (err) {
+      toast.error("Failed to fetch data");
+      console.log(err);
+      setRules([]);
+    }
+    setLoading(false);
+  };
+
+  // Reset visible rules when rules change
+  useEffect(() => {
+    setVisibleRules([]); // Reset visible rules
+    if (rules.length > 0) {
+      rules.forEach((_, index) => {
+        setTimeout(() => {
+          setVisibleRules((prev) => [...prev, index]);
+        }, index * 200); // Reduced delay to 200ms for smoother animation
+      });
+    }
+  }, [rules]); // Depend on rules instead of mounting
 
   useEffect(() => {
-    rules.forEach((_, index) => {
-      setTimeout(() => {
-        setVisibleRules((prev) => [...prev, index]);
-      }, index * 500); // 500ms delay between each rule
-    });
+    fetchRules();
   }, []);
 
   return (
-    <div className=" mx-auto p-6 rounded-xl shadow-lg">
+    <div className="mx-auto p-6 rounded-xl shadow-lg">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -103,24 +108,31 @@ const UserRules = () => {
             <Shield className="mr-2" />
             Rules
           </h3>
-          <ul className="space-y-3">
-            {rules.map((rule, index) => (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={
-                  visibleRules.includes(index) ? { opacity: 1, x: 0 } : {}
-                }
-                transition={{ duration: 0.5 }}
-                className="flex items-start"
-              >
-                <div
-                  className={`flex-shrink-0 w-1.5 h-1.5 mt-1.5 ${rule.color} rounded-full`}
-                ></div>
-                <p className="ml-2">{rule.text}</p>
-              </motion.li>
-            ))}
-          </ul>
+          {loading ? (
+            <Loader />
+          ) : (
+            <ul className="space-y-3">
+              {rules?.map((rule, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={
+                    visibleRules.includes(index)
+                      ? { opacity: 1, x: 0 }
+                      : { opacity: 0, x: -20 }
+                  }
+                  transition={{ duration: 0.3 }}
+                  className="flex items-start"
+                >
+                  <div
+                    className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 rounded-full"
+                    style={{ backgroundColor: rule?.color }}
+                  ></div>
+                  <p className="ml-2">{rule?.text}</p>
+                </motion.li>
+              ))}
+            </ul>
+          )}
         </motion.div>
 
         {/* Forex Definitions Section */}

@@ -20,6 +20,7 @@ import {
   Ticket,
   Settings2Icon,
   HandCoins,
+  LucideBookText,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -67,11 +68,11 @@ const Sidebar = () => {
     //   icon: <ChevronsRight />,
     //   route: "/admin/withdraw-conditions",
     // },
-    // {
-    //   label: "Trade Accounts",
-    //   icon: <ChevronsRight />,
-    //   route: "/admin/trade-accounts",
-    // },
+    {
+      label: "Rules",
+      icon: <LucideBookText />,
+      route: "/admin/rules",
+    },
     {
       label: "Manage Users",
       icon: <Users />,

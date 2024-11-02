@@ -45,6 +45,7 @@ import UserAccountDetails from "./pages/user/UserAccountDetails";
 import { UserReferralWithdrawal } from "./pages/user/referral/UserReferalWithdrwal";
 import UserReferalWithdrwalHistory from "./pages/user/referral/UserReferalWithdrwalHistory";
 import IbWithdrawalStatus from "./pages/admin/IbWithdrawalStatus";
+import RulesManagement from "./pages/admin/RulesManagement";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -93,6 +94,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/ib-withdrawal/:status",
         element: <IbWithdrawalStatus></IbWithdrawalStatus>,
+      },
+      {
+        path: "/admin/rules",
+        element: <RulesManagement></RulesManagement>,
       },
       {
         path: "/admin/ticket/:status",
