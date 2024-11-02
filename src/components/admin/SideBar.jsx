@@ -19,6 +19,7 @@ import {
   ListCollapseIcon,
   Ticket,
   Settings2Icon,
+  HandCoins,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -110,6 +111,25 @@ const Sidebar = () => {
         { label: "Approved Withdrawals", route: "/admin/withdrawal/approved" },
         { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
         { label: "All Withdrawals", route: "/admin/withdrawal/all" },
+      ],
+    },
+    {
+      label: "IB Withdrawals",
+      icon: <HandCoins />,
+      nested: [
+        {
+          label: "Pending IB Withdrawals",
+          route: "/admin/ib-withdrawal/pending",
+        },
+        {
+          label: "Approved IB Withdrawals",
+          route: "/admin/ib-withdrawal/approved",
+        },
+        {
+          label: "Rejected IB Withdrawals",
+          route: "/admin/ib-withdrawal/rejected",
+        },
+        { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
       ],
     },
     {
