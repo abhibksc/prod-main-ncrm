@@ -69,6 +69,29 @@ const UserRules = () => {
     setLoading(false);
   };
 
+  function formatTextWithLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return text.split(urlRegex).map((part, index) => {
+      // If part is a URL, wrap it in an anchor tag
+      if (urlRegex.test(part)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline"
+          >
+            {part}
+          </a>
+        );
+      }
+      // Otherwise, return the text part as is
+      return part;
+    });
+  }
+
   // Reset visible rules when rules change
   useEffect(() => {
     setVisibleRules([]); // Reset visible rules
@@ -128,7 +151,7 @@ const UserRules = () => {
                     className="flex-shrink-0 w-1.5 h-1.5 mt-1.5 rounded-full"
                     style={{ backgroundColor: rule?.color }}
                   ></div>
-                  <p className="ml-2">{rule?.text}</p>
+                  <p className="ml-2">{formatTextWithLinks(rule?.text)}</p>
                 </motion.li>
               ))}
             </ul>

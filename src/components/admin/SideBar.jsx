@@ -58,21 +58,26 @@ const Sidebar = () => {
       icon: <Settings2Icon />,
       route: "/admin/account-configuration",
     },
-    // {
-    //   label: "Account Challenges",
-    //   icon: <ChevronsRight />,
-    //   route: "/admin/account-challenges",
-    // },
-    // // {
-    //   label: "Withdrawal conditions",
-    //   icon: <ChevronsRight />,
-    //   route: "/admin/withdraw-conditions",
-    // },
+    {
+      label: "Account Challenges",
+      icon: <ChevronsRight />,
+      route: "/admin/account-challenges",
+    },
     {
       label: "Rules",
       icon: <LucideBookText />,
       route: "/admin/rules",
     },
+    // {
+    //   label: "Withdrawal conditions",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/withdraw-conditions",
+    // },
+    // {
+    //   label: "Trade Accounts",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/trade-accounts",
+    // },
     {
       label: "Manage Users",
       icon: <Users />,
