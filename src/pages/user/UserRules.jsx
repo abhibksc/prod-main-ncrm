@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 const DefinitionAccordion = ({ title, content, isOpen, toggle }) => {
   return (
-    <div className="border border-gray-200 rounded-md">
+    <div className="border border-secondary-700/70 rounded-md">
       <button
         className="w-full px-4 py-3 text-left focus:outline-none flex justify-between items-center"
         onClick={toggle}
@@ -146,6 +146,31 @@ const UserRules = () => {
               content="A pip, short for 'percentage in point' or 'price interest point,' is the smallest price move that an exchange rate can make based on forex market convention. Most currency pairs are priced to four decimal places and the pip is the last (fourth) decimal point."
               isOpen={expandedDefinition === "What is a Pip?"}
               toggle={() => toggleDefinition("What is a Pip?")}
+            />
+            <DefinitionAccordion
+              title="What is Leverage in Forex?"
+              content="Leverage in Forex trading allows traders to control a larger position than their initial investment, amplifying both potential gains and potential losses. It is typically expressed as a ratio, such as 100:1, meaning the trader can control $100 for every $1 in their account."
+              isOpen={expandedDefinition === "What is Leverage in Forex?"}
+              toggle={() => toggleDefinition("What is Leverage in Forex?")}
+            />
+            <DefinitionAccordion
+              title="What is a Currency Pair?"
+              content="A currency pair in Forex is a quotation of two different currencies, where the value of one currency is quoted against the other. The first currency is the base currency, and the second is the quote currency. For example, in EUR/USD, EUR is the base currency, and USD is the quote currency."
+              isOpen={expandedDefinition === "What is a Currency Pair?"}
+              toggle={() => toggleDefinition("What is a Currency Pair?")}
+            />
+
+            <DefinitionAccordion
+              title="What is a Stop-Loss Order?"
+              content="A stop-loss order is a risk management tool that allows traders to set a predefined price level at which their position will automatically be closed to limit potential losses. It helps manage risk by preventing further loss if the market moves unfavorably."
+              isOpen={expandedDefinition === "What is a Stop-Loss Order?"}
+              toggle={() => toggleDefinition("What is a Stop-Loss Order?")}
+            />
+            <DefinitionAccordion
+              title="What is Technical Analysis?"
+              content="Technical analysis is a method of evaluating price movements and trends using historical market data, such as price charts and trading volume. Forex traders use technical analysis to identify trading opportunities and forecast future currency movements."
+              isOpen={expandedDefinition === "What is Technical Analysis?"}
+              toggle={() => toggleDefinition("What is Technical Analysis?")}
             />
           </div>
         </motion.div>
