@@ -15,6 +15,7 @@ const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectWallet, setSelectWallet] = useState("Thether");
   const [selectedAccount, setSelectedAccount] = useState(
     loggedUser.accountType
   );
@@ -175,7 +176,10 @@ const UserWithdraw = () => {
         const withdrawalDBres = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
           {
-            method: selectedGateway,
+            method:
+              selectedGateway === "Bank Transfer"
+                ? selectedGateway
+                : selectWallet,
             tradeAccount: selectedAccount,
             amount: amount,
             mt5Account: userInfo.MT5Account,
@@ -278,6 +282,26 @@ const UserWithdraw = () => {
                 <option value="">{loggedUser.accountType}</option>
               </select>
             </div>
+            {selectedGateway === "Wallet Transfer" && (
+              <div className=" w-full">
+                <label
+                  htmlFor="account"
+                  className="block text-sm font-medium text-white mb-2"
+                >
+                  Choose Wallet
+                </label>
+                <select
+                  id="account"
+                  value={selectWallet}
+                  onChange={(e) => setSelectWallet(e.target.value)}
+                  className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
+                >
+                  <option value="Thether">Thether {"(USDT)"} </option>
+                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
+                  <option value="TRX">TRX {"(Tron)"} </option>
+                </select>
+              </div>
+            )}
           </div>
           {/* account details -- */}
 
@@ -342,30 +366,36 @@ const UserWithdraw = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              <div>
-                <p>
-                  Thether Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.tetherAddress}{" "}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Ethereum Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.ethAddress}
-                  </span>{" "}
-                </p>
-              </div>
-              <div>
-                <p>
-                  TRX Address -
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.trxAddress}
-                  </span>
-                </p>
-              </div>
+              {selectWallet === "Thether" && (
+                <div>
+                  <p>
+                    Thether Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.tetherAddress}{" "}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "Ethereum" && (
+                <div>
+                  <p>
+                    Ethereum Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.ethAddress}
+                    </span>{" "}
+                  </p>
+                </div>
+              )}
+              {selectWallet === "TRX" && (
+                <div>
+                  <p>
+                    TRX Address -
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.trxAddress}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             ""

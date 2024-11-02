@@ -66,6 +66,10 @@ const UserRules = () => {
       color: "bg-blue-600",
       text: "Base leverage on all evaluation accounts is set at 1:200. During the experienced trader/funded stage, leverage is 1:100",
     },
+    {
+      color: "bg-teal-600",
+      text: "For more detailed rules, please visit to our trading rules section on https://www.betafunded.com/trading-rules",
+    },
   ];
 
   useEffect(() => {

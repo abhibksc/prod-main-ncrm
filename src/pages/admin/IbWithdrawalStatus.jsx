@@ -750,37 +750,10 @@ const IbWithdrawalStatus = () => {
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "Wallet Transfer" ? (
+                    ) : selectedDeposit?.method === "TRX" ? (
                       <div>
-                        <div className=" flex items-center gap-2 my-2">
+                        <div className=" flex gap-1">
                           <WalletCardsIcon size={20}></WalletCardsIcon>
-                          <h1 className=" font-bold">
-                            {selectedDeposit?.method}
-                          </h1>
-                        </div>{" "}
-                        <div>
-                          <p>
-                            Thether Address -{" "}
-                            <span className=" font-bold">
-                              {
-                                selectedDeposit?.userId?.walletDetails
-                                  ?.tetherAddress
-                              }{" "}
-                            </span>
-                          </p>
-                        </div>
-                        <div>
-                          <p>
-                            Ethereum Address -{" "}
-                            <span className=" font-bold">
-                              {
-                                selectedDeposit?.userId?.walletDetails
-                                  ?.ethAddress
-                              }
-                            </span>{" "}
-                          </p>
-                        </div>
-                        <div>
                           <p>
                             TRX Address -
                             <span className=" font-bold">
@@ -791,6 +764,30 @@ const IbWithdrawalStatus = () => {
                             </span>
                           </p>
                         </div>
+                      </div>
+                    ) : selectedDeposit?.method === "Ethereum" ? (
+                      <div className=" flex items-center gap-1">
+                        <WalletCardsIcon size={20}></WalletCardsIcon>
+
+                        <p>
+                          Ethereum Address -{" "}
+                          <span className=" font-bold">
+                            {selectedDeposit?.userId?.walletDetails?.ethAddress}
+                          </span>{" "}
+                        </p>
+                      </div>
+                    ) : selectedDeposit?.method === "Thether" ? (
+                      <div className=" flex items-center gap-1">
+                        <WalletCardsIcon size={20}></WalletCardsIcon>{" "}
+                        <p>
+                          Thether Address -{" "}
+                          <span className=" font-bold">
+                            {
+                              selectedDeposit?.userId?.walletDetails
+                                ?.tetherAddress
+                            }{" "}
+                          </span>
+                        </p>
                       </div>
                     ) : (
                       ""
