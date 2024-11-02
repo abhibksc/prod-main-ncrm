@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowDownCircle,
@@ -23,6 +23,12 @@ const UserWithdraw = () => {
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+  const {
+    GetUserInfoAPI,
+    getUpdatePhase,
+    getUpdateLoggedUser,
+    GetOpenTradeApi,
+  } = UseUserHook();
 
   // functions------------
   const isLastPhase = phaseMaxLength === loggedUser.phase;
@@ -215,6 +221,26 @@ const UserWithdraw = () => {
   };
   // console.log(selectedGateway);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getUpdateLoggedUser();
+        await GetUserInfoAPI();
+        await GetOpenTradeApi();
+      } catch (error) {
+        console.error("Error in dashboard:", error);
+      }
+    };
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 6000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
       <motion.div
@@ -236,7 +262,7 @@ const UserWithdraw = () => {
               className={` text-center ${
                 profitNloss > 0
                   ? "text-green-500 bg-secondary-700/30"
-                  : "text-red-500 bg-red-400/30"
+                  : "text-red-500 bg-red-400/20"
               }   mt-1 rounded-full py-1  font-bold`}
             >
               {Number(profitNloss) > 0
