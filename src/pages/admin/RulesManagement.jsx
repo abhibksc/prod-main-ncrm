@@ -256,7 +256,7 @@ const RulesManagement = () => {
                               color: e.target.value,
                             })
                           }
-                          className="w-20 h-10 rounded-lg"
+                          className=" outline-none border-none rounded-lg cursor-copy"
                         />
                         <span className="font-mono text-gray-100">
                           {editingRule.color}
