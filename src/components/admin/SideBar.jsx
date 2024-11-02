@@ -57,12 +57,12 @@ const Sidebar = () => {
       icon: <Settings2Icon />,
       route: "/admin/account-configuration",
     },
-    {
-      label: "Account Challenges",
-      icon: <ChevronsRight />,
-      route: "/admin/account-challenges",
-    },
     // {
+    //   label: "Account Challenges",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/account-challenges",
+    // },
+    // // {
     //   label: "Withdrawal conditions",
     //   icon: <ChevronsRight />,
     //   route: "/admin/withdraw-conditions",
