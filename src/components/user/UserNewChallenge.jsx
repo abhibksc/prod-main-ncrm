@@ -187,7 +187,7 @@ const UserNewChallenge = () => {
           groupName: formData.apiGroup,
         }
       );
-
+      await GetUserInfoAPI();
       dispatch(setProfitNloss(0));
       dispatch(setOpenTrades([]));
       dispatch(setAvailableBalance(0));

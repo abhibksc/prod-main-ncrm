@@ -76,13 +76,16 @@ export default function UseUserHook() {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUserHook.current.mt5Account}`
         );
-        if (res.data.Balance) {
+        if (res.data.Balance && loggedUserHook.current.accountSize) {
           dispatch(setUserInfo(res.data));
           dispatch(setAvailableBalance(res.data.Balance));
           const balance = Number(res.data.Balance);
           const accountSize = Number(loggedUserHook.current.accountSize);
-          console.log("Balance:~~~~~~~~~~~~~~~~~~~~", balance);
-          console.log("Account Size~~~~~~~~~~~~~~~~~~~~~~~~`:", accountSize);
+          if (Number(res.data.Balance === 0)) {
+            dispatch(setProfitNloss(0));
+          }
+          // console.log("Balance:~~~~~~~~~~~~~~~~~~~~", balance);
+          // console.log("Account Size~~~~~~~~~~~~~~~~~~~~~~~~`:", accountSize);
 
           const newPnl = balance - accountSize;
           setCurrentPnlAndRef(newPnl);
