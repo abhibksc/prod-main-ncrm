@@ -48,6 +48,7 @@ const UserNewChallenge = () => {
   });
 
   const [accountConfigurations, setAccountConfigurations] = useState([]);
+  const [phases, setPhases] = useState([]);
 
   const filterAccountConfig = accountConfigurations.find(
     (value) => value.accountType === formData.accountType
@@ -79,7 +80,6 @@ const UserNewChallenge = () => {
   const filteredMethodsData = paymentMethods?.filter(
     (value) => value.status === "active"
   );
-  // console.log("filteredMethodsData-----", filteredMethodsData);
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -105,7 +105,7 @@ const UserNewChallenge = () => {
     }
   };
 
-  // add main changlange api handler---------------
+  // add main api handler---------------
 
   const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
   const apiTestHandler = async () => {
@@ -227,6 +227,25 @@ const UserNewChallenge = () => {
       console.log("Error fetching existing ac types data", error);
     }
   };
+
+  // fetch phases  ------------------
+  const fetchPhases = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
+      );
+
+      setPhases(res.data.data);
+    } catch (error) {
+      console.log("Error fetching existing phases data", error);
+    }
+  };
+  const filterPhaseData = phases.filter(
+    (value) => value.accountType === formData.accountType && value.phase === 1
+  )[0];
+
+  // console.log("filter phase data________________________", filterPhaseData);
+
   // Set default leverage
   useEffect(() => {
     const filterAccountConfig = accountConfigurations.find(
@@ -250,6 +269,7 @@ const UserNewChallenge = () => {
     getPlatforms();
     getPaymentMethod();
     fetchAccountConfigurations();
+    fetchPhases();
   }, []);
   const [copied, setCopied] = useState(false);
   const paymentDetails = paymentMethods?.find(
@@ -296,23 +316,11 @@ const UserNewChallenge = () => {
   };
   // target stacks ---------------
 
-  let targetStaks;
-
-  if (formData.accountType === "Beta Standard") {
-    targetStaks = [
-      "8% Profit Target*",
-      "10% Max Overall Loss*",
-      "5% Max Daily Loss*",
-    ];
-  } else if (formData.accountType === "Beta Algo") {
-    targetStaks = [
-      "10% Profit Target*",
-      "8% Max Overall Loss*",
-      "4% Max Daily Loss*",
-    ];
-  }
-
-  // console.log("selecteddd-- data###---", selectedPayment);
+  const targetStaks = [
+    `${filterPhaseData?.maxProfit || 0}% Profit Target*`,
+    `${filterPhaseData?.maxOverallLoss || 0}% Max Overall Loss*`,
+    `${filterPhaseData?.maxDailyLoss || 0}% Max Daily Loss*`,
+  ];
   return (
     <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
       <div className="flex justify-between mb-8">
@@ -366,7 +374,9 @@ const UserNewChallenge = () => {
                     onChange={handleInputChange}
                     className="w-full bg-secondary-800 p-3 rounded appearance-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="">Select Type</option>
+                    <option value="" disabled>
+                      Select Type
+                    </option>
                     {accountConfigurations.map((value, index) => (
                       <option key={index} value={value?.accountType}>
                         {value.accountType}

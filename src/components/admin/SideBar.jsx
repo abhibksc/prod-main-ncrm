@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, Route } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
@@ -21,6 +21,7 @@ import {
   Settings2Icon,
   HandCoins,
   LucideBookText,
+  RouteIcon,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -137,6 +138,11 @@ const Sidebar = () => {
         },
         { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
       ],
+    },
+    {
+      label: "Phases",
+      icon: <RouteIcon />,
+      route: "/admin/phases",
     },
     {
       label: "Payment Getways",

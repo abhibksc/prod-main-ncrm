@@ -16,6 +16,7 @@ import {
 } from "@/redux/user/userSlice";
 import { useLocation } from "react-router-dom";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
+import axios from "axios";
 
 export default function UserDashboard() {
   const {
@@ -85,30 +86,34 @@ export default function UserDashboard() {
 
   // group phase-------------
   useEffect(() => {
-    let phaseLimitValues;
+    const fetchPhases = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
+        );
 
-    if (loggedUser?.accountType === "Beta Standard") {
-      phaseLimitValues = [
-        { phase: 1, min: 10, max: 8 },
-        { phase: 2, min: 10, max: 5 },
-        { phase: 3, min: 10, max: Infinity },
-      ];
-    } else if (loggedUser?.accountType === "Beta Algo") {
-      phaseLimitValues = [
-        { phase: 1, min: 8, max: 10 },
-        { phase: 2, min: 8, max: Infinity },
-      ];
-    } else {
-      phaseLimitValues = [
-        { phase: 1, min: 8, max: 10 },
-        { phase: 2, min: 8, max: Infinity },
-      ];
-    }
-    const currentPhaseData = phaseLimitValues.find(
-      (value) => value.phase === loggedUser.phase
-    );
-    dispatch(setPhaseMaxLength(phaseLimitValues.length));
-    dispatch(setPhaseStats(currentPhaseData));
+        const filterallPhaseData = res.data.data
+          .map((value) => ({
+            ...value,
+            maxProfit: value.maxProfit === 0 ? Infinity : value.maxProfit,
+          }))
+          .filter((value) => value.accountType === loggedUser.accountType);
+
+        const filterCurrentPhaseData = filterallPhaseData.filter(
+          (value) => value.phase === loggedUser.phase
+        )[0];
+        const currentPhaseData = {
+          phase: filterCurrentPhaseData.phase,
+          min: filterCurrentPhaseData.maxOverallLoss,
+          max: filterCurrentPhaseData.maxProfit,
+        };
+        dispatch(setPhaseMaxLength(filterallPhaseData.length));
+        dispatch(setPhaseStats(currentPhaseData));
+      } catch (error) {
+        console.log("Error fetching existing phases data", error);
+      }
+    };
+    fetchPhases();
   }, [loggedUser]);
 
   return (
