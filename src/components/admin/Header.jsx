@@ -4,6 +4,7 @@ import {
   ChartNoAxesGantt,
   KeyRound,
   LogOut,
+  LucideUserCircle2,
   Search,
   Settings,
   User,
@@ -123,23 +124,6 @@ const Header = () => {
               <span className="sr-only">Search</span>
               <Search></Search>
             </button>
-            {/* <button
-              type="button"
-              onClick={toggleNotificationDropdown}
-              className="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-            >
-              <span className="sr-only">View notifications</span>
-              <Bell></Bell>
-            </button> */}
-            {/* Notification dropdown */}
-            {isNotificationDropdownOpen && (
-              <div
-                className="absolute top-full right-0 z-50 my-4 w-80 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700"
-                id="notification-dropdown"
-              >
-                {/* Notification dropdown content */}
-              </div>
-            )}
 
             <button
               type="button"
@@ -149,11 +133,12 @@ const Header = () => {
               aria-expanded={isUserDropdownOpen}
             >
               <span className="sr-only">Open user menu</span>
-              <img
-                className="w-8 h-8 rounded-full"
-                src="https://www.svgrepo.com/show/382097/female-avatar-girl-face-woman-user-9.svg"
-                alt="user photo"
-              />
+              <div className=" bg-primary-500 rounded-full p-1">
+                <LucideUserCircle2
+                  size={27}
+                  className=" text-white/80"
+                ></LucideUserCircle2>
+              </div>
             </button>
             {/* User dropdown */}
             <motion.div

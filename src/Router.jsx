@@ -44,6 +44,9 @@ import UserVerify from "./pages/user/UserVerify";
 import UserAccountDetails from "./pages/user/UserAccountDetails";
 import { UserReferralWithdrawal } from "./pages/user/referral/UserReferalWithdrwal";
 import UserReferalWithdrwalHistory from "./pages/user/referral/UserReferalWithdrwalHistory";
+import IbWithdrawalStatus from "./pages/admin/IbWithdrawalStatus";
+import RulesManagement from "./pages/admin/RulesManagement";
+import Phases from "./pages/admin/Phases";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -88,6 +91,18 @@ const Router = createBrowserRouter([
       {
         path: "/admin/withdrawal/:status",
         element: <WithdrawalStatus></WithdrawalStatus>,
+      },
+      {
+        path: "/admin/ib-withdrawal/:status",
+        element: <IbWithdrawalStatus></IbWithdrawalStatus>,
+      },
+      {
+        path: "/admin/rules",
+        element: <RulesManagement></RulesManagement>,
+      },
+      {
+        path: "/admin/phases",
+        element: <Phases></Phases>,
       },
       {
         path: "/admin/ticket/:status",

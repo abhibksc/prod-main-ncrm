@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   ArrowLeftRight,
   CircleCheckBig,
+  CircleGauge,
   CircleX,
   Loader,
   Search,
@@ -61,7 +62,7 @@ const StatCard = ({ icon, amount, label, bgColor, link }) => (
   </Link>
 );
 
-const WithdrawalStatus = () => {
+const IbWithdrawalStatus = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const { status } = useParams();
@@ -76,9 +77,11 @@ const WithdrawalStatus = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawals`
+        `${
+          import.meta.env.VITE_BECKEND_END_POINT
+        }/api/auth/referral-withdrawals`
       );
-      console.log("res all withdrawals---", res.data.data);
+      // console.log("res all withdrawals---", res.data.data);
       setDepositData(res.data.data.reverse());
       setLoading(false);
     } catch (error) {
@@ -97,6 +100,7 @@ const WithdrawalStatus = () => {
         item.status === "approved"
     );
   }
+  console.log("filterParamsData---", filterParamsData);
 
   // format date ---------------------
 
@@ -127,7 +131,7 @@ const WithdrawalStatus = () => {
 
   // custom content -----------------
 
-  console.log("selected withdrawal####################", selectedDeposit);
+  // console.log("selected withdrawal####################", selectedDeposit);
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -226,7 +230,7 @@ const WithdrawalStatus = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrwal Success</h1>
+          <h1>Referral Withdrwal Success</h1>
         </div>
         <div class="content">
           <p>Dear ${
@@ -236,27 +240,17 @@ const WithdrawalStatus = () => {
           },</p>
   <p> Your withdrawal request has been successfully processed.</p>
         <div class="withdrawal-details">
-          <p>Account No: <span class="highlight">${
-            selectedDeposit?.mt5Account
+          <p>Referal ID: <span class="highlight">${
+            selectedDeposit?.referralId
           }</span></p>
-            <p>Amount: <span class="highlight">${
+            <p>Withdrawal Amount: <span class="highlight">${
               selectedDeposit?.amount
             }</span></p>
-            <p>Phase: <span class="highlight">${
-              selectedDeposit?.tradeAccount === "Beta Standard"
-                ? selectedDeposit.phase === 3
-                  ? "Live Account"
-                  : selectedDeposit?.phase
-                : selectedDeposit?.tradeAccount === "Beta Algo"
-                ? selectedDeposit.phase === 2
-                  ? "Live Account"
-                  : selectedDeposit?.phase
-                : null
+      
+            <p>Available Balance: <span class="highlight">${
+              selectedDeposit?.totalBalance - selectedDeposit?.amount
             }</span></p>
-            <p>Account Type: <span class="highlight">${
-              selectedDeposit?.tradeAccount
-            }</span></p>
-            <p>Time Stamp: <span class="highlight">${formattedDateTime}</span></p>
+           <p>Time Stamp: <span class="highlight">${formattedDateTime}</span></p>
           </div>
 
     <p>Thank you for choosing us.</p>
@@ -294,8 +288,6 @@ const WithdrawalStatus = () => {
       </div>
     </body>
     </html>`;
-
-  // handle confirm click ----------------
   const handleConfirmAction = async (selectedDeposit) => {
     const toastId = toast.loading("Plese wait..");
     try {
@@ -305,31 +297,32 @@ const WithdrawalStatus = () => {
             import.meta.env.VITE_API_END_POINT
           }/api/web/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
+          }&MT5Account=${selectedDeposit.referralId}&Amount=${
             selectedDeposit.amount
-          }&Comment=test`
+          }&Comment=ib-withdrawal`
         );
-        const res = await axios.put(
+        const DBresWithdarwal = await axios.put(
           `${
             import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-withdrawal`,
+          }/api/auth/update-referral-withdrawal`,
           {
-            _id: selectedDeposit._id,
+            id: selectedDeposit._id,
             status: "approved",
           }
         );
+
         const customMailRes = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
           {
             email: selectedDeposit.userId.email,
             content: customContent,
-            subject: "Withdrwal Success",
+            subject: " Referral Withdrawal Success",
           }
         );
-        toast.success("Withdrwal Approved", { id: toastId });
+        toast.success("IB Withdrwal Approved", { id: toastId });
 
-        console.log("updated confirm data", res);
-        console.log("updated apiWithdrawalRes data", apiWithdrwalRes);
+        // console.log("updated confirm data", res);
+        // console.log("updated apiWithdrawalRes data", apiWithdrwalRes);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -345,13 +338,15 @@ const WithdrawalStatus = () => {
         const res = await axios.put(
           `${
             import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-withdrawal`,
+          }/api/auth/update-referral-withdrawal`,
           {
-            _id: selectedDeposit._id,
+            id: selectedDeposit._id,
             status: "rejected",
           }
         );
-        console.log("updated rejection data", res);
+        // console.log("updated rejection data", res);
+        // toast.success("Withdrwal Rejected");
+
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
@@ -362,39 +357,41 @@ const WithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
-        toast.success("Withdrwal Rejected", { id: toastId });
+        toast.success("IB Withdrwal Rejected", { id: toastId });
       }
     } catch (error) {
       toast.success("Something went wrong", { id: toastId });
-      console.error("Error updating deposit status:", error);
+      console.error("Error updating IB withdrwal:", error);
     }
   };
   // total deposits ----------
 
-  const TotalDeposits = depositData.reduce(
-    (total, item) => total + parseFloat(item.amount),
-    0
-  );
+  const TotalDeposits = depositData
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
   // console.log("total deposits", TotalDeposits);
   // total pending deposits ----------
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
   // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
   const TotalSuccessfullDeposits = depositData
     .filter((item) => item.status === "approved")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
   // console.log("total successfull", TotalSuccessfullDeposits);
 
   // total rejected deposits ----------
 
   const TotalRejectedDeposits = depositData
     .filter((item) => item.status === "rejected")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
   // console.log("Total rejected", TotalRejectedDeposits);
 
   // stats data------------
@@ -403,30 +400,30 @@ const WithdrawalStatus = () => {
     {
       icon: <ArrowLeftRight size={24} />,
       amount: TotalDeposits,
-      label: "Total Withdrawals",
+      label: "Total IB Withdrawals",
       bgColor: "bg-sky-800",
-      link: "/admin/deposit/all",
+      link: "/admin/ib-withdrawal/all",
     },
     {
       icon: <ArrowLeftRight size={24} />,
       amount: TotalSuccessfullDeposits,
-      label: "Successfull Withdrawals",
+      label: "Successfull IB Withdrawals",
       bgColor: "bg-green-800",
-      link: "/admin/deposit/approved",
+      link: "/admin/ib-withdrawal/approved",
     },
     {
       icon: <ArrowLeftRight size={24} />,
       amount: TotalPendingDeposits,
-      label: "Pending Withdrawals",
+      label: "Pending IB Withdrawals",
       bgColor: "bg-yellow-800",
-      link: "/admin/deposit/pending",
+      link: "/admin/ib-withdrawal/pending",
     },
     {
       icon: <ArrowLeftRight size={24} />,
       amount: TotalRejectedDeposits,
-      label: "Rejected Withdrawals",
+      label: "Rejected IB Withdrawals",
       bgColor: "bg-orange-800",
-      link: "/admin/deposit/rejected",
+      link: "/admin/ib-withdrawal/rejected",
     },
   ];
 
@@ -523,7 +520,7 @@ const WithdrawalStatus = () => {
   return (
     <div className="container mx-auto px-10 py-5">
       <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
-        {status} Withdrawals
+        {status} IB Withdrawals
       </h1>
 
       <div className="flex justify-between mb-4">
@@ -584,10 +581,9 @@ const WithdrawalStatus = () => {
           <thead className="bg-primary-400 text-white">
             <tr>
               <th className="py-2 px-4 text-left">User | Email</th>
-              <th className="py-2 px-4 text-left">Account</th>
-              <th className="py-2 px-4 text-left">Plan</th>
-              <th className="py-2 px-4 text-left">Profit</th>
-              <th className="py-2 px-4 text-left">Withdrwal</th>
+              <th className="py-2 px-4 text-left">Referral ID</th>
+              <th className="py-2 px-4 text-left">Total Balance</th>
+              <th className="py-2 px-4 text-left">Withdrwal Amount</th>
               <th className="py-2 px-4 text-left">Method</th>
               <th className="py-2 px-4 text-left">Requested Date</th>
               <th className="py-2 px-4 text-left">Status</th>
@@ -618,14 +614,11 @@ const WithdrawalStatus = () => {
                       {item?.userId ? item?.userId?.email : "Not found!!"}
                     </div>
                   </td>
-                  <td className="py-2 px-4">{item?.mt5Account}</td>
-                  <td className="py-2 px-4">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                      {"Silver"}
-                    </span>
+                  <td className="py-2 px-4">{item?.referralId}</td>
+                  <td className="py-2 px-4 text-center">
+                    {item?.totalBalance}
                   </td>
-                  <td className="py-2 px-4">{item?.pNl}</td>
-                  <td className="py-2 px-4">{item?.amount}</td>
+                  <td className="py-2 px-4 text-center">{item?.amount}</td>
                   <td className="py-2 px-4">{item?.method}</td>
                   <td className="py-3 px-4">
                     <div>{formatDate(item?.createdAt)}</div>
@@ -824,4 +817,4 @@ const WithdrawalStatus = () => {
   );
 };
 
-export default WithdrawalStatus;
+export default IbWithdrawalStatus;

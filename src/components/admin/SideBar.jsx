@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { NavLink } from "react-router-dom";
+import { NavLink, Route } from "react-router-dom";
 import {
   ChevronDown,
   ChevronUp,
@@ -19,6 +19,9 @@ import {
   ListCollapseIcon,
   Ticket,
   Settings2Icon,
+  HandCoins,
+  LucideBookText,
+  RouteIcon,
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -60,6 +63,11 @@ const Sidebar = () => {
       label: "Account Challenges",
       icon: <ChevronsRight />,
       route: "/admin/account-challenges",
+    },
+    {
+      label: "Rules",
+      icon: <LucideBookText />,
+      route: "/admin/rules",
     },
     // {
     //   label: "Withdrawal conditions",
@@ -111,6 +119,30 @@ const Sidebar = () => {
         { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
         { label: "All Withdrawals", route: "/admin/withdrawal/all" },
       ],
+    },
+    {
+      label: "IB Withdrawals",
+      icon: <HandCoins />,
+      nested: [
+        {
+          label: "Pending IB Withdrawals",
+          route: "/admin/ib-withdrawal/pending",
+        },
+        {
+          label: "Approved IB Withdrawals",
+          route: "/admin/ib-withdrawal/approved",
+        },
+        {
+          label: "Rejected IB Withdrawals",
+          route: "/admin/ib-withdrawal/rejected",
+        },
+        { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
+      ],
+    },
+    {
+      label: "Phases",
+      icon: <RouteIcon />,
+      route: "/admin/phases",
     },
     {
       label: "Payment Getways",

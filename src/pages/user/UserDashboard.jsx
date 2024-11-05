@@ -16,6 +16,7 @@ import {
 } from "@/redux/user/userSlice";
 import { useLocation } from "react-router-dom";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
+import axios from "axios";
 
 export default function UserDashboard() {
   const {
@@ -39,7 +40,8 @@ export default function UserDashboard() {
   // console.log("is max length__________", loggedUser.phase + 1);
   // console.log("is max__________", isMax);
 
-  // for fetch logged user data-------------
+  // for update logged data and userInfo-------------
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,30 +62,8 @@ export default function UserDashboard() {
     };
   }, []);
 
-  // for update phase ---------------
+  // phases data old way------
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!isMax && loggedUser.phase !== 0) {
-        await getUpdatePhase();
-      }
-    };
-
-    if (!isMax && loggedUser.phase !== 0) {
-      getUpdatePhase();
-    }
-
-    const intervalId = setInterval(() => {
-      fetchData();
-      console.log("getUpdatePhase");
-    }, 10000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [loggedUser]);
-
-  // group phase-------------
   useEffect(() => {
     let phaseLimitValues;
 
@@ -110,6 +90,62 @@ export default function UserDashboard() {
     dispatch(setPhaseMaxLength(phaseLimitValues.length));
     dispatch(setPhaseStats(currentPhaseData));
   }, [loggedUser]);
+
+  // for update phase ---------------
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isMax && loggedUser.phase !== 0) {
+        await getUpdatePhase();
+      }
+    };
+
+    if (!isMax && loggedUser.phase !== 0) {
+      getUpdatePhase();
+    }
+
+    const intervalId = setInterval(() => {
+      fetchData();
+      console.log("getUpdatePhase");
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [loggedUser]);
+
+  // // group phase new wayy -------------
+
+  // useEffect(() => {
+  //   const fetchPhases = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
+  //       );
+
+  //       const filterallPhaseData = res.data.data
+  //         .map((value) => ({
+  //           ...value,
+  //           maxProfit: value.maxProfit === 0 ? Infinity : value.maxProfit,
+  //         }))
+  //         .filter((value) => value.accountType === loggedUser.accountType);
+
+  //       const filterCurrentPhaseData = filterallPhaseData.filter(
+  //         (value) => value.phase === loggedUser.phase
+  //       )[0];
+  //       const currentPhaseData = {
+  //         phase: filterCurrentPhaseData.phase,
+  //         min: filterCurrentPhaseData.maxOverallLoss,
+  //         max: filterCurrentPhaseData.maxProfit,
+  //       };
+  //       dispatch(setPhaseMaxLength(filterallPhaseData.length));
+  //       dispatch(setPhaseStats(currentPhaseData));
+  //     } catch (error) {
+  //       console.log("Error fetching existing phases data", error);
+  //     }
+  //   };
+  //   fetchPhases();
+  // }, [loggedUser]);
 
   return (
     <motion.div

@@ -19,6 +19,7 @@ export const UserReferralWithdrawal = () => {
   const [error, setError] = useState("");
   const [balance, userInfoData] = UseCommissionBalance();
   const [amount, setAmount] = useState("");
+  const [selectWallet, setSelectWallet] = useState("Thether");
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -190,7 +191,10 @@ export const UserReferralWithdrawal = () => {
           }/api/auth/add-referral-withdrawal`,
           {
             referralId: loggedUser.referalId,
-            method: selectedGateway,
+            method:
+              selectedGateway === "Bank Transfer"
+                ? selectedGateway
+                : selectWallet,
             amount: amount,
             status: "pending",
             userId: loggedUser._id,
@@ -207,6 +211,7 @@ export const UserReferralWithdrawal = () => {
             subject: "Commission Withdrwal requested",
           }
         );
+        console.log("withdraw db res--", withdrawalDBres.data);
 
         setApiLoader(false);
         toast.success("Withdawal Requested");
@@ -256,7 +261,7 @@ export const UserReferralWithdrawal = () => {
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
           {/* method and account type -- */}
-          <div className=" grid grid-cols-1  items-center   gap-6">
+          <div className=" grid grid-cols-1 md:grid-cols-2 items-center   gap-6">
             <div className=" w-full">
               <label
                 htmlFor="gateway"
@@ -275,6 +280,27 @@ export const UserReferralWithdrawal = () => {
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>
             </div>
+
+            {selectedGateway === "Wallet Transfer" && (
+              <div className=" w-full">
+                <label
+                  htmlFor="account"
+                  className="block text-sm font-medium text-white mb-2"
+                >
+                  Choose Wallet
+                </label>
+                <select
+                  id="account"
+                  value={selectWallet}
+                  onChange={(e) => setSelectWallet(e.target.value)}
+                  className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
+                >
+                  <option value="Thether">Thether {"(USDT)"} </option>
+                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
+                  <option value="TRX">TRX {"(Tron)"} </option>
+                </select>
+              </div>
+            )}
           </div>
           {/* account details -- */}
 
@@ -339,30 +365,36 @@ export const UserReferralWithdrawal = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              <div>
-                <p>
-                  Thether Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.tetherAddress}{" "}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Ethereum Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.ethAddress}
-                  </span>{" "}
-                </p>
-              </div>
-              <div>
-                <p>
-                  TRX Address -
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.trxAddress}
-                  </span>
-                </p>
-              </div>
+              {selectWallet === "Thether" && (
+                <div>
+                  <p>
+                    Thether Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.tetherAddress}{" "}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "Ethereum" && (
+                <div>
+                  <p>
+                    Ethereum Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.ethAddress}
+                    </span>{" "}
+                  </p>
+                </div>
+              )}
+              {selectWallet === "TRX" && (
+                <div>
+                  <p>
+                    TRX Address -
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.trxAddress}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             ""

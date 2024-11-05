@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowDownCircle,
@@ -15,6 +15,7 @@ const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectWallet, setSelectWallet] = useState("Thether");
   const [selectedAccount, setSelectedAccount] = useState(
     loggedUser.accountType
   );
@@ -22,6 +23,12 @@ const UserWithdraw = () => {
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+  const {
+    GetUserInfoAPI,
+    getUpdatePhase,
+    getUpdateLoggedUser,
+    GetOpenTradeApi,
+  } = UseUserHook();
 
   // functions------------
   const isLastPhase = phaseMaxLength === loggedUser.phase;
@@ -175,7 +182,10 @@ const UserWithdraw = () => {
         const withdrawalDBres = await axios.post(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
           {
-            method: selectedGateway,
+            method:
+              selectedGateway === "Bank Transfer"
+                ? selectedGateway
+                : selectWallet,
             tradeAccount: selectedAccount,
             amount: amount,
             mt5Account: userInfo.MT5Account,
@@ -211,6 +221,26 @@ const UserWithdraw = () => {
   };
   // console.log(selectedGateway);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getUpdateLoggedUser();
+        await GetUserInfoAPI();
+        await GetOpenTradeApi();
+      } catch (error) {
+        console.error("Error in dashboard:", error);
+      }
+    };
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 6000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
       <motion.div
@@ -232,7 +262,7 @@ const UserWithdraw = () => {
               className={` text-center ${
                 profitNloss > 0
                   ? "text-green-500 bg-secondary-700/30"
-                  : "text-red-500 bg-red-400/30"
+                  : "text-red-500 bg-red-400/20"
               }   mt-1 rounded-full py-1  font-bold`}
             >
               {Number(profitNloss) > 0
@@ -278,6 +308,26 @@ const UserWithdraw = () => {
                 <option value="">{loggedUser.accountType}</option>
               </select>
             </div>
+            {selectedGateway === "Wallet Transfer" && (
+              <div className=" w-full">
+                <label
+                  htmlFor="account"
+                  className="block text-sm font-medium text-white mb-2"
+                >
+                  Choose Wallet
+                </label>
+                <select
+                  id="account"
+                  value={selectWallet}
+                  onChange={(e) => setSelectWallet(e.target.value)}
+                  className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
+                >
+                  <option value="Thether">Thether {"(USDT)"} </option>
+                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
+                  <option value="TRX">TRX {"(Tron)"} </option>
+                </select>
+              </div>
+            )}
           </div>
           {/* account details -- */}
 
@@ -342,30 +392,36 @@ const UserWithdraw = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              <div>
-                <p>
-                  Thether Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.tetherAddress}{" "}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Ethereum Address -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.ethAddress}
-                  </span>{" "}
-                </p>
-              </div>
-              <div>
-                <p>
-                  TRX Address -
-                  <span className=" font-bold">
-                    {loggedUser?.walletDetails?.trxAddress}
-                  </span>
-                </p>
-              </div>
+              {selectWallet === "Thether" && (
+                <div>
+                  <p>
+                    Thether Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.tetherAddress}{" "}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "Ethereum" && (
+                <div>
+                  <p>
+                    Ethereum Address -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.ethAddress}
+                    </span>{" "}
+                  </p>
+                </div>
+              )}
+              {selectWallet === "TRX" && (
+                <div>
+                  <p>
+                    TRX Address -
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.trxAddress}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             ""
