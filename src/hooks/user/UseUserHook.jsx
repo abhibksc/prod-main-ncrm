@@ -78,8 +78,12 @@ export default function UseUserHook() {
         );
         if (res.data.Balance && loggedUserHook.current.accountSize) {
           dispatch(setUserInfo(res.data));
-          dispatch(setAvailableBalance(res.data.Balance));
           const balance = Number(res.data.Balance);
+          dispatch(setAvailableBalance(res.data.Balance));
+          // console.log(
+          //   "user info hook ______________________",
+          //   res.data.Balance
+          // );
           const accountSize = Number(loggedUserHook.current.accountSize);
           if (Number(res.data.Balance === 0)) {
             dispatch(setProfitNloss(0));

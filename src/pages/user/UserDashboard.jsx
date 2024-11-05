@@ -40,29 +40,29 @@ export default function UserDashboard() {
   // console.log("is max length__________", loggedUser.phase + 1);
   // console.log("is max__________", isMax);
 
-  // for fetch logged user data-------------
+  // for update logged data and userInfo-------------
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       await getUpdateLoggedUser();
-  //       await GetUserInfoAPI();
-  //       await GetOpenTradeApi();
-  //     } catch (error) {
-  //       console.error("Error in dashboard:", error);
-  //     }
-  //   };
-  //   fetchData();
-  //   const intervalId = setInterval(() => {
-  //     fetchData();
-  //   }, 6000);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getUpdateLoggedUser();
+        await GetUserInfoAPI();
+        await GetOpenTradeApi();
+      } catch (error) {
+        console.error("Error in dashboard:", error);
+      }
+    };
+    fetchData();
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 6000);
 
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, []);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
-  // standard way------
+  // phases data old way------
 
   useEffect(() => {
     let phaseLimitValues;
@@ -114,37 +114,38 @@ export default function UserDashboard() {
     };
   }, [loggedUser]);
 
-  // group phase-------------
-  useEffect(() => {
-    const fetchPhases = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
-        );
+  // // group phase new wayy -------------
 
-        const filterallPhaseData = res.data.data
-          .map((value) => ({
-            ...value,
-            maxProfit: value.maxProfit === 0 ? Infinity : value.maxProfit,
-          }))
-          .filter((value) => value.accountType === loggedUser.accountType);
+  // useEffect(() => {
+  //   const fetchPhases = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
+  //       );
 
-        const filterCurrentPhaseData = filterallPhaseData.filter(
-          (value) => value.phase === loggedUser.phase
-        )[0];
-        const currentPhaseData = {
-          phase: filterCurrentPhaseData.phase,
-          min: filterCurrentPhaseData.maxOverallLoss,
-          max: filterCurrentPhaseData.maxProfit,
-        };
-        dispatch(setPhaseMaxLength(filterallPhaseData.length));
-        dispatch(setPhaseStats(currentPhaseData));
-      } catch (error) {
-        console.log("Error fetching existing phases data", error);
-      }
-    };
-    fetchPhases();
-  }, [loggedUser]);
+  //       const filterallPhaseData = res.data.data
+  //         .map((value) => ({
+  //           ...value,
+  //           maxProfit: value.maxProfit === 0 ? Infinity : value.maxProfit,
+  //         }))
+  //         .filter((value) => value.accountType === loggedUser.accountType);
+
+  //       const filterCurrentPhaseData = filterallPhaseData.filter(
+  //         (value) => value.phase === loggedUser.phase
+  //       )[0];
+  //       const currentPhaseData = {
+  //         phase: filterCurrentPhaseData.phase,
+  //         min: filterCurrentPhaseData.maxOverallLoss,
+  //         max: filterCurrentPhaseData.maxProfit,
+  //       };
+  //       dispatch(setPhaseMaxLength(filterallPhaseData.length));
+  //       dispatch(setPhaseStats(currentPhaseData));
+  //     } catch (error) {
+  //       console.log("Error fetching existing phases data", error);
+  //     }
+  //   };
+  //   fetchPhases();
+  // }, [loggedUser]);
 
   return (
     <motion.div
