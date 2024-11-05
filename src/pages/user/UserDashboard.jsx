@@ -41,25 +41,55 @@ export default function UserDashboard() {
   // console.log("is max__________", isMax);
 
   // for fetch logged user data-------------
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getUpdateLoggedUser();
-        await GetUserInfoAPI();
-        await GetOpenTradeApi();
-      } catch (error) {
-        console.error("Error in dashboard:", error);
-      }
-    };
-    fetchData();
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 6000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       await getUpdateLoggedUser();
+  //       await GetUserInfoAPI();
+  //       await GetOpenTradeApi();
+  //     } catch (error) {
+  //       console.error("Error in dashboard:", error);
+  //     }
+  //   };
+  //   fetchData();
+  //   const intervalId = setInterval(() => {
+  //     fetchData();
+  //   }, 6000);
+
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, []);
+
+  // standard way------
+
+  useEffect(() => {
+    let phaseLimitValues;
+
+    if (loggedUser?.accountType === "Beta Standard") {
+      phaseLimitValues = [
+        { phase: 1, min: 10, max: 8 },
+        { phase: 2, min: 10, max: 5 },
+        { phase: 3, min: 10, max: Infinity },
+      ];
+    } else if (loggedUser?.accountType === "Beta Algo") {
+      phaseLimitValues = [
+        { phase: 1, min: 8, max: 10 },
+        { phase: 2, min: 8, max: Infinity },
+      ];
+    } else {
+      phaseLimitValues = [
+        { phase: 1, min: 8, max: 10 },
+        { phase: 2, min: 8, max: Infinity },
+      ];
+    }
+    const currentPhaseData = phaseLimitValues.find(
+      (value) => value.phase === loggedUser.phase
+    );
+    dispatch(setPhaseMaxLength(phaseLimitValues.length));
+    dispatch(setPhaseStats(currentPhaseData));
+  }, [loggedUser]);
 
   // for update phase ---------------
 
