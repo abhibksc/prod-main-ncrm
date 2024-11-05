@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccount";
@@ -9,14 +9,10 @@ import UserLineChart from "@/components/user/UserLineChart";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
-import {
-  setPhaseMaxLength,
-  setPhaseStats,
-  setProfitNloss,
-} from "@/redux/user/userSlice";
-import { useLocation } from "react-router-dom";
+import { setPhaseMaxLength, setPhaseStats } from "@/redux/user/userSlice";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
 import axios from "axios";
+import UsePhaseStats from "@/hooks/user/UsePhaseStats";
 
 export default function UserDashboard() {
   const {
@@ -25,20 +21,13 @@ export default function UserDashboard() {
     getUpdateLoggedUser,
     GetOpenTradeApi,
   } = UseUserHook();
-  const closeTrades = useSelector((store) => store.user.closeTrades);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
-  const profitNloss = useSelector((store) => store.user.profitNloss);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
+  const { updatePhaseStats } = UsePhaseStats();
+  const phaseStats = useSelector((store) => store.user.phaseStats);
 
   const isMax = phaseMaxLength === loggedUser.phase - 1;
-  // const isOnLast = phaseMaxLength - 1 === phaseMaxLength - 1 ? true : false;
-  console.log("is max dashboard ---", isMax);
-
-  // console.log("isOnLast dashboard ----", isOnLast);
-
-  // console.log("is max length__________", loggedUser.phase + 1);
-  // console.log("is max__________", isMax);
 
   // for update logged data and userInfo-------------
 
@@ -64,55 +53,32 @@ export default function UserDashboard() {
 
   // phases data old way------
 
-  useEffect(() => {
-    let phaseLimitValues;
+  // useEffect(() => {
+  //   let phaseLimitValues;
 
-    if (loggedUser?.accountType === "Beta Standard") {
-      phaseLimitValues = [
-        { phase: 1, min: 10, max: 8 },
-        { phase: 2, min: 10, max: 5 },
-        { phase: 3, min: 10, max: Infinity },
-      ];
-    } else if (loggedUser?.accountType === "Beta Algo") {
-      phaseLimitValues = [
-        { phase: 1, min: 8, max: 10 },
-        { phase: 2, min: 8, max: Infinity },
-      ];
-    } else {
-      phaseLimitValues = [
-        { phase: 1, min: 8, max: 10 },
-        { phase: 2, min: 8, max: Infinity },
-      ];
-    }
-    const currentPhaseData = phaseLimitValues.find(
-      (value) => value.phase === loggedUser.phase
-    );
-    dispatch(setPhaseMaxLength(phaseLimitValues.length));
-    dispatch(setPhaseStats(currentPhaseData));
-  }, [loggedUser]);
-
-  // for update phase ---------------
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!isMax && loggedUser.phase !== 0) {
-        await getUpdatePhase();
-      }
-    };
-
-    if (!isMax && loggedUser.phase !== 0) {
-      getUpdatePhase();
-    }
-
-    const intervalId = setInterval(() => {
-      fetchData();
-      console.log("getUpdatePhase");
-    }, 10000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [loggedUser]);
+  //   if (loggedUser?.accountType === "Beta Standard") {
+  //     phaseLimitValues = [
+  //       { phase: 1, min: 10, max: 8 },
+  //       { phase: 2, min: 10, max: 5 },
+  //       { phase: 3, min: 10, max: Infinity },
+  //     ];
+  //   } else if (loggedUser?.accountType === "Beta Algo") {
+  //     phaseLimitValues = [
+  //       { phase: 1, min: 8, max: 10 },
+  //       { phase: 2, min: 8, max: Infinity },
+  //     ];
+  //   } else {
+  //     phaseLimitValues = [
+  //       { phase: 1, min: 8, max: 10 },
+  //       { phase: 2, min: 8, max: Infinity },
+  //     ];
+  //   }
+  //   const currentPhaseData = phaseLimitValues.find(
+  //     (value) => value.phase === loggedUser.phase
+  //   );
+  //   dispatch(setPhaseMaxLength(phaseLimitValues.length));
+  //   dispatch(setPhaseStats(currentPhaseData));
+  // }, [loggedUser]);
 
   // // group phase new wayy -------------
 
@@ -145,7 +111,31 @@ export default function UserDashboard() {
   //     }
   //   };
   //   fetchPhases();
-  // }, [loggedUser]);
+  // }, [loggedUser.phase]);
+
+  // for update phase ---------------
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!isMax && loggedUser.phase !== 0 && phaseStats) {
+        await getUpdatePhase();
+      }
+    };
+
+    if (!isMax && loggedUser.phase !== 0 && phaseStats) {
+      getUpdatePhase();
+      updatePhaseStats(); // for update phase stats---
+    }
+
+    const intervalId = setInterval(() => {
+      fetchData();
+      console.log("getUpdatePhase");
+    }, 10000);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [loggedUser]);
 
   return (
     <motion.div
