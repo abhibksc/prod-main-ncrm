@@ -1,20 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccount";
 import UserDashboardAccountStats from "@/components/user/dashboard/UserDashboardAccountStats";
 import UserDashboardBanner from "@/components/user/dashboard/UserDashboardBanner";
 import UserDashboardCountdown from "@/components/user/dashboard/UserDashboardCountdown";
-import UserLineChart from "@/components/user/UserLineChart";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
-import {
-  setPhaseMaxLength,
-  setPhaseStats,
-  setProfitNloss,
-} from "@/redux/user/userSlice";
-import { useLocation } from "react-router-dom";
+import { setPhaseMaxLength, setPhaseStats } from "@/redux/user/userSlice";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
 import axios from "axios";
 
@@ -25,20 +19,11 @@ export default function UserDashboard() {
     getUpdateLoggedUser,
     GetOpenTradeApi,
   } = UseUserHook();
-  const closeTrades = useSelector((store) => store.user.closeTrades);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
-  const profitNloss = useSelector((store) => store.user.profitNloss);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
 
   const isMax = phaseMaxLength === loggedUser.phase - 1;
-  // const isOnLast = phaseMaxLength - 1 === phaseMaxLength - 1 ? true : false;
-  console.log("is max dashboard ---", isMax);
-
-  // console.log("isOnLast dashboard ----", isOnLast);
-
-  // console.log("is max length__________", loggedUser.phase + 1);
-  // console.log("is max__________", isMax);
 
   // for update logged data and userInfo-------------
 
@@ -114,7 +99,7 @@ export default function UserDashboard() {
     };
   }, [loggedUser]);
 
-  // // group phase new wayy -------------
+  // // group phase new way -------------
 
   // useEffect(() => {
   //   const fetchPhases = async () => {
@@ -138,6 +123,10 @@ export default function UserDashboard() {
   //         min: filterCurrentPhaseData.maxOverallLoss,
   //         max: filterCurrentPhaseData.maxProfit,
   //       };
+  //       console.log(
+  //         "filter current phase data_________________________________",
+  //         currentPhaseData
+  //       );
   //       dispatch(setPhaseMaxLength(filterallPhaseData.length));
   //       dispatch(setPhaseStats(currentPhaseData));
   //     } catch (error) {
@@ -145,7 +134,7 @@ export default function UserDashboard() {
   //     }
   //   };
   //   fetchPhases();
-  // }, [loggedUser]);
+  // }, [loggedUser.phase]);
 
   return (
     <motion.div
