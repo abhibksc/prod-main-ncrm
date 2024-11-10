@@ -137,11 +137,18 @@ const UserHeader = () => {
           </button>
           <a href="/user/dashboard" className=" items-center mr-4">
             <img
-              src={import.meta.env.VITE_LOGO_LINK}
+              src="/local-logo.png"
               alt="Forex Funding Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
           </a>
+          {/* <a href="/user/dashboard" className=" items-center mr-4">
+            <img
+              src={import.meta.env.VITE_LOGO_LINK}
+              alt="Forex Funding Logo"
+              className=" object-contain w-auto h-10 md:h-12 sm:h-8"
+            />
+          </a> */}
         </div>
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
@@ -161,9 +168,9 @@ const UserHeader = () => {
         </div>
         <div className="relative flex items-center gap-2">
           <div className=" flex gap-1 items-center">
-            <CheckCircle className=" w-4 mt-1 text-green-500  " />
+            <CheckCircle className=" w-4 mt-1 text-secondary-500  " />
 
-            <p className="text-sm text-green-500  font-semibold">
+            <p className="text-sm text-secondary-500  font-semibold">
               {loggedUser.firstName}
             </p>
           </div>

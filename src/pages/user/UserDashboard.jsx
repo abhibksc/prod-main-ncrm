@@ -12,6 +12,9 @@ import { setPhaseMaxLength, setPhaseStats } from "@/redux/user/userSlice";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
 import axios from "axios";
 import UsePhaseStats from "@/hooks/user/UsePhaseStats";
+import VisitorHoursGraph from "@/components/user/graph/VisitorHoursGraph";
+import VisitorChart from "@/components/user/graph/VisitorChart";
+import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
 
 export default function UserDashboard() {
   const {
@@ -164,10 +167,15 @@ export default function UserDashboard() {
       >
         <div className="">
           {/* <UserLineChart /> */}
-          <TradingViewWidget></TradingViewWidget>
+          {/* <TradingViewWidget></TradingViewWidget> */}{" "}
+          <VisitorChart></VisitorChart>
         </div>
         <div className=" flex md:ml-20 flex-col">
           <UserDashboardAccount />
+          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
+          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
+          {/* <VisitorChart></VisitorChart> */}
+          {/* <VisitorsLineChart></VisitorsLineChart> */}
         </div>
       </motion.div>
 

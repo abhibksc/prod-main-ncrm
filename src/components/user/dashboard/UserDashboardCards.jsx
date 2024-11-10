@@ -99,21 +99,21 @@ const UserDashboardBalanceCards = () => {
         icon={Scale}
         title="Account Size"
         value={`${loggedUser.accountSize} $USD`}
-        borderColor="#f97316"
+        borderColor="#00BCD4"
         delay={0.2}
       />
       <BalanceCard
         icon={Activity}
         title="Available Balance"
         value={`${loggedUser.phase === 0 ? "000" : availableBalance} $USD`}
-        borderColor="#3b82f6"
+        borderColor="#00BCD4"
         delay={0.3}
       />
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Profit/Loss"
         value={`${loggedUser.phase === 0 ? 0 : profitNloss.toFixed(2)} USD`}
-        borderColor="#facc15"
+        borderColor="#00BCD4"
         delay={0.4}
         isProfit={isPositive}
       />
@@ -121,7 +121,7 @@ const UserDashboardBalanceCards = () => {
         icon={CircleDot}
         title="Phase"
         value={isMax ? `Live Account` : loggedUser.phase}
-        borderColor="#a855f7"
+        borderColor="#00BCD4"
         delay={0.5}
         isMax={isMax}
         isPhase={true}

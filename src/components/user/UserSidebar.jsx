@@ -22,7 +22,7 @@ const MenuItem = ({ icon: Icon, label, link }) => (
     <NavLink
       to={link}
       className={({ isActive }) =>
-        `flex flex-col items-center justify-center p-4 rounded-lg ${
+        `flex items-center gap-3 p-4 rounded-lg ${
           isActive
             ? "text-secondary-500"
             : "text-white/80 transition-colors duration-300"
