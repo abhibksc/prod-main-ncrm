@@ -371,7 +371,7 @@ const UserLogin = () => {
                       <img
                         src="/local-logo.png"
                         alt="Forex Funding Logo"
-                        className=" object-contain w-auto h-10 md:h-16 sm:h-8"
+                        className=" object-contain w-auto h-10 md:h-16 sm:h-10"
                       />
                     </a>
                     <h2 className="text-4xl font-bold mb-2 text-white">
