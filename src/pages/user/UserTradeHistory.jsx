@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { DollarSign, BarChart2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BarChart2 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Loader from "@/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("closed");
@@ -11,7 +11,6 @@ export default function UserTradeHistory() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const currentAccount = useSelector((store) => store.user.currentAccount);
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const fetchTradeData = async (tradeType = "closed") => {
@@ -104,13 +103,13 @@ export default function UserTradeHistory() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-secondary-800/20 p-6 rounded-lg shadow-lg my-5 text-white"
+      className="bg-secondary-800/70 p-6 rounded-lg shadow-lg my-5 text-white"
     >
       <motion.h1
         variants={itemVariants}
         className="mb-6 text-2xl font-bold flex items-center"
       >
-        <BarChart2 className="mr-2" />
+        <BarChart2 className="mr-2 text-secondary-500" />
         Trades History
       </motion.h1>
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
@@ -146,7 +145,7 @@ export default function UserTradeHistory() {
           exit={{ opacity: 0 }}
           className="text-center py-4"
         >
-          <Loader />
+          <DynamicLoder></DynamicLoder>
         </motion.div>
       )}
       {error && (
