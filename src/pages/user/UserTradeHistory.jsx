@@ -104,7 +104,7 @@ export default function UserTradeHistory() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-secondary-800/70 p-6 rounded-lg shadow-lg my-5 text-white"
+      className="bg-secondary-800/20 p-6 rounded-lg shadow-lg my-5 text-white"
     >
       <motion.h1
         variants={itemVariants}
@@ -204,24 +204,45 @@ export default function UserTradeHistory() {
                         ? trade?.Open_Time
                         : trade?.Close_Time}
                     </td>
-                    <td className="text-left py-1 px-6">{trade?.Open_Price}</td>
+                    <td className="text-left py-1 px-6">
+                      {trade?.Open_Price.toFixed(2)}
+                    </td>
+
                     {activeTab === "closed" && (
                       <td className="text-left py-2 px-6 ">
-                        {trade?.Close_Price}
+                        {trade?.Close_Price.toFixed(2)}
                       </td>
                     )}
-                    <td
-                      className={`text-center py-3 px-4 ${
-                        trade?.BUY_SELL === 0
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
-                    </td>
-                    <td className="text-right py-3 px-4">
-                      {trade?.Lot / 100000}
-                    </td>
+                    {activeTab === "closed" && (
+                      <td
+                        className={`text-center py-2 px-6 ${
+                          trade?.OrderType === 0
+                            ? "text-red-500"
+                            : "text-green-500"
+                        } `}
+                      >
+                        {trade?.OrderType === 0 ? "Sell" : "Buy"}
+                      </td>
+                    )}
+
+                    {activeTab === "open" && (
+                      <td
+                        className={`text-center py-3 px-4 ${
+                          trade?.BUY_SELL === 0
+                            ? "text-green-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
+                      </td>
+                    )}
+                    {activeTab === "open" ? (
+                      <td className="text-right py-3 px-4">
+                        {trade?.Lot / 100000}
+                      </td>
+                    ) : (
+                      <td className="text-right py-3 px-4">{trade?.Lot}</td>
+                    )}
                     <td
                       className={`text-right py-3 px-4 ${
                         trade?.Profit >= 0 ? "text-green-500" : "text-red-500"
