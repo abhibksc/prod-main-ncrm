@@ -39,7 +39,7 @@ const UserReferal = () => {
       whileTap={{ scale: 0.95 }}
       className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base ${
         isActive
-          ? "bg-secondary-700/80 text-white shadow-lg"
+          ? "bg-secondary-500/70 text-white shadow-lg"
           : "text-white hover:bg-secondary-700/20"
       }`}
       onClick={onClick}

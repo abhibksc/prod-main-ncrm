@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Loader from "@/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
 import { data } from "autoprefixer";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 export default function UserTransaction() {
   const [activeTab, setActiveTab] = useState("withdrawal");
@@ -135,7 +136,7 @@ export default function UserTransaction() {
         variants={itemVariants}
         className="mb-6 text-2xl font-bold flex items-center"
       >
-        <ArrowUpDownIcon className="mr-2" />
+        <ArrowUpDownIcon className="mr-2 text-secondary-500" />
         Transaction History
       </motion.h1>
 
@@ -173,7 +174,8 @@ export default function UserTransaction() {
           exit={{ opacity: 0 }}
           className="text-center py-4"
         >
-          <Loader />
+          {/* <Loader /> */}
+          <DynamicLoder></DynamicLoder>
         </motion.div>
       )}
 

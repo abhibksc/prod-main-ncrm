@@ -148,6 +148,13 @@ const UserSignUp = () => {
           className="w-full max-w-4xl relative z-10"
         >
           <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
+            <a className=" flex flex-col justify-center mt-8 items-center mr-4">
+              <img
+                src={import.meta.env.VITE_LOGO_LINK}
+                alt="Forex Funding Logo"
+                className=" object-contain w-auto h-10 md:h-16 sm:h-10"
+              />
+            </a>
             <div className="p-8 md:p-12">
               <motion.div
                 initial={{ y: -20, opacity: 0 }}
@@ -157,7 +164,7 @@ const UserSignUp = () => {
                 <h2 className="text-4xl font-bold mb-2 text-white">
                   Create Your Account
                 </h2>
-                <p className="text-secondary-300 mb-8">
+                <p className="text-secondary-500 mb-8">
                   Join {import.meta.env.VITE_WEBSITE_NAME} and start your
                   trading journey today.
                 </p>
@@ -184,13 +191,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <User
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="firstName"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleChange}
@@ -204,13 +211,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <User
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="lastName"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleChange}
@@ -225,13 +232,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Mail
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="email"
                     name="email"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
@@ -250,7 +257,7 @@ const UserSignUp = () => {
                     onChange={handlePhoneChange}
                     defaultCountry="IN"
                     international
-                    inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     className="react-tel-input"
                     required={true}
                   />
@@ -262,12 +269,12 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Globe
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <select
                     name="country"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     value={formData.country}
                     onChange={handleChange}
                     required
@@ -286,13 +293,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="address"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleChange}
@@ -305,13 +312,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="state"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="State"
                     value={formData.state}
                     onChange={handleChange}
@@ -325,13 +332,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="city"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="City"
                     value={formData.city}
                     onChange={handleChange}
@@ -344,13 +351,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="text"
                     name="zipCode"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Zip code"
                     value={formData.zipCode}
                     onChange={handleChange}
@@ -363,13 +370,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Lock
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="password"
                     name="password"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
@@ -384,13 +391,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Lock
-                    className="absolute top-3 left-3 text-secondary-400"
+                    className="absolute top-3 left-3 text-secondary-500"
                     size={20}
                   />
                   <input
                     type="password"
                     name="confirmPassword"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
                     placeholder="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
@@ -410,11 +417,11 @@ const UserSignUp = () => {
                       className="mr-2 form-checkbox text-green-500 rounded"
                       required
                     />
-                    <span className="text-sm text-secondary-300">
+                    <span className="text-sm text-gray-400">
                       I agree with the
                       <a
                         href={import.meta.env.VITE_TAC_LINK}
-                        className="text-blue-400 mx-1 cursor-pointer"
+                        className="text-blue-400 hover:text-blue-400/80 mx-1 cursor-pointer"
                         target="_blank"
                       >
                         Terms & Conditions
@@ -428,7 +435,7 @@ const UserSignUp = () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.7 }}
                   type="submit"
-                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
                 >
                   <Check className="mr-2" size={20} />
                   Create Account
@@ -442,11 +449,11 @@ const UserSignUp = () => {
               transition={{ delay: 0.8 }}
               className="px-8 py-4 bg-secondary-700 bg-opacity-50 border-t border-secondary-600"
             >
-              <p className="text-center text-sm text-secondary-300">
+              <p className="text-center text-sm text-gray-400">
                 Already have an account?{" "}
                 <Link
                   to="/user/login"
-                  className="font-medium text-green-500 hover:text-green-400 transition"
+                  className="font-medium text-blue-400 hover:text-blue-400/80 transition"
                 >
                   Log in here
                 </Link>

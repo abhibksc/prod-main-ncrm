@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 
 const UserPlatform = () => {
   return (
-    <div className="p-4 sm:p-8 bg-gradient-to-br from-primary-900 to-gray-800 min-h-screen">
+    <div className="p-4 sm:p-8 bg-gradient-to-br from-primary-900 to-gray-800">
       <motion.h2
         className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-12 text-center"
         initial={{ opacity: 0, y: -50 }}
@@ -28,19 +28,25 @@ const UserPlatform = () => {
           description="Experience the power of MetaTrader 5 on your preferred device. Download now for advanced trading features and real-time market analysis."
           buttons={[
             {
-              icon: <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />,
+              icon: (
+                <Smartphone className="w-5 text-secondary-500 h-5 sm:w-6 sm:h-6" />
+              ),
               text: "Android",
               downloadLink:
                 "https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5&pcampaignid=web_share",
             },
             {
-              icon: <AppleIcon className="w-5 h-5 sm:w-6 sm:h-6" />,
+              icon: (
+                <AppleIcon className="w-5 text-secondary-500 h-5 sm:w-6 sm:h-6" />
+              ),
               text: "iOS",
               downloadLink:
                 "https://apps.apple.com/us/app/metatrader-5/id413251709?platform=ipad",
             },
             {
-              icon: <Monitor className="w-5 h-5 sm:w-6 sm:h-6" />,
+              icon: (
+                <Monitor className="w-5  text-secondary-500 h-5 sm:w-6 sm:h-6" />
+              ),
               text: "Windows",
               downloadLink:
                 "https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_source=www.metatrader5.com&utm_campaign=download",

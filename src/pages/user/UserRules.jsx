@@ -81,7 +81,7 @@ const UserRules = () => {
             href={part}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 underline"
+            className="text-blue-400 hover:text-blue-400/80 underline"
           >
             {part}
           </a>
@@ -128,7 +128,7 @@ const UserRules = () => {
           className="bg-secondary-700/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
-            <Shield className="mr-2" />
+            <Shield className="mr-2 text-secondary-500" />
             Rules
           </h3>
           {loading ? (
@@ -166,7 +166,7 @@ const UserRules = () => {
           className="bg-secondary-700/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
-            <BookOpenIcon className="mr-2 text-white" />
+            <BookOpenIcon className="mr-2 text-secondary-500 " />
             Forex Definitions
           </h3>
           <div className="space-y-4">

@@ -296,13 +296,13 @@ const UserChnagePassword = () => {
           </Link>
           <motion.button
             type="submit"
-            className="w-full sm:w-auto bg-green-600/80 text-white py-3 px-6 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
-            initial={{ scale: 0.95 }}
-            whileHover={{ scale: 1.05 }}
+            className="w-full sm:w-auto bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-500/80 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            initial={{ scale: 0.99 }}
+            whileHover={{ scale: 1.01 }}
             transition={{ duration: 0.3 }}
           >
             <CheckCircle className="mr-2" size={20} />
-            Change Password
+            Update Password
           </motion.button>
         </div>
       </form>

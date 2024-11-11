@@ -369,7 +369,7 @@ const UserLogin = () => {
                       className=" flex flex-col justify-center mb-5 items-center mr-4"
                     >
                       <img
-                        src="/local-logo.png"
+                        src={import.meta.env.VITE_LOGO_LINK}
                         alt="Forex Funding Logo"
                         className=" object-contain w-auto h-10 md:h-16 sm:h-10"
                       />
@@ -395,7 +395,7 @@ const UserLogin = () => {
                       <input
                         type="email"
                         id="email"
-                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                         placeholder="Email address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -415,7 +415,7 @@ const UserLogin = () => {
                       <input
                         type="password"
                         id="password"
-                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -426,7 +426,7 @@ const UserLogin = () => {
                       <button
                         type="button"
                         onClick={() => setShowForgotPassword(true)}
-                        className="text-sm text-secondary-500 hover:text-white hover:  transition-all"
+                        className="text-sm text-blue-400 font-semibold hover:text-blue-400/80  transition-all"
                       >
                         Forgot password?
                       </button>
@@ -436,7 +436,7 @@ const UserLogin = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
                       type="submit"
-                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-secondary-500 transition transform hover:scale-105"
                     >
                       <LogIn className="mr-1" size={20} />
                       <p className="group-hover:animate-pulse transition-all">
@@ -452,11 +452,11 @@ const UserLogin = () => {
                   transition={{ delay: 0.6 }}
                   className="px-8 py-4 bg-secondary-700/30 bg-opacity-50 border-t border-secondary-600"
                 >
-                  <p className="text-center text-sm text-secondary-500/70">
+                  <p className="text-center text-sm text-gray-400">
                     Don't have an account?{" "}
                     <Link
                       to="/user/signup"
-                      className="font-medium text-secondary-500 hover:text-secondary-500/80 transition"
+                      className="font-medium text-blue-400 hover:text-blue-400/80 transition"
                     >
                       Sign up
                     </Link>

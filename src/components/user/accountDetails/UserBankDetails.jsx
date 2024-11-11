@@ -14,7 +14,7 @@ const InputField = ({ label, placeholder, value, onChange, name }) => (
       value={value}
       onChange={onChange}
       name={name}
-      className="w-full px-4 py-3 border text-secondary-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-600 focus:border-secondary-600 transition-all duration-300"
+      className="w-full px-4 py-3 border text-secondary-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300"
     />
   </div>
 );
@@ -120,7 +120,7 @@ const UserBankDetails = () => {
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={submitHandler}
-          className="px-6 py-3 bg-secondary-700 text-white font-semibold rounded-full hover:bg-secondary-700/60 hover:px-8 transition-all shadow-lg"
+          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-500/80 hover:px-8 transition-all shadow-lg"
         >
           Update Details
         </motion.button>

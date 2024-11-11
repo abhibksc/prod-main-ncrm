@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Loader from "@/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("closed");
@@ -110,7 +111,7 @@ export default function UserTradeHistory() {
         variants={itemVariants}
         className="mb-6 text-2xl font-bold flex items-center"
       >
-        <BarChart2 className="mr-2" />
+        <BarChart2 className="mr-2 text-secondary-500" />
         Trades History
       </motion.h1>
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
@@ -146,7 +147,7 @@ export default function UserTradeHistory() {
           exit={{ opacity: 0 }}
           className="text-center py-4"
         >
-          <Loader />
+          <DynamicLoder></DynamicLoder>
         </motion.div>
       )}
       {error && (
