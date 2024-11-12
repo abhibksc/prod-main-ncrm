@@ -385,12 +385,12 @@ const UserReferal = () => {
                 : "opacity-0 translate-y-10"
             }`}
           >
-            <div className="bg-secondary-600/10 px-4 py-1 rounded-full text-sm font-medium text-secondary-600 mb-4 hover:bg-secondary-600/20 transition-colors">
+            <div className="bg-secondary-600/10 px-4 py-1 rounded-full text-sm font-medium text-secondary-500 mb-4 hover:bg-secondary-600/20 transition-colors">
               Earn 15% Per referral commission{" "}
             </div>
             <h2 className="text-3xl font-bold mb-4">
               Transform Your Network Into <br />
-              <span className="text-secondary-600 inline-block hover:scale-105 transition-transform">
+              <span className="text-secondary-500 inline-block hover:scale-105 transition-transform">
                 Passive Income
               </span>
             </h2>
@@ -401,7 +401,7 @@ const UserReferal = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <button
-                className="px-6 py-3 bg-secondary-600/70 hover:bg-secondary-600/40 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-600/80 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 onClick={generateHandler}
               >
                 <Users className="animate-pulse" size={20} />
@@ -427,7 +427,7 @@ const UserReferal = () => {
                 }`}
                 style={{ transitionDelay: `${index * 200}ms` }}
               >
-                <div className="text-2xl font-bold text-secondary-600">
+                <div className="text-2xl font-bold text-secondary-500">
                   {stat.value}
                 </div>
                 <div className="text-sm text-gray-300">{stat.label}</div>
@@ -466,8 +466,8 @@ const UserReferal = () => {
                 }`}
                 style={{ transitionDelay: `${index * 200}ms` }}
               >
-                <div className="w-12 h-12 bg-secondary-600/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary-600/20 transition-all duration-300 group-hover:scale-110">
-                  <feature.icon className="w-6 h-6 text-secondary-600 transition-transform duration-300 group-hover:rotate-12" />
+                <div className="w-12 h-12 bg-secondary-700/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-secondary-600/20 transition-all duration-300 group-hover:scale-110">
+                  <feature.icon className="w-6 h-6 text-secondary-500 transition-transform duration-300 group-hover:rotate-12" />
                 </div>
                 <h3 className="font-semibold mb-2">{feature.title}</h3>
                 <p className="text-gray-300 text-sm">{feature.description}</p>
@@ -511,7 +511,7 @@ const UserReferal = () => {
                   style={{ transitionDelay: `${index * 300}ms` }}
                 >
                   <div className="w-8 h-8 bg-secondary-600/10 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 group-hover:scale-110">
-                    <span className="text-secondary-600 font-medium">
+                    <span className="text-secondary-500 font-medium">
                       {step.step}
                     </span>
                   </div>
@@ -539,7 +539,7 @@ const UserReferal = () => {
               Join our community of dedicated and successful affiliates.{" "}
             </p>
             <button
-              className="px-8 py-4 bg-secondary-600/70 hover:bg-secondary-600/40 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="px-8 py-4 bg-blue-600 hover:bg-blue-600/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
               onClick={generateHandler}
             >
               <Users className="animate-pulse" size={20} />

@@ -192,13 +192,6 @@ const Sidebar = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <a href="/user/dashboard" className=" items-center mr-4">
-          <img
-            src="/local-logo.png"
-            alt="Forex Funding Logo"
-            className=" object-contain w-auto h-10 md:h-12 sm:h-8"
-          />
-        </a>
         <ul className="space-y-2 text-sm px-4 py-1">
           {menuItems.map((item, index) => (
             <li key={index} className="relative">
