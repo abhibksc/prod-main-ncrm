@@ -16,6 +16,7 @@ import {
   LucideDownload,
   HardDriveDownloadIcon,
 } from "lucide-react";
+import { handleToggleSidebar } from "@/redux/user/userSlice";
 
 const MenuItem = ({ icon: Icon, label, link }) => (
   <motion.div whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
@@ -170,13 +171,23 @@ const UserSidebar = () => {
           variants={contentVariants}
         >
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
+            <a
+              href="/user/dashboard"
+              className=" flex items-center md:hidden justify-center mb-4 mr-4"
+            >
+              <img
+                src={import.meta.env.VITE_LOGO_LINK}
+                alt="Forex Funding Logo"
+                className=" object-contain w-auto h-10 md:h-12 sm:h-8"
+              />
+            </a>
             {(loggedUser.phase === 0 || isMax) && (
               <motion.div
                 className=" hover:py-2 transition-all"
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-700/90 w-full transition-all duration-300 hover:bg-secondary-600">
+                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/50">
                     New challenge
                   </button>
                 </Link>
@@ -187,6 +198,7 @@ const UserSidebar = () => {
                 menuItems.map((item) => (
                   <motion.div
                     key={item.label}
+                    onClick={() => dispatch(handleToggleSidebar(false))}
                     className="w-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
