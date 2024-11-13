@@ -46,7 +46,7 @@ export default function UserDashboard() {
     fetchData();
     const intervalId = setInterval(() => {
       fetchData();
-    }, 6000);
+    }, 4000);
 
     return () => {
       clearInterval(intervalId);
@@ -121,27 +121,26 @@ export default function UserDashboard() {
 
   // for update phase ---------------
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!isMax && loggedUser.phase !== 0 && phaseStats) {
-        await getUpdatePhase();
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!isMax && loggedUser.phase !== 0 && phaseStats) {
+  //       // await getUpdatePhase();
+  //     }
+  //   };
 
-    if (!isMax && loggedUser.phase !== 0 && phaseStats) {
-      getUpdatePhase();
-      updatePhaseStats(); // for update phase stats---
-    }
+  //   if (!isMax && loggedUser.phase !== 0 && phaseStats) {
+  //     // getUpdatePhase();
+  //     updatePhaseStats(); // for update phase stats---
+  //   }
 
-    const intervalId = setInterval(() => {
-      fetchData();
-      console.log("getUpdatePhase");
-    }, 10000);
+  //   const intervalId = setInterval(() => {
+  //     fetchData();
+  //   }, 10000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [loggedUser]);
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [loggedUser]);
 
   return (
     <motion.div

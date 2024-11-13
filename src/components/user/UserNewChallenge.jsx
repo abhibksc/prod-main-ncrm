@@ -322,7 +322,7 @@ const UserNewChallenge = () => {
     `${filterPhaseData?.maxDailyLoss || 0}% Max Daily Loss*`,
   ];
   return (
-    <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
+    <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-6xl mx-auto">
       <div className="flex justify-between mb-8">
         {["Configure", "Verify", "Pay"].map((stepName, index) => (
           <div key={stepName} className="flex flex-col items-center">
@@ -400,7 +400,7 @@ const UserNewChallenge = () => {
                       }
                       className={`p-4 flex rounded-full items-center justify-center transition-colors ${
                         formData.platform === plt.name
-                          ? "bg-secondary-600/80 shadow-lg  font-semibold"
+                          ? "bg-secondary-500/80 shadow-lg  font-semibold"
                           : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -428,7 +428,7 @@ const UserNewChallenge = () => {
                       }
                       className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
                         formData.accountSize === option.deposit
-                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          ? "bg-secondary-500/80 shadow-lg text-white"
                           : "bg-secondary-800/60 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -646,7 +646,7 @@ const UserNewChallenge = () => {
                       onClick={() => setSelectedPayment(method.name)}
                       className={`p-4 flex flex-col items-center font-semibold justify-center rounded-lg transition-colors ${
                         selectedPayment === method.name
-                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          ? "bg-secondary-500/80 shadow-lg text-white"
                           : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -734,7 +734,7 @@ const UserNewChallenge = () => {
                   Upload proof of payment
                 </label>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <label className="cursor-pointer bg-secondary-700 hover:bg-secondary-600 transition-colors py-2 px-4 rounded-lg flex items-center">
+                  <label className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-600 transition-colors py-2 px-4 rounded-lg flex items-center">
                     <Upload className="mr-2" />
                     Choose file
                     <input
@@ -796,7 +796,7 @@ const UserNewChallenge = () => {
                 <label htmlFor="agreeToTerms" className="text-sm">
                   I agree to
                   <a
-                    href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                    href={import.meta.env.VITE_TAC_LINK}
                     className="text-blue-400 mx-1 cursor-pointer"
                     target="_blank"
                   >
@@ -809,7 +809,7 @@ const UserNewChallenge = () => {
                 disabled={!agreeToTerms || !selectedPayment || !file}
                 className={`w-full flex mx-auto justify-center items-center py-3 px-4 rounded-lg text-white transition-colors ${
                   selectedPayment && agreeToTerms && file
-                    ? "bg-green-700 hover:bg-green-800 "
+                    ? "bg-blue-500 hover:bg-blue-500/80 "
                     : "bg-gray-600  pointer-events-none"
                 }`}
               >
@@ -822,7 +822,7 @@ const UserNewChallenge = () => {
           )}
         </motion.div>
       </AnimatePresence>
-      <div className="flex relative justify-between mt-8">
+      <div className="flex relative justify-between mt-8 mb-2">
         {step > 1 && (
           <button
             onClick={prevStep}
@@ -838,7 +838,7 @@ const UserNewChallenge = () => {
           <div className="  absolute top-[-10px] right-0">
             <button
               onClick={nextStep}
-              className="bg-secondary-700/80  hover:px-6 transition-all text-white px-4 py-2  rounded-full"
+              className="bg-secondary-500/70  hover:px-6 transition-all text-white px-4 py-2  rounded-full"
             >
               Next
               <ArrowRightCircleIcon className="inline-block ml-2 animate-bounce" />
