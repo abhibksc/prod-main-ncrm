@@ -120,7 +120,12 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={CircleDot}
         title="Phase"
-        value={isMax ? `Live Account` : loggedUser.phase}
+        value={
+          loggedUser.accountSize > 0 && isMax
+            ? `Live Account`
+            : loggedUser.phase
+        }
+        // value={isMax ? `Live Account` : loggedUser.phase}
         borderColor="#00BCD4"
         delay={0.5}
         isMax={isMax}
