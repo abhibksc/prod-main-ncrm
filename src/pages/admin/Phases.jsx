@@ -178,7 +178,9 @@ export default function Phases() {
 
   return (
     <div className="min-h-screen bg-primary-800 p-4">
-      <h1 className=" text-white mb-4 text-4xl font-bold ">Phase Management</h1>
+      <h1 className=" text-white mb-4 text-3xl md:text-4xl font-bold ">
+        Phase Management
+      </h1>
       <div className="max-w-7xl mx-auto">
         <form
           onSubmit={handleSubmit}
@@ -410,7 +412,7 @@ export default function Phases() {
           </div>
         </form>
 
-        <div className="bg-primary-700/60 rounded-lg shadow-xl">
+        <div className="bg-primary-700/60 overflow-x-scroll md:overflow-hidden rounded-lg shadow-xl">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-700">

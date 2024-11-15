@@ -28,7 +28,7 @@ export default function Dashboard() {
         <InvestmentReport></InvestmentReport>
         <TradeReport></TradeReport>
       </div>
-      <div className=" px-5 grid grid-cols-3 my-10 gap-2">
+      <div className=" px-5 grid grid-cols-1 md:grid-cols-3 my-10 gap-2">
         <BrowserGraph></BrowserGraph>
         <OsGraph></OsGraph>
         <CountryGraph></CountryGraph>

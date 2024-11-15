@@ -4,8 +4,10 @@ import Header from "./components/admin/Header";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
+
 export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
+  const adminToggle = useSelector((store) => store.admin.adminToggle);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,23 +15,22 @@ export default function App() {
       navigate("/admin/login");
     }
   }, [adminUser, navigate]);
-  console.log("object");
 
   if (!adminUser) {
     return null;
   }
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="text-white h-screen overflow-hidden">
       <Toaster />
-      <div className="fixed top-0 left-0 right-0 z-10">
-        <Header />
-      </div>
-      <div className="flex flex-1 pt-14">
-        <div className="fixed left-0 w-64">
-          <Sidebar />
-        </div>
-        <div className="ml-64 flex-1 overflow-auto bg-primary-700/60">
+      <Header className="fixed top-0 w-full z-10" />
+      <div className="flex">
+        <Sidebar className="fixed top-15 left-0 h-full z-10" />
+        <div
+          className={`flex-1 custom-scrollbar pb-20 overflow-y-auto bg-primary-700/60 h-screen ${
+            !adminToggle ? "lg:ml-0" : ""
+          }`}
+        >
           <Outlet />
         </div>
       </div>

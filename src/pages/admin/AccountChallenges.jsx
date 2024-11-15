@@ -32,23 +32,17 @@ const AccountChallenges = () => {
     fetchChallengesData();
   }, []);
 
-  // Reset to first page when search query changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery]);
 
-  // Enhanced search function
   const filteredData = challengesData?.filter((item) => {
     if (!searchQuery.trim()) return true;
 
     const searchLower = searchQuery.toLowerCase().trim();
-
-    // List of all searchable fields
     const searchableFields = [
-      // User fields
       item?.userId?.firstName,
       item?.userId?.email,
-      // Account fields
       item?.mt5Account,
       item?.type,
       item?.accountSize?.toString(),
@@ -58,13 +52,11 @@ const AccountChallenges = () => {
       item?.status,
     ];
 
-    // Search through all fields
     return searchableFields.some((field) =>
       field?.toLowerCase()?.includes(searchLower)
     );
   });
 
-  // Calculate pagination
   const totalPages = Math.ceil((filteredData?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData?.slice(
@@ -106,13 +98,12 @@ const AccountChallenges = () => {
     return pageNumbers;
   };
 
-  // Handle search input change with debounce
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   return (
-    <div className="m-5 px-10 bg-primary-700 text-white rounded-xl shadow-2xl">
+    <div className="m-5 p-5 sm:px-6 bg-primary-700 text-white rounded-xl shadow-2xl">
       <div className="py-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <h2 className="text-3xl font-bold">Account Challenges</h2>
@@ -210,15 +201,14 @@ const AccountChallenges = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         {!loader && filteredData?.length > 0 && (
-          <div className="flex justify-between items-center mt-6 pb-4">
-            <div className="text-sm text-primary-300">
+          <div className="flex flex-wrap justify-between items-center mt-6 pb-4">
+            <div className="text-sm text-primary-300 mb-2 sm:mb-0">
               Showing {startIndex + 1} to{" "}
               {Math.min(startIndex + itemsPerPage, filteredData.length)} of{" "}
               {filteredData.length} entries
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-wrap items-center space-x-2">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
@@ -256,7 +246,6 @@ const AccountChallenges = () => {
           </div>
         )}
 
-        {/* No results message */}
         {!loader && filteredData?.length === 0 && (
           <div className="text-center py-8 text-primary-300">
             No results found for "{searchQuery}"
@@ -264,10 +253,9 @@ const AccountChallenges = () => {
         )}
       </div>
 
-      {/* Modal Dialog */}
       {isDialogOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-primary-700 rounded-lg p-6 max-w-md w-full">
+          <div className="bg-primary-700 rounded-lg p-6 max-w-full w-full sm:max-w-md">
             <h3 className="text-2xl font-bold mb-4">Challenge Details</h3>
             {selectedChallenge && (
               <div className="space-y-2">

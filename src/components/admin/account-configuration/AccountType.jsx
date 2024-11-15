@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { PlusCircle, Trash, Trash2 } from "lucide-react";
+import { PlusCircle, Trash2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Divider } from "../Divider";
 
 const AccountTypes = () => {
   const [accountTypes, setAccountTypes] = useState([]);
@@ -19,22 +18,20 @@ const AccountTypes = () => {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-custom-groups`
       );
-      console.log("res custom ac types--", res.data.data);
-
       setAccountTypes(res.data.data);
     } catch (error) {
       console.log("Error fetching account types", error);
     }
   };
+
   const fetchExistingData = async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-account-types`
       );
-
       setExistingData(res.data.data);
     } catch (error) {
-      console.log("Error fetching existing ac types data", error);
+      console.log("Error fetching existing account types data", error);
     }
   };
 
@@ -48,13 +45,11 @@ const AccountTypes = () => {
         const selectedType = accountTypes.find(
           (type) => type.customGroup === value
         );
-        console.log("selected type!!!", selectedType);
         if (selectedType) {
           updated.accountType = selectedType.customGroup;
           updated.apiGroup = selectedType.apiGroup;
         } else {
           updated.apiGroup = "";
-          updated.customGroup = "";
         }
       } else {
         updated[name] = value;
@@ -94,70 +89,75 @@ const AccountTypes = () => {
           accountSize: newAccountType.accountSize,
         }
       );
-      console.log("add account type---", res.data);
-
       if (res.data.status) {
         setNewAccountType({
           accountType: "",
           leverage: [{ label: "", value: "" }],
           accountSize: [{ deposit: "", balance: "" }],
         });
-        toast.success("Account type Added");
+        toast.success("Account type added successfully!");
         fetchExistingData();
       }
     } catch (error) {
       console.error("Error adding account type:", error);
     }
   };
+
   const deleteHandler = async (id) => {
     try {
-      const res = await axios.delete(
+      await axios.delete(
         `${
           import.meta.env.VITE_BECKEND_END_POINT
         }/api/auth/delete-account-type?id=${id}`
       );
-      toast.success("Account type deleted");
+      toast.success("Account type deleted successfully!");
       fetchExistingData();
     } catch (error) {
-      console.log("error in deleting account type", error);
+      console.error("Error deleting account type:", error);
     }
   };
+
   useEffect(() => {
     fetchAccountTypes();
     fetchExistingData();
   }, []);
-  // console.log("use state new account Type", newAccountType);
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-white">
+      <h1 className="text-3xl font-bold mb-6 text-center text-white">
         Configure Account Type
       </h1>
+      {/* Add New Account Type Form */}
       <div className="bg-primary-700 text-white shadow-md rounded-lg p-6 mb-8">
         <h2 className="text-2xl font-semibold mb-4">Add New Account Type</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block mb-2 font-medium">Account Type</label>
-            <select
-              name="accountType"
-              value={newAccountType.customGroup}
-              onChange={(e) => handleInputChange(e)}
-              required
-              className="w-full px-3 text-black py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select an account type</option>
-              {accountTypes?.map((type) => (
-                <option key={type._id} value={type?.customGroup}>
-                  {type?.customGroup}
-                </option>
-              ))}
-            </select>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+            <div className="flex-1">
+              <label className="block mb-2 font-medium">Account Type</label>
+              <select
+                name="accountType"
+                value={newAccountType.customGroup}
+                onChange={(e) => handleInputChange(e)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select an account type</option>
+                {accountTypes?.map((type) => (
+                  <option key={type._id} value={type.customGroup}>
+                    {type.customGroup}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div>
             <label className="block mb-2 font-medium">Leverage</label>
             {newAccountType.leverage.map((lev, index) => (
-              <div key={index} className="flex space-x-2 mb-2">
+              <div
+                key={index}
+                className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2"
+              >
                 <input
                   type="text"
                   placeholder="Label (e.g. 1:100)"
@@ -166,7 +166,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "leverage", "label")
                   }
                   required
-                  className="flex-1  text-black px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
@@ -176,7 +176,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "leverage", "value")
                   }
                   required
-                  className="flex-1 px-3 text-black py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -190,7 +190,7 @@ const AccountTypes = () => {
             <button
               type="button"
               onClick={() => addField("leverage")}
-              className="mt-2 flex items-center text-black px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <PlusCircle className="h-5 w-5 mr-2" /> Add Leverage
             </button>
@@ -199,7 +199,10 @@ const AccountTypes = () => {
           <div>
             <label className="block mb-2 font-medium">Account Size</label>
             {newAccountType.accountSize.map((size, index) => (
-              <div key={index} className="flex space-x-2 mb-2">
+              <div
+                key={index}
+                className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2"
+              >
                 <input
                   type="text"
                   placeholder="Deposit (payable)"
@@ -208,7 +211,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "accountSize", "deposit")
                   }
                   required
-                  className="flex-1 px-3 text-black py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
@@ -218,7 +221,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "accountSize", "balance")
                   }
                   required
-                  className="flex-1 px-3 text-black py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"
@@ -247,6 +250,7 @@ const AccountTypes = () => {
         </form>
       </div>
 
+      {/* Existing Account Types Table */}
       <div className="bg-primary-700 text-white shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">Existing Account Types</h2>
         <div className="overflow-x-auto">
@@ -262,35 +266,30 @@ const AccountTypes = () => {
             <tbody>
               {existingData?.map((type) => (
                 <tr key={type._id} className="border-t border-gray-500">
-                  <td className="px-4 py-2">{type?.accountType}</td>
+                  <td className="px-4 py-2">{type.accountType}</td>
                   <td className="px-4 py-2">
-                    {type?.leverage?.map((leverage) => (
-                      <div
-                        key={leverage._id}
-                        className=" border-b-2 border-primary-600"
-                      >
-                        <p>Lebel - {leverage?.label}</p>
-                        <p>Value - {leverage?.value}</p>
+                    {type.leverage?.map((lev, i) => (
+                      <div key={i} className="border-b-2 border-primary-600">
+                        <p>Label: {lev.label}</p>
+                        <p>Value: {lev.value}</p>
                       </div>
                     ))}
                   </td>
                   <td className="px-4 py-2">
-                    {type?.accountSize?.map((size) => (
-                      <div
-                        key={size._id}
-                        className=" border-b-2 border-primary-600"
-                      >
-                        <p>Deposit - {size?.deposit}</p>
-                        <p>Balance - {size?.balance}</p>
+                    {type.accountSize?.map((size, i) => (
+                      <div key={i} className="border-b-2 border-primary-600">
+                        <p>Deposit: {size.deposit}</p>
+                        <p>Balance: {size.balance}</p>
                       </div>
                     ))}
                   </td>
-                  <td className="px-4 py-2 ">
-                    <div className=" flex justify-center items-center text-red-500 hover:text-red-900 hover:scale-110 transition-all">
-                      <button onClick={() => deleteHandler(type._id)}>
-                        <Trash2></Trash2>
-                      </button>
-                    </div>
+                  <td className="px-4 py-2 text-center">
+                    <button
+                      onClick={() => deleteHandler(type._id)}
+                      className="text-red-500 hover:text-red-700 focus:outline-none"
+                    >
+                      <Trash2 className="h-5 w-5 mx-auto" />
+                    </button>
                   </td>
                 </tr>
               ))}

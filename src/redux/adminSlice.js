@@ -5,6 +5,7 @@ const initialState = {
   dbUsers: [],
   deposits: [],
   withdrawals: [],
+  adminToggle: false,
 };
 
 export const adminSlice = createSlice({
@@ -23,10 +24,18 @@ export const adminSlice = createSlice({
     setWithdrawals: (state, action) => {
       state.withdrawals = action.payload;
     },
+    setAdminToggle: (state) => {
+      state.adminToggle = !state.adminToggle;
+    },
   },
 });
 
-export const { setAdminUser, setDbUsers, setDeposits, setWithdrawals } =
-  adminSlice.actions;
+export const {
+  setAdminUser,
+  setDbUsers,
+  setDeposits,
+  setWithdrawals,
+  setAdminToggle,
+} = adminSlice.actions;
 
 export default adminSlice.reducer;

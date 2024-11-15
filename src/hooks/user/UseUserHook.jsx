@@ -33,8 +33,8 @@ export default function UseUserHook() {
   const totalFinalPnLRef = useRef(0);
   const [isToRefresh, setIsToRefresh] = useState(false);
 
-  const isMax = phaseMaxLength === loggedUser.phase + 1;
-  const isLastPhase = phaseMaxLength === loggedUser.phase;
+  const isMax = phaseMaxLength === loggedUser?.phase + 1;
+  const isLastPhase = phaseMaxLength === loggedUser?.phase;
 
   console.log("isLastPhase hook ----", isLastPhase);
   console.log("is phaseMaxLength hook----", phaseMaxLength);

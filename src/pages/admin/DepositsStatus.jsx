@@ -76,6 +76,7 @@ const DepositsStatus = () => {
   const dispatch = useDispatch();
   const [previewUrl, setPreviewUrl] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   console.log("selected deposit!!!!", selectedDeposit);
   const togglePreview = (item) => {
@@ -98,9 +99,9 @@ const DepositsStatus = () => {
     }
   };
 
-  let filterParamsData = depositData.filter((item) => item.status === status);
+  let filterParamsData = depositData?.filter((item) => item.status === status);
   if (status === "all") {
-    filterParamsData = depositData.filter(
+    filterParamsData = depositData?.filter(
       (item) =>
         item.status === "pending" ||
         item.status === "rejected" ||
@@ -604,61 +605,93 @@ const DepositsStatus = () => {
     // This function can be used to trigger a re-render if needed
     setDepositData([...depositData]);
   };
+  // pagination -------------------
+  const filteredData = getFilteredData();
+  const usersPerPage = 10; // Adjust as needed
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredData.slice(indexOfFirstUser, indexOfLastUser);
+
+  const totalPages = Math.ceil(filteredData.length / usersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   // use effect -----------------
 
   useEffect(() => {
     fetchApiData();
   }, [status]);
-  const filteredData = getFilteredData();
 
   return (
     <div className="container mx-auto px-10 py-5">
-      <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
-        {status} Deposits
-      </h1>
+      <div>
+        <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
+          {status} Deposits
+        </h1>
+        <div className="w-full space-y-4 p-4">
+          {/* User search form */}
+          <form
+            onSubmit={handleSearch}
+            className="flex flex-col sm:flex-row w-full gap-2"
+          >
+            <input
+              type="text"
+              placeholder="User/Email/Account"
+              className="flex-1 border outline-none text-gray-700 p-2 rounded sm:rounded-l sm:rounded-r-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-10 bg-primary-300 hover:bg-primary-400 text-white p-2 rounded sm:rounded-r sm:rounded-l-none transition-colors"
+            >
+              <Search size={20} className="mx-auto" />
+            </button>
+          </form>
 
-      <div className="flex justify-between mb-4">
-        <form onSubmit={handleSearch} className="flex">
-          <input
-            type="text"
-            placeholder="User/Email/Account"
-            className="border outline-none p-2 rounded-l"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
+          {/* Date range search form */}
+          <form
+            onSubmit={handleDateRangeSearch}
+            className="flex flex-col sm:flex-row w-full gap-2"
           >
-            <Search size={20} />
-          </button>
-        </form>
-        <form onSubmit={handleDateRangeSearch} className="flex">
-          <input
-            type="date"
-            className="border outline-none p-2 rounded-l"
-            value={dateRange.start}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, start: e.target.value })
-            }
-          />
-          <input
-            type="date"
-            className="borde outline-none p-2"
-            value={dateRange.end}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, end: e.target.value })
-            }
-          />
-          <button
-            type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
-          >
-            <Search size={20} />
-          </button>
-        </form>
+            <div className="flex-1 flex flex-col md:flex-row gap-2">
+              <input
+                type="date"
+                className="w-full md:w-1/2 border text-gray-500 outline-none p-2 rounded sm:rounded-l sm:rounded-r-none"
+                value={dateRange.start}
+                onChange={(e) =>
+                  setDateRange({ ...dateRange, start: e.target.value })
+                }
+              />
+              <input
+                type="date"
+                className="w-full md:w-1/2 text-gray-500 border outline-none p-2 rounded sm:rounded-none"
+                value={dateRange.end}
+                onChange={(e) =>
+                  setDateRange({ ...dateRange, end: e.target.value })
+                }
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-10 bg-primary-300 hover:bg-primary-400 text-white p-2  rounded sm:rounded-r sm:rounded-l-none transition-colors"
+            >
+              <Search size={20} className="mx-auto" />
+            </button>
+          </form>
+        </div>
       </div>
+
       <div className="overflow-x-auto">
         {isAll && (
           <motion.div
@@ -698,7 +731,7 @@ const DepositsStatus = () => {
                 </td>
               </tr>
             ) : (
-              filteredData?.map((item) => (
+              currentUsers?.map((item) => (
                 <tr key={item._id} className="border-b">
                   <td className="py-2 px-4">
                     <div className="font-semibold">
@@ -790,6 +823,33 @@ const DepositsStatus = () => {
             )}
           </tbody>
         </table>
+        <div className="mt-4 flex justify-between items-center">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-white">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>
