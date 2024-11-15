@@ -10,12 +10,7 @@ export default defineConfig({
     },
   },
   server: {
-    proxy: {
-      "/api": {
-        target: "https://myapi4crm.testcrm.co.in",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, "/api/web"),
-      },
-    },
+    host: true, // Or you can set it to your local IP like '192.168.0.x'
+    port: 3000, // Make sure this port is not blocked by a firewall
   },
 });

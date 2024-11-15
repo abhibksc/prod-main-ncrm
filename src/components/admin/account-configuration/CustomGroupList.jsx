@@ -44,7 +44,7 @@ export default function CustomGroupList({ refresh, setRefresh }) {
               <th className="py-3 px-6 text-center">Sr. No.</th>
               <th className="py-3 px-6 text-center">API Group</th>
               <th className="py-3 px-6 text-center">Custom Group</th>
-              {/* <th className="py-3 px-6 text-center">Action</th> */}
+              <th className="py-3 px-6 text-center">Action</th>
             </tr>
           </thead>
           <tbody className=" text-sm">
@@ -62,13 +62,23 @@ export default function CustomGroupList({ refresh, setRefresh }) {
                     <p>{value.customGroup}</p>
                   </div>
                 </td>
-                {/* <td className="py-3 px-6 text-center ">
+                <td className="py-3 px-6 text-center ">
                   <div className=" flex items-center text-red-500 hover:text-red-800 hover:scale-110 transition-all justify-center">
-                    <button onClick={() => deleteHandler(value._id)}>
+                    <button
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure want to delete this group?"
+                          )
+                        ) {
+                          deleteHandler(value._id);
+                        }
+                      }}
+                    >
                       <Trash></Trash>
                     </button>
                   </div>
-                </td> */}
+                </td>
               </tr>
             ))}
           </tbody>
