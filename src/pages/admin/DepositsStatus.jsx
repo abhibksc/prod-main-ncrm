@@ -392,6 +392,7 @@ const DepositsStatus = () => {
         const updateChallengeDB = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
           {
+            accountSize: selectedDeposit.accountSize,
             mt5Account: selectedDeposit.mt5Account,
             status: "active",
             balance: selectedDeposit.balance,
@@ -487,9 +488,11 @@ const DepositsStatus = () => {
             ? {
                 ...deposit,
                 status: "rejected",
+                accountSize: selectedDeposit.accountSize,
               }
             : deposit
         );
+
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
         toast.success("Account rejected", { id: toastId });

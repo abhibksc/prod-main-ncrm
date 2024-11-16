@@ -161,9 +161,9 @@ const UserNewChallenge = () => {
         {
           mt5Account: randomNumber,
           type: formData.accountType,
+          accountSize: formData.accountBalance,
           deposit: formData.accountSize,
           balance: "000",
-          accountSize: formData.accountSize,
           phase: "1",
           reason: "pending",
           status: "inactive",
@@ -314,6 +314,33 @@ const UserNewChallenge = () => {
   const togglePreview = () => {
     setShowPreview(!showPreview);
   };
+  // url to button convert ----
+  function formatTextWithLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return text.split(urlRegex).map((part, index) => {
+      // If part is a URL, render it as a button
+      if (urlRegex.test(part)) {
+        return (
+          <button
+            key={index}
+            onClick={() => window.open(part, "_blank", "noopener,noreferrer")}
+            className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition duration-200 ml-2"
+          >
+            Pay Now
+          </button>
+        );
+      }
+
+      // Otherwise, return the text as is
+      return (
+        <span key={index} className="text-gray-200">
+          {part}
+        </span>
+      );
+    });
+  }
+
   // target stacks ---------------
 
   const targetStaks = [
@@ -667,7 +694,8 @@ const UserNewChallenge = () => {
                       className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
                     >
                       <p className="text-sm text-white">
-                        {paymentDetails || "No details available"}
+                        {formatTextWithLinks(paymentDetails) ||
+                          "No details available"}
                       </p>
                       <ClipboardIcon className="h-5 w-5" />
                       <span className="text-xs">
@@ -734,7 +762,7 @@ const UserNewChallenge = () => {
                   Upload proof of payment
                 </label>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <label className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-600 transition-colors py-2 px-4 rounded-lg flex items-center">
+                  <label className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-500/50 transition-colors py-2 px-4 rounded-lg flex items-center">
                     <Upload className="mr-2" />
                     Choose file
                     <input

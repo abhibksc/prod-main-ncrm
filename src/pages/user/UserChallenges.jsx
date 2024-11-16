@@ -101,6 +101,7 @@ const UserChallenges = () => {
       setLoader(false);
     }
   };
+  console.log("challenges data --", challengesData);
 
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
