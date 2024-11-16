@@ -161,9 +161,9 @@ const UserNewChallenge = () => {
         {
           mt5Account: randomNumber,
           type: formData.accountType,
+          accountSize: formData.accountBalance,
           deposit: formData.accountSize,
           balance: "000",
-          accountSize: formData.accountSize,
           phase: "1",
           reason: "pending",
           status: "inactive",
@@ -212,7 +212,6 @@ const UserNewChallenge = () => {
     setDirection(-1);
     setStep((prev) => prev - 1);
   };
-
   // fetch Account Configurations --------------
 
   const fetchAccountConfigurations = async () => {
@@ -314,6 +313,33 @@ const UserNewChallenge = () => {
   const togglePreview = () => {
     setShowPreview(!showPreview);
   };
+  // url to button convert ----
+  function formatTextWithLinks(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+    return text.split(urlRegex).map((part, index) => {
+      // If part is a URL, render it as a button
+      if (urlRegex.test(part)) {
+        return (
+          <button
+            key={index}
+            onClick={() => window.open(part, "_blank", "noopener,noreferrer")}
+            className="bg-blue-500/90 mx-2 text-white px-6 py-2 rounded-full hover:bg-blue-600/80 transition duration-200 ml-2"
+          >
+            Pay Now
+          </button>
+        );
+      }
+
+      // Otherwise, return the text as is
+      return (
+        <span key={index} className="text-gray-200">
+          {part}
+        </span>
+      );
+    });
+  }
+
   // target stacks ---------------
 
   const targetStaks = [
@@ -322,7 +348,7 @@ const UserNewChallenge = () => {
     `${filterPhaseData?.maxDailyLoss || 0}% Max Daily Loss*`,
   ];
   return (
-    <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-4xl mx-auto">
+    <div className="bg-secondary-800/60 p-10 mb-20 text-white rounded-lg max-w-3xl md:max-w-6xl mx-auto">
       <div className="flex justify-between mb-8">
         {["Configure", "Verify", "Pay"].map((stepName, index) => (
           <div key={stepName} className="flex flex-col items-center">
@@ -667,7 +693,8 @@ const UserNewChallenge = () => {
                       className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
                     >
                       <p className="text-sm text-white">
-                        {paymentDetails || "No details available"}
+                        {formatTextWithLinks(paymentDetails) ||
+                          "No details available"}
                       </p>
                       <ClipboardIcon className="h-5 w-5" />
                       <span className="text-xs">
@@ -796,7 +823,7 @@ const UserNewChallenge = () => {
                 <label htmlFor="agreeToTerms" className="text-sm">
                   I agree to
                   <a
-                    href="https://drive.google.com/file/d/14CXOGtA6ZznDDt3KiPNuYa5GXE8VjHoY/view?usp=drivesdk"
+                    href={import.meta.env.VITE_TAC_LINK}
                     className="text-blue-400 mx-1 cursor-pointer"
                     target="_blank"
                   >
@@ -809,7 +836,7 @@ const UserNewChallenge = () => {
                 disabled={!agreeToTerms || !selectedPayment || !file}
                 className={`w-full flex mx-auto justify-center items-center py-3 px-4 rounded-lg text-white transition-colors ${
                   selectedPayment && agreeToTerms && file
-                    ? "bg-green-700 hover:bg-green-800 "
+                    ? "bg-blue-500 hover:bg-blue-500/80 "
                     : "bg-gray-600  pointer-events-none"
                 }`}
               >
@@ -822,7 +849,7 @@ const UserNewChallenge = () => {
           )}
         </motion.div>
       </AnimatePresence>
-      <div className="flex relative justify-between mt-8">
+      <div className="flex relative justify-between mt-8 mb-2">
         {step > 1 && (
           <button
             onClick={prevStep}
