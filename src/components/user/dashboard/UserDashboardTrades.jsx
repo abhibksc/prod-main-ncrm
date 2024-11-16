@@ -46,7 +46,7 @@ export default function UserDashboardTrades() {
     <div className="bg-secondary-800 p-6 rounded-lg shadow-lg my-5 text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold flex items-center">
-          <BarChart2 className="mr-2" />
+          <BarChart2 className="mr-2 text-secondary-500" />
           Trades Summary
         </h2>
         <button

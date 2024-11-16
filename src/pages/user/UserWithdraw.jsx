@@ -450,7 +450,7 @@ const UserWithdraw = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-blue-500 text-white py-3 rounded-md shadow-md hover:bg-blue-500/80 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-blue-600 text-white py-3 rounded-md shadow-md hover:bg-blue-600/80 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}

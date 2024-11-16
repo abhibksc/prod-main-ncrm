@@ -115,7 +115,7 @@ const UserChallenges = () => {
     <div className=" mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
       <table className="w-full border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-700 rounded text-white">
+          <tr className="bg-secondary-500/50 rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
             </th>

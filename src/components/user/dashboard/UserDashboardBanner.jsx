@@ -19,22 +19,22 @@ const UserDashboardBanner = () => {
             We recommend checking the FAQ section before starting a challenge.
           </p>
         </div>
-        <Trophy className="w-12 h-12 text-yellow-300" />
+        <Trophy className="w-12 h-12 text-secondary-500" />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         {loggedUser.phase === 0 && (
           <Link to={"/user/new-challenge"}>
-            <button className="bg-white text-secondary-600 py-2 px-4 rounded-full font-medium hover:bg-opacity-90 transition-colors">
+            <button className="bg-secondary-500/70 text-white py-2 px-4 rounded-full font-medium hover:bg-opacity-90 transition-colors">
               New Challenge
             </button>
           </Link>
         )}
-        <Link to={"/user/rules"}>
+        {/* <Link to={"/user/rules"}>
           <button className="bg-secondary-600 py-2 px-4 rounded-full font-medium hover:bg-secondary-600/80 transition-colors">
             Trading Rules
           </button>
-        </Link>
+        </Link> */}
       </div>
     </div>
   );
