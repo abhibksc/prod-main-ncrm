@@ -2,6 +2,16 @@ import { useEffect, useState } from "react";
 import { ArrowRight, Check, RefreshCw, X } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const UserInfoForm = ({ userData }) => {
   console.log("userData props--", userData);
@@ -16,6 +26,7 @@ const UserInfoForm = ({ userData }) => {
     zipCode: "",
     country: "",
   });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [verificationStatuses, setVerificationStatuses] = useState({
     email: userData?.emailVerified,
@@ -73,6 +84,9 @@ const UserInfoForm = ({ userData }) => {
       toast.error("Updateing Failed", { id: toastId });
     }
   };
+  useEffect(() => {
+    userData;
+  }, []);
 
   return (
     <div className="container mx-auto p-5 rounded-lg bg-primary-700 shadow-lg text-white">
@@ -182,6 +196,14 @@ const UserInfoForm = ({ userData }) => {
           />
         </div>
       </form>
+      <div className=" flex justify-end">
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className=" flex justify-end p-4 text-blue-400 hover:underline hover:text-blue-400/80"
+        >
+          View Account details
+        </button>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2  max-w-2xl mx-auto gap-4 mt-8">
         <VerificationStatus
@@ -199,7 +221,7 @@ const UserInfoForm = ({ userData }) => {
       <button
         type="submit"
         onClick={handleSubmit}
-        className="group relative w-full mt-8 p-4 bg-primary-400 text-white font-bold rounded-full shadow-lg hover:bg-purple-700 transition-all duration-300 overflow-hidden"
+        className="group relative w-full mt-8 p-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg  transition-all duration-300 overflow-hidden"
       >
         <span className="relative z-10 flex items-center justify-center">
           <span className="mr-2 group-hover:mr-4 transition-all duration-300">
@@ -207,8 +229,228 @@ const UserInfoForm = ({ userData }) => {
           </span>
           <RefreshCw className="w-5 h-5 animate-spin-slow opacity-0 group-hover:opacity-100 transition-all duration-300" />
         </span>
-        <span className="absolute inset-0 w-full h-0 bg-purple-800 group-hover:h-full transition-all duration-300 ease-out"></span>
+        <span className="absolute inset-0 w-full h-0 bg-blue-700 group-hover:h-full transition-all duration-300 ease-out"></span>
       </button>
+
+      <AlertDialog
+        className=" w-[300px]"
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Account Details</AlertDialogTitle>
+            <AlertDialogDescription>
+              <div>
+                {/* KYC details -- */}
+                <div className=" my-4">
+                  <h1 className=" text-lg font-bold border-b my-4">
+                    KYC Details
+                  </h1>
+                  <div>
+                    <p className="">
+                      Purpose -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.kycDetails?.purpose}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Occupation -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.kycDetails?.occupation}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Country of issue -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.kycDetails?.countryOfIssue}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Document Type -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.kycDetails?.documentType}{" "}
+                      </span>{" "}
+                    </p>
+                    <div className=" border border-1 rounded-md border-gray-500/40 my-4 p-2">
+                      <p>Front Side of Docuent </p>
+                      <img
+                        className=" mx-auto size-[40%]"
+                        src={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.frontSideOfDocument
+                        }
+                        alt=""
+                      />
+                      <a
+                        target="_blank"
+                        className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
+                        href={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.selfieWithDocument
+                        }
+                      >
+                        View Full Image
+                      </a>
+                    </div>
+                    <div className=" border border-1 rounded-md border-gray-500/40 my-4 p-2">
+                      <p>Back Side of Docuent </p>
+                      <img
+                        className=" mx-auto size-[40%]"
+                        src={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.backSideOfDocument
+                        }
+                        alt=""
+                      />
+                      <a
+                        target="_blank"
+                        className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
+                        href={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.selfieWithDocument
+                        }
+                      >
+                        View Full Image
+                      </a>
+                    </div>
+                    <div className=" border border-1 rounded-md border-gray-500/40 my-4 p-2">
+                      <p>Selfi With Docuent </p>
+                      <img
+                        className=" mx-auto size-[40%]"
+                        src={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.selfieWithDocument
+                        }
+                        alt=""
+                      />
+                      <a
+                        target="_blank"
+                        className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
+                        href={
+                          import.meta.env.VITE_BECKEND_END_POINT +
+                          "/" +
+                          userData?.kycDetails?.selfieWithDocument
+                        }
+                      >
+                        View Full Image
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                {/* Bank details -- */}
+                <div className="my-4">
+                  <h1 className=" text-lg font-bold border-b my-4">
+                    Bank Details
+                  </h1>
+                  <div>
+                    <p className="">
+                      Bank Name -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.bankName}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Holder Name -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.holderName}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Account Number -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.accountNumber}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      IFSC Code -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.ifscCode}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Swift Code -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.swiftCode}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      UPI ID -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.bankDetails?.upiId}{" "}
+                      </span>{" "}
+                    </p>
+                  </div>
+                </div>
+                {/* Wallet details -- */}
+                <div className="my-4">
+                  <h1 className=" text-lg font-bold border-b my-4">
+                    Wallet Details
+                  </h1>
+                  <div>
+                    <p className="">
+                      Account Number -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.accountNumber}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      ETH Address -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.ethAddress}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      ETH Address -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.ethAddress}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Tether Address -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.ethAddress}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      TRX Address -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.trxAddress}{" "}
+                      </span>{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+              Close
+            </AlertDialogCancel>
+            {/* <AlertDialogAction>Confirm</AlertDialogAction> */}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
