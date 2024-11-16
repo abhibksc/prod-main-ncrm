@@ -205,9 +205,9 @@ const UserInfoForm = ({ userData }) => {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2  max-w-2xl mx-auto gap-4 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2  max-w-2xl mx-auto gap-4 mt-8">
         <VerificationStatus
-          label="Email Verification"
+          label="Email"
           isVerified={verificationStatuses.email}
           onToggle={() => toggleStatus("email")}
         />
