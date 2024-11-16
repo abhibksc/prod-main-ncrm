@@ -196,6 +196,14 @@ const UserInfoForm = ({ userData }) => {
           />
         </div>
       </form>
+      <div className=" flex justify-end">
+        <button
+          onClick={() => setIsDialogOpen(true)}
+          className=" flex justify-end p-4 text-blue-400 hover:underline hover:text-blue-400/80"
+        >
+          View Account details
+        </button>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2  max-w-2xl mx-auto gap-4 mt-8">
         <VerificationStatus
@@ -209,12 +217,6 @@ const UserInfoForm = ({ userData }) => {
           onToggle={() => toggleStatus("kyc")}
         />
       </div>
-      <button
-        onClick={() => setIsDialogOpen(true)}
-        className=" flex justify-end p-4 underline text-blue-500"
-      >
-        View Account details
-      </button>
 
       <button
         type="submit"
