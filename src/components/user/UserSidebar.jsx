@@ -170,7 +170,7 @@ const UserSidebar = () => {
           variants={contentVariants}
         >
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
-            {(loggedUser.phase === 0 || isMax) && (
+            {loggedUser.phase === 0 && (
               <motion.div
                 className=" hover:py-2 transition-all"
                 whileTap={{ scale: 0.95 }}

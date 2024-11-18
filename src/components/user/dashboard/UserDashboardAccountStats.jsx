@@ -68,21 +68,6 @@ const UserDashboardAccountStats = () => {
     },
   ];
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Reached":
-        return "bg-red-500";
-      case "Passing":
-        return "bg-blue-400";
-      case "Passed":
-        return "bg-green-500";
-      case "Information":
-        return "bg-yellow-400";
-      default:
-        return "bg-gray-200";
-    }
-  };
-
   return (
     <div className="bg-secondary-800/70 shadow-md rounded-lg p-4 sm:p-6 max-w-full sm:max-w-4xl mx-auto">
       <h2 className="text-lg sm:text-xl text-center font-semibold mb-4">
@@ -100,16 +85,10 @@ const UserDashboardAccountStats = () => {
             >
               <span className="font-medium">{stat.label}</span>
               <div className="flex items-center">
-                <span className="mr-2">{stat.value}</span>
-                {/* {stat.status && (
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs sm:text-xs text-white ${getStatusColor(
-                      stat.status
-                    )}`}
-                  >
-                    {stat.status}
-                  </span>
-                )} */}
+                <span className="mr-2">
+                  {" "}
+                  {loggedUser.phase > 0 && stat.value}
+                </span>
                 {openDropdowns[stat.id] ? (
                   <ChevronUp size={20} />
                 ) : (

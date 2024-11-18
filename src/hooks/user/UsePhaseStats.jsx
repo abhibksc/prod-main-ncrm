@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 export default function UsePhaseStats() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
+  console.log("hello");
 
   const updatePhaseStats = async () => {
     try {
@@ -28,6 +29,7 @@ export default function UsePhaseStats() {
         min: filterCurrentPhaseData.maxOverallLoss,
         max: filterCurrentPhaseData.maxProfit,
       };
+      console.log("currentPhaseData", currentPhaseData);
       dispatch(setPhaseMaxLength(filterallPhaseData.length));
       dispatch(setPhaseStats(currentPhaseData));
     } catch (error) {

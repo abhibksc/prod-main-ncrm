@@ -393,7 +393,6 @@ const DepositsStatus = () => {
           {
             mt5Account: selectedDeposit.mt5Account,
             status: "active",
-            balance: selectedDeposit.balance,
           }
         );
         const updateLoggedUser = await axios.put(

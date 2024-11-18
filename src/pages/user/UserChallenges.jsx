@@ -122,7 +122,7 @@ const UserChallenges = () => {
             <th className="p-2 sm:p-3 text-center font-semibold">
               Account Size
             </th>
-            {/* <th className="p-2 sm:p-3 text-center font-semibold">Balance</th> */}
+            <th className="p-2 sm:p-3 text-center font-semibold">Last P/L</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Phase</th>
             <th className="p-2 sm:p-3 text-center font-semibold">
               Dropdown status
@@ -162,9 +162,9 @@ const UserChallenges = () => {
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.accountSize}
               </td>
-              {/* <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.balance}
-              </td> */}
+              </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.phase}
               </td>
