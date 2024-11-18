@@ -20,12 +20,12 @@ const DropdownField = ({ label, options, value, onChange }) => (
   <div className="mb-6 w-full">
     <label className="block text-sm font-medium text-white mb-2">{label}</label>
     <select
-      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-400 focus:border-secondary-400 transition-all duration-300 bg-white text-secondary-800"
+      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 bg-white text-secondary-800"
       value={value}
       onChange={(e) => onChange(e.target.value)} // Remove the label parameter
     >
       <option value="">Select {label}</option>
-      {options.map((option, index) => (
+      {options?.map((option, index) => (
         <option key={index} value={option}>
           {option}
         </option>
@@ -554,7 +554,7 @@ const UserKycDetails = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-secondary-700 text-white font-semibold rounded-full hover:bg-secondary-700/60 hover:px-8 transition-all shadow-lg"
+            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-500/80 hover:px-8 transition-all shadow-lg"
           >
             Update Details
           </motion.button>

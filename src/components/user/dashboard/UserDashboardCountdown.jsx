@@ -46,7 +46,7 @@ const UserDashboardCountdown = () => {
       <div className="flex justify-center items-center space-x-2 sm:space-x-4 mb-4">
         {["hours", "minutes", "seconds"].map((unit) => (
           <div key={unit} className="text-center">
-            <div className="bg-gradient-to-b from-secondary-600 to-secondary-700 text-white text-3xl sm:text-4xl font-bold rounded-lg p-2 sm:p-3 w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center shadow-inner">
+            <div className="bg-gradient-to-b from-secondary-500/20 to-secondary-500 text-white text-3xl sm:text-4xl font-bold rounded-lg p-2 sm:p-3 w-16 sm:w-20 h-16 sm:h-20 flex items-center justify-center shadow-inner">
               {String(timeLeft[unit]).padStart(2, "0")}
             </div>
             <p className="text-xs sm:text-sm mt-2">{unit}</p>

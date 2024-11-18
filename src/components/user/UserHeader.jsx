@@ -161,9 +161,9 @@ const UserHeader = () => {
         </div>
         <div className="relative flex items-center gap-2">
           <div className=" flex gap-1 items-center">
-            <CheckCircle className=" w-4 mt-1 text-green-500  " />
+            <CheckCircle className=" w-4 mt-1 text-secondary-500  " />
 
-            <p className="text-sm text-green-500  font-semibold">
+            <p className="text-sm text-secondary-500  font-semibold">
               {loggedUser.firstName}
             </p>
           </div>

@@ -251,7 +251,7 @@ const UserWithdraw = () => {
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center">
-            <ArrowDownCircle className="w-8 h-8 mr-2" />
+            <ArrowDownCircle className="w-8 text-secondary-500 h-8 mr-2" />
             Withdraw Funds
           </h2>
           <div>
@@ -450,7 +450,7 @@ const UserWithdraw = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-blue-600 text-white py-3 rounded-md shadow-md hover:bg-blue-600/80 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}

@@ -14,6 +14,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 const UserChallenges = () => {
   const [challengesData, setChallengesData] = useState();
@@ -100,6 +101,7 @@ const UserChallenges = () => {
       setLoader(false);
     }
   };
+  console.log("challenges data --", challengesData);
 
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
@@ -113,7 +115,7 @@ const UserChallenges = () => {
     <div className=" mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
       <table className="w-full border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-700 rounded text-white">
+          <tr className="bg-secondary-500/50 rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
             </th>
@@ -138,9 +140,7 @@ const UserChallenges = () => {
           {loader && (
             <tr>
               <td colSpan="9" className="p-4">
-                <div className="flex justify-center items-center w-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-400"></div>
-                </div>
+                <DynamicLoder></DynamicLoder>
               </td>
             </tr>
           )}

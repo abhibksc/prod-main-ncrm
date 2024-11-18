@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { DollarSign, BarChart2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BarChart2 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import Loader from "@/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("closed");
@@ -11,7 +11,6 @@ export default function UserTradeHistory() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const currentAccount = useSelector((store) => store.user.currentAccount);
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const fetchTradeData = async (tradeType = "closed") => {
@@ -110,7 +109,7 @@ export default function UserTradeHistory() {
         variants={itemVariants}
         className="mb-6 text-2xl font-bold flex items-center"
       >
-        <BarChart2 className="mr-2" />
+        <BarChart2 className="mr-2 text-secondary-500" />
         Trades History
       </motion.h1>
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
@@ -119,7 +118,7 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "closed"
-              ? "bg-yellow-600 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("closed")}
@@ -131,7 +130,7 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "open"
-              ? "bg-green-700 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("open")}
@@ -146,7 +145,7 @@ export default function UserTradeHistory() {
           exit={{ opacity: 0 }}
           className="text-center py-4"
         >
-          <Loader />
+          <DynamicLoder></DynamicLoder>
         </motion.div>
       )}
       {error && (

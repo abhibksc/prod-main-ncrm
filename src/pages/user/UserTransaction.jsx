@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Loader from "@/components/Loader/Loader";
 import { AnimatePresence, motion } from "framer-motion";
 import { data } from "autoprefixer";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
 export default function UserTransaction() {
   const [activeTab, setActiveTab] = useState("withdrawal");
@@ -135,7 +136,7 @@ export default function UserTransaction() {
         variants={itemVariants}
         className="mb-6 text-2xl font-bold flex items-center"
       >
-        <ArrowUpDownIcon className="mr-2" />
+        <ArrowUpDownIcon className="mr-2 text-secondary-500" />
         Transaction History
       </motion.h1>
 
@@ -145,7 +146,7 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "deposit"
-              ? "bg-yellow-600 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("deposit")}
@@ -157,7 +158,7 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "withdrawal"
-              ? "bg-green-700 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("withdrawal")}
@@ -173,7 +174,8 @@ export default function UserTransaction() {
           exit={{ opacity: 0 }}
           className="text-center py-4"
         >
-          <Loader />
+          {/* <Loader /> */}
+          <DynamicLoder></DynamicLoder>
         </motion.div>
       )}
 

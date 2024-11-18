@@ -364,10 +364,20 @@ const UserLogin = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
                   >
+                    <a
+                      href="/user/dashboard"
+                      className=" flex flex-col justify-center mb-5 items-center mr-4"
+                    >
+                      <img
+                        src={import.meta.env.VITE_LOGO_LINK}
+                        alt="Forex Funding Logo"
+                        className=" object-contain w-auto h-10 md:h-16 sm:h-10"
+                      />
+                    </a>
                     <h2 className="text-4xl font-bold mb-2 text-white">
                       Welcome back
                     </h2>
-                    <p className="text-secondary-300 mb-8">
+                    <p className="text-secondary-500 mb-8">
                       Enter your credentials to access your account
                     </p>
                   </motion.div>
@@ -379,13 +389,13 @@ const UserLogin = () => {
                       className="relative"
                     >
                       <Mail
-                        className="absolute top-3 left-3 text-secondary-400"
+                        className="absolute top-3 left-3 text-secondary-500"
                         size={20}
                       />
                       <input
                         type="email"
                         id="email"
-                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                         placeholder="Email address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -399,13 +409,13 @@ const UserLogin = () => {
                       className="relative"
                     >
                       <Lock
-                        className="absolute top-3 left-3 text-secondary-400"
+                        className="absolute top-3 left-3 text-secondary-500"
                         size={20}
                       />
                       <input
                         type="password"
                         id="password"
-                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                        className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -416,7 +426,7 @@ const UserLogin = () => {
                       <button
                         type="button"
                         onClick={() => setShowForgotPassword(true)}
-                        className="text-sm text-green-500 hover:text-white hover:  transition-all"
+                        className="text-sm text-blue-400 font-semibold hover:text-blue-400/80  transition-all"
                       >
                         Forgot password?
                       </button>
@@ -426,7 +436,7 @@ const UserLogin = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
                       type="submit"
-                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white transition transform hover:scale-105"
                     >
                       <LogIn className="mr-1" size={20} />
                       <p className="group-hover:animate-pulse transition-all">
@@ -442,11 +452,11 @@ const UserLogin = () => {
                   transition={{ delay: 0.6 }}
                   className="px-8 py-4 bg-secondary-700/30 bg-opacity-50 border-t border-secondary-600"
                 >
-                  <p className="text-center text-sm text-secondary-300">
+                  <p className="text-center text-sm text-gray-400">
                     Don't have an account?{" "}
                     <Link
                       to="/user/signup"
-                      className="font-medium text-green-500 hover:text-green-400 transition"
+                      className="font-medium text-blue-400 hover:text-blue-400/80 transition"
                     >
                       Sign up
                     </Link>
@@ -464,7 +474,7 @@ const UserLogin = () => {
               >
                 <button
                   onClick={() => setShowForgotPassword(false)}
-                  className="flex items-center text-secondary-300 hover:text-white transition mb-6"
+                  className="flex items-center text-blue-400 hover:text-blue-400/80 transition mb-6"
                 >
                   <ArrowLeft size={20} className="mr-2" />
                   Back to login
@@ -477,7 +487,7 @@ const UserLogin = () => {
                   <h2 className="text-4xl font-bold mb-2 text-white">
                     Forgot Password
                   </h2>
-                  <p className="text-secondary-300 mb-8">
+                  <p className="text-gray-300 mb-8">
                     Please enter your email address, and we'll send your
                     password directly to your inbox.
                   </p>
@@ -490,12 +500,12 @@ const UserLogin = () => {
                     className="relative"
                   >
                     <Mail
-                      className="absolute top-3 left-3 text-secondary-400"
+                      className="absolute top-3 left-3 text-secondary-500/80"
                       size={20}
                     />
                     <input
                       type="email"
-                      className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-400 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                      className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                       placeholder="Email address"
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
@@ -507,7 +517,7 @@ const UserLogin = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
                     type="submit"
-                    className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-green-600 hover:bg-green-600/80 focus:outline-none focus:ring-1 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                    className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white   transition transform hover:scale-105"
                   >
                     Send Password
                     {isResetLoading && (

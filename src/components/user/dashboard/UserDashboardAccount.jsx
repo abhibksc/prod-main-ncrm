@@ -69,7 +69,7 @@ const UserDashboardAccount = () => {
         transition={{ duration: 0.3, delay: 0.1 }}
       >
         Server -{" "}
-        <span className=" bg-yellow-600/20 text-xl rounded-full py-1 px-3">
+        <span className=" bg-secondary-500/20 text-xl rounded-full py-1 px-3">
           {import.meta.env.VITE_SERVER_NAME}
         </span>
       </motion.h2>

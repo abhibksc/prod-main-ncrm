@@ -141,7 +141,7 @@ const UserProfile = () => {
 
         <motion.button
           type="submit"
-          className="w-full bg-green-700 text-white py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform hover:bg-green-600"
+          className="w-full bg-blue-500  hover:bg-blue-500/80 text-white py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
@@ -173,7 +173,7 @@ const InputField = ({
       {required && "*"}
     </label>
     <div className="relative rounded-md shadow-sm">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary-200">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary-500">
         {icon}
       </div>
       <input

@@ -264,8 +264,8 @@ const UserVerify = () => {
       <div className="flex items-center px-5 justify-center min-h-screen bg-gray-900">
         <Toaster></Toaster>
         <div className="max-w-md w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
-          <div className="bg-secondary-700 p-4 flex items-center justify-center">
-            <Mail className="text-gray-100 w-12 h-12" />
+          <div className="bg-secondary-800/50 p-4 flex items-center justify-center">
+            <Mail className="text-secondary-500 w-12 h-12" />
           </div>
           <div className="p-6">
             <h2 className="text-2xl font-semibold text-gray-100 mb-4">
@@ -275,8 +275,8 @@ const UserVerify = () => {
               We've sent a verification link to your email address. Please check
               your inbox and click the link to activate your account.
             </p>
-            <div className="bg-secondary-800/40 border-l-4 border-secondary-500 p-4 mb-6">
-              <p className="text-indigo-200 font-medium">
+            <div className="bg-green-700/20 border-l-4 border-green-500 p-4 mb-6">
+              <p className="text-white font-medium">
                 <CheckCircle className="inline-block w-5 h-5 mr-2" />
                 Link sent successfully!
               </p>
@@ -286,7 +286,7 @@ const UserVerify = () => {
                 className={`block w-full text-center ${
                   isButtonDisabled
                     ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-secondary-700 hover:bg-secondary-700/60 text-gray-100"
+                    : "bg-green-800 hover:bg-green-800/80 text-gray-100"
                 } font-semibold py-2 px-4 rounded transition duration-300 ease-in-out`}
                 onClick={resendHandler}
                 disabled={isButtonDisabled}
@@ -304,11 +304,8 @@ const UserVerify = () => {
           </div>
           <div className=" bg-gray-900/40 px-6 py-4">
             <p className="text-sm text-gray-300">
-              Didn't receive the email? Check your spam folder or{" "}
-              <a href="#" className="text-blue-400 hover:underline">
-                contact support
-              </a>
-              .
+              Didn't receive the email? Check your spam folder or contact
+              support .
             </p>
           </div>
         </div>
