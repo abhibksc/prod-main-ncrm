@@ -1,23 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  Bell,
-  ChartNoAxesGantt,
-  KeyRound,
-  LogOut,
-  LucideUserCircle2,
-  Search,
-  Settings,
-  User,
-  UserCheck,
-} from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { ChartNoAxesGantt, LogOut, LucideUserCircle2 } from "lucide-react";
 import { motion, useAnimation } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { handleToggleSidebar, setLoggedUser } from "@/redux/user/userSlice";
+import { handleToggleSidebar } from "@/redux/user/userSlice";
 import UseAdminHook from "@/hooks/admin/UseAdminHook";
+import { setAdminToggle } from "@/redux/adminSlice";
 
 const Header = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
+
   // const isSidebarOpen = false;
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
     useState(false);
@@ -28,9 +20,8 @@ const Header = () => {
 
   // handle toggle bar ------------------
   const toggleSidebar = () => {
-    dispatch(handleToggleSidebar(!isSidebarOpen));
+    dispatch(setAdminToggle(true));
   };
-  // console.log("isSidebarOpen headerrr---", isSidebarOpen);
 
   const toggleNotificationDropdown = () =>
     setIsNotificationDropdownOpen(!isNotificationDropdownOpen);
@@ -53,6 +44,8 @@ const Header = () => {
       controls.start({ opacity: 0, y: -20 });
     }
   }, [isUserDropdownOpen, controls]);
+  // test handler--
+  const testHandler = () => {};
 
   // Effect to close dropdown when clicking outside
   useEffect(() => {
@@ -82,9 +75,9 @@ const Header = () => {
               aria-expanded={isSidebarOpen}
               aria-controls="sidebar"
               onClick={toggleSidebar}
-              className="md:hidden p-2 mr-3 text-gray-600 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
+              className=" lg:hidden p-2 mr-3 text-gray-600 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700"
             >
-              <ChartNoAxesGantt className="md:hidden"></ChartNoAxesGantt>
+              <ChartNoAxesGantt className=" "></ChartNoAxesGantt>
             </button>
             <a href="/admin/dashboard" className=" items-center mr-4">
               <img
@@ -93,38 +86,10 @@ const Header = () => {
                 className=" object-contain w-auto h-10 md:h-12 sm:h-10"
               />
             </a>
-            {/* <form
-              action="#"
-              method="GET"
-              className="hidden ml-20 lg:block lg:pl-2"
-            >
-              <label htmlFor="topbar-search" className="sr-only">
-                Search here...
-              </label>
-              <div className="relative mt-1 lg:w-96">
-                <div className="flex text-neutral-200 absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <Search className=""></Search>
-                </div>
-                <input
-                  type="text"
-                  name="email"
-                  id="topbar-search"
-                  className="border px-3 bg-primary-700 text-white outline-none border-white/10 sm:text-sm rounded-lg block w-full pl-9 p-2.5 focus:ring-primary-500 focus:border-primary-500"
-                  placeholder="Search here"
-                />
-              </div>
-            </form> */}
+            <div></div>
           </div>
-          <div className="flex items-center lg:order-2">
-            <button
-              id="toggleSidebarMobileSearch"
-              type="button"
-              className="p-2 text-gray-500 rounded-lg lg:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              <span className="sr-only">Search</span>
-              <Search></Search>
-            </button>
 
+          <div className="flex items-center lg:order-2">
             <button
               type="button"
               onClick={toggleUserDropdown}
@@ -151,27 +116,6 @@ const Header = () => {
             >
               {isUserDropdownOpen && (
                 <>
-                  {/* <Link
-                    to={"/admin/profile-setting"}
-                    className="flex hover:bg-primary-500 p-2  rounded gap-2"
-                  >
-                    <User></User>
-                    <p>Profile</p>
-                  </Link> */}
-                  {/* <Link
-                    to={`/admin/password-setting`}
-                    className="flex hover:bg-primary-500 p-2  rounded  gap-2"
-                  >
-                    <KeyRound></KeyRound>
-                    <p>Password</p>
-                  </Link> */}
-                  {/* <Link
-                    to={`/admin/kyc-setting`}
-                    className=" hover:bg-primary-500 p-2  rounded flex gap-2"
-                  >
-                    <UserCheck></UserCheck>
-                    <p className=" whitespace-nowrap">KYC varification</p>
-                  </Link> */}
                   <Link
                     to={"/admin/login"}
                     className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2"

@@ -71,6 +71,7 @@ const WithdrawalStatus = () => {
   const [actionType, setActionType] = useState("");
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchApiData = async () => {
     setLoading(true);
@@ -96,27 +97,6 @@ const WithdrawalStatus = () => {
         item.status === "rejected" ||
         item.status === "approved"
     );
-  }
-
-  // format date ---------------------
-
-  function formatDate(isoDateString) {
-    const date = new Date(isoDateString);
-
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    });
-
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
-    });
-
-    return `${formattedDate}, ${formattedTime}`;
   }
 
   const handleActionClick = (deposit, action) => {
@@ -380,7 +360,8 @@ const WithdrawalStatus = () => {
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
   // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
@@ -474,6 +455,27 @@ const WithdrawalStatus = () => {
     // This function can be used to trigger a re-render if needed
     setDepositData([...depositData]);
   };
+
+  // format date ---------------------
+
+  function formatDate(isoDateString) {
+    const date = new Date(isoDateString);
+
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // 12-hour format with AM/PM
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  }
   // since joined ---------------
 
   function calculateTimeSinceJoined(isoDateString) {
@@ -513,39 +515,64 @@ const WithdrawalStatus = () => {
     return timeString.join(", ") + " ago";
   }
 
+  // pagination -------------------
+  const filteredData = getFilteredData();
+  const usersPerPage = 10; // Adjust as needed
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredData.slice(indexOfFirstUser, indexOfLastUser);
+
+  const totalPages = Math.ceil(filteredData.length / usersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   // use effect -----------------
 
   useEffect(() => {
     fetchApiData();
   }, [status]);
-  const filteredData = getFilteredData();
 
   return (
-    <div className="container mx-auto px-10 py-5">
+    <div className="  w-full p-4">
       <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
         {status} Withdrawals
       </h1>
 
-      <div className="flex justify-between mb-4">
-        <form onSubmit={handleSearch} className="flex">
-          <input
-            type="text"
-            placeholder="User/Email/Account"
-            className="border p-2 rounded-l"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
-          >
-            <Search size={20} />
-          </button>
-        </form>
-        <form onSubmit={handleDateRangeSearch} className="flex">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <div className=" flex justify-between ">
+          <form onSubmit={handleSearch} className="flex items-center">
+            <input
+              type="text"
+              placeholder="User/Email/Account"
+              className="border p-2 rounded-l text-gray-600"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-primary-300 text-white p-2 rounded-r"
+            >
+              <Search size={25} />
+            </button>
+          </form>
+        </div>
+        <form
+          onSubmit={handleDateRangeSearch}
+          className="flex flex-col md:flex-row gap-1"
+        >
           <input
             type="date"
-            className="border p-2 rounded-l"
+            className="border p-2 text-gray-400 rounded-l"
             value={dateRange.start}
             onChange={(e) =>
               setDateRange({ ...dateRange, start: e.target.value })
@@ -553,7 +580,7 @@ const WithdrawalStatus = () => {
           />
           <input
             type="date"
-            className="border p-2"
+            className="border text-gray-400 p-2"
             value={dateRange.end}
             onChange={(e) =>
               setDateRange({ ...dateRange, end: e.target.value })
@@ -561,9 +588,9 @@ const WithdrawalStatus = () => {
           />
           <button
             type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
+            className="bg-primary-300 flex text-white p-2 rounded-md md:rounded-r"
           >
-            <Search size={20} />
+            <Search size={20} className=" mx-auto" />
           </button>
         </form>
       </div>
@@ -606,7 +633,7 @@ const WithdrawalStatus = () => {
                 </td>
               </tr>
             ) : (
-              filteredData?.map((item) => (
+              currentUsers?.map((item) => (
                 <tr key={item._id} className="border-b">
                   <td className="py-2 px-4">
                     <div className="font-semibold">
@@ -625,7 +652,7 @@ const WithdrawalStatus = () => {
                     </span>
                   </td>
                   <td className="py-2 px-4">{item?.pNl}</td>
-                  <td className="py-2 px-4">{item?.amount}</td>
+                  <td className="py-2 px-4">{item?.amount.toFixed(2)}</td>
                   <td className="py-2 px-4">{item?.method}</td>
                   <td className="py-3 px-4">
                     <div>{formatDate(item?.createdAt)}</div>
@@ -668,6 +695,33 @@ const WithdrawalStatus = () => {
             )}
           </tbody>
         </table>
+        <div className="mt-4 flex justify-between items-center">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-white">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>

@@ -1,19 +1,24 @@
 import { useState, useEffect } from "react";
-import { CircleUser, ExternalLink, Search, User, User2 } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { LoaderIcon, Search, User } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { Button } from "@headlessui/react";
 import { useDispatch } from "react-redux";
 import { setLoggedUser } from "@/redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import toast from "react-hot-toast";
 
 const ManageUsers = () => {
   const { subList } = useParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { getReset } = UseUserHook();
+
   const fetchUsersData = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-users`
@@ -34,23 +39,15 @@ const ManageUsers = () => {
       } else {
         setUsers(resData);
       }
-      // console.log("users res--", users);
+      setLoading(false);
     } catch (error) {
-      console.log("erroe in fetching users--", error);
+      toast.error("Something went wrong");
+      console.log("Error fetching users:", error);
+      setLoading(false);
     }
   };
 
-  const filteredUsers = searchTerm
-    ? users?.filter(
-        (user) =>
-          user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : users;
-
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
+  // format date ---------------------
 
   function formatDate(isoDateString) {
     const date = new Date(isoDateString);
@@ -70,6 +67,7 @@ const ManageUsers = () => {
 
     return `${formattedDate}, ${formattedTime}`;
   }
+  // since joined ---------------
 
   function calculateTimeSinceJoined(isoDateString) {
     const joinDate = new Date(isoDateString);
@@ -108,30 +106,58 @@ const ManageUsers = () => {
     return timeString.join(", ") + " ago";
   }
 
+  const filteredUsers = searchTerm
+    ? users?.filter(
+        (user) =>
+          user?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user?.email?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : users;
+
+  const usersPerPage = 10; // Adjust as needed
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const capitalizeFirstLetter = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
+
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
   const userRedirectHandler = (user) => {
     getReset();
     dispatch(setLoggedUser(user));
     window.open("/user/dashboard", "_blank");
   };
 
-  // useEfeect --------------------
-
   useEffect(() => {
     fetchUsersData();
   }, [subList]);
 
   return (
-    <div className="container mx-auto px-10 py-5">
-      <div className="flex justify-between items-center mb-4">
+    <div className="container mx-auto p-5">
+      <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4">
         <h1 className="text-2xl text-white font-bold">
-          {capitalizeFirstLetter(subList)}
+          {capitalizeFirstLetter(subList || "Manage Users")}
         </h1>
         <div className="flex items-center">
-          <div className="relative mr-2">
+          <div className="relative">
             <input
               type="text"
               placeholder="Email / Name"
-              className="pl-10 pr-4 py-2 bg-neutral-800/60 text-white  border-primary-500 border-2 rounded-lg"
+              className="pl-10 pr-4 py-2 bg-neutral-800/60 text-white border-primary-500 border-2 rounded-lg"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -143,9 +169,9 @@ const ManageUsers = () => {
         </div>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow-md rounded-lg">
+        <table className="w-full shadow-md rounded-lg">
           <thead className="bg-primary-400 text-white">
-            <tr className=" rounded">
+            <tr>
               <th className="py-3 px-4 text-left">User/Email</th>
               <th className="py-3 px-4 text-left">Country</th>
               <th className="py-3 px-4 text-left">Email Verified</th>
@@ -156,58 +182,94 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers?.map((user) => (
-              <tr
-                key={user?._id}
-                className="border-b bg-primary-700 hover:bg-primary-700/90 text-white"
-              >
-                <td className="py-3 flex items-center gap-2 px-4">
-                  {subList === "all-users" && (
-                    <Button
-                      onClick={() => userRedirectHandler(user)}
-                      className=" text-blue-400 hover:shadow-lg hover:text-blue-500 hover:scale-110 transition-all"
-                    >
-                      <User></User>
-                    </Button>
-                  )}
-                  <div>
-                    <div className="font-semibold">{user?.firstName}</div>
-                    <Link
-                      to={`/admin/user-detail/${user?._id}`}
-                      className="text-sm cursor-pointer text-gray-300"
-                    >
-                      {user?.email}
-                    </Link>
+            {loading ? (
+              <tr>
+                <td colSpan="7" className=" border-none">
+                  <div className="text-white py-6 border-none flex justify-center items-center gap-4">
+                    <p>Loading...</p>
+                    <LoaderIcon className="animate-spin" />
                   </div>
-                </td>
-                <td className="py-3 px-4">
-                  <div>{user?.country}</div>
-                </td>
-                <td className="py-3 px-4">
-                  {user?.emailVerified ? "Active" : "Inactive"}
-                </td>
-                <td className="py-3 px-4">
-                  {user?.kycVerified ? "Active" : "Inactive"}
-                </td>
-                <td className="py-3 px-4 text-center">{user?.mt5Account}</td>
-                <td className="py-3 px-4">
-                  <div>{formatDate(user?.createdAt)}</div>
-                  <div className="text-sm text-gray-400">
-                    {calculateTimeSinceJoined(user?.createdAt)}
-                  </div>
-                </td>
-                <td className="py-3 px-4">
-                  <Link
-                    to={`/admin/user-detail/${user?._id}`}
-                    className="text-blue-400 hover:text-blue-600 transition-all hover:scale-110"
-                  >
-                    Details
-                  </Link>
                 </td>
               </tr>
-            ))}
+            ) : (
+              currentUsers.map((user) => (
+                <tr
+                  key={user?._id}
+                  className="border-b bg-primary-700 hover:bg-primary-700/90 text-white"
+                >
+                  <td className="py-3 flex items-center gap-2 px-4">
+                    {subList === "all-users" && (
+                      <Button
+                        onClick={() => userRedirectHandler(user)}
+                        className="text-blue-400 hover:shadow-lg hover:text-blue-500 hover:scale-110 transition-all"
+                      >
+                        <User />
+                      </Button>
+                    )}
+                    <div>
+                      <div className="font-semibold">{user?.firstName}</div>
+                      <Link
+                        to={`/admin/user-detail/${user?._id}`}
+                        className="text-sm cursor-pointer text-gray-300"
+                      >
+                        {user?.email}
+                      </Link>
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">{user?.country}</td>
+                  <td className="py-3 px-4">
+                    {user?.emailVerified ? "Active" : "Inactive"}
+                  </td>
+                  <td className="py-3 px-4">
+                    {user?.kycVerified ? "Active" : "Inactive"}
+                  </td>
+                  <td className="py-3 px-4 text-center">{user?.mt5Account}</td>
+                  <td className="py-3 px-4">
+                    <div>{formatDate(user?.createdAt)}</div>
+                    <div className="text-sm text-gray-400">
+                      {calculateTimeSinceJoined(user?.createdAt)}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    <Link
+                      to={`/admin/user-detail/${user?._id}`}
+                      className="text-blue-400 hover:text-blue-600 transition-all hover:scale-110"
+                    >
+                      Details
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
+      </div>
+      <div className="mt-4 flex justify-between items-center">
+        <button
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === 1
+              ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+              : "bg-primary-500 text-white"
+          }`}
+        >
+          Previous
+        </button>
+        <span className="text-white">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+          className={`px-4 py-2 rounded-lg ${
+            currentPage === totalPages
+              ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+              : "bg-primary-500 text-white"
+          }`}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

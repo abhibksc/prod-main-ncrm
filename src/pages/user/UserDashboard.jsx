@@ -9,6 +9,9 @@ import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
 import UsePhaseStats from "@/hooks/user/UsePhaseStats";
+import VisitorHoursGraph from "@/components/user/graph/VisitorHoursGraph";
+import VisitorChart from "@/components/user/graph/VisitorChart";
+import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
 
 export default function UserDashboard() {
   const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi } =
@@ -62,10 +65,15 @@ export default function UserDashboard() {
       >
         <div className="">
           {/* <UserLineChart /> */}
-          <TradingViewWidget></TradingViewWidget>
+          {/* <TradingViewWidget></TradingViewWidget> */}{" "}
+          <VisitorChart></VisitorChart>
         </div>
         <div className=" flex md:ml-20 flex-col">
           <UserDashboardAccount />
+          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
+          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
+          {/* <VisitorChart></VisitorChart> */}
+          {/* <VisitorsLineChart></VisitorsLineChart> */}
         </div>
       </motion.div>
 

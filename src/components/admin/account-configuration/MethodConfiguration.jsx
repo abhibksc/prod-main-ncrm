@@ -140,16 +140,18 @@ export default function MethodConfiguration() {
   const isAddButtonDisabled = !newField.name || !newField.details;
 
   return (
-    <div className="container mx-auto px-6 py-8">
+    <div className="container mx-auto px-4 sm:px-6 py-8">
       <h2 className="text-3xl font-bold mb-6 text-white">Payment Method</h2>
-      <div className="mt-6 bg-primary-700 overflow-hidden text-white rounded-lg shadow-lg p-6">
-        <div className="flex space-x-4">
+
+      {/* Form Section */}
+      <div className="bg-primary-700 overflow-hidden text-white rounded-lg shadow-lg p-6">
+        <div className="flex flex-wrap sm:flex-nowrap space-y-4 sm:space-y-0 sm:space-x-4">
           <input
             type="text"
             placeholder="Name (display name)"
             value={newField.name}
             onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-            className="flex-1 px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full sm:flex-1 px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -158,9 +160,9 @@ export default function MethodConfiguration() {
             onChange={(e) =>
               setNewField({ ...newField, details: e.target.value })
             }
-            className="flex-1 px-4 py-2 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full sm:flex-1 px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div className="relative">
+          <div className="relative w-full sm:w-auto">
             <input
               type="file"
               accept="image/*"
@@ -170,7 +172,7 @@ export default function MethodConfiguration() {
             />
             <label
               htmlFor="image-upload"
-              className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition-colors duration-300"
+              className="flex items-center justify-center w-full px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600 transition-colors duration-300"
             >
               <Upload size={18} className="mr-2" />
               Upload Image
@@ -181,7 +183,7 @@ export default function MethodConfiguration() {
               onClick={() =>
                 handleViewImage(URL.createObjectURL(newField.image))
               }
-              className=" py-2 text-green-500 rounded-md hover:scale-110 transition-all duration-300"
+              className="py-2 text-green-500 rounded-md hover:scale-110 transition-all duration-300"
             >
               <Eye size={22} />
             </button>
@@ -189,51 +191,52 @@ export default function MethodConfiguration() {
           <button
             onClick={addField}
             disabled={isAddButtonDisabled}
-            className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+            className={`w-full sm:w-auto px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
               isAddButtonDisabled
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-blue-500 hover:bg-blue-600"
             }`}
           >
-            <Plus size={18} />
+            <Plus size={18} className=" mx-auto" />
           </button>
         </div>
       </div>
 
-      <div className="bg-primary-800 mt-5 rounded-lg shadow-lg">
-        <table className="min-w-full divide-y divide-gray-200 overflow-hidden">
+      {/* Table Section */}
+      <div className="bg-primary-800 mt-5 rounded-lg shadow-lg overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-primary-400 text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 S.No.
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Details
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 STATUS
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
+              <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-primary-700 divide-y text-white divide-gray-400">
+          <tbody className="bg-primary-700 divide-y divide-gray-400">
             {arrayData?.map((platform, index) => (
               <tr key={platform?._id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm ">
                   {platform?.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm ">
                   {platform?.details}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm ">
                   <Switch
                     checked={platform?.status === "active"}
                     onCheckedChange={() =>
@@ -241,8 +244,8 @@ export default function MethodConfiguration() {
                     }
                   />
                 </td>
-                <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex justify-center ml-6 space-x-2">
+                <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div className="flex justify-center space-x-2">
                     <button
                       onClick={() =>
                         handleViewImage(
@@ -269,6 +272,7 @@ export default function MethodConfiguration() {
         </table>
       </div>
 
+      {/* Image Popup */}
       {showImagePopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
           <div className="relative bg-primary-800/90 rounded-lg p-4">
@@ -278,11 +282,11 @@ export default function MethodConfiguration() {
             >
               <XCircle size={30} />
             </button>
-            <div className=" max-w-xl flex justify-center items-center">
+            <div className="max-w-xl flex justify-center items-center">
               <img
                 src={popupImageUrl}
                 alt="Popup"
-                className=" w-[70%] h-full object-contain"
+                className="w-[70%] h-full object-contain"
               />
             </div>
           </div>

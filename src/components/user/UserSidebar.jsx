@@ -16,13 +16,14 @@ import {
   LucideDownload,
   HardDriveDownloadIcon,
 } from "lucide-react";
+import { handleToggleSidebar } from "@/redux/user/userSlice";
 
 const MenuItem = ({ icon: Icon, label, link }) => (
   <motion.div whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
     <NavLink
       to={link}
       className={({ isActive }) =>
-        `flex flex-col items-center justify-center p-4 rounded-lg ${
+        `flex items-center gap-3 p-4 rounded-lg ${
           isActive
             ? "text-secondary-500"
             : "text-white/80 transition-colors duration-300"
@@ -131,17 +132,17 @@ const UserSidebar = () => {
     //   label: "Support Ticket",
     //   link: "/user/support-ticket",
     // },
-    {
-      icon: ShieldAlertIcon,
-      label: "Rules",
-      link: "/user/rules",
-    },
+    // {
+    //   icon: ShieldAlertIcon,
+    //   label: "Rules",
+    //   link: "/user/rules",
+    // },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
-    {
-      icon: ReceiptPoundSterlingIcon,
-      label: "Economic Calendar",
-      link: "/user/economic-calendar",
-    },
+    // {
+    //   icon: ReceiptPoundSterlingIcon,
+    //   label: "Economic Calendar",
+    //   link: "/user/economic-calendar",
+    // },
   ];
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
@@ -176,7 +177,7 @@ const UserSidebar = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-700/90 w-full transition-all duration-300 hover:bg-secondary-600">
+                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/50">
                     New challenge
                   </button>
                 </Link>
@@ -187,6 +188,7 @@ const UserSidebar = () => {
                 menuItems.map((item) => (
                   <motion.div
                     key={item.label}
+                    onClick={() => dispatch(handleToggleSidebar(false))}
                     className="w-full"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}

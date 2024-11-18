@@ -426,7 +426,7 @@ const UserNewChallenge = () => {
                       }
                       className={`p-4 flex rounded-full items-center justify-center transition-colors ${
                         formData.platform === plt.name
-                          ? "bg-secondary-600/80 shadow-lg  font-semibold"
+                          ? "bg-secondary-500/80 shadow-lg  font-semibold"
                           : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -454,7 +454,7 @@ const UserNewChallenge = () => {
                       }
                       className={`py-2 px-4 rounded-full text-sm font-medium transition-colors ${
                         formData.accountSize === option.deposit
-                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          ? "bg-secondary-500/80 shadow-lg text-white"
                           : "bg-secondary-800/60 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -672,7 +672,7 @@ const UserNewChallenge = () => {
                       onClick={() => setSelectedPayment(method.name)}
                       className={`p-4 flex flex-col items-center font-semibold justify-center rounded-lg transition-colors ${
                         selectedPayment === method.name
-                          ? "bg-secondary-600/80 shadow-lg text-white"
+                          ? "bg-secondary-500/80 shadow-lg text-white"
                           : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                       }`}
                     >
@@ -761,7 +761,7 @@ const UserNewChallenge = () => {
                   Upload proof of payment
                 </label>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-                  <label className="cursor-pointer bg-secondary-700 hover:bg-secondary-600 transition-colors py-2 px-4 rounded-lg flex items-center">
+                  <label className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-500/50 transition-colors py-2 px-4 rounded-lg flex items-center">
                     <Upload className="mr-2" />
                     Choose file
                     <input
@@ -865,7 +865,7 @@ const UserNewChallenge = () => {
           <div className="  absolute top-[-10px] right-0">
             <button
               onClick={nextStep}
-              className="bg-secondary-700/80  hover:px-6 transition-all text-white px-4 py-2  rounded-full"
+              className="bg-secondary-500/70  hover:px-6 transition-all text-white px-4 py-2  rounded-full"
             >
               Next
               <ArrowRightCircleIcon className="inline-block ml-2 animate-bounce" />

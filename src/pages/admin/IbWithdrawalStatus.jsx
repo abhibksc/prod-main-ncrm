@@ -72,6 +72,7 @@ const IbWithdrawalStatus = () => {
   const [actionType, setActionType] = useState("");
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchApiData = async () => {
     setLoading(true);
@@ -509,13 +510,32 @@ const IbWithdrawalStatus = () => {
 
     return timeString.join(", ") + " ago";
   }
+  // pagination -------------------
+  const filteredData = getFilteredData();
+  const usersPerPage = 10; // Adjust as needed
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredData.slice(indexOfFirstUser, indexOfLastUser);
+
+  const totalPages = Math.ceil(filteredData.length / usersPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
 
   // use effect -----------------
 
   useEffect(() => {
     fetchApiData();
   }, [status]);
-  const filteredData = getFilteredData();
 
   return (
     <div className="container mx-auto px-10 py-5">
@@ -523,26 +543,31 @@ const IbWithdrawalStatus = () => {
         {status} IB Withdrawals
       </h1>
 
-      <div className="flex justify-between mb-4">
-        <form onSubmit={handleSearch} className="flex">
-          <input
-            type="text"
-            placeholder="User/Email/Account"
-            className="border p-2 rounded-l"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
-          >
-            <Search size={20} />
-          </button>
-        </form>
-        <form onSubmit={handleDateRangeSearch} className="flex">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <div className=" flex justify-between ">
+          <form onSubmit={handleSearch} className="flex items-center">
+            <input
+              type="text"
+              placeholder="User/Email/Account"
+              className="border p-2 rounded-l text-gray-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button
+              type="submit"
+              className="bg-primary-300 text-white p-2 rounded-r"
+            >
+              <Search size={25} />
+            </button>
+          </form>
+        </div>
+        <form
+          onSubmit={handleDateRangeSearch}
+          className="flex flex-col md:flex-row gap-1"
+        >
           <input
             type="date"
-            className="border p-2 rounded-l"
+            className="border p-2 text-gray-400 rounded-l"
             value={dateRange.start}
             onChange={(e) =>
               setDateRange({ ...dateRange, start: e.target.value })
@@ -550,7 +575,7 @@ const IbWithdrawalStatus = () => {
           />
           <input
             type="date"
-            className="border p-2"
+            className="border text-gray-400 p-2"
             value={dateRange.end}
             onChange={(e) =>
               setDateRange({ ...dateRange, end: e.target.value })
@@ -558,9 +583,9 @@ const IbWithdrawalStatus = () => {
           />
           <button
             type="submit"
-            className="bg-primary-300 text-white p-2 rounded-r"
+            className="bg-primary-300 flex text-white p-2 rounded-md md:rounded-r"
           >
-            <Search size={20} />
+            <Search size={20} className=" mx-auto" />
           </button>
         </form>
       </div>
@@ -602,7 +627,7 @@ const IbWithdrawalStatus = () => {
                 </td>
               </tr>
             ) : (
-              filteredData?.map((item) => (
+              currentUsers?.map((item) => (
                 <tr key={item._id} className="border-b">
                   <td className="py-2 px-4">
                     <div className="font-semibold">
@@ -661,6 +686,33 @@ const IbWithdrawalStatus = () => {
             )}
           </tbody>
         </table>
+        <div className="mt-4 flex justify-between items-center">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === 1
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Previous
+          </button>
+          <span className="text-white">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg ${
+              currentPage === totalPages
+                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
+                : "bg-primary-500 text-white"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>

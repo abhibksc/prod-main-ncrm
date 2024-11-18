@@ -35,7 +35,6 @@ export default function PlatformConfiguration() {
         if (!res.data.status) {
           toast.error("Value already exist", { id: toastId });
         }
-        console.log("add platform res --", res);
       } catch (error) {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in add platform", error);
@@ -47,8 +46,6 @@ export default function PlatformConfiguration() {
   const toggleActive = async (id, currentStatus) => {
     const toastId = toast.loading("Updating status...");
     const newStatus = currentStatus === "active" ? "inactive" : "active";
-    console.log("current status--", currentStatus);
-    console.log("new status--", newStatus);
     try {
       const res = await axios.put(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-platform`,
@@ -57,7 +54,6 @@ export default function PlatformConfiguration() {
           status: newStatus,
         }
       );
-      console.log("res updatedd--", res.data);
 
       if (res.data.status) {
         setPlatformData(
@@ -72,7 +68,6 @@ export default function PlatformConfiguration() {
         });
       }
     } catch (error) {
-      console.error("Error in toggleActive:", error);
       toast.error("Something went wrong while updating status", {
         id: toastId,
       });
@@ -87,7 +82,6 @@ export default function PlatformConfiguration() {
           import.meta.env.VITE_BECKEND_END_POINT
         }/api/auth/delete-platform/?id=${id}`
       );
-      console.log("test delete--", res.data);
       if (res.data.status) {
         setPlatformData(platformData.filter((platform) => platform._id !== id));
         toast.success("Platform deleted successfully", { id: toastId });
@@ -97,7 +91,6 @@ export default function PlatformConfiguration() {
         });
       }
     } catch (error) {
-      console.log("error in deleteTest", error);
       toast.error("Something went wrong", { id: toastId });
     }
   };
@@ -108,11 +101,11 @@ export default function PlatformConfiguration() {
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-platforms`
       );
       setPlatformData(res.data.data);
-      console.log("getAllPlatforms", res.data);
     } catch (error) {
       console.log("error in getAllPlatform", error);
     }
   };
+
   const isAddButtonDisabled = !newField.name || !newField.value;
 
   useEffect(() => {
@@ -120,18 +113,20 @@ export default function PlatformConfiguration() {
   }, []);
 
   return (
-    <div className="container mx-auto px-6 py-8">
-      <h2 className="text-3xl font-bold mb-6 text-white">List of Platforms</h2>
+    <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-white">
+        List of Platforms
+      </h2>
 
-      <div className="mt-6 bg-primary-700/40 text-white rounded-lg shadow-lg p-6">
+      <div className="mt-6 bg-primary-700/40 text-white rounded-lg shadow-lg p-4 sm:p-6">
         <h3 className="text-lg font-semibold mb-4">Add New Field</h3>
-        <div className="flex space-x-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <input
             type="text"
             placeholder="Name"
             value={newField.name}
             onChange={(e) => setNewField({ ...newField, name: e.target.value })}
-            className="flex-1 px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -140,7 +135,7 @@ export default function PlatformConfiguration() {
             onChange={(e) =>
               setNewField({ ...newField, value: e.target.value })
             }
-            className="flex-1 px-4 py-2 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={addField}
@@ -151,64 +146,84 @@ export default function PlatformConfiguration() {
                 : "bg-blue-500 hover:bg-blue-600"
             }`}
           >
-            <Plus size={18} />
+            <Plus className=" mx-auto" size={18} />
           </button>
         </div>
-        <div className="bg-primary-800 mt-6 rounded-lg shadow-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-primary-400 text-white">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  S.No.
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Value
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  STATUS
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-primary-700 divide-y text-white divide-gray-400">
-              {platformData?.map((platform, index) => (
-                <tr key={platform.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium  text-white">
-                    {index + 1}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                    {platform.value}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                    {platform.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm ">
-                    <Switch
-                      checked={platform.status === "active" ? true : false}
-                      onCheckedChange={() =>
-                        toggleActive(platform._id, platform.status)
-                      }
-                    />
-                  </td>
-                  <td className="px-6 gap-3 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className=" flex  justify-center ml-6">
-                      <button
-                        onClick={() => deletePlatform(platform?._id)}
-                        className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
-                      >
-                        <Trash2 size={20} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        <div className="mt-6 overflow-x-auto">
+          <div className="inline-block min-w-full align-middle">
+            <div className="overflow-hidden border border-gray-700 rounded-lg">
+              <table className="min-w-full divide-y divide-gray-700">
+                <thead className="bg-primary-400 text-white">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium sm:px-6"
+                    >
+                      S.No.
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium sm:px-6"
+                    >
+                      Value
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium sm:px-6"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-left text-xs font-medium sm:px-6"
+                    >
+                      Status
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-3 py-3 text-right text-xs font-medium sm:px-6"
+                    >
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-primary-700 divide-y text-white divide-gray-700">
+                  {platformData?.map((platform, index) => (
+                    <tr key={platform.id}>
+                      <td className="px-3 py-4 text-sm font-medium whitespace-nowrap sm:px-6">
+                        {index + 1}
+                      </td>
+                      <td className="px-3 py-4 text-sm whitespace-nowrap sm:px-6">
+                        {platform.value}
+                      </td>
+                      <td className="px-3 py-4 text-sm whitespace-nowrap sm:px-6">
+                        {platform.name}
+                      </td>
+                      <td className="px-3 py-4 text-sm whitespace-nowrap sm:px-6">
+                        <Switch
+                          checked={platform.status === "active"}
+                          onCheckedChange={() =>
+                            toggleActive(platform._id, platform.status)
+                          }
+                        />
+                      </td>
+                      <td className="px-3 py-4 text-sm text-right whitespace-nowrap sm:px-6">
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => deletePlatform(platform?._id)}
+                            className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
+                          >
+                            <Trash2 size={20} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
