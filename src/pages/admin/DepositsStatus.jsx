@@ -364,7 +364,7 @@ const DepositsStatus = () => {
           {
             Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
             MT5Account: selectedDeposit.mt5Account,
-            Name: selectedDeposit.name,
+            Name: selectedDeposit.name + selectedDeposit.lName,
             Country: selectedDeposit.country,
             Leverage: selectedDeposit.leverage,
             Group_Name: selectedDeposit.groupName,

@@ -31,7 +31,7 @@ html {
 }
 
 .user-custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #00bcd4; /* primary-400 */
+  background-color: #52b788; /* primary-400 */
   border-radius: 10px;
 }
 

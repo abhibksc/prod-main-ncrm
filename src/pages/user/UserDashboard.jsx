@@ -65,8 +65,8 @@ export default function UserDashboard() {
       >
         <div className="">
           {/* <UserLineChart /> */}
-          {/* <TradingViewWidget></TradingViewWidget> */}{" "}
-          <VisitorChart></VisitorChart>
+          <TradingViewWidget></TradingViewWidget>{" "}
+          {/* <VisitorChart></VisitorChart> */}
         </div>
         <div className=" flex md:ml-20 flex-col">
           <UserDashboardAccount />

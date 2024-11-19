@@ -89,7 +89,9 @@ const UserDashboardAccountStats = () => {
             >
               <span className="font-medium">{stat.label}</span>
               <div className="flex items-center">
-                <span className="mr-2">{stat.value}</span>
+                <span className="mr-2">
+                  {loggedUser.phase > 0 && stat.value}
+                </span>
                 {/* {stat.status && (
                   <span
                     className={`px-2 py-1 rounded-full text-xs sm:text-xs text-white ${getStatusColor(
