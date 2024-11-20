@@ -9,27 +9,6 @@ export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
   const adminToggle = useSelector((store) => store.admin.adminToggle);
   const navigate = useNavigate();
-  // mobile app ---
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-
-  useEffect(() => {
-    window.addEventListener("beforeinstallprompt", (e) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-    });
-  }, []);
-
-  const handleInstallClick = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
-        }
-        setDeferredPrompt(null);
-      });
-    }
-  };
 
   useEffect(() => {
     if (!adminUser) {
@@ -44,12 +23,6 @@ export default function App() {
   return (
     <div className="text-white h-screen overflow-hidden">
       <Toaster />
-      <button
-        onClick={handleInstallClick}
-        style={{ display: deferredPrompt ? "block" : "none" }}
-      >
-        Install App
-      </button>
       <Header className="fixed top-0 w-full z-10" />
       <div className="flex">
         <Sidebar className="fixed top-15 left-0 h-full z-10" />
