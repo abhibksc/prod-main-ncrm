@@ -74,6 +74,7 @@ export default function UseUserHook() {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUserHook.current.mt5Account}`
         );
+
         if (res.data.Equity && loggedUser.accountSize) {
           dispatch(setUserInfo(res.data));
           dispatch(setAvailableBalance(Number(res.data.Balance)));
