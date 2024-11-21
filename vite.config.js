@@ -4,10 +4,8 @@ import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  // Load environment variables
   const env = loadEnv(mode, process.cwd(), "");
-  // console.log("website name:", env.VITE_WEBSITE_NAME);
 
   return {
     plugins: [
@@ -15,7 +13,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: "autoUpdate",
         manifest: {
-          name: env.VITE_WEBSITE_NAME, // You can use it here
+          name: env.VITE_WEBSITE_NAME,
           short_name: env.VITE_WEBSITE_NAME,
           description: env.VITE_WEBSITE_NAME,
           theme_color: "#000000",
@@ -42,9 +40,17 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-    server: {
-      host: true,
-      port: 5173,
-    },
+    // server: {
+    //   host: true, // Makes the server accessible on the local network
+    //   port: 5173, // Development server port
+    //   proxy: {
+    //     "/api": {
+    //       target: "https://trapi.jarha.in", // API base URL
+    //       changeOrigin: true, // Modifies the Origin header to match the target URL
+    //       secure: false, // Disables SSL verification (if the target has invalid SSL certificates)
+    //       rewrite: (path) => path.replace(/^\/api/, ""), // Strips "/api" prefix from requests
+    //     },
+    //   },
+    // },
   };
 });

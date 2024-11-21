@@ -3,6 +3,7 @@ import {
   ArrowLeftRight,
   CircleCheckBig,
   CircleX,
+  Import,
   Loader,
   Search,
 } from "lucide-react";
@@ -359,7 +360,7 @@ const DepositsStatus = () => {
     try {
       if (actionType === "approve") {
         const addUserApi = await axios.post(
-          `${import.meta.env.VITE_API_END_POINT}/Adduser`,
+          `${import.meta.env}/Adduser`,
 
           {
             Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
