@@ -359,7 +359,7 @@ const DepositsStatus = () => {
     try {
       if (actionType === "approve") {
         const addUserApi = await axios.post(
-          `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
+          `${import.meta.env.VITE_API_END_POINT}/Adduser`,
 
           {
             Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
@@ -374,7 +374,7 @@ const DepositsStatus = () => {
         const depositApires = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeDepositBalance?Manager_Index=${
+          }/MakeDepositBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.balance
@@ -420,7 +420,7 @@ const DepositsStatus = () => {
           const addCommisonMt5Api = await axios.get(
             `${
               import.meta.env.VITE_API_END_POINT
-            }/api/web/MakeDepositBalance?Manager_Index=${
+            }/MakeDepositBalance?Manager_Index=${
               import.meta.env.VITE_MANAGER_INDEX
             }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
               selectedDeposit.deposit *
