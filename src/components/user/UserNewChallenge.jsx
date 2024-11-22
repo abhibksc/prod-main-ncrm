@@ -107,7 +107,11 @@ const UserNewChallenge = () => {
 
   // add main api handler---------------
 
-  const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
+  const digits = Math.floor(Math.random() * 3) + 5; // Randomly choose between 5, 6, and 7 digits
+  const randomNumber =
+    Math.floor(Math.random() * (10 ** digits - 10 ** (digits - 1))) +
+    10 ** (digits - 1);
+
   const apiTestHandler = async () => {
     const toastID = toast.loading("Please wait..");
     setCreatingLoading(true);
