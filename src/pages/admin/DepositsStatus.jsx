@@ -355,7 +355,7 @@ const DepositsStatus = () => {
   // on confirm api handler  ------------------------------
 
   const handleConfirmAction = async (selectedDeposit) => {
-    const toastId = toast.loading("Plese wait..");
+    const toastId = toast.loading("Please wait..");
     // console.log("selected deposits--", selectedDeposit);
     try {
       if (actionType === "approve") {

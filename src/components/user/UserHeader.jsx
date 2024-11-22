@@ -129,12 +129,6 @@ const UserHeader = () => {
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
-  const apiTest = async () => {
-    const res = await axios.get(
-      `https://trapi.jarha.in/demo1/MakeDepositBalance?Manager_Index=101&MT5Account=58677&Amount=101&Comment=test`
-    );
-    console.log("test^^^^^^^^^^^^^", res.data);
-  };
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
       <div className=" px-5  flex justify-between items-center">
@@ -150,9 +144,6 @@ const UserHeader = () => {
             />
           </a>
         </div>
-        <button onClick={apiTest} className=" p-5">
-          test
-        </button>
 
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
