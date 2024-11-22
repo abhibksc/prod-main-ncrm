@@ -372,6 +372,8 @@ const DepositsStatus = () => {
           }
         );
 
+        console.log("addUserApi---", addUserApi);
+
         const depositApires = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT

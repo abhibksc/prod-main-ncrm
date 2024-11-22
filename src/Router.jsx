@@ -47,6 +47,7 @@ import UserReferalWithdrwalHistory from "./pages/user/referral/UserReferalWithdr
 import IbWithdrawalStatus from "./pages/admin/IbWithdrawalStatus";
 import RulesManagement from "./pages/admin/RulesManagement";
 import Phases from "./pages/admin/Phases";
+import TestApi from "./pages/protected/TestApi";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -257,6 +258,10 @@ const Router = createBrowserRouter([
   {
     path: "/user/login",
     element: <UserLogin></UserLogin>,
+  },
+  {
+    path: "/test/000",
+    element: <TestApi></TestApi>,
   },
 ]);
 
