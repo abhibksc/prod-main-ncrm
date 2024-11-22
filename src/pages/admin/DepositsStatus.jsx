@@ -79,7 +79,6 @@ const DepositsStatus = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  console.log("selected deposit!!!!", selectedDeposit);
   const togglePreview = (item) => {
     setShowPreview(!showPreview);
     setSelectedDeposit(item);
@@ -360,7 +359,7 @@ const DepositsStatus = () => {
     try {
       if (actionType === "approve") {
         const addUserApi = await axios.post(
-          `${import.meta.env}/Adduser`,
+          `${import.meta.env.VITE_API_END_POINT}/Adduser`,
 
           {
             Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
@@ -371,110 +370,115 @@ const DepositsStatus = () => {
             Group_Name: selectedDeposit.groupName,
           }
         );
-
-        console.log("addUserApi---", addUserApi);
-
-        const depositApires = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/MakeDepositBalance?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
-            selectedDeposit.balance
-          }&Comment=TEST`
-        );
-
-        const updateDbDepositRes = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
-          {
-            _id: selectedDeposit._id,
-            status: "approved",
-          }
-        );
-
-        const updateChallengeDB = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-          {
-            accountSize: selectedDeposit.accountSize,
-            mt5Account: selectedDeposit.mt5Account,
-            status: "active",
-          }
-        );
-        const updateLoggedUser = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-          {
-            id: selectedDeposit.userId,
-            accountSize: selectedDeposit.balance,
-            depositBalance: selectedDeposit.deposit,
-            phase: 1,
-            masterPassword: addUserApi.data.Master_Pwd,
-            investorPassword: addUserApi.data.Investor_Pwd,
-            mt5Account: selectedDeposit.mt5Account,
-            accountType: selectedDeposit.accountType,
-            leverage: selectedDeposit.leverage,
-          }
-        );
-        // add refferal commission ----------
-
-        if (
-          selectedDeposit?.userId?.referralFromUserId &&
-          selectedDeposit?.userId?.referalFromId
-        ) {
-          const addCommisonMt5Api = await axios.get(
+        console.log("addUserApi", addUserApi);
+        if (addUserApi.data.MT5Account > 0) {
+          const depositApires = await axios.get(
             `${
               import.meta.env.VITE_API_END_POINT
             }/MakeDepositBalance?Manager_Index=${
               import.meta.env.VITE_MANAGER_INDEX
-            }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
-              selectedDeposit.deposit *
-              (import.meta.env.VITE_IB_COMMISSION / 100)
-            }&Comment=commission`
+            }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
+              selectedDeposit.balance
+            }&Comment=TEST`
           );
 
-          const addCommissionDB = await axios.post(
-            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-commission`,
+          const updateDbDepositRes = await axios.put(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
             {
-              mt5Account: selectedDeposit.mt5Account,
-              referralId: selectedDeposit?.userId?.referalFromId,
-              depositBalance: selectedDeposit.balance,
-              accountSize: selectedDeposit.deposit,
-              commission:
-                selectedDeposit.deposit *
-                (import.meta.env.VITE_IB_COMMISSION / 100),
-              accountType: selectedDeposit.accountType,
-              level: 1,
-              referralFrom: selectedDeposit.userId.referralFromUserId,
-              currentReferral: selectedDeposit.userId._id,
+              _id: selectedDeposit._id,
+              status: "approved",
             }
           );
-          console.log("addCommissionDB---------", addCommissionDB);
-        }
 
-        const updatedDepositData = depositData.map((deposit) =>
-          deposit._id === selectedDeposit._id
-            ? {
-                ...deposit,
-                status: "approved",
+          const updateChallengeDB = await axios.put(
+            `${
+              import.meta.env.VITE_BECKEND_END_POINT
+            }/api/auth/update-challenge`,
+            {
+              mt5Account: selectedDeposit.mt5Account,
+              status: "active",
+              balance: selectedDeposit.balance,
+            }
+          );
+          const updateLoggedUser = await axios.put(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+            {
+              id: selectedDeposit.userId,
+              accountSize: selectedDeposit.balance,
+              depositBalance: selectedDeposit.deposit,
+              phase: 1,
+              masterPassword: addUserApi.data.Master_Pwd,
+              investorPassword: addUserApi.data.Investor_Pwd,
+              mt5Account: selectedDeposit.mt5Account,
+              accountType: selectedDeposit.accountType,
+              leverage: selectedDeposit.leverage,
+            }
+          );
+          // add refferal commission ----------
+
+          if (
+            selectedDeposit?.userId?.referralFromUserId &&
+            selectedDeposit?.userId?.referalFromId
+          ) {
+            const addCommisonMt5Api = await axios.get(
+              `${
+                import.meta.env.VITE_API_END_POINT
+              }/MakeDepositBalance?Manager_Index=${
+                import.meta.env.VITE_MANAGER_INDEX
+              }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
+                selectedDeposit.deposit *
+                (import.meta.env.VITE_IB_COMMISSION / 100)
+              }&Comment=commission`
+            );
+
+            const addCommissionDB = await axios.post(
+              `${
+                import.meta.env.VITE_BECKEND_END_POINT
+              }/api/auth/add-commission`,
+              {
+                mt5Account: selectedDeposit.mt5Account,
+                referralId: selectedDeposit?.userId?.referalFromId,
+                depositBalance: selectedDeposit.balance,
+                accountSize: selectedDeposit.deposit,
+                commission:
+                  selectedDeposit.deposit *
+                  (import.meta.env.VITE_IB_COMMISSION / 100),
+                accountType: selectedDeposit.accountType,
+                level: 1,
+                referralFrom: selectedDeposit.userId.referralFromUserId,
+                currentReferral: selectedDeposit.userId._id,
               }
-            : deposit
-        );
-
-        setDepositData(updatedDepositData);
-        setIsDialogOpen(false);
-        setApiMasterPassword(addUserApi.data.Master_Pwd);
-        setApiInvestorPassword(addUserApi.data.Investor_Pwd);
-        toast.success("Account created", { id: toastId });
-
-        console.log(" add user api---", addUserApi.data);
-
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: selectedDeposit.email,
-            content: customContent,
-            subject: "Challenge Added",
+            );
+            console.log("addCommissionDB---------", addCommissionDB);
           }
-        );
+
+          const updatedDepositData = depositData.map((deposit) =>
+            deposit._id === selectedDeposit._id
+              ? {
+                  ...deposit,
+                  status: "approved",
+                }
+              : deposit
+          );
+
+          setDepositData(updatedDepositData);
+          setIsDialogOpen(false);
+          setApiMasterPassword(addUserApi.data.Master_Pwd);
+          setApiInvestorPassword(addUserApi.data.Investor_Pwd);
+          toast.success("Account created", { id: toastId });
+
+          const customMailRes = await axios.post(
+            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+            {
+              email: selectedDeposit.email,
+              content: customContent,
+              subject: "Challenge Added",
+            }
+          );
+        } else {
+          toast.error("Failed, Please retry!!", { id: toastId });
+          setIsDialogOpen(false);
+        }
       } else if (actionType === "reject") {
         const res = await axios.put(
           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-deposit`,
@@ -483,18 +487,15 @@ const DepositsStatus = () => {
             status: "rejected",
           }
         );
-        console.log("updated rejection data", res);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
                 ...deposit,
                 status: "rejected",
-                accountSize: selectedDeposit.accountSize,
               }
             : deposit
         );
-
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
         toast.success("Account rejected", { id: toastId });
@@ -510,9 +511,7 @@ const DepositsStatus = () => {
     (total, item) => total + Number(item.deposit),
     0
   );
-  // console.log("total deposits", TotalDeposits);
   // total pending deposits ----------
-  console.log(depositData);
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")

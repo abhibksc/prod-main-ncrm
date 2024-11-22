@@ -10,7 +10,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
 
   const fetchApiGroups = async () => {
     const res = await axios.get(
-      `${import.meta.env.VITE_API_END_POINT}/api/web//GetGroups?Manager_Index=${
+      `${import.meta.env.VITE_API_END_POINT}/GetGroups?Manager_Index=${
         import.meta.env.VITE_MANAGER_INDEX
       }`
     );
