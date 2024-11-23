@@ -57,13 +57,13 @@ const UserDashboardAccount = () => {
   useEffect(() => {}, [userInfo]);
   return (
     <motion.div
-      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 max-w-md  "
+      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 min-w-5xl  md:max-w-md "
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
       <motion.h2
-        className="text-2xl font-bold mb-4 text-gray-200"
+        className="text-2xl font-bold mb-4 whitespace-nowrap  text-gray-200"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}

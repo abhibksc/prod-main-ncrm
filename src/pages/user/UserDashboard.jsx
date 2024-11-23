@@ -16,7 +16,7 @@ import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
 export default function UserDashboard() {
   const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi } =
     UseUserHook();
-  const { updatePhaseStats } = UsePhaseStats();
+  const { updatePhaseStats } = UsePhaseStats(); //don't remove it
 
   // for update logged data and userInfo-------------
 
@@ -34,7 +34,7 @@ export default function UserDashboard() {
     // updatePhaseStats();
     const intervalId = setInterval(() => {
       fetchData();
-    }, 4000);
+    }, 3000);
 
     return () => {
       clearInterval(intervalId);

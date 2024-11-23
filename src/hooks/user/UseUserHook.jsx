@@ -5,121 +5,43 @@ import {
   setLoggedUser,
   setOpenTrades,
   setPaymentMethods,
-  setPhaseMaxLength,
-  setPhaseStats,
   setPlatforms,
   setProfitNloss,
-  setTotalFinalPnL,
   setUserInfo,
 } from "@/redux/user/userSlice";
 import axios from "axios";
-import { useCallback, useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function UseUserHook() {
   const dispatch = useDispatch();
   const currentDate = new Date().toISOString().slice(0, 10);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const userInfo = useSelector((store) => store.user.userInfo);
-  const openTrades = useSelector((store) => store.user.openTrades);
-  const currentPnlRef = useRef(0);
-  const [currentPnl, setCurrentPnl] = useState(0);
-  const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
-  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
-  const phaseStats = useSelector((store) => store.user.phaseStats);
-  const phaseHook = useRef(0);
-  const loggedUserHook = useRef("");
-  const totalFinalPnLRef = useRef(0);
-  const [isToRefresh, setIsToRefresh] = useState(false);
-
-  // const isMax = phaseMaxLength === loggedUser.phase + 1;
-  // const isLastPhase = phaseMaxLength === loggedUser.phase;
-
-  // console.log("isLastPhase hook ----", isLastPhase);
-  // console.log("is phaseMaxLength hook----", phaseMaxLength);
-
-  // without including open trade price pnl ----------
-
-  // const setCurrentPnlAndRef = useCallback((newValue) => {
-  //   currentPnlRef.current = newValue;
-  //   setCurrentPnl(newValue);
-  // }, []);
-
-  // useEffect(() => {
-  //   currentPnlRef.current = currentPnl;
-  // }, [currentPnl]);
-
-  // final pnl -----------------
-
-  // useEffect(() => {
-  //   const calculateTotalNetProfit = () => {
-  //     return openTrades.reduce((sum, entry) => sum + entry.Profit, 0);
-  //   };
-  //   const newTotalFinalPnL = currentPnl + calculateTotalNetProfit();
-  //   totalFinalPnLRef.current = newTotalFinalPnL;
-  //   console.log("total final rnf-------", totalFinalPnLRef);
-  //   dispatch(setProfitNloss(newTotalFinalPnL));
-  // }, [openTrades, loggedUser, userInfo]);
-
-  // console.log("final pnl !!!!!!!!!!!!!!!!!!1", totalFinalPnLRef.current);
 
   // get user info api-----------------
 
   const GetUserInfoAPI = async () => {
     try {
-      if (phaseHook.current !== 0) {
-        const res = await axios.get(
-          `/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${loggedUserHook.current.mt5Account}`
-        );
-
-        if (res.data.Equity && loggedUser.accountSize) {
-          dispatch(setUserInfo(res.data));
-          dispatch(setAvailableBalance(Number(res.data.Balance)));
-          const finalPnL = Number(res.data.Equity - loggedUser.accountSize);
-          dispatch(setProfitNloss(finalPnL));
-          console.log("finalPnL:~~~~~~~~~~~~~~~~~~~~", finalPnL);
-          // console.log("Account Size~~~~~~~~~~~~~~~~~~~~~~~~`:", accountSize);
-        }
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_END_POINT}/GetUserInfo?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${loggedUser.mt5Account}`
+      );
+      if (res.data.Equity && loggedUser.accountSize) {
+        dispatch(setUserInfo(res.data));
+        dispatch(setAvailableBalance(Number(res.data.Equity)));
+        const finalPnL = Number(res.data.Equity - loggedUser.accountSize);
+        dispatch(setProfitNloss(finalPnL));
+        // console.log("finalPnL:~~~~~~~~~~~~~~~~~~~~", finalPnL);
+        // console.log("Account Size~~~~~~~~~~~~~~~~~~~~~~~~`:", accountSize);
       }
     } catch (error) {
       console.error("Error in GetUserInfoAPI:", error);
     }
   };
 
-  // // get user info api-----------------
-
-  // const GetUserInfoAPI = useCallback(async () => {
-  //   try {
-  //     if (phaseHook.current !== 0) {
-  //       const res = await axios.get(
-  //         `${
-  //           import.meta.env.VITE_API_END_POINT
-  //         }/api/web/GetUserInfo?Manager_Index=${
-  //           import.meta.env.VITE_MANAGER_INDEX
-  //         }&MT5Account=${loggedUserHook.current.mt5Account}`
-  //       );
-  //       // console.log("get userInfo called ---", res.data);
-  //       dispatch(setUserInfo(res.data));
-  //       dispatch(setAvailableBalance(res.data.Balance));
-  //       const newPnl = res.data.Balance - loggedUserHook.current.accountSize;
-  //       setCurrentPnlAndRef(newPnl);
-  //       // dispatch(setProfitNloss(newPnl));
-  //       // console.log("profit n loss hook---", newPnl);
-  //       // console.log("acount size---", newPnl);
-  //     }
-  //   } catch (error) {
-  //     console.log("error while userInfo hook--", error.data);
-  //   }
-  // }, [dispatch, setCurrentPnlAndRef]);
-
-  // close trade api --------------------
-
   const GetCloseTradeApi = async () => {
     try {
-      if (phaseHook.current !== 0) {
+      if (loggedUser.phase !== 0) {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
@@ -143,7 +65,7 @@ export default function UseUserHook() {
 
   const GetOpenTradeApi = async () => {
     try {
-      if (phaseHook.current !== 0) {
+      if (loggedUser.phase !== 0) {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
@@ -181,470 +103,10 @@ export default function UseUserHook() {
         }`
       );
       dispatch(setLoggedUser(res.data.data));
-      phaseHook.current = res.data.data.phase;
-      loggedUserHook.current = res.data.data;
     } catch (error) {
       console.log("error in update logedUser hook", error);
     }
   };
-
-  // update phase ----------------
-
-  //   const getUpdatePhase = async () => {
-  //     // console.log(" final pnl__________________", totalFinalPnLRef.current);
-
-  //     const phaseMinValueInNumber =
-  //       (phaseStats?.min / 100) * loggedUserHook.current.accountSize * -1;
-
-  //     const phaseMaxValueInNumber =
-  //       (phaseStats?.max / 100) * loggedUserHook.current.accountSize;
-
-  //     // console.log("current phase stats___________________", phaseStats);
-  //     // console.log("phase update hook********", currentPnlRef.current);
-  //     // console.log("is max ##############", isMax);
-  //     if (
-  //       totalFinalPnLRef.current >= phaseMaxValueInNumber &&
-  //       loggedUserHook.current.phase <= phaseMaxLength
-  //     ) {
-  //       const toastId = toast.loading("Updating phase..");
-  //       try {
-  //         console.log("Profit reached---------");
-
-  //         const addApiRes = await axios.post(
-  //           `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
-
-  //           {
-  //             Manager_Index: loggedUser.managerIndex,
-  //             MT5Account: randomNumber,
-  //             Name: loggedUser.firstName + " " + loggedUser.lastName,
-  //             Leverage: loggedUser.leverage,
-  //             Country: loggedUser.country,
-  //             Group_Name: loggedUser.groupName,
-  //           }
-  //         );
-  //         const depositApires = await axios.get(
-  //           `${
-  //             import.meta.env.VITE_API_END_POINT
-  //           }/api/web/MakeDepositBalance?Manager_Index=${
-  //             import.meta.env.VITE_MANAGER_INDEX
-  //           }&MT5Account=${randomNumber}&Amount=${
-  //             loggedUser.accountSize
-  //           }&Comment=TEST`
-  //         );
-  //         const updateChallengeDB = await axios.put(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-  //           {
-  //             mt5Account: loggedUser.mt5Account,
-  //             status: "closed",
-  //             reason: "Profit reached",
-  //           }
-  //         );
-  //         const addChallengeDB = await axios.post(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
-  //           {
-  //             mt5Account: randomNumber,
-  //             type: loggedUser.accountType,
-  //             accountSize: loggedUser.accountSize,
-  //             deposit: loggedUser.depositBalance,
-  //             phase: Number(loggedUser.phase) + 1,
-  //             reason: "pending",
-  //             status: "active",
-  //             leverage: loggedUser.leverage,
-  //             masterPassword: addApiRes.data.Master_Pwd,
-  //             investarPassword: addApiRes.data.Investor_Pwd,
-  //             userId: loggedUser._id,
-  //           }
-  //         );
-  //         const disableAccountRes = await axios.get(
-  //           `${
-  //             import.meta.env.VITE_API_END_POINT
-  //           }/api/web/EnableProfileAccount?Manager_Index=${
-  //             import.meta.env.VITE_MANAGER_INDEX
-  //           }&MT5Account=${loggedUser.mt5Account}&Status=0`
-  //         );
-
-  //         const updateLoggedUser = await axios.put(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-  //           {
-  //             id: loggedUser._id,
-  //             phase: isLastPhase ? phaseMaxLength : Number(loggedUser.phase) + 1,
-  //             masterPassword: addApiRes.data.Master_Pwd,
-  //             investorPassword: addApiRes.data.Investor_Pwd,
-  //             mt5Account: randomNumber,
-  //           }
-  //         );
-
-  //         dispatch(setLoggedUser(updateLoggedUser.data.data));
-  //         getUpdateLoggedUser();
-  //         dispatch(setProfitNloss(0));
-  //         dispatch(setAvailableBalance(0));
-  //         GetUserInfoAPI();
-  //         toast.success("Maximum profit reached", { id: toastId });
-  //         window.location.reload();
-  //         const customContent = `<!DOCTYPE html>
-  //         <html lang="en">
-  //         <head>
-  //           <meta charset="UTF-8">
-  //           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  //           <title>Withdrawal Request Confirmation - Arena Trade</title>
-  //           <style>
-  //             body, html {
-  //               margin: 0;
-  //               padding: 0;
-  //               font-family: 'Arial', sans-serif;
-  //               line-height: 1.6;
-  //               color: #333;
-  //               background-color: #f4f4f4;
-  //             }
-  //             .container {
-  //               max-width: 600px;
-  //               margin: 0 auto;
-  //               padding: 5px;
-  //               background-color: #ffffff;
-  //             }
-  //             .header {
-  //               background-color: #19422df2;
-  //               color: #ffffff;
-  //               padding: 20px 15px;
-  //               text-align: center;
-  //               border-radius: 10px 10px 0 0;
-  //             }
-  //             .header h1 {
-  //               margin: 0;
-  //               font-size: 22px;
-  //               letter-spacing: 1px;
-  //             }
-  //             .content {
-  //               padding: 10px 20px;
-  //             }
-  //             .cta-button {
-  //               display: inline-block;
-  //               padding: 12px 24px;
-  //               background-color: #2d6a4f;
-  //               color: #FFFFFF;
-  //               text-decoration: none;
-  //               border-radius: 5px;
-  //               font-weight: bold;
-  //               margin: 10px 0;
-  //             }
-  //             .footer {
-  //               background-color: #19422df2;
-  //               color: #ffffff;
-  //               text-align: center;
-  //               padding: 5px 10px;
-  //               font-size: 12px;
-  //               border-radius: 0 0 10px 10px;
-  //             }
-  //             .footer-info {
-  //               margin-top: 6px;
-  //             }
-  //             .footer-info a {
-  //               color: #B6D0E2;
-  //               text-decoration: none;
-  //             }
-
-  //             .withdrawal-details {
-  //               background-color: #f8f8f8;
-  //               border-left: 4px solid #2d6a4f;
-  //               padding: 15px;
-  //               margin: 20px 0;
-  //             }
-  //             .withdrawal-details p {
-  //               margin: 5px 0;
-  //             }
-  //             .highlight {
-  //               font-weight: bold;
-  //               color: #0a2342;
-  //             }
-  //             .risk-warning {
-  //               color: #C70039;
-  //               padding: 5px;
-  //               font-size: 12px;
-  //               line-height: 1.4;
-  //             }
-  //           </style>
-  //         </head>
-  //         <body>
-  //           <div class="container">
-  //             <div class="header">
-  //               <h1>Phase Updated</h1>
-  //             </div>
-  //             <div class="content">
-  //               <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
-  // <p>We regret to inform you that your account ID: <strong>${
-  //           loggedUser.mt5Account
-  //         }</strong> has been blocked due to reaching <strong> Maximum Profit Limit</strong> from phase <strong>${
-  //           loggedUser.phase
-  //         }</strong>.</p>
-  // <br>
-  // <p>We are pleased to inform you that a new account has been successfully opened with the following details given below</p>
-  //             <div class="withdrawal-details">
-  //               <p>Account No: <span class="highlight">${randomNumber}
-  //                 </span></p>
-  //               <p>Phase : <span class="highlight">
-  // ${isMax ? "Live Account" : loggedUser.phase}                </span></p>
-  //               <p>Master Password : <span class="highlight">
-  //               ${addApiRes.data.Master_Pwd}
-  //                 </span></p>
-  //               <p>Investor Password : <span class="highlight">
-  //               ${addApiRes.data.Investor_Pwd}
-  //                 </span></p>
-
-  //               </div>
-
-  //         <p>Thank you for choosing us.</p>
-  //         <p>Happy trading!</p>
-
-  //               <p>Best regards,<br>The ${
-  //                 import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //               } Team</p>
-  //               <hr>
-  //          <div class="risk-warning">
-  //           <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
-  //           <br><br>
-  //           Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
-  //         </div>
-
-  //             </div>
-  //               <div class="footer">
-  //           <div class="footer-info">
-  //            <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
-  //             <p>Website: <a href="https://${
-  //               import.meta.env.VITE_EMAIL_WEBSITE
-  //             }"> ${
-  //           import.meta.env.VITE_EMAIL_WEBSITE
-  //         } </a> | E-mail: <a href="mailto:${
-  //           import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
-  //         }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
-  //             <p>We sent out this message to all existing ${
-  //               import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //             } traders. Please visit this page to know more about our Privacy Policy.</p>
-  //             <p>&copy; 2024 ${
-  //               import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //             }. All Rights Reserved</p>
-  //           </div>
-  //         </div>
-  //           </div>
-  //         </body>
-  //         </html>`;
-
-  //         const customMailRes = await axios.post(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-  //           {
-  //             email: loggedUser.email,
-  //             content: customContent,
-  //             subject: "Phase updated",
-  //           }
-  //         );
-  //       } catch (error) {
-  //         toast.error("Something went wrong", { id: toastId });
-  //         console.log("error in update phase--", error);
-  //       }
-  //     }
-  //     if (
-  //       totalFinalPnLRef.current <= phaseMinValueInNumber &&
-  //       loggedUserHook.current.phase <= phaseMaxLength
-  //     ) {
-  //       console.log("max loss reached**********");
-  //       const toastId = toast.loading("Updating...");
-  //       try {
-  //         const disableAccountRes = await axios.get(
-  //           `${
-  //             import.meta.env.VITE_API_END_POINT
-  //           }/api/web/EnableProfileAccount?Manager_Index=${
-  //             import.meta.env.VITE_MANAGER_INDEX
-  //           }&MT5Account=${loggedUserHook.current.mt5Account}&Status=0`
-  //         );
-  //         const updateChallengeDB = await axios.put(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-  //           {
-  //             mt5Account: loggedUserHook.current.mt5Account,
-  //             status: "closed",
-  //             reason: "Loss reached",
-  //           }
-  //         );
-  //         const updateLoggedUser = await axios.put(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-  //           {
-  //             id: loggedUserHook.current._id,
-  //             phase: 0,
-  //             masterPassword: "000",
-  //             investorPassword: "000",
-  //             mt5Account: "000",
-  //             accountSize: "000",
-  //             availableBalance: Number("000"),
-  //             depositBalance: "000",
-  //             groupName: "null",
-  //             accountType: "null",
-  //             leverage: "000",
-  //           }
-  //         );
-  //         const customContent = `<!DOCTYPE html>
-  //                 <html lang="en">
-  //                 <head>
-  //                   <meta charset="UTF-8">
-  //                   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  //                   <title>Withdrawal Request Confirmation - Arena Trade</title>
-  //                   <style>
-  //                     body, html {
-  //                       margin: 0;
-  //                       padding: 0;
-  //                       font-family: 'Arial', sans-serif;
-  //                       line-height: 1.6;
-  //                       color: #333;
-  //                       background-color: #f4f4f4;
-  //                     }
-  //                     .container {
-  //                       max-width: 600px;
-  //                       margin: 0 auto;
-  //                       padding: 5px;
-  //                       background-color: #ffffff;
-  //                     }
-  //                     .header {
-  //                       background-color: #19422df2;
-  //                       color: #ffffff;
-  //                       padding: 20px 15px;
-  //                       text-align: center;
-  //                       border-radius: 10px 10px 0 0;
-  //                     }
-  //                     .header h1 {
-  //                       margin: 0;
-  //                       font-size: 22px;
-  //                       letter-spacing: 1px;
-  //                     }
-  //                     .content {
-  //                       padding: 10px 20px;
-  //                     }
-  //                     .cta-button {
-  //                       display: inline-block;
-  //                       padding: 12px 24px;
-  //                       background-color: #2d6a4f;
-  //                       color: #FFFFFF;
-  //                       text-decoration: none;
-  //                       border-radius: 5px;
-  //                       font-weight: bold;
-  //                       margin: 10px 0;
-  //                     }
-  //                     .footer {
-  //                       background-color: #19422df2;
-  //                       color: #ffffff;
-  //                       text-align: center;
-  //                       padding: 5px 10px;
-  //                       font-size: 12px;
-  //                       border-radius: 0 0 10px 10px;
-  //                     }
-  //                     .footer-info {
-  //                       margin-top: 6px;
-  //                     }
-  //                     .footer-info a {
-  //                       color: #B6D0E2;
-  //                       text-decoration: none;
-  //                     }
-
-  //                     .withdrawal-details {
-  //                       background-color: #f8f8f8;
-  //                       border-left: 4px solid #2d6a4f;
-  //                       padding: 15px;
-  //                       margin: 20px 0;
-  //                     }
-  //                     .withdrawal-details p {
-  //                       margin: 5px 0;
-  //                     }
-  //                     .highlight {
-  //                       font-weight: bold;
-  //                       color: #0a2342;
-  //                     }
-  //                     .risk-warning {
-  //                       color: #C70039;
-  //                       padding: 5px;
-  //                       font-size: 12px;
-  //                       line-height: 1.4;
-  //                     }
-  //                   </style>
-  //                 </head>
-  //                 <body>
-  //                   <div class="container">
-  //                     <div class="header">
-  //                       <h1>Account Closed</h1>
-  //                     </div>
-  //                     <div class="content">
-  //                       <p>Dear ${
-  //                         loggedUser?.firstName + " " + loggedUser?.lastName
-  //                       },</p>
-  //         <p>We regret to inform you that your account has been closed due to reaching Maximum Loss Limit.</p>
-  //         <br>
-  //        <div class="withdrawal-details">
-  //          <p>
-  //            Account No: <span class="highlight">${loggedUser.mt5Account}</span>
-  //          </p>
-  //          <p>
-  //            Phase : <span class="highlight">${
-  //              isLastPhase ? "Live Account" : loggedUser.phase
-  //            }  </span>
-  //          </p>
-  //        </div>
-
-  //                 <p>Thank you for choosing us.</p>
-  //                 <p>Happy trading!</p>
-
-  //                       <p>Best regards,<br>The ${
-  //                         import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //                       } Team</p>
-  //                       <hr>
-  //                  <div class="risk-warning">
-  //                   <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
-  //                   <br><br>
-  //                   Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
-  //                 </div>
-
-  //                     </div>
-  //                     <div class="footer">
-  //                   <div class="footer-info">
-  //                   <p>${
-  //                     import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"
-  //                   }</p>
-  //             <p>Website: <a href="https://${
-  //               import.meta.env.VITE_EMAIL_WEBSITE
-  //             }"> ${
-  //           import.meta.env.VITE_EMAIL_WEBSITE
-  //         } </a> | E-mail: <a href="mailto:${
-  //           import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
-  //         }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
-  //             <p>We sent out this message to all existing ${
-  //               import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //             } traders. Please visit this page to know more about our Privacy Policy.</p>
-  //             <p>&copy; 2024 ${
-  //               import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
-  //             }. All Rights Reserved</p>
-  //                   </div>
-  //                 </div>
-  //                   </div>
-  //                 </body>
-  //                 </html>`;
-  //         const customMailRes = await axios.post(
-  //           `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-  //           {
-  //             email: loggedUser.email,
-  //             content: customContent,
-  //             subject: "Account Closed ",
-  //           }
-  //         );
-
-  //         await getUpdateLoggedUser();
-  //         dispatch(setProfitNloss(0));
-  //         dispatch(setAvailableBalance(0));
-  //         dispatch(setPhaseStats(""));
-  //         await GetUserInfoAPI();
-  //         toast.success("Account Closed", { id: toastId });
-  //         window.location.reload();
-  //       } catch (error) {
-  //         toast.error("Something went wrong", { id: toastId });
-  //         console.log("error in update phase--", error);
-  //       }
-  //     }
-  //   };
-
-  // reset all details --------------
 
   const getReset = () => {
     dispatch(setLoggedUser(""));
@@ -662,7 +124,6 @@ export default function UseUserHook() {
     GetUserInfoAPI,
     GetCloseTradeApi,
     getAllTradeApi,
-    // getUpdatePhase,
     getUpdateLoggedUser,
     getReset,
   };

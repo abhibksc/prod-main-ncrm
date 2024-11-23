@@ -412,6 +412,7 @@ const DepositsStatus = () => {
               mt5Account: selectedDeposit.mt5Account,
               accountType: selectedDeposit.accountType,
               leverage: selectedDeposit.leverage,
+              lastEquity: selectedDeposit.balance,
             }
           );
           // add refferal commission ----------

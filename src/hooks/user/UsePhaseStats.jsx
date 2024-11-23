@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 export default function UsePhaseStats() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const dispatch = useDispatch();
-  console.log("hello");
 
   const updatePhaseStats = async () => {
+    console.log("updatePhaseStats called ________---");
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
