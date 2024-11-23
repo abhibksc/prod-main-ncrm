@@ -4,10 +4,7 @@ import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
-  const env = loadEnv(mode, process.cwd(), "");
-  // console.log("website name:", env.VITE_WEBSITE_NAME);
+  const env = loadEnv(mode, process.cwd(), ""); // Load environment variables
 
   return {
     plugins: [
@@ -15,10 +12,10 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: "autoUpdate",
         manifest: {
-          name: env.VITE_WEBSITE_NAME, // You can use it here
+          name: env.VITE_WEBSITE_NAME,
           short_name: env.VITE_WEBSITE_NAME,
           description: env.VITE_WEBSITE_NAME,
-          theme_color: "#000000",
+          theme_color: "#000000", // Set the desired theme color
           background_color: "#ffffff",
           display: "standalone",
           start_url: "/user/dashboard",
@@ -35,6 +32,25 @@ export default defineConfig(({ mode }) => {
             },
           ],
         },
+        workbox: {
+          cleanupOutdatedCaches: true,
+          runtimeCaching: [
+            {
+              urlPattern: ({ url }) => url.origin === self.location.origin, // Cache static assets
+              handler: "CacheFirst",
+              options: {
+                cacheName: "static-assets",
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+                },
+              },
+            },
+          ],
+        },
+        devOptions: {
+          enabled: true, // Enable PWA during development
+        },
       }),
     ],
     resolve: {
@@ -44,7 +60,7 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: true,
-      port: 5173,
+      port: 5173, // Default port for development server
     },
   };
 });
