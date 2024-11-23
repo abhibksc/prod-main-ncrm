@@ -4,24 +4,28 @@ import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory.
-  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  // Load environment variables based on the current mode
   const env = loadEnv(mode, process.cwd(), "");
-  // console.log("website name:", env.VITE_WEBSITE_NAME);
 
   return {
     plugins: [
+      // React plugin for Vite
       react(),
+
+      // PWA plugin configuration
       VitePWA({
-        registerType: "autoUpdate",
+        registerType: "autoUpdate", // Automatically updates service workers
+        devOptions: {
+          enabled: true, // Enables PWA features in development mode for testing
+        },
         manifest: {
-          name: env.VITE_WEBSITE_NAME, // You can use it here
-          short_name: env.VITE_WEBSITE_NAME,
-          description: env.VITE_WEBSITE_NAME,
-          theme_color: "#000000",
-          background_color: "#ffffff",
-          display: "standalone",
-          start_url: "/user/dashboard",
+          name: env.VITE_WEBSITE_NAME || "My PWA App", // Fallback if env is missing
+          short_name: env.VITE_WEBSITE_NAME || "PWA App",
+          description: env.VITE_WEBSITE_NAME || "A Vite PWA application",
+          theme_color: "#000000", // Defines the theme color of the app
+          background_color: "#ffffff", // Sets the background color
+          display: "standalone", // Ensures standalone (app-like) behavior
+          start_url: "/user/dashboard", // App starting route
           icons: [
             {
               src: "/icons/icon-192x192.png",
@@ -35,16 +39,41 @@ export default defineConfig(({ mode }) => {
             },
           ],
         },
+        workbox: {
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/your-api-domain\.com\/.*$/, // Adjust for your APIs
+              handler: "NetworkFirst", // Caching strategy
+              options: {
+                cacheName: "api-cache",
+                expiration: {
+                  maxEntries: 50, // Max number of items to cache
+                  maxAgeSeconds: 60 * 60 * 24 * 30, // Cache for 30 days
+                },
+              },
+            },
+          ],
+        },
       }),
     ],
+
+    // Aliases for cleaner imports
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+
+    // Dev server configuration
     server: {
-      host: true,
-      port: 5173,
+      host: true, // Expose the dev server to external networks
+      port: 5173, // Default port
+    },
+
+    // Build optimizations or adjustments
+    build: {
+      outDir: "dist", // Build output directory
+      sourcemap: true, // Enable source maps for debugging
     },
   };
 });
