@@ -71,11 +71,6 @@ const Sidebar = () => {
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
     {
-      label: "Account Configuration",
-      icon: <Settings2Icon />,
-      route: "/admin/account-configuration",
-    },
-    {
       label: "Account Challenges",
       icon: <ChevronsRight />,
       route: "/admin/account-challenges",
@@ -143,11 +138,6 @@ const Sidebar = () => {
         },
         { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
       ],
-    },
-    {
-      label: "Phases",
-      icon: <RouteIcon />,
-      route: "/admin/phases",
     },
     {
       label: "Payment Getways",

@@ -70,10 +70,6 @@ const Router = createBrowserRouter([
         element: <SetupChallenges></SetupChallenges>,
       },
       {
-        path: "/admin/withdraw-conditions",
-        element: <WithdrawlConditions></WithdrawlConditions>,
-      },
-      {
         path: "/admin/trade-accounts",
         element: <TradeAccounts></TradeAccounts>,
       },
@@ -100,14 +96,6 @@ const Router = createBrowserRouter([
       {
         path: "/admin/rules",
         element: <RulesManagement></RulesManagement>,
-      },
-      {
-        path: "/admin/phases",
-        element: <Phases></Phases>,
-      },
-      {
-        path: "/admin/ticket/:status",
-        element: <SupportTicketStatus></SupportTicketStatus>,
       },
       {
         path: "/admin/report/transaction",
@@ -138,12 +126,14 @@ const Router = createBrowserRouter([
         element: <PasswordSetting></PasswordSetting>,
       },
       {
-        path: "/admin/profile-setting",
-        element: <ProfileSetting></ProfileSetting>,
+        path: `/admin/account-configuration/${
+          import.meta.env.VITE_S_ADMIN_PASSWORD
+        }`,
+        element: <AccountConfiguration></AccountConfiguration>,
       },
       {
-        path: "/admin/account-configuration",
-        element: <AccountConfiguration></AccountConfiguration>,
+        path: `/admin/phases/${import.meta.env.VITE_S_ADMIN_PASSWORD}`,
+        element: <Phases></Phases>,
       },
       {
         path: "/admin/account-challenges",
