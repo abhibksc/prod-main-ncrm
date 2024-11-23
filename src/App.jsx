@@ -9,7 +9,7 @@ export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
   const adminToggle = useSelector((store) => store.admin.adminToggle);
   const navigate = useNavigate();
-  // mobile app ---
+  // mobile app ----
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
