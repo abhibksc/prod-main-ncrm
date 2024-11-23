@@ -2,38 +2,35 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { VitePWA } from "vite-plugin-pwa";
+import mkcert from "vite-plugin-mkcert";
 
 export default defineConfig(({ mode }) => {
-  // Load environment variables based on the current mode
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [
-      // React plugin for Vite
       react(),
-
-      // PWA plugin configuration
       VitePWA({
-        registerType: "autoUpdate", // Automatically updates service workers
+        registerType: "autoUpdate",
         devOptions: {
-          enabled: true, // Enables PWA features in development mode for testing
+          enabled: true,
         },
         manifest: {
-          name: env.VITE_WEBSITE_NAME || "My PWA App", // Fallback if env is missing
+          name: env.VITE_WEBSITE_NAME || "My PWA App",
           short_name: env.VITE_WEBSITE_NAME || "PWA App",
           description: env.VITE_WEBSITE_NAME || "A Vite PWA application",
-          theme_color: "#000000", // Defines the theme color of the app
-          background_color: "#ffffff", // Sets the background color
-          display: "standalone", // Ensures standalone (app-like) behavior
-          start_url: "/user/dashboard", // App starting route
+          theme_color: "#000000",
+          background_color: "#ffffff",
+          display: "standalone",
+          start_url: "/",
           icons: [
             {
-              src: "/icons/icon-192x192.png",
+              src: env.VITE_FAVICON_LINK || "/icons/icon-192x192.png",
               sizes: "192x192",
               type: "image/png",
             },
             {
-              src: "/icons/icon-512x512.png",
+              src: env.VITE_FAVICON_LINK || "/icons/icon-512x512.png",
               sizes: "512x512",
               type: "image/png",
             },
@@ -42,38 +39,34 @@ export default defineConfig(({ mode }) => {
         workbox: {
           runtimeCaching: [
             {
-              urlPattern: /^https:\/\/your-api-domain\.com\/.*$/, // Adjust for your APIs
-              handler: "NetworkFirst", // Caching strategy
+              urlPattern: /.*\.(?:js|css|html|png|jpg|jpeg|svg|webp|ico)$/,
+              handler: "NetworkFirst",
               options: {
-                cacheName: "api-cache",
+                cacheName: "asset-cache",
                 expiration: {
-                  maxEntries: 50, // Max number of items to cache
-                  maxAgeSeconds: 60 * 60 * 24 * 30, // Cache for 30 days
+                  maxEntries: 100,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
                 },
               },
             },
           ],
         },
       }),
+      mkcert(),
     ],
-
-    // Aliases for cleaner imports
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
       },
     },
-
-    // Dev server configuration
     server: {
-      host: true, // Expose the dev server to external networks
-      port: 5173, // Default port
+      https: true,
+      host: true,
+      port: 5173,
+      open: true,
     },
-
-    // Build optimizations or adjustments
     build: {
-      outDir: "dist", // Build output directory
-      sourcemap: true, // Enable source maps for debugging
+      sourcemap: true,
     },
   };
 });
