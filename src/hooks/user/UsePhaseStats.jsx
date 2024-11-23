@@ -26,7 +26,7 @@ export default function UsePhaseStats() {
       )[0];
       const currentPhaseData = {
         phase: filterCurrentPhaseData.phase,
-        min: filterCurrentPhaseData.maxOverallLoss,
+        min: filterCurrentPhaseData.maxDailyLoss,
         max: filterCurrentPhaseData.maxProfit,
       };
       console.log("currentPhaseData", currentPhaseData);

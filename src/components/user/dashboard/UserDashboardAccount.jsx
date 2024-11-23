@@ -57,7 +57,7 @@ const UserDashboardAccount = () => {
   useEffect(() => {}, [userInfo]);
   return (
     <motion.div
-      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 min-w-5xl  md:max-w-md "
+      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 min-w-5xl w-full  md:max-w-lg "
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}

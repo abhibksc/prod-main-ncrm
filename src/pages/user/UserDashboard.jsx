@@ -48,6 +48,8 @@ export default function UserDashboard() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* 1st row  */}
+
       <motion.div
         className="grid grid-cols-1"
         initial={{ opacity: 0, y: 20 }}
@@ -56,45 +58,46 @@ export default function UserDashboard() {
       >
         <UserDashboardBalanceCards></UserDashboardBalanceCards>
       </motion.div>
-
+      {/* 2nd row */}
       <motion.div
-        className="grid md:grid-cols-2 grid-cols-1 items-center gap-5 justify-between my-5"
+        className="grid gap-6 md:grid-cols-2 grid-cols-1 items-center my-6 "
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.0, delay: 0.0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="">
           {/* <UserLineChart /> */}
-          <TradingViewWidget></TradingViewWidget>{" "}
-          {/* <VisitorChart></VisitorChart> */}
+          <TradingViewWidget />
+          {/* <VisitorChart /> */}
         </div>
-        <div className=" flex md:ml-20 flex-col">
+        <div className="flex  justify-center items-center">
           <UserDashboardAccount />
-          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
-          {/* <VisitorHoursGraph></VisitorHoursGraph> */}
-          {/* <VisitorChart></VisitorChart> */}
-          {/* <VisitorsLineChart></VisitorsLineChart> */}
+          {/* <VisitorHoursGraph /> */}
+          {/* <VisitorHoursGraph /> */}
+          {/* <VisitorChart /> */}
+          {/* <VisitorsLineChart /> */}
         </div>
       </motion.div>
+      {/* 3rd row  */}
 
       <motion.div
-        className="grid md:grid-cols-2 grid-cols-1 justify-between my-10"
+        className="grid  gap-6 md:grid-cols-2 grid-cols-1 my-4  w-full"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <div>
-          <UserDashboardAccountStats />
-          <UserDashboardTrades></UserDashboardTrades>
-        </div>
-        <div className="flex flex-col gap-10 mt-10">
-          <div>
-            <UserDashboardBanner />
-          </div>
-          <div>
-            <UserDashboardCountdown />
-          </div>
-        </div>
+        <UserDashboardAccountStats />
+        <UserDashboardBanner />
+      </motion.div>
+      {/* 4th row  */}
+      <motion.div
+        className="grid md:grid-cols-2 grid-cols-1 my-4 gap-6 w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <UserDashboardTrades></UserDashboardTrades>
+        <UserDashboardCountdown />
       </motion.div>
     </motion.div>
   );

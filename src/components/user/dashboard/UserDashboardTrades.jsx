@@ -43,7 +43,7 @@ export default function UserDashboardTrades() {
   };
 
   return (
-    <div className="bg-secondary-800 p-6 rounded-lg shadow-lg my-5 text-white">
+    <div className="bg-secondary-800/80 p-6 rounded-lg shadow-lg my-5 text-white">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold flex items-center">
           <BarChart2 className="mr-2 text-secondary-500" />
@@ -59,23 +59,23 @@ export default function UserDashboardTrades() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-secondary-700 p-4 rounded-lg">
+        <div className="bg-secondary-700/30  p-4 rounded-lg">
           <p className="text-gray-100 mb-1">Total Trades</p>
           <p className="text-2xl font-bold">{tradesSummary.totalTrades}</p>
         </div>
-        <div className="bg-secondary-700 p-4 rounded-lg">
+        <div className="bg-secondary-700/30 p-4 rounded-lg">
           <p className="text-gray-100 whitespace-nowrap mb-1">Profit Trades</p>
           <p className="text-2xl font-bold text-green-500">
             {tradesSummary.profitableTrades}
           </p>
         </div>
-        <div className="bg-secondary-700 p-4 rounded-lg">
+        <div className="bg-secondary-700/30 p-4 rounded-lg">
           <p className="text-gray-100 mb-1">PnL floating</p>
           <p className="text-2xl font-bold text-yellow-500">
             {tradesSummary.winRate.toFixed(2)}%
           </p>
         </div>
-        <div className="bg-secondary-700 p-4 rounded-lg">
+        <div className="bg-secondary-700/30 p-4 rounded-lg">
           <p className="text-gray-100 mb-1">Net Profit</p>
           <p
             className={`text-2xl font-bold ${
