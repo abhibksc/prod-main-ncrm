@@ -4,7 +4,6 @@ import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccou
 import UserDashboardAccountStats from "@/components/user/dashboard/UserDashboardAccountStats";
 import UserDashboardBanner from "@/components/user/dashboard/UserDashboardBanner";
 import UserDashboardCountdown from "@/components/user/dashboard/UserDashboardCountdown";
-import UseUserHook from "@/hooks/user/UseUserHook";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
@@ -12,9 +11,10 @@ import UsePhaseStats from "@/hooks/user/UsePhaseStats";
 import VisitorHoursGraph from "@/components/user/graph/VisitorHoursGraph";
 import VisitorChart from "@/components/user/graph/VisitorChart";
 import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 export default function UserDashboard() {
-  const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi }  
+  const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi } =
     UseUserHook();
   const { updatePhaseStats } = UsePhaseStats(); //don't remove it
 
