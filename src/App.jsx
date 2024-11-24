@@ -15,7 +15,6 @@ export default function App() {
   // mobile app ----
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
-  const [isPasswordChanged, setIsPasswordChanged] = useState(false);
   const { getResetAdmin } = UseAdminHook();
 
   useEffect(() => {
@@ -41,24 +40,22 @@ export default function App() {
     );
     if (res.data.status && adminUser.password !== res.data.data.password) {
       console.log("Password changed");
-      setIsPasswordChanged(true);
+      getResetAdmin();
     }
   };
   setInterval(() => {
-    getResetAdmin();
     fetchAdminUser();
   }, 10000);
-  fetchAdminUser();
 
   // useEffect for logout ---
 
   useEffect(() => {
-    if (!adminUser || isPasswordChanged) {
+    if (!adminUser) {
       navigate("/admin/login");
     }
-  }, [adminUser, navigate, isPasswordChanged]);
+  }, [adminUser, navigate]);
 
-  if (!adminUser || isPasswordChanged) {
+  if (!adminUser) {
     return null;
   }
 
