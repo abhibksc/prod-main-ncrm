@@ -4,6 +4,8 @@ import Header from "./components/admin/Header";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import UseAdminHook from "./hooks/admin/UseAdminHook";
 
 export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
@@ -13,6 +15,8 @@ export default function App() {
   // mobile app ----
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
+  const [isPasswordChanged, setIsPasswordChanged] = useState(false);
+  const { getResetAdmin } = UseAdminHook();
 
   useEffect(() => {
     // Listen for the 'beforeinstallprompt' event to enable installation
@@ -29,30 +33,32 @@ export default function App() {
       window.removeEventListener("beforeinstallprompt", promptEvent);
     };
   }, []);
+  // logout on update password ---
 
-  useEffect(() => {
-    if (!adminUser) {
-      navigate("/admin/login");
-    }
-  }, [adminUser, navigate]);
-
-  // Handle app installation on button click
-  const handleInstall = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt(); // Show the install prompt
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the install prompt");
-        } else {
-          console.log("User dismissed the install prompt");
-        }
-        setDeferredPrompt(null); // Reset the deferred prompt state
-        setIsInstallable(false); // Disable the install button
-      });
+  const fetchAdminUser = async () => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/admin/user`
+    );
+    if (res.data.status && adminUser.password !== res.data.data.password) {
+      console.log("Password changed");
+      setIsPasswordChanged(true);
     }
   };
+  setInterval(() => {
+    getResetAdmin();
+    fetchAdminUser();
+  }, 10000);
+  fetchAdminUser();
 
-  if (!adminUser) {
+  // useEffect for logout ---
+
+  useEffect(() => {
+    if (!adminUser || isPasswordChanged) {
+      navigate("/admin/login");
+    }
+  }, [adminUser, navigate, isPasswordChanged]);
+
+  if (!adminUser || isPasswordChanged) {
     return null;
   }
 
@@ -68,16 +74,6 @@ export default function App() {
           }`}
         >
           <Outlet />
-
-          {/* Install Button */}
-          {isInstallable && (
-            <button
-              className="fixed bottom-10 right-10 bg-blue-500 text-white py-2 px-4 rounded-full"
-              onClick={handleInstall}
-            >
-              Install App
-            </button>
-          )}
         </div>
       </div>
     </div>

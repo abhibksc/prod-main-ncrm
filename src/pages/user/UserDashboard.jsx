@@ -14,7 +14,7 @@ import VisitorChart from "@/components/user/graph/VisitorChart";
 import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
 
 export default function UserDashboard() {
-  const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi } =
+  const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi }  
     UseUserHook();
   const { updatePhaseStats } = UsePhaseStats(); //don't remove it
 

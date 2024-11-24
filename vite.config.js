@@ -60,10 +60,8 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      https: true,
       host: true,
       port: 5173,
-      open: true,
     },
     build: {
       sourcemap: true,
