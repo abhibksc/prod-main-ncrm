@@ -189,6 +189,7 @@ const UserNewChallenge = () => {
           phase: 0,
           managerIndex: import.meta.env.VITE_MANAGER_INDEX,
           groupName: formData.apiGroup,
+          calculatedLoss: 0,
         }
       );
       await GetUserInfoAPI();
