@@ -145,18 +145,35 @@ const UserPlatform = () => {
 
 const PlatformCard = ({ title, description, buttons }) => (
   <motion.div
-    className="bg-secondary-800/30 rounded-2xl shadow-2xl overflow-hidden"
+    className=" overflow-hidden"
     initial={{ opacity: 0, y: 50 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
     <div className="p-4 sm:p-8">
-      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-4">
+      <h3 className="text-2xl sm:text-4xl font-bold mb-2 sm:mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-secondary-500/80 to-gray-100 animate-text">
         {title}
       </h3>
-      <p className="text-gray-300 mb-4 sm:mb-8 text-base sm:text-lg">
-        {description}
-      </p>
+      <style jsx>{`
+        @keyframes gradient-shimmer {
+          0% {
+            background-position: 0% 0%;
+          }
+          50% {
+            background-position: 100% 100%;
+          }
+          100% {
+            background-position: 0% 0%;
+          }
+        }
+
+        .animate-text {
+          background-size: 300% 300%;
+          animation: gradient-shimmer 4s linear infinite;
+        }
+      `}</style>
+
+      <p className="text-gray-300 mb-4 sm:mb-8 sm:text-lg">{description}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
         {buttons.map((button, index) => (
           <DownloadButton
@@ -174,7 +191,7 @@ const PlatformCard = ({ title, description, buttons }) => (
 const DownloadButton = ({ icon, text, downloadLink }) => (
   <Link to={downloadLink} target="_blank" className="group">
     <motion.button
-      className="w-full flex items-center justify-center space-x-2 sm:space-x-3 bg-secondary-700 hover:bg-secondary-700/60 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
+      className="w-full flex items-center justify-center space-x-2 sm:space-x-3 bg-secondary-800/30 hover:bg-secondary-800 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >

@@ -7,16 +7,16 @@ import toast from "react-hot-toast";
 
 const DefinitionAccordion = ({ title, content, isOpen, toggle }) => {
   return (
-    <div className="border border-secondary-700/70 rounded-md">
+    <div className=" border-b border-secondary-500/20 rounded-md">
       <button
         className="w-full px-4 py-3 text-left focus:outline-none flex justify-between items-center"
         onClick={toggle}
       >
         <span className="font-medium">{title}</span>
         {isOpen ? (
-          <ChevronUp className="h-5 w-5" />
+          <ChevronUp className="h-5 w-5 text-secondary-500/50" />
         ) : (
-          <ChevronDown className="h-5 w-5" />
+          <ChevronDown className="h-5 w-5  text-secondary-500/50" />
         )}
       </button>
       <AnimatePresence>

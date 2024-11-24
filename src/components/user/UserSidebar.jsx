@@ -132,17 +132,17 @@ const UserSidebar = () => {
     //   label: "Support Ticket",
     //   link: "/user/support-ticket",
     // },
-    // {
-    //   icon: ShieldAlertIcon,
-    //   label: "Rules",
-    //   link: "/user/rules",
-    // },
+    {
+      icon: ShieldAlertIcon,
+      label: "Rules",
+      link: "/user/rules",
+    },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
-    // {
-    //   icon: ReceiptPoundSterlingIcon,
-    //   label: "Economic Calendar",
-    //   link: "/user/economic-calendar",
-    // },
+    {
+      icon: ReceiptPoundSterlingIcon,
+      label: "Economic Calendar",
+      link: "/user/economic-calendar",
+    },
   ];
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
