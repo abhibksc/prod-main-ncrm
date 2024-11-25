@@ -23,7 +23,7 @@ const UserPlatform = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-8 bg-gradient-to-br from-primary-900 to-gray-800">
+    <div className=" bg-gradient-to-br from-primary-900 to-gray-800">
       {!loggedUser.kycVerified ? (
         <div className="mx-auto">
           <div className="bg-secondary-800/20 rounded-lg shadow-lg p-4">
@@ -104,7 +104,7 @@ const UserPlatform = () => {
             transition={{ duration: 0.5 }}
           >
             Download Trading Platforms
-            <div className="max-w-6xl mt-10 mx-auto">
+            <div className="w-full md:mt-20 mt-5 mx-auto">
               <PlatformCard
                 title="MetaTrader 5 (MT5)"
                 description="Experience the power of MetaTrader 5 on your preferred device. Download now for advanced trading features and real-time market analysis."
@@ -150,8 +150,8 @@ const PlatformCard = ({ title, description, buttons }) => (
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
   >
-    <div className="p-4 sm:p-8">
-      <h3 className="text-2xl sm:text-4xl font-bold mb-2 sm:mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-secondary-500/80 to-gray-100 animate-text">
+    <div className="p-4 sm:p-2">
+      <h3 className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-secondary-500/80 to-gray-100 animate-text">
         {title}
       </h3>
       <style jsx>{`
@@ -173,7 +173,7 @@ const PlatformCard = ({ title, description, buttons }) => (
         }
       `}</style>
 
-      <p className="text-gray-300 mb-4 sm:mb-8 sm:text-lg">{description}</p>
+      <p className="text-gray-300 mb-4 sm:mb-8 text-sm">{description}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
         {buttons.map((button, index) => (
           <DownloadButton

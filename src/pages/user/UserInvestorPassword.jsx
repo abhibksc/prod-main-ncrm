@@ -149,22 +149,30 @@ const UserInvesterPassword = () => {
     <p>Thank you for choosing us.</p>
     <p>Happy trading!</p>
           
-          <p>Best regards,<br>The Beta Funded Team</p>
+          <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
           <hr>
      <div class="risk-warning">
       <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
       <br><br>
-      Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+      ${
+        import.meta.env.VITE_WEBSITE_NAME
+      } Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
     </div>
         
     
         </div>
-          <div class="footer">
+      <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+            <p>${import.meta.env.VITE_EMAIL_ADDRESS}</p>
+            <p>Website: <a href=${import.meta.env.VITE_EMAIL_WEBSITE}>${
+    import.meta.env.VITE_WEBSITE_NAME
+  }</a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL}">${
+    import.meta.env.VITE_EMAIL_EMAIL
+  }</a></p>
+            <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME
+            }. All Rights Reserved</p>
           </div>
         </div>
       </div>
@@ -182,7 +190,7 @@ const UserInvesterPassword = () => {
         const res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/ChangeInvesterPassword?Manager_Index=${
+          }/ChangeInvesterPassword?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
         );

@@ -242,12 +242,12 @@ const UserWithdraw = () => {
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
+    <div className="w-full h-screen flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-3xl bg-secondary-800/50 -mt-20 p-8 rounded-lg shadow-xl"
+        className="w-full max-w-2xl bg-secondary-800/40 -mt-20 p-8 rounded-lg shadow-xl"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center">
@@ -287,7 +287,6 @@ const UserWithdraw = () => {
                 onChange={(e) => setSelectedGateway(e.target.value)}
                 className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
               >
-                {/* <option value="">Select Gateway</option> */}
                 <option value="Bank Transfer">Bank Transfer</option>
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>

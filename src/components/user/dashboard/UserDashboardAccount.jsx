@@ -19,6 +19,7 @@ const CredentialItem = ({
   value,
   badgeColor = "",
   delay,
+  link,
 }) => (
   <motion.div
     className="flex items-center justify-between py-2"
@@ -30,18 +31,20 @@ const CredentialItem = ({
       <Icon className="w-5 h-5 text-gray-300" />
       <span className="text-sm font-medium text-gray-200">{label}</span>
     </div>
-    <motion.div
-      className="flex items-center"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.1 }}
-    >
-      <span
-        className={`text-sm font-medium px-3 py-1 rounded-full ${badgeColor}`}
+    <Link to={link}>
+      <motion.div
+        className="flex items-center"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        transition={{ duration: 0.1 }}
       >
-        {value}
-      </span>
-    </motion.div>
+        <span
+          className={`text-sm font-medium px-3 py-1 rounded-full ${badgeColor}`}
+        >
+          {value}
+        </span>
+      </motion.div>
+    </Link>
   </motion.div>
 );
 
@@ -95,6 +98,7 @@ const UserDashboardAccount = () => {
           value={loggedUser.masterPassword}
           badgeColor="bg-yellow-100 text-yellow-800"
           delay={0.25}
+          link="/user/master-password"
         />
         <CredentialItem
           icon={Shield}
@@ -102,6 +106,7 @@ const UserDashboardAccount = () => {
           value={loggedUser.investorPassword}
           badgeColor="bg-yellow-100 text-yellow-800"
           delay={0.3}
+          link="/user/investor-password"
         />
         <CredentialItem
           icon={PanelTopInactiveIcon}
