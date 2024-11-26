@@ -58,33 +58,46 @@ const UserReferal = () => {
   // generate IB account handler ------------
 
   const generateHandler = async () => {
-    const randomNumber = Math.floor(10000 + Math.random() * 90000).toString();
-    const toastId = toast.loading("Gerating..");
+    const digits = Math.floor(Math.random() * 3) + 5; // Randomly choose between 5, 6, and 7 digits
+    const randomNumber =
+      Math.floor(Math.random() * (10 ** digits - 10 ** (digits - 1))) +
+      10 ** (digits - 1);
+
+    const toastId = toast.loading("Generating..");
+    // const envGroup = "SK GROUP\\M10\\STANDARD";
+    const envGroup = String(import.meta.env.VITE_IB_GROUP_NAME);
+    const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
+    console.log(doubleQuotedEnvGroup); // Prints the string with single backslashes
+
+    // console.log(envGroup);
 
     try {
       const generateMtId = await axios.post(
-        `${import.meta.env.VITE_API_END_POINT}/api/web/Adduser`,
+        `${import.meta.env.VITE_API_END_POINT}/Adduser`,
         {
           Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
           MT5Account: randomNumber,
-          Name: loggedUser.firstName,
-          Leverage: import.meta.env.VITE_IB_LEVERAGE || "200",
-          Group_Name: import.meta.env.VITE_IB_GROUP_NAME,
+          Name: loggedUser.firstName + " " + loggedUser.lastName,
+          Leverage: import.meta.env.VITE_IB_LEVERAGE,
+          Group_Name: doubleQuotedEnvGroup,
         }
       );
-      const updateLoggedUser = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-        {
-          id: loggedUser._id,
-          referalId: generateMtId.data.MT5Account,
-        }
-      );
-      toast.success("IB account created", { id: toastId });
-      getUpdateLoggedUser();
-      // console.log("generate mt id ---", generateMtId.data.MT5Account);
-      // console.log("updateLoggedUser---", updateLoggedUser.data);
+      console.log(generateMtId);
+      if (generateMtId.data.MT5Account > 0) {
+        const updateLoggedUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: loggedUser._id,
+            referalId: generateMtId.data.MT5Account,
+          }
+        );
+        toast.success("IB account created", { id: toastId });
+        getUpdateLoggedUser();
+      } else {
+        toast.error("Please try again", { id: toastId });
+      }
     } catch (error) {
-      console.log(error);
+      console.log("error");
       toast.error(" Something went wrong", { id: toastId });
     }
   };
