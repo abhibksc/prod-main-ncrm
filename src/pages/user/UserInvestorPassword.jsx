@@ -18,7 +18,6 @@ const UserInvesterPassword = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  // const userInfo = useSelector((store) => store.user.userInfo);
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -29,6 +28,12 @@ const UserInvesterPassword = () => {
     setShowPasswords({ ...showPasswords, [field]: !showPasswords[field] });
   };
 
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=<>?]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -37,7 +42,7 @@ const UserInvesterPassword = () => {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: false, // 12-hour format with AM/PM
+      hour12: false,
     });
 
   const customContent = `<!DOCTYPE html>
@@ -156,7 +161,7 @@ const UserInvesterPassword = () => {
       <br><br>
       ${
         import.meta.env.VITE_WEBSITE_NAME
-      } Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+      } Trade's services are not for U.S. citizens or in jurisdictions where they violate local laws.
     </div>
         
     
@@ -182,52 +187,65 @@ const UserInvesterPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("Please wait...");
+
+    // Validate new password
+    if (!validatePassword(passwords.new)) {
+      setError(
+        "Password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special symbol."
+      );
+      toast.error("Invalid password format", { id: toastId });
+      return;
+    }
+
     if (passwords.new !== passwords.confirm) {
       setError("Passwords do not match. Please try again.");
-      toast.error("Please try again", { id: toastId });
-    } else {
-      try {
-        const res = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/ChangeInvesterPassword?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
-        );
-        const updateChallengeDB = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-          {
-            mt5Account: loggedUser.mt5Account,
-            investarPassword: passwords.confirm,
-          }
-        );
-        const updateUser = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-          {
-            id: loggedUser._id,
-            investorPassword: passwords.confirm,
-          }
-        );
-
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: loggedUser.email,
-            content: customContent,
-            subject: "Investor password changed",
-          }
-        );
-        toast.success(res.data.MESSAGE, { id: toastId });
-        // dispatch(setInvestorPassword(passwords.confirm));
-        navigate("/user/dashboard");
-      } catch (error) {
-        console.log(error);
-        toast.error("Please try again", { id: toastId });
-      }
-      // Reset the form and error
-      setPasswords({ new: "", confirm: "" });
-      setError("");
+      toast.error("Passwords do not match", { id: toastId });
+      return;
     }
+
+    try {
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_API_END_POINT
+        }/ChangeMasterPassword?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
+      );
+
+      const updateChallengeDB = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
+        {
+          mt5Account: loggedUser.mt5Account,
+          investarPassword: passwords.confirm,
+        }
+      );
+
+      const updateUser = await axios.put(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+        {
+          id: loggedUser._id,
+          investorPassword: passwords.confirm,
+        }
+      );
+
+      const customMailRes = await axios.post(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
+        {
+          email: loggedUser.email,
+          content: customContent,
+          subject: "Investor password changed",
+        }
+      );
+
+      toast.success("Investor password updated", { id: toastId });
+      navigate("/user/dashboard");
+    } catch (error) {
+      toast.error("An error occurred. Please try again.", { id: toastId });
+    }
+
+    // Reset the form and error
+    setPasswords({ new: "", confirm: "" });
+    setError("");
   };
 
   return (
@@ -303,8 +321,8 @@ const UserInvesterPassword = () => {
           </Link>
           <motion.button
             type="submit"
-            className="w-full sm:w-auto bg-green-700 hover:bg-green-700/70 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
-            whileHover={{ scale: 1.05 }}
+            className="w-full sm:w-auto bg-secondary-500/60 hover:bg-secondary-500/50 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary-500 flex items-center justify-center"
+            whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
           >
             <CheckCircle className="mr-2" size={20} />
