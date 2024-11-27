@@ -8,6 +8,14 @@ import {
   UserCheck,
   FileText,
   AlertCircle,
+  Server,
+  Globe,
+  BarChart2,
+  CodeIcon,
+  Layers,
+  Zap,
+  CreditCard,
+  ArrowRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -23,183 +31,242 @@ const UserPlatform = () => {
   }, []);
 
   return (
-    <div className=" bg-gradient-to-br from-primary-900 to-gray-800">
+    <div className=" bg-gradient-to-br from-primary-900 to-gray-800 flex items-center justify-center p-4">
       {!loggedUser.kycVerified ? (
-        <div className="mx-auto">
-          <div className="bg-secondary-800/20 rounded-lg shadow-lg p-4">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <div className="mx-auto mb-4 w-16">
-                <Shield className="w-16 h-16 text-secondary-500" />
-              </div>
-              <h2 className="text-2xl font-bold mb-2">Verify Your Identity</h2>
-              <p className="text-gray-300">
-                Complete KYC verification to access our trading platforms
-              </p>
-            </div>
-
-            {/* Alert */}
-            <div className="flex items-center bg-amber-50/90 border border-amber-200 rounded-lg p-4 mb-8">
-              <AlertCircle className="w-5 h-5 text-amber-500 flex-shrink-0" />
-              <p className="ml-2 text-amber-700">
-                Your account requires verification before accessing trading
-                platforms
-              </p>
-            </div>
-
-            {/* KYC Steps */}
-            <div className="grid gap-6 md:grid-cols-3">
-              {/* Step 1 */}
-              <div className="p-4 rounded-lg border border-gray-700/30 bg-secondary-800/60 hover:shadow-md transition-shadow">
-                <FileText className="w-8 h-8 text-secondary-500 mb-3" />
-                <h3 className="font-semibold mb-2">1. Prepare Documents</h3>
-                <p className="text-sm text-gray-300">
-                  Have your ID, proof of address, and other required documents
-                  ready
-                </p>
-              </div>
-
-              {/* Step 2 */}
-              <div className="p-4 rounded-lg border border-gray-700/30 bg-secondary-800/60 hover:shadow-md transition-shadow">
-                <UserCheck className="w-8 h-8 text-secondary-500 mb-3" />
-                <h3 className="font-semibold mb-2">2. Submit Information</h3>
-                <p className="text-sm text-gray-300">
-                  Fill out your personal details and upload your verification
-                  documents
-                </p>
-              </div>
-
-              {/* Step 3 */}
-              <div className="p-4 rounded-lg border border-gray-700/30 bg-secondary-800/60 hover:shadow-md transition-shadow">
-                <Shield className="w-8 h-8 text-secondary-500 mb-3" />
-                <h3 className="font-semibold mb-2">3. Get Verified</h3>
-                <p className="text-sm text-gray-300">
-                  Our team will review your documents and verify your account
-                </p>
-              </div>
-            </div>
-
-            {/* Action Button */}
-            <div className="mt-8 text-center">
-              <Link to={"/user/account-details"}>
-                <button className="bg-blue-600/80 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-600/70 transition-colors">
-                  Start Verification
-                </button>
-              </Link>
-            </div>
-
-            {/* Footer Note */}
-            <p className="mt-6 text-center text-sm text-gray-500">
-              Your information is encrypted and securely stored following
-              industry standards
-            </p>
-          </div>
-        </div>
+        <KYCVerificationSection />
       ) : (
-        <div>
-          <motion.h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 sm:mb-12 text-center"
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
+        <div className="container mx-auto max-w-7xl">
+          <motion.div
+            className="overflow-hidden"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            Download Trading Platforms
-            <div className="w-full md:mt-20 mt-5 mx-auto">
-              <PlatformCard
-                title="MetaTrader 5 (MT5)"
-                description="Experience the power of MetaTrader 5 on your preferred device. Download now for advanced trading features and real-time market analysis."
-                buttons={[
-                  {
-                    icon: (
-                      <Smartphone className="w-5 text-secondary-500 h-5 sm:w-6 sm:h-6" />
-                    ),
-                    text: "Android",
-                    downloadLink:
-                      "https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5&pcampaignid=web_share",
-                  },
-                  {
-                    icon: (
-                      <AppleIcon className="w-5 text-secondary-500 h-5 sm:w-6 sm:h-6" />
-                    ),
-                    text: "iOS",
-                    downloadLink:
-                      "https://apps.apple.com/us/app/metatrader-5/id413251709?platform=ipad",
-                  },
-                  {
-                    icon: (
-                      <Monitor className="w-5  text-secondary-500 h-5 sm:w-6 sm:h-6" />
-                    ),
-                    text: "Windows",
-                    downloadLink:
-                      "https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_source=www.metatrader5.com&utm_campaign=download",
-                  },
-                ]}
-              />
+            <div className="grid md:grid-cols-2 gap-8 ">
+              <PlatformDownloadSection />
+              <PlatformFeatureSection />
             </div>
-          </motion.h2>
+          </motion.div>
         </div>
       )}
     </div>
   );
 };
 
-const PlatformCard = ({ title, description, buttons }) => (
-  <motion.div
-    className=" overflow-hidden"
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <div className="p-4 sm:p-2">
-      <h3 className="text-3xl sm:text-4xl font-bold mb-2 sm:mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-secondary-500/80 to-gray-100 animate-text">
-        {title}
-      </h3>
-      <style jsx>{`
-        @keyframes gradient-shimmer {
-          0% {
-            background-position: 0% 0%;
-          }
-          50% {
-            background-position: 100% 100%;
-          }
-          100% {
-            background-position: 0% 0%;
-          }
-        }
-
-        .animate-text {
-          background-size: 300% 300%;
-          animation: gradient-shimmer 4s linear infinite;
-        }
-      `}</style>
-
-      <p className="text-gray-300 mb-4 sm:mb-8 text-sm">{description}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-        {buttons.map((button, index) => (
-          <DownloadButton
-            key={index}
-            icon={button.icon}
-            downloadLink={button.downloadLink}
-            text={button.text}
-          />
-        ))}
+const KYCVerificationSection = () => (
+  <div className="w-full mx-auto p-4">
+    <div className="text-center mb-12">
+      <div className="flex justify-center mb-6">
+        <div className="p-4 bg-secondary-500/10 rounded-full">
+          <Shield className="w-16 h-16 text-secondary-500" />
+        </div>
       </div>
+      <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-white mb-4">
+        Identity Verification
+      </h2>
+      <p className="text-gray-300 max-w-2xl mx-auto">
+        Secure your account and unlock full platform access through our
+        comprehensive KYC process.
+      </p>
     </div>
-  </motion.div>
+
+    <div className="grid md:grid-cols-3 gap-8">
+      {[
+        {
+          icon: FileText,
+          title: "Document Preparation",
+          description:
+            "Gather government-issued ID, proof of address, and supporting documents",
+        },
+        {
+          icon: UserCheck,
+          title: "Information Submission",
+          description:
+            "Securely upload and verify your personal and financial information",
+        },
+        {
+          icon: Shield,
+          title: "Final Verification",
+          description:
+            "Our expert team reviews and validates your submitted documents",
+        },
+      ].map(({ icon: Icon, title, description, color, gradient }, index) => (
+        <motion.div
+          key={index}
+          className={`
+            rounded-2xl p-6 bg-secondary-800/20 hover:bg-secondary-800/30 transition-all shadow-md 
+            relative overflow-hidden group
+          `}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.2 }}
+        >
+          <div className="absolute bg-secondary-800 group-hover:opacity-20 transition-all"></div>
+          <div className="relative z-10">
+            <div className="p-3 bg-secondary-900/30 rounded-full inline-block mb-4">
+              <Icon className="w-8 h-8 text-secondary-500" />
+            </div>
+            <h3 className="font-bold text-xl mb-3 text-white">{title}</h3>
+            <p className="text-gray-400 text-sm">{description}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+
+    <div className="text-center mt-12">
+      <Link to="/user/account-details">
+        <motion.button
+          className="
+            bg-gradient-to-r from-secondary-500/10  to-secondary-500/50 
+            text-white px-12 py-4 rounded-full 
+            font-semibold shadow-2xl hover:shadow-secondary-500/80 
+            transition-all group
+          "
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <span className="flex items-center justify-center gap-2">
+            Start Verification
+            <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+          </span>
+        </motion.button>
+      </Link>
+    </div>
+  </div>
 );
 
-const DownloadButton = ({ icon, text, downloadLink }) => (
-  <Link to={downloadLink} target="_blank" className="group">
-    <motion.button
-      className="w-full flex items-center justify-center space-x-2 sm:space-x-3 bg-secondary-800/30 hover:bg-secondary-800 text-white font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-xl transition-colors duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base"
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      <motion.div>{icon}</motion.div>
-      <span>{text}</span>
-      <Download className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-y-1 transition-transform duration-300" />
-    </motion.button>
-  </Link>
+const PlatformDownloadSection = () => (
+  <div className="space-y-6">
+    <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-white">
+      MetaTrader 5 Pro
+    </h2>
+    <p className="text-gray-300">
+      Unlock the power of professional trading with our advanced MetaTrader 5
+      platform. Designed for traders who demand precision, speed, and
+      comprehensive market insights.
+    </p>
+
+    <div className="flex space-x-4 mb-6">
+      {[
+        { icon: <BarChart2 />, text: "Advanced Analytics" },
+        { icon: <Globe />, text: "Global Market Access" },
+        { icon: <CodeIcon />, text: "Algorithmic Trading" },
+      ].map((highlight, index) => (
+        <div
+          key={index}
+          className="flex items-center space-x-2 bg-secondary-900/50 px-3 py-2 rounded-lg hover:bg-secondary-900/70 transition-all"
+        >
+          <div className="text-secondary-500">{highlight.icon}</div>
+          <span className="text-white text-sm">{highlight.text}</span>
+        </div>
+      ))}
+    </div>
+
+    <div className="grid grid-cols-3 gap-4">
+      {[
+        {
+          icon: <Smartphone className="w-6 h-6 text-secondary-500" />,
+          text: "Android",
+          link: "https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5",
+          description: "Trade on the go with full platform capabilities",
+        },
+        {
+          icon: <AppleIcon className="w-6 h-6 text-secondary-500" />,
+          text: "iOS",
+          link: "https://apps.apple.com/us/app/metatrader-5/id413251709",
+          description: "Seamless trading experience for Apple devices",
+        },
+        {
+          icon: <Monitor className="w-6 h-6 text-secondary-500" />,
+          text: "Windows",
+          link: "https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe",
+          description: "Full-featured desktop trading environment",
+        },
+      ].map((platform, index) => (
+        <motion.a
+          key={index}
+          href={platform.link}
+          target="_blank"
+          className="group"
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <div className="bg-secondary-800/20 group transition-all hover:bg-secondary-800/50 rounded-xl p-4 flex flex-col items-center gap-3">
+            <div className="flex items-center gap-2">
+              {platform.icon}
+              <span className="text-white text-sm font-semibold">
+                {platform.text}
+              </span>
+            </div>
+            <p className="text-xs text-gray-400 text-center">
+              {platform.description}
+            </p>
+            <Download className="text-secondary-500 group-hover:animate-bounce transition-all" />
+          </div>
+        </motion.a>
+      ))}
+    </div>
+
+    <div className="bg-secondary-900/30 rounded-xl p-4 mt-4">
+      <div className="flex items-center space-x-3">
+        <Shield className="text-secondary-500 w-6 h-6" />
+        <h3 className="text-white font-semibold">Secure & Compliant</h3>
+      </div>
+      <p className="text-gray-400 text-sm mt-2">
+        Bank-grade encryption, regulatory compliance, and multi-factor
+        authentication ensure your trading security.
+      </p>
+    </div>
+  </div>
+);
+
+const PlatformFeatureSection = () => (
+  <div className=" rounded-2xl p-6 space-y-6">
+    <h3 className="text-2xl font-bold text-white">Why Choose Our Platform</h3>
+    {[
+      {
+        icon: <Server />,
+        title: "Robust Infrastructure",
+        description: "99.9% uptime with low-latency global servers",
+      },
+      {
+        icon: <Shield />,
+        title: "Bank-Grade Security",
+        description: "Multi-factor authentication and encryption",
+      },
+      {
+        icon: <Layers />,
+        title: "Multi-Asset Trading",
+        description: "Trade forex, stocks, crypto from one platform",
+      },
+      {
+        icon: <Zap />,
+        title: "Lightning Fast Execution",
+        description: "Millisecond trade execution speeds",
+      },
+      {
+        icon: <CreditCard />,
+        title: "Easy Deposits",
+        description: "Multiple payment methods, instant processing",
+      },
+    ].map((feature, index) => (
+      <motion.div
+        key={index}
+        className="flex items-center space-x-4 bg-secondary-900/60 p-4 rounded-xl hover:bg-secondary-800/20 transition-all"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: index * 0.1 }}
+      >
+        <div className="p-3 bg-secondary-500/10 rounded-full text-secondary-500">
+          {feature.icon}
+        </div>
+        <div>
+          <h4 className="text-lg font-semibold text-white">{feature.title}</h4>
+          <p className="text-gray-400 text-sm">{feature.description}</p>
+        </div>
+      </motion.div>
+    ))}
+  </div>
 );
 
 export default UserPlatform;
