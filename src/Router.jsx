@@ -48,6 +48,8 @@ import IbWithdrawalStatus from "./pages/admin/IbWithdrawalStatus";
 import RulesManagement from "./pages/admin/RulesManagement";
 import Phases from "./pages/admin/Phases";
 import TestApi from "./pages/protected/TestApi";
+import UserReferralsDetails from "./pages/user/referral/UserReferralsDetails";
+import UserPendingReferrals from "./pages/user/referral/UserPendingReferrals";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -173,6 +175,14 @@ const Router = createBrowserRouter([
       {
         path: "/user/referrals/withdrawal-history",
         element: <UserReferalWithdrwalHistory></UserReferalWithdrwalHistory>,
+      },
+      {
+        path: "/user/referrals/referrals-details",
+        element: <UserReferralsDetails></UserReferralsDetails>,
+      },
+      {
+        path: "/user/referrals/pending-referrals",
+        element: <UserPendingReferrals></UserPendingReferrals>,
       },
       {
         path: "/user/withdraw",

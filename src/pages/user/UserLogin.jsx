@@ -306,11 +306,11 @@ const UserLogin = () => {
   }, [loginData]);
 
   // redirect to user dashboard --------
-  useEffect(() => {
-    if (loggedUser && !isLoading) {
-      navigate("/user/dashboard");
-    }
-  }, [navigate, loggedUser]);
+  // useEffect(() => {
+  //   if (loggedUser && !isLoading) {
+  //     navigate("/user/dashboard");
+  //   }
+  // }, [navigate, loggedUser]);
 
   return (
     <div className="min-h-screen bg-secondary-900 flex items-center justify-center p-4 relative overflow-hidden">

@@ -1,4 +1,8 @@
+import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
+import axios from "axios";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const UserIBcards = ({ commissionsData }) => {
@@ -7,14 +11,40 @@ const UserIBcards = ({ commissionsData }) => {
     (increment, value) => increment + Number(value.commission),
     0
   );
+  const [balance, userInfoData] = UseCommissionBalance();
+  const [WithdarwalSum, setWithdrawalSum] = useState(0);
+  const logggedUser = useSelector((store) => store.user.loggedUser);
+
+  // fetch withdrawal history ---
+  const fetchHistoryData = async () => {
+    try {
+      const res = await axios.get(
+        `${
+          import.meta.env.VITE_BECKEND_END_POINT
+        }/api/auth/referral-withdrawals`
+      );
+      const filteredData = res.data.data.filter(
+        (value) => value.userId._id === logggedUser._id
+      );
+      const totalSum = filteredData.reduce(
+        (total, value) => total + value.amount,
+        0
+      );
+      setWithdrawalSum(totalSum);
+    } catch (error) {
+      console.log("error in fetch user challenges", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistoryData();
+  }, [balance, userInfoData, WithdarwalSum]);
 
   const stats = {
     totalIBs: totalCommissionLength,
     totalCommission: totalCommissionValue,
-    availableCommission: totalCommissionValue,
-    pendingWithdrawals: "$0",
-    pendingDeposits: "$0", // Dummy data for pending deposits
-    activeClients: "0", // Dummy data for active clients
+    availableCommission: balance,
+    pendingWithdrawals: `$${WithdarwalSum}`,
   };
 
   return (
@@ -25,7 +55,7 @@ const UserIBcards = ({ commissionsData }) => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Total Affiliates
+                Successful Deposits
               </span>
               <span className="text-2xl font-bold text-gray-100">
                 {stats.totalIBs}
@@ -130,7 +160,7 @@ const UserIBcards = ({ commissionsData }) => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Available Commission
+                Withdrawable balance
               </span>
               <span className="text-2xl font-bold text-green-500/70">
                 ${Number(stats?.availableCommission || 0).toFixed(2)}
@@ -171,8 +201,8 @@ const UserIBcards = ({ commissionsData }) => {
               <span className="text-sm font-medium text-gray-300">
                 Pending Deposits
               </span>
-              <span className="text-2xl font-bold text-gray-100">
-                {stats.pendingDeposits}
+              <span className=" text-gray-300/60 text-sm py-2">
+                Users with pending deposits
               </span>
             </div>
             <div className="p-3 bg-yellow-100 rounded-full">
@@ -192,12 +222,14 @@ const UserIBcards = ({ commissionsData }) => {
             </div>
           </div>
           <div className="mt-4">
-            <button
-              className="w-full bg-yellow-600/80 hover:bg-yellow-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
-              onClick={() => console.log("View Deposits clicked")}
-            >
-              View List
-            </button>
+            <Link to={"/user/referrals/pending-referrals"}>
+              <button
+                className="w-full bg-yellow-600/80 hover:bg-yellow-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
+                onClick={() => console.log("View Deposits clicked")}
+              >
+                View List
+              </button>
+            </Link>
           </div>
         </div>
 
@@ -206,10 +238,10 @@ const UserIBcards = ({ commissionsData }) => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Active Clients
+                Referrals Details
               </span>
-              <span className="text-2xl font-bold text-gray-100">
-                {stats.activeClients}
+              <span className=" text-gray-300/60 text-sm py-2">
+                Users with deposits
               </span>
             </div>
             <div className="p-3 bg-indigo-100 rounded-full">
@@ -229,12 +261,14 @@ const UserIBcards = ({ commissionsData }) => {
             </div>
           </div>
           <div className="mt-4">
-            <button
-              className="w-full bg-indigo-600/80 hover:bg-indigo-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
-              onClick={() => console.log("View Clients clicked")}
-            >
-              View Clients
-            </button>
+            <Link to={"/user/referrals/referrals-details"}>
+              <button
+                className="w-full bg-indigo-600/80 hover:bg-indigo-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
+                onClick={() => console.log("View Clients clicked")}
+              >
+                View Details
+              </button>
+            </Link>
           </div>
         </div>
       </div>

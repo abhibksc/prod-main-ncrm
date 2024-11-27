@@ -17,7 +17,7 @@ export default function UserEconomicCalendar() {
             <Loader />
           </div>
         )}
-        <div className="w-full h-full bg-secondary-800/10 p-4  shadow-4xl rounded-2xl flex flex-col justify-center items-center">
+        <div className="w-full h-full mb-6 bg-secondary-800/10 p-4  shadow-4xl rounded-2xl flex flex-col justify-center items-center">
           <iframe
             src="https://s.tradingview.com/embed-widget/events/?locale=en#%7B%22width%22%3A%22100%25%22%2C%22height%22%3A%22%22%2C%22isTransparent%22%3Atrue%2C%22colorTheme%22%3A%22dark%22%2C%22importanceFilter%22%3A%22-1%2C0%2C1%22%7D"
             width="100%"

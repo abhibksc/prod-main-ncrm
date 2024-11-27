@@ -296,7 +296,7 @@ const IbWithdrawalStatus = () => {
         const apiWithdrwalRes = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeWithdrawBalance?Manager_Index=${
+          }/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.referralId}&Amount=${
             selectedDeposit.amount
@@ -361,7 +361,7 @@ const IbWithdrawalStatus = () => {
         toast.success("IB Withdrwal Rejected", { id: toastId });
       }
     } catch (error) {
-      toast.success("Something went wrong", { id: toastId });
+      toast.error("Something went wrong", { id: toastId });
       console.error("Error updating IB withdrwal:", error);
     }
   };

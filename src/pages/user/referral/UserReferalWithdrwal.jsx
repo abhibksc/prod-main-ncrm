@@ -169,7 +169,6 @@ export const UserReferralWithdrawal = () => {
       </div>
     </body>
     </html>`;
-  const check = false;
 
   //    main withdrwal handler ---------------------
 
@@ -225,12 +224,8 @@ export const UserReferralWithdrawal = () => {
   };
 
   useEffect(() => {
-    if (balance) {
-      console.log("User Balance:", balance);
-    }
-    if (userInfoData) {
-      //   console.log("User Info:", userInfoData);
-    }
+  useEffect(() => {
+   
   }, [balance, userInfoData]);
 
   return (

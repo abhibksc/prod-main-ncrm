@@ -1,24 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { ArrowUpDown, CheckCircle, Edit, Info } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { useEffect, useState } from "react";
+import { ArrowUpDown } from "lucide-react";
+
 import axios from "axios";
-import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 const UserReferalWithdrwalHistory = () => {
   const [challengesData, setChallengesData] = useState();
-  const [selectedchallenge, setSelectedChallenge] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const logggedUser = useSelector((store) => store.user.loggedUser);
 
@@ -89,13 +77,13 @@ const UserReferalWithdrwalHistory = () => {
           import.meta.env.VITE_BECKEND_END_POINT
         }/api/auth/referral-withdrawals`
       );
-      // console.log("challenges res--", res.data.data);
-      const loggedUserData = res.data.data
-        .reverse()
-        .filter((value) => value.userId === logggedUser._id);
 
-      // console.log("logged user data", loggedUserData);
-      setChallengesData(loggedUserData);
+      const filderedData = res.data.data
+        .reverse()
+        .filter((value) => value.userId._id === logggedUser._id);
+
+      // console.log("filderedData", filderedData);
+      setChallengesData(filderedData);
       setLoader(false);
     } catch (error) {
       console.log("error in fetch user challenges", error);
@@ -103,12 +91,7 @@ const UserReferalWithdrwalHistory = () => {
       setLoader(false);
     }
   };
-
-  const handleMoreInfo = (value) => {
-    setIsDialogOpen(true);
-    setSelectedChallenge(value);
-  };
-  console.log("challenges data--------", challengesData);
+  console.log(challengesData);
 
   useEffect(() => {
     fetchChallengesData();
@@ -168,13 +151,13 @@ const UserReferalWithdrwalHistory = () => {
               </td>
               <td className="text-center py-2 px-2">
                 <div
-                  className={`inline-block px-2 py-1 font-semibold rounded-full ${
+                  className={`inline-block px-3 py-1 font-semibold rounded-full ${
                     value?.status === "pending"
                       ? "bg-yellow-500/20 text-yellow-500"
-                      : value?.status === "accepted"
-                      ? "bg-green-500/20 text-green-500"
+                      : value?.status === "approved"
+                      ? "bg-green-500/10 text-green-500"
                       : value?.status === "rejected"
-                      ? " bg-red-500/20  text-red-400"
+                      ? " bg-red-500/10  text-red-500"
                       : ""
                   } `}
                 >
@@ -185,66 +168,6 @@ const UserReferalWithdrwalHistory = () => {
           ))}
         </tbody>
       </table>
-      <div>
-        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className=" ">{"More info"}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {true && (
-                  <div className=" flex gap-[2px] font-semibold flex-col">
-                    <p>Mt5 Amount - {selectedchallenge?.mt5Account}</p>
-                    <p>Leverage - {selectedchallenge?.leverage}</p>
-                    <div className=" flex gap-4">
-                      <p>
-                        Master password - {selectedchallenge?.masterPassword}
-                      </p>
-                      {(selectedchallenge?.phase === "1") &
-                      (selectedchallenge.status === "active") ? (
-                        <Link
-                          to={"/user/master-password"}
-                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                        >
-                          change
-                        </Link>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className=" flex gap-4">
-                      <p>
-                        Investar password -{" "}
-                        {selectedchallenge?.investarPassword}
-                      </p>
-                      {(selectedchallenge?.phase === "1") &
-                      (selectedchallenge.status === "active") ? (
-                        <Link
-                          to={"/user/investor-password"}
-                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                        >
-                          change
-                        </Link>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                  </div>
-                )}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </AlertDialogCancel>
-              {/* <AlertDialogAction
-                onClick={() => handleConfirmAction(selectedDeposit)}
-              >
-                Confirm {actionType === "approve" ? "Approval" : "Rejection"}
-              </AlertDialogAction> */}
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
     </div>
   );
 };

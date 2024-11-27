@@ -11,13 +11,12 @@ export default function UseCommissionBalance() {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/api/web/GetUserInfo?Manager_Index=${
+          `${import.meta.env.VITE_API_END_POINT}/GetUserInfo?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${loggedUser.referalId}`
         );
         setBalance(res.data.Balance);
+        console.log("res data--", res.data);
         setUserInfoData(res.data);
       } catch (error) {
         console.error("Error fetching user info:", error);

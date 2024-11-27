@@ -357,6 +357,20 @@ const DepositsStatus = () => {
     const toastId = toast.loading("Please wait..");
     // console.log("selected deposits--", selectedDeposit);
     try {
+      const phaseData = await axios.get(
+        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-phases`
+      );
+
+      const filterallPhaseData = phaseData.data.data.filter(
+        (value) => value.accountType === selectedDeposit.accountType
+      );
+
+      const filterCurrentPhaseData = filterallPhaseData.filter(
+        (value) => value.phase === 1
+      )[0];
+
+      const overallMaxProfit = filterCurrentPhaseData.maxOverallLoss;
+
       if (actionType === "approve") {
         const addUserApi = await axios.post(
           `${import.meta.env.VITE_API_END_POINT}/Adduser`,
@@ -413,6 +427,7 @@ const DepositsStatus = () => {
               accountType: selectedDeposit.accountType,
               leverage: selectedDeposit.leverage,
               lastEquity: selectedDeposit.balance,
+              calculatedLoss: overallMaxProfit,
             }
           );
           // add refferal commission ----------
@@ -427,9 +442,9 @@ const DepositsStatus = () => {
               }/MakeDepositBalance?Manager_Index=${
                 import.meta.env.VITE_MANAGER_INDEX
               }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
-                selectedDeposit.deposit *
-                (import.meta.env.VITE_IB_COMMISSION / 100)
-              }&Comment=commission`
+                Number(selectedDeposit.deposit) *
+                (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
+              }&Comment=commissionDeposit`
             );
 
             const addCommissionDB = await axios.post(
@@ -442,15 +457,18 @@ const DepositsStatus = () => {
                 depositBalance: selectedDeposit.balance,
                 accountSize: selectedDeposit.deposit,
                 commission:
-                  selectedDeposit.deposit *
-                  (import.meta.env.VITE_IB_COMMISSION / 100),
+                  Number(selectedDeposit.deposit) *
+                  (Number(import.meta.env.VITE_IB_COMMISSION) / 100),
                 accountType: selectedDeposit.accountType,
                 level: 1,
                 referralFrom: selectedDeposit.userId.referralFromUserId,
                 currentReferral: selectedDeposit.userId._id,
               }
             );
-            console.log("addCommissionDB---------", addCommissionDB);
+            // console.log("addCommissionDB---------", addCommissionDB);
+            toast.success(
+              `${addCommissionDB.data.savedData.commission} Commission added to referral`
+            );
           }
 
           const updatedDepositData = depositData.map((deposit) =>
