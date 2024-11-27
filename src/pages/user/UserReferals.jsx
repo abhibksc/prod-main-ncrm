@@ -9,7 +9,21 @@ import {
   Wallet,
   Gift,
   HandCoins,
+  WheatIcon,
+  Share2Icon,
 } from "lucide-react";
+import {
+  FaFacebook,
+  FaFacebookF,
+  FaFacebookMessenger,
+  FaFacebookSquare,
+  FaInstagram,
+  FaShareAlt,
+  FaTwitter,
+  FaWhatsapp,
+} from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -25,7 +39,6 @@ const UserReferal = () => {
   const [isVisible, setIsVisible] = useState(false);
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
-  const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referalId}`;
   const [commissionsData, setCommissionsData] = useState([]);
 
   const TabButton = ({ label, isActive, onClick }) => (
@@ -43,12 +56,6 @@ const UserReferal = () => {
     </motion.button>
   );
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(referralLink).then(() => {
-      setIsCopied(true);
-      setTimeout(() => setIsCopied(false), 2000);
-    });
-  };
   // generate IB account handler ------------
 
   const generateHandler = async () => {
@@ -61,9 +68,7 @@ const UserReferal = () => {
     // const envGroup = "SK GROUP\\M10\\STANDARD";
     const envGroup = String(import.meta.env.VITE_IB_GROUP_NAME);
     const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
-    console.log(doubleQuotedEnvGroup); // Prints the string with single backslashes
-
-    // console.log(envGroup);
+    // console.log(doubleQuotedEnvGroup); // Prints the string with single backslashes
 
     try {
       const generateMtId = await axios.post(
@@ -112,45 +117,150 @@ const UserReferal = () => {
     }
   };
 
-  const ReferralsView = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="space-y-4 sm:space-y-6 rounded-xl"
-    >
-      <div className="bg-secondary-800/60 max-w-5xl mx-auto sm:p-6 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
-        <h3 className="font-semibold text-base sm:text-lg mb-3 sm:mb-4">
-          Referral Link
-        </h3>
-        <div className="flex flex-col sm:flex-row items-center bg-gray-100 p-2 sm:p-3 rounded-lg">
-          <input
-            type="text"
-            value={referralLink}
-            readOnly
-            className="w-full sm:w-auto flex-grow bg-transparent outline-none text-gray-700 text-sm mb-2 sm:mb-0"
+  const ReferralsView = () => {
+    const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referalId}`;
+
+    const [isCopied, setIsCopied] = useState(false);
+    const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(referralLink);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    };
+
+    const shareOnPlatform = (platform) => {
+      const shareText = `Check out this awesome referral link! ${referralLink}`;
+      const shareUrls = {
+        whatsapp: `https://wa.me/?text=${encodeURIComponent(shareText)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          referralLink
+        )}`,
+        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          shareText
+        )}`,
+        instagram: "https://www.instagram.com/", // Note: Instagram doesn't support direct sharing via URL
+      };
+
+      if (platform !== "instagram") {
+        window.open(shareUrls[platform], "_blank");
+      }
+      setIsShareMenuOpen(false);
+    };
+
+    const globalShare = () => {
+      if (navigator.share) {
+        navigator
+          .share({
+            title: "Referral Link",
+            text: "Check out this awesome referral link!",
+            url: referralLink,
+          })
+          .then(() => console.log("Shared successfully!"))
+          .catch((error) => console.error("Error sharing:", error));
+      } else {
+        alert("Sharing is not supported on this browser.");
+      }
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 rounded-xl p-4 sm:p-6"
+      >
+        <div className="w-full sm:w-1/2">
+          <img
+            src="/referral2.png"
+            alt="Referral"
+            className="w-full h-auto rounded-lg"
           />
-          <motion.button
-            onClick={copyToClipboard}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto sm:ml-4 bg-secondary-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-secondary-700 transition-colors duration-300 flex items-center justify-center"
-          >
-            {isCopied ? <Check size={18} /> : <Copy size={18} />}
-            {isCopied && (
-              <motion.span layout className="ml-2 text-sm">
-                Copied
-              </motion.span>
-            )}
-          </motion.button>
         </div>
-        <p className="text-xs sm:text-sm text-yellow-500 font-semibold mt-3 flex items-center">
-          <Smile className="mr-2" size={16} />
-          Share this link to invite your friends and earn commissions.
-        </p>
-      </div>
-    </motion.div>
-  );
+
+        <div className="w-full sm:w-1/2 space-y-4">
+          <div className="rounded-lg p-4">
+            <h3 className="text-lg font-semibold text-white mb-3">
+              Referral Link
+            </h3>
+
+            <div className="w-full flex sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <input
+                type="text"
+                value={referralLink}
+                readOnly
+                className="w-full bg-transparent text-gray-200 outline-none border-b border-gray-700 pb-1"
+              />
+
+              <motion.button
+                onClick={copyToClipboard}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto flex items-center justify-center text-white px-4 py-2 rounded-lg transition-colors"
+              >
+                {isCopied ? <Check size={18} /> : <Copy size={18} />}
+                {isCopied && (
+                  <motion.span layout className="ml-2 text-sm">
+                    Copied
+                  </motion.span>
+                )}
+              </motion.button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <motion.button
+              onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full flex items-center justify-center bg-secondary-500/40 text-white px-4 py-2 rounded-lg hover:bg-secondary-500/50 transition-colors"
+            >
+              <Share2Icon size={18} className="mr-2" />
+              Share Referral
+            </motion.button>
+
+            {isShareMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute z-10 bottom-full mb-2 w-full bg-black/80 rounded-lg shadow-lg p-3 flex justify-between"
+              >
+                <button
+                  onClick={() => shareOnPlatform("whatsapp")}
+                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                >
+                  <FaWhatsapp size={24} />
+                </button>
+                <button
+                  onClick={() => shareOnPlatform("facebook")}
+                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                >
+                  <FaFacebookF size={24} />
+                </button>
+                <button
+                  onClick={() => shareOnPlatform("twitter")}
+                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                >
+                  <FaXTwitter size={24} />
+                </button>
+                <button
+                  onClick={globalShare}
+                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                >
+                  <FaShareAlt size={24} />
+                </button>
+              </motion.div>
+            )}
+          </div>
+
+          <p className="text-sm text-yellow-500 flex items-center">
+            <Smile className="mr-2" size={16} />
+            Share this link to invite friends and earn commissions.
+          </p>
+        </div>
+      </motion.div>
+    );
+  };
 
   const CommissionView = () => (
     <motion.div

@@ -223,10 +223,7 @@ export const UserReferralWithdrawal = () => {
     }
   };
 
-  useEffect(() => {
-  useEffect(() => {
-   
-  }, [balance, userInfoData]);
+  useEffect(() => {}, [balance, userInfoData]);
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">

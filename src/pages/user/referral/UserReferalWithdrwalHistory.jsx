@@ -115,7 +115,9 @@ const UserReferalWithdrwalHistory = () => {
             </th>
             <th className="p-2 sm:p-3 text-center font-semibold">Method</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Updated At</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Status</th>
+            <th className="p-2 sm:p-3 text-center font-semibold rounded-tr-lg">
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
