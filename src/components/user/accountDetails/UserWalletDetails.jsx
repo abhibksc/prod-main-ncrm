@@ -64,33 +64,33 @@ const UserWalletDetails = () => {
     getUpdateLoggedUser();
   }, []);
   return (
-    <div className="mx-auto p-4 bg-secondary-800/60 rounded-2xl ">
+    <div className="mx-auto p-4 bg-secondary-800/50 rounded-2xl ">
       <div className=" text-black p-4 rounded-xl ">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField
-            label="Tether Wallet Address"
-            placeholder="Enter Tether wallet address"
+            label="USDT (Trc20)"
+            placeholder="Enter USDT(Trc20) address"
             value={formData.tetherAddress}
             onChange={handleInputChange}
             name="tetherAddress"
           />
           <InputField
-            label="ETH Wallet Address"
-            placeholder="Enter ETH wallet address"
+            label="USDT (Erc20)"
+            placeholder="Enter USDT(Trc20) address"
             value={formData.ethAddress}
             onChange={handleInputChange}
             name="ethAddress"
           />
           <InputField
-            label="Account No"
-            placeholder="Enter account number"
+            label="Binance ID"
+            placeholder="Enter Binance ID"
             value={formData.accountNumber}
             onChange={handleInputChange}
             name="accountNumber"
           />
           <InputField
-            label="TRX Wallet Address"
-            placeholder="Enter TRX wallet address"
+            label="BTC Address"
+            placeholder="Enter BTC address"
             value={formData.trxAddress}
             onChange={handleInputChange}
             name="trxAddress"
