@@ -283,7 +283,7 @@ const WithdrawalStatus = () => {
         const apiWithdrwalRes = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/MakeWithdrawBalance?Manager_Index=${
+          }/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.amount
@@ -811,42 +811,52 @@ const WithdrawalStatus = () => {
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "TRX" ? (
+                    ) : selectedDeposit?.method === "USDT(Trc20)" ? (
                       <div>
                         <div className=" flex gap-1">
                           <WalletCardsIcon size={20}></WalletCardsIcon>
                           <p>
-                            TRX Address -
+                            USDT-Trc20 -
                             <span className=" font-bold">
                               {
                                 selectedDeposit?.userId?.walletDetails
-                                  ?.trxAddress
+                                  ?.tetherAddress
                               }
                             </span>
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "Ethereum" ? (
+                    ) : selectedDeposit?.method === "USDT(Erc20)" ? (
                       <div className=" flex items-center gap-1">
                         <WalletCardsIcon size={20}></WalletCardsIcon>
 
                         <p>
-                          Ethereum Address -{" "}
+                          USDT-Erc20 -{" "}
                           <span className=" font-bold">
                             {selectedDeposit?.userId?.walletDetails?.ethAddress}
                           </span>{" "}
                         </p>
                       </div>
-                    ) : selectedDeposit?.method === "Thether" ? (
+                    ) : selectedDeposit?.method === "BinanceID" ? (
                       <div className=" flex items-center gap-1">
                         <WalletCardsIcon size={20}></WalletCardsIcon>{" "}
                         <p>
-                          Thether Address -{" "}
+                          Binance ID -{" "}
                           <span className=" font-bold">
                             {
                               selectedDeposit?.userId?.walletDetails
-                                ?.tetherAddress
-                            }{" "}
+                                ?.accountNumber
+                            }
+                          </span>
+                        </p>
+                      </div>
+                    ) : selectedDeposit?.method === "BTCAddress" ? (
+                      <div className=" flex items-center gap-1">
+                        <WalletCardsIcon size={20}></WalletCardsIcon>{" "}
+                        <p>
+                          BTC Address -{" "}
+                          <span className=" font-bold">
+                            {selectedDeposit?.userId?.walletDetails?.trxAddress}
                           </span>
                         </p>
                       </div>
