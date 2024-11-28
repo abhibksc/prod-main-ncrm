@@ -163,7 +163,7 @@ const UserChallenges = () => {
                 {value?.accountSize}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.balance}
+                {Number(value?.balance).toFixed(2)}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
                 {value?.phase}

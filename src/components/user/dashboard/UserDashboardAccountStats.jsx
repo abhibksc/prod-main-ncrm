@@ -65,13 +65,16 @@ const UserDashboardAccountStats = () => {
         className="text-2xl sm:text-3xl text-center font-semibold text-gray-100 
              mb-6 tracking-wide"
       >
-        Account Stats -
-        <span
-          className="font-bold text-transparent bg-clip-text 
+        Account Stats
+        {loggedUser.phase > 0 && (
+          <span
+            className="font-bold text-transparent bg-clip-text 
                bg-gradient-to-r from-gray-200 to-secondary-500"
-        >
-          {loggedUser.accountType}
-        </span>
+          >
+            {" "}
+            - {loggedUser.accountType}
+          </span>
+        )}
       </h2>
       <div className="space-y-2">
         {stats.map((stat) => (

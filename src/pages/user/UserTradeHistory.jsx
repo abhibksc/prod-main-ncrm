@@ -22,7 +22,7 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/GetCloseTradeAll?Manager_Index=${
+          }/GetCloseTradeAll?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Accont=${
             loggedUser.mt5Account
@@ -32,7 +32,7 @@ export default function UserTradeHistory() {
         res = await axios.get(
           `${
             import.meta.env.VITE_API_END_POINT
-          }/api/web/getOpenTradeByAccount?Manager_Index=${
+          }/getOpenTradeByAccount?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Accont=${loggedUser.mt5Account}`
         );
@@ -118,8 +118,8 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "closed"
-              ? "bg-secondary-500/80 text-white"
-              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
+              ? "bg-secondary-500/50 text-white"
+              : "bg-secondary-800/40 text-gray-300 hover:bg-secondary-700/30"
           }`}
           onClick={() => handleTabClick("closed")}
         >
@@ -130,8 +130,8 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "open"
-              ? "bg-secondary-500/80 text-white"
-              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
+              ? "bg-secondary-500/50 text-white"
+              : "bg-secondary-800/40 text-gray-300 hover:bg-secondary-700/30"
           }`}
           onClick={() => handleTabClick("open")}
         >

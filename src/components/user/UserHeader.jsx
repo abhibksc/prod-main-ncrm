@@ -136,7 +136,10 @@ const UserHeader = () => {
           <button className=" lg:hidden" onClick={sidebarHandler}>
             <Menu></Menu>
           </button>
-          <a href="/user/dashboard" className=" items-center mr-4">
+          <a
+            href="/user/dashboard"
+            className=" items-center mr-4 outline-none border-none"
+          >
             <img
               src={import.meta.env.VITE_LOGO_LINK}
               alt="Forex Funding Logo"

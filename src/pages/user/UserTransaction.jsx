@@ -146,8 +146,8 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "deposit"
-              ? "bg-secondary-500/80 text-white"
-              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
+              ? "bg-secondary-500/60 text-white"
+              : "bg-secondary-800/50 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("deposit")}
         >
@@ -158,8 +158,8 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "withdrawal"
-              ? "bg-secondary-500/80 text-white"
-              : "bg-secondary-800 text-gray-300 hover:bg-secondary-700/50"
+              ? "bg-secondary-500/60 text-white"
+              : "bg-secondary-800/50 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("withdrawal")}
         >
@@ -206,15 +206,26 @@ export default function UserTransaction() {
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Type
                 </th>
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Phase
-                </th>
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Deposit
-                </th>
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Ac size
-                </th>
+                {activeTab === "withdrawal" && (
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Amount
+                  </th>
+                )}
+                {activeTab === "deposit" ? (
+                  <>
+                    <th className="text-center py-3 px-4 whitespace-nowrap">
+                      Deposit
+                    </th>
+                    <th className="text-center py-3 px-4 whitespace-nowrap">
+                      Ac size
+                    </th>
+                  </>
+                ) : (
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Method
+                  </th>
+                )}
+
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Requested on
                 </th>
@@ -232,7 +243,7 @@ export default function UserTransaction() {
                   <motion.tr
                     key={index}
                     variants={rowVariants}
-                    className="border-b border-gray-700 hover:bg-secondary-800 transition-all"
+                    className="border-b border-gray-700/60 sticky hover:bg-secondary-800 transition-all"
                     whileHover={{
                       backgroundColor: "rgba(255,255,255,0.05)",
                       transition: { duration: 0.2 },
@@ -243,23 +254,28 @@ export default function UserTransaction() {
                     </td>
                     <td className="py-2 px-4 text-center">
                       <motion.div
-                        className="bg-cyan-100/20 rounded-full px-2 py-1 inline-block"
+                        className="bg-secondary-500/10 whitespace-nowrap rounded-full px-3 py-1 inline-block"
                         whileHover={{ scale: 1.05 }}
                       >
-                        {item?.userId.accountType}
+                        {activeTab === "withdrawal"
+                          ? item?.tradeAccount
+                          : item.accountType}
                       </motion.div>
                     </td>
-                    <td className="py-2 px-4 text-center">
-                      {activeTab === "withdrawal" ? item?.phase : "1"}
-                    </td>
-                    <td className="py-2 text-center">
-                      {activeTab === "withdrawal"
-                        ? item?.userId?.depositBalance
-                        : item?.deposit}
-                    </td>
-                    <td className="py-2 px-4 text-center">
-                      {item?.userId?.accountSize}
-                    </td>
+                    {activeTab === "withdrawal" && (
+                      <td className="py-2 px-4 text-center">${item?.amount}</td>
+                    )}
+                    {activeTab === "deposit" ? (
+                      <>
+                        <td className="py-2 text-center">${item?.deposit}</td>
+                        <td className="py-2 px-4 text-center">
+                          ${item?.balance}
+                        </td>
+                      </>
+                    ) : (
+                      <td className="py-2 px-4 text-center">{item?.method}</td>
+                    )}
+
                     <td className="text-center py-2 px-3">
                       {formatDate(item?.createdAt)}
                     </td>
@@ -270,11 +286,11 @@ export default function UserTransaction() {
                       <motion.div
                         className={`inline-block px-2 py-1 font-semibold rounded-full ${
                           item?.status === "pending"
-                            ? "bg-yellow-500/20 text-yellow-500"
+                            ? "bg-yellow-500/10 text-yellow-500"
                             : item?.status === "approved"
-                            ? "bg-green-500/20 text-green-500"
+                            ? "bg-green-500/10 text-green-500"
                             : item?.status === "rejected"
-                            ? "bg-red-400/20 text-red-500"
+                            ? "bg-red-400/10 text-red-500"
                             : ""
                         }`}
                         whileHover={{ scale: 1.05 }}

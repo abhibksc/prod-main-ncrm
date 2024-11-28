@@ -46,7 +46,6 @@ const AccountChallenges = () => {
       item?.mt5Account,
       item?.type,
       item?.accountSize?.toString(),
-      item?.leverage?.toString(),
       item?.phase,
       item?.reason,
       item?.status,
@@ -102,15 +101,76 @@ const AccountChallenges = () => {
     setSearchQuery(e.target.value);
   };
 
+  // format date ---------------------
+
+  function formatDate(isoDateString) {
+    const date = new Date(isoDateString);
+
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      year: "numeric",
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    const formattedTime = date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true, // 12-hour format with AM/PM
+    });
+
+    return `${formattedDate}, ${formattedTime}`;
+  }
+  // since joined ---------------
+
+  function calculateTimeSinceJoined(isoDateString) {
+    const joinDate = new Date(isoDateString);
+    const today = new Date();
+
+    // Calculate the difference in time (in milliseconds)
+    const timeDifference = today - joinDate;
+
+    // Calculate different time units
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+    );
+
+    // Build the time string
+    let timeString = [];
+
+    if (days > 0) {
+      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
+    }
+    if (hours > 0) {
+      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
+    }
+    if (minutes > 0) {
+      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+    }
+
+    // Handle case when less than a minute
+    if (timeString.length === 0) {
+      return "less than a minute ago";
+    }
+
+    return timeString.join(", ") + " ago";
+  }
+
+  console.log("painted data --", paginatedData);
+
   return (
     <div className="m-5 p-5 sm:px-6 bg-primary-700 text-white rounded-xl shadow-2xl">
       <div className="py-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          <h2 className="text-3xl font-bold">Account Challenges</h2>
+          <h2 className="text-xl md:text-3xl font-bold">Account Challenges</h2>
           <div className="relative w-full md:w-96">
             <input
               type="text"
-              placeholder="Search by name, email, account no"
+              placeholder="Search by any field"
               value={searchQuery}
               onChange={handleSearchChange}
               className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
@@ -137,16 +197,13 @@ const AccountChallenges = () => {
                 <th className="p-3 text-left font-semibold rounded-tl-lg">
                   Name/Email
                 </th>
-                <th className="p-3 text-left font-semibold">Account No</th>
-                <th className="p-3 text-center font-semibold">Account Type</th>
-                <th className="p-3 text-center font-semibold">Account Size</th>
-                <th className="p-3 text-center font-semibold rounded-tr-lg">
-                  Leverage
-                </th>
+                <th className="p-3 text-left font-semibold">AC No</th>
+                <th className="p-3 text-center font-semibold">AC Type</th>
+                <th className="p-3 text-center font-semibold">AC Size</th>
+                <th className="p-3 text-center font-semibold">Last P/L</th>
                 <th className="p-3 text-center font-semibold">Phase</th>
-                <th className="p-3 text-center font-semibold">
-                  Dropdown Status
-                </th>
+                <th className="p-3 text-center font-semibold">Dropdown</th>
+                <th className="p-3 text-center font-semibold">Timestamp</th>
                 <th className="p-3 text-center font-semibold">Status</th>
               </tr>
             </thead>
@@ -163,12 +220,14 @@ const AccountChallenges = () => {
                 paginatedData?.map((value, index) => (
                   <tr
                     key={index}
-                    className="border-b border-primary-200 hover:bg-primary-600/50 transition-colors"
+                    className="border-b border-primary-500/50 hover:bg-primary-600/50 transition-colors"
                   >
                     <td className="p-3 text-sm">
                       <div>
                         <p>{value?.userId?.firstName}</p>
-                        <p className="text-gray-300">{value?.userId?.email}</p>
+                        <p className="text-gray-300/80">
+                          {value?.userId?.email}
+                        </p>
                       </div>
                     </td>
                     <td className="p-3 text-sm">{value?.mt5Account}</td>
@@ -177,18 +236,24 @@ const AccountChallenges = () => {
                       {value?.accountSize}
                     </td>
                     <td className="p-3 text-sm text-center">
-                      {value?.leverage}
+                      {Number(value?.balance).toFixed(2)}
                     </td>
                     <td className="p-3 text-sm text-center">{value?.phase}</td>
                     <td className="p-3 text-sm text-center capitalize">
                       {value?.reason}
                     </td>
-                    <td className="p-3 text-center">
+                    <td className="py-3 text-center whitespace-nowrap px-4">
+                      <div>{formatDate(value?.updatedAt)}</div>
+                      <div className="text-sm text-gray-400">
+                        {calculateTimeSinceJoined(value?.updatedAt)}
+                      </div>
+                    </td>
+                    <td className="p-3 text-center first-letter:capitalize">
                       <span
-                        className={`px-3 py-1 text-xs font-medium rounded-full ${
+                        className={`px-3 py-1 text-sm font-medium rounded-full ${
                           value?.status === "active"
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
+                            ? "bg-green-500/20 text-green-500"
+                            : "bg-red-500/10 text-red-500"
                         }`}
                       >
                         {value?.status}
@@ -252,42 +317,6 @@ const AccountChallenges = () => {
           </div>
         )}
       </div>
-
-      {isDialogOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-primary-700 rounded-lg p-6 max-w-full w-full sm:max-w-md">
-            <h3 className="text-2xl font-bold mb-4">Challenge Details</h3>
-            {selectedChallenge && (
-              <div className="space-y-2">
-                <p>
-                  <span className="font-semibold">MT5 Account:</span>{" "}
-                  {selectedChallenge.mt5Account}
-                </p>
-                <p>
-                  <span className="font-semibold">Leverage:</span>{" "}
-                  {selectedChallenge.leverage}
-                </p>
-                <p>
-                  <span className="font-semibold">Master Password:</span>{" "}
-                  {selectedChallenge.masterPassword}
-                </p>
-                <p>
-                  <span className="font-semibold">Investor Password:</span>{" "}
-                  {selectedChallenge.masterPassword}
-                </p>
-              </div>
-            )}
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setIsDialogOpen(false)}
-                className="px-4 py-2 bg-primary-600 hover:bg-primary-500 rounded-lg transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

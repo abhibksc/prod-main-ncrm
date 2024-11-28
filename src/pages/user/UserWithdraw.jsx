@@ -23,12 +23,7 @@ const UserWithdraw = () => {
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
-  const {
-    GetUserInfoAPI,
-    getUpdatePhase,
-    getUpdateLoggedUser,
-    GetOpenTradeApi,
-  } = UseUserHook();
+  const { GetUserInfoAPI, getUpdateLoggedUser } = UseUserHook();
 
   // functions------------
   const isLastPhase = phaseMaxLength === loggedUser.phase;
@@ -226,7 +221,6 @@ const UserWithdraw = () => {
       try {
         await getUpdateLoggedUser();
         await GetUserInfoAPI();
-        await GetOpenTradeApi();
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
@@ -234,7 +228,7 @@ const UserWithdraw = () => {
     fetchData();
     const intervalId = setInterval(() => {
       fetchData();
-    }, 6000);
+    }, 3000);
 
     return () => {
       clearInterval(intervalId);
