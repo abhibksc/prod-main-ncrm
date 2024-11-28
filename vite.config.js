@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: "autoUpdate",
         devOptions: {
-          enabled: true,
+          enabled: mode === "production", // Enable only in production mode
         },
         manifest: {
           name: env.VITE_WEBSITE_NAME || "My PWA App",
@@ -33,21 +33,6 @@ export default defineConfig(({ mode }) => {
               src: env.VITE_FAVICON_LINK || "/icons/icon-512x512.png",
               sizes: "512x512",
               type: "image/png",
-            },
-          ],
-        },
-        workbox: {
-          runtimeCaching: [
-            {
-              urlPattern: /.*\.(?:js|css|html|png|jpg|jpeg|svg|webp|ico)$/,
-              handler: "NetworkFirst",
-              options: {
-                cacheName: "asset-cache",
-                expiration: {
-                  maxEntries: 100,
-                  maxAgeSeconds: 60 * 60 * 24 * 30,
-                },
-              },
             },
           ],
         },
