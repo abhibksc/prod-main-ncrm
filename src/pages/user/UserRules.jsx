@@ -125,7 +125,7 @@ const UserRules = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-secondary-700/20 rounded-lg shadow-md p-6"
+          className="bg-secondary-800/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
             <Shield className="mr-2 text-secondary-500" />
@@ -163,7 +163,7 @@ const UserRules = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-secondary-700/20 rounded-lg shadow-md p-6"
+          className="bg-secondary-800/20 rounded-lg shadow-md p-6"
         >
           <h3 className="text-2xl font-semibold mb-4 flex items-center">
             <BookOpenIcon className="mr-2 text-secondary-500 " />
