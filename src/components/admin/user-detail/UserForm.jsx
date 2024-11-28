@@ -404,35 +404,28 @@ const UserInfoForm = ({ userData }) => {
                   </h1>
                   <div>
                     <p className="">
-                      Account Number -{" "}
+                      USDT-Trc20 -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.tetherAddress}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      USDT-Erc20 -{" "}
+                      <span className=" font-semibold">
+                        {" "}
+                        {userData?.walletDetails?.ethAddress}{" "}
+                      </span>{" "}
+                    </p>
+                    <p className="">
+                      Binance ID -{" "}
                       <span className=" font-semibold">
                         {" "}
                         {userData?.walletDetails?.accountNumber}{" "}
                       </span>{" "}
                     </p>
                     <p className="">
-                      ETH Address -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {userData?.walletDetails?.ethAddress}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      ETH Address -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {userData?.walletDetails?.ethAddress}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      Tether Address -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {userData?.walletDetails?.ethAddress}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      TRX Address -{" "}
+                      BTC Address -{" "}
                       <span className=" font-semibold">
                         {" "}
                         {userData?.walletDetails?.trxAddress}{" "}
