@@ -15,7 +15,7 @@ const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const profitNloss = useSelector((store) => store.user.profitNloss);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
-  const [selectWallet, setSelectWallet] = useState("Thether");
+  const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
   const [selectedAccount, setSelectedAccount] = useState(
     loggedUser.accountType
   );
@@ -242,12 +242,12 @@ const UserWithdraw = () => {
   }, []);
 
   return (
-    <div className="w-full h-screen flex items-center justify-center">
+    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl bg-secondary-800/40 -mt-20 p-8 rounded-lg shadow-xl"
+        className="w-full max-w-3xl bg-secondary-800/50 -mt-20 p-8 rounded-lg shadow-xl"
       >
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white flex items-center">
@@ -287,6 +287,7 @@ const UserWithdraw = () => {
                 onChange={(e) => setSelectedGateway(e.target.value)}
                 className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
               >
+                {/* <option value="">Select Gateway</option> */}
                 <option value="Bank Transfer">Bank Transfer</option>
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>
@@ -321,9 +322,10 @@ const UserWithdraw = () => {
                   onChange={(e) => setSelectWallet(e.target.value)}
                   className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
                 >
-                  <option value="Thether">Thether {"(USDT)"} </option>
-                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
-                  <option value="TRX">TRX {"(Tron)"} </option>
+                  <option value="USDT(Trc20)">USDT {"(Trc20)"} </option>
+                  <option value="USDT(Erc20)">USDT {"(Erc20)"} </option>
+                  <option value="BinanceID">Binance ID </option>
+                  <option value="BTCAddress">BTC Address </option>
                 </select>
               </div>
             )}
@@ -391,30 +393,40 @@ const UserWithdraw = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              {selectWallet === "Thether" && (
+              {selectWallet === "USDT(Trc20)" && (
                 <div>
                   <p>
-                    Thether Address -{" "}
+                    USDT-Trc20 -{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.tetherAddress}{" "}
                     </span>
                   </p>
                 </div>
               )}
-              {selectWallet === "Ethereum" && (
+              {selectWallet === "USDT(Erc20)" && (
                 <div>
                   <p>
-                    Ethereum Address -{" "}
+                    USDT-Erc20 -{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.ethAddress}
                     </span>{" "}
                   </p>
                 </div>
               )}
-              {selectWallet === "TRX" && (
+              {selectWallet === "BinanceID" && (
                 <div>
                   <p>
-                    TRX Address -
+                    Binance ID -
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.accountNumber}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "BTCAddress" && (
+                <div>
+                  <p>
+                    BTC Address -
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.trxAddress}
                     </span>
@@ -449,7 +461,7 @@ const UserWithdraw = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-blue-600 text-white py-3 rounded-md shadow-md hover:bg-blue-600/80 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-blue-600 text-white py-3 rounded-md shadow-md hover:bg-blue-600/80 focus:outline-none focus:ring-2 focus:ring-secondary-500 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
