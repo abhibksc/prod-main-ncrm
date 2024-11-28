@@ -645,7 +645,7 @@ const IbWithdrawalStatus = () => {
                   </td>
                   <td className="py-2 px-4 text-center">{item?.amount}</td>
                   <td className="py-2 px-4">{item?.method}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 whitespace-nowrap">
                     <div>{formatDate(item?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(item?.createdAt)}

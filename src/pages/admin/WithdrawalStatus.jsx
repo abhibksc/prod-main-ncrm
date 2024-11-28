@@ -654,7 +654,7 @@ const WithdrawalStatus = () => {
                   <td className="py-2 px-4">{item?.pNl}</td>
                   <td className="py-2 px-4">{item?.amount.toFixed(2)}</td>
                   <td className="py-2 px-4">{item?.method}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 whitespace-nowrap px-4">
                     <div>{formatDate(item?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(item?.createdAt)}

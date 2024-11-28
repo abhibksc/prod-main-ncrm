@@ -224,7 +224,7 @@ const ManageUsers = () => {
                     {user?.kycVerified ? "Active" : "Inactive"}
                   </td>
                   <td className="py-3 px-4 text-center">{user?.mt5Account}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 whitespace-nowrap">
                     <div>{formatDate(user?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(user?.createdAt)}

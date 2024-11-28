@@ -118,7 +118,7 @@ const Header = () => {
                 <>
                   <Link
                     to={"/admin/login"}
-                    className="text-red-600 hover:bg-primary-500 p-2  rounded flex gap-2"
+                    className="text-red-500 hover:bg-red-500/10 p-2  rounded flex gap-2"
                     onClick={logoutHandler}
                   >
                     <LogOut></LogOut>

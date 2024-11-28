@@ -531,11 +531,12 @@ const DepositsStatus = () => {
     0
   );
   // total pending deposits ----------
+  console.log("deposit data--", depositData);
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
-    .reduce((total, item) => total + item.deposit, 0);
-  // console.log("total pending", TotalPendingDeposits);
+    .reduce((total, item) => total + Number(item.deposit), 0);
+  console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
@@ -656,7 +657,7 @@ const DepositsStatus = () => {
   }, [status]);
 
   return (
-    <div className="container mx-auto px-10 py-5">
+    <div className="container mx-auto px-5">
       <div>
         <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
           {status} Deposits
@@ -776,7 +777,7 @@ const DepositsStatus = () => {
                   </td>
                   <td className="py-2 px-4">{item?.deposit}</td>
                   <td className="py-2 px-4">{item?.balance}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 whitespace-nowrap px-4">
                     <div>{formatDate(item?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(item?.createdAt)}
