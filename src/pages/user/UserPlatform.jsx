@@ -138,7 +138,7 @@ const KYCVerificationSection = () => (
 const PlatformDownloadSection = () => (
   <div className="space-y-6">
     <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-white">
-      MetaTrader 5 Pro
+      MetaTrader 5
     </h2>
     <p className="text-gray-300">
       Unlock the power of professional trading with our advanced MetaTrader 5

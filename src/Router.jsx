@@ -50,6 +50,7 @@ import Phases from "./pages/admin/Phases";
 import TestApi from "./pages/protected/TestApi";
 import UserReferralsDetails from "./pages/user/referral/UserReferralsDetails";
 import UserPendingReferrals from "./pages/user/referral/UserPendingReferrals";
+import AdminCustomEmail from "./pages/admin/AdminCustomEmail";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -112,20 +113,8 @@ const Router = createBrowserRouter([
         element: <LoginReport></LoginReport>,
       },
       {
-        path: "/admin/getway/automatic",
-        element: <AutomaticGetways></AutomaticGetways>,
-      },
-      {
         path: "/admin/getway/manual",
         element: <ManualGetways></ManualGetways>,
-      },
-      {
-        path: "/admin/kyc-setting",
-        element: <KYCSetting></KYCSetting>,
-      },
-      {
-        path: "/admin/password-setting",
-        element: <PasswordSetting></PasswordSetting>,
       },
       {
         path: `/admin/account-configuration/${
@@ -140,6 +129,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/account-challenges",
         element: <AccountChallenges></AccountChallenges>,
+      },
+      {
+        path: "/admin/custom-email",
+        element: <AdminCustomEmail></AdminCustomEmail>,
       },
     ],
   },

@@ -79,7 +79,10 @@ const Header = () => {
             >
               <ChartNoAxesGantt className=" "></ChartNoAxesGantt>
             </button>
-            <a href="/admin/dashboard" className=" items-center mr-4">
+            <a
+              href="/admin/dashboard"
+              className=" border-none outline-none items-center mr-4"
+            >
               <img
                 src={import.meta.env.VITE_LOGO_LINK}
                 alt="Forex-ZX Logo"

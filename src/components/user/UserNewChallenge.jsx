@@ -54,7 +54,7 @@ const UserNewChallenge = () => {
     (value) => value.accountType === formData.accountType
   );
 
-  console.log("formm data----", formData);
+  // console.log("formm data----", formData);
 
   const [startAnimation, setStartAnimation] = useState(false);
   const [creatingLoading, setCreatingLoading] = useState(false);
@@ -113,99 +113,100 @@ const UserNewChallenge = () => {
     10 ** (digits - 1);
 
   const apiTestHandler = async () => {
-    const toastID = toast.loading("Please wait..");
-    setCreatingLoading(true);
-
-    try {
-      setCreatingLoading(false);
-      // Store all form values in a separate object
-      const formValues = {
-        deposit: formData.accountSize,
-        balance: formData.accountBalance,
-        mt5Account: randomNumber,
-        status: "pending",
-        userId: loggedUser._id,
-        managerIndex: import.meta.env.VITE_MANAGER_INDEX,
-        name: formData.firstName,
-        lName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        address: formData.address,
-        city: formData.city,
-        state: formData.state,
-        country: formData.country,
-        zipCode: formData.zipCode,
-        leverage: formData.leverage,
-        groupName: formData.apiGroup,
-        accountType: formData.accountType,
-      };
-
-      // Create FormData object
-      const formDataObj = new FormData();
-
-      // Append all key-value pairs from the formValues object to FormData
-      for (const key in formValues) {
-        formDataObj.append(key, formValues[key]);
-      }
-
-      // Also append the image file to the FormData object
-      formDataObj.append("depositSS", file); // Assuming 'file' is the image file you want to upload
-
-      const depositDBres = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
-        formDataObj, // Pass FormData object
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Important for file upload
-          },
-        }
-      );
-      const addChallengeDB = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
-        {
-          mt5Account: randomNumber,
-          type: formData.accountType,
-          accountSize: formData.accountBalance,
+    if (!creatingLoading) {
+      const toastID = toast.loading("Please wait..");
+      try {
+        setCreatingLoading(true);
+        // Store all form values in a separate object
+        const formValues = {
           deposit: formData.accountSize,
-          balance: "000",
-          phase: "1",
-          reason: "pending",
-          status: "inactive",
-          leverage: formData.leverage,
-          masterPassword: "000",
-          investarPassword: "000",
+          balance: formData.accountBalance,
+          mt5Account: randomNumber,
+          status: "pending",
           userId: loggedUser._id,
-        }
-      );
-      const updateUser = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-        {
-          id: loggedUser._id,
-          mt5Account: "000",
-          depositBalance: 0,
-          accountSize: 0,
-          masterPassword: "000",
-          investorPassword: "000",
-          phase: 0,
           managerIndex: import.meta.env.VITE_MANAGER_INDEX,
+          name: formData.firstName,
+          lName: formData.lastName,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          zipCode: formData.zipCode,
+          leverage: formData.leverage,
           groupName: formData.apiGroup,
-          calculatedLoss: 0,
-          lastEquity: 0,
+          accountType: formData.accountType,
+        };
+        //
+        // Create FormData object
+        const formDataObj = new FormData();
+
+        // Append all key-value pairs from the formValues object to FormData
+        for (const key in formValues) {
+          formDataObj.append(key, formValues[key]);
         }
-      );
-      await GetUserInfoAPI();
-      dispatch(setProfitNloss(0));
-      dispatch(setOpenTrades([]));
-      dispatch(setAvailableBalance(0));
-      dispatch(setProfitNloss(0));
-      await getUpdateLoggedUser();
-      await GetUserInfoAPI();
-      toast.success("Created new challenge", { id: toastID });
-      navigate("/user/dashboard");
-    } catch (error) {
-      setCreatingLoading(false);
-      toast.error("Plese try again", { id: toastID });
-      console.log("api testing error---", error);
+
+        // Also append the image file to the FormData object
+        formDataObj.append("depositSS", file); // Assuming 'file' is the image file you want to upload
+
+        const depositDBres = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposit`,
+          formDataObj, // Pass FormData object
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", // Important for file upload
+            },
+          }
+        );
+        const addChallengeDB = await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-challenge`,
+          {
+            mt5Account: randomNumber,
+            type: formData.accountType,
+            accountSize: formData.accountBalance,
+            deposit: formData.accountSize,
+            balance: "000",
+            phase: "1",
+            reason: "pending",
+            status: "inactive",
+            leverage: formData.leverage,
+            masterPassword: "000",
+            investarPassword: "000",
+            userId: loggedUser._id,
+          }
+        );
+        const updateUser = await axios.put(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
+          {
+            id: loggedUser._id,
+            mt5Account: "000",
+            depositBalance: 0,
+            accountSize: 0,
+            masterPassword: "000",
+            investorPassword: "000",
+            phase: 0,
+            managerIndex: import.meta.env.VITE_MANAGER_INDEX,
+            groupName: formData.apiGroup,
+            calculatedLoss: 0,
+            lastEquity: 0,
+          }
+        );
+        await GetUserInfoAPI();
+        dispatch(setProfitNloss(0));
+        dispatch(setOpenTrades([]));
+        dispatch(setAvailableBalance(0));
+        dispatch(setProfitNloss(0));
+        await getUpdateLoggedUser();
+        await GetUserInfoAPI();
+        toast.success("Created new challenge", { id: toastID });
+        setCreatingLoading(false);
+        navigate("/user/dashboard");
+      } catch (error) {
+        setCreatingLoading(false);
+        toast.error("Please try again", { id: toastID });
+        console.log("user new challenge error---", error);
+      }
     }
   };
 
@@ -276,6 +277,7 @@ const UserNewChallenge = () => {
     fetchAccountConfigurations();
     fetchPhases();
   }, []);
+  // useEffect(() => {}, [creatingLoading]);
   const [copied, setCopied] = useState(false);
   const paymentDetails = paymentMethods?.find(
     (m) => m.name === selectedPayment
@@ -839,7 +841,9 @@ const UserNewChallenge = () => {
               </div>
               <button
                 onClick={apiTestHandler}
-                disabled={!agreeToTerms || !selectedPayment || !file}
+                disabled={
+                  !agreeToTerms || creatingLoading || !selectedPayment || !file
+                }
                 className={`w-full flex mx-auto justify-center items-center py-3 px-4 rounded-lg text-white transition-colors ${
                   selectedPayment && agreeToTerms && file
                     ? "bg-blue-500 hover:bg-blue-500/80 "
@@ -851,6 +855,8 @@ const UserNewChallenge = () => {
                   <Loader2 className="animate-spin mx-2"></Loader2>
                 )}
               </button>
+              {/* {!creatingLoading && (
+              )} */}
             </div>
           )}
         </motion.div>
