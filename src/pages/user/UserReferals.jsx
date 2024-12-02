@@ -59,10 +59,14 @@ const UserReferal = () => {
   // generate IB account handler ------------
 
   const generateHandler = async () => {
-    const digits = Math.floor(Math.random() * 3) + 5; // Randomly choose between 5, 6, and 7 digits
-    const randomNumber =
-      Math.floor(Math.random() * (10 ** digits - 10 ** (digits - 1))) +
-      10 ** (digits - 1);
+    function generateRandomNumber(digits) {
+      if (digits <= 0) throw new Error("Digits must be a positive number");
+      const min = Math.pow(10, digits - 1);
+      const max = Math.pow(10, digits) - 1;
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const randomNumber = generateRandomNumber(7);
 
     const toastId = toast.loading("Generating..");
     // const envGroup = "SK GROUP\\M10\\STANDARD";
