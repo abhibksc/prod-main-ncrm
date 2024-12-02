@@ -169,6 +169,23 @@ export default function AdminCustomEmail() {
           }
         );
         toast.success("Email sent", { id: toastId });
+      } else if (recipient === "all") {
+        toast.success(
+          "Your request is being processed. The time required may vary based on the number of users, so please allow a few moments for completion.",
+          {
+            duration: 7000,
+          }
+        );
+        setEmail("");
+        setSubject("");
+        setMessage("");
+        await axios.post(
+          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/send-emails`,
+          {
+            text: message,
+            subject: subject,
+          }
+        );
       }
 
       setStatus("success");
@@ -185,9 +202,12 @@ export default function AdminCustomEmail() {
 
   return (
     <div className="  flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl bg-primary-700/70 shadow-2xl rounded-2xl overflow-hidden">
+      <div className="w-full max-w-6xl bg-primary-700/40 shadow-2xl rounded-2xl overflow-hidden">
         {/* Header */}
-        <div className="bg-primary-600/80 text-white p-6 flex items-center justify-between">
+        <div
+          className="bg-primary-600
+         text-white p-6 flex items-center justify-between"
+        >
           <div className="flex items-center space-x-3">
             <Mail className="w-8 h-8" />
             <h2 className="text-2xl font-semibold">Custom Email</h2>
@@ -276,7 +296,7 @@ export default function AdminCustomEmail() {
           {/* Send Button */}
           <button
             onClick={handleSubmit}
-            className="w-full p-3 bg-blue-700/70 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group"
+            className="w-full p-3 bg-blue-600/80 text-white rounded-lg hover:bg-blue-800 transition-all duration-300 flex items-center justify-center space-x-2 group"
           >
             <Send className="mr-2 group-hover:animate-pulse" />
             Send Email

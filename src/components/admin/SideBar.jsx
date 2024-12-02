@@ -23,6 +23,7 @@ import {
   HandCoins,
   LucideBookText,
   RouteIcon,
+  Mails,
 } from "lucide-react";
 
 const sidebarVariants = {
@@ -143,6 +144,11 @@ const Sidebar = () => {
       label: "Payment Getways",
       icon: <CreditCard />,
       nested: [{ label: "Manual getways", route: "/admin/getway/manual" }],
+    },
+    {
+      label: "Custom Mail",
+      icon: <Mails />,
+      route: "/admin/custom-email",
     },
     { label: "Logout", icon: <LogOut />, route: "/admin/login" },
   ];
