@@ -5,7 +5,9 @@ export default function UserCustomerSupport() {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleSendMail = () => {
-    const mailtoLink = `mailto:support@company.com?subject=Customer%20Support%20Inquiry&body=Hello%20Support%20Team,%0A%0APlease%20help%20me%20with%20the%20following%20inquiry:%0A%0A1. Issue Description:%0A   - Provide detailed information about your concern%0A%0A2. Steps Already Taken:%0A   - List any troubleshooting steps you've already attempted%0A%0A3. Additional Context:%0A   - Any relevant information that might help resolve the issue%0A%0ABest%20regards,`;
+    const mailtoLink = `mailto:${
+      import.meta.env.VITE_EMAIL_EMAIL
+    }?subject=Customer%20Support%20Inquiry&body=Hello%20Support%20Team,`;
     window.location.href = mailtoLink;
   };
 
@@ -44,7 +46,9 @@ export default function UserCustomerSupport() {
                   <h3 className="text-lg font-semibold text-gray-300">
                     Support Email
                   </h3>
-                  <p className="text-gray-500 text-sm">support@company.com</p>
+                  <p className="text-gray-500 text-sm">
+                    {import.meta.env.VITE_EMAIL_EMAIL}
+                  </p>
                 </div>
                 <Mail className="w-8 h-8 text-blue-500" />
               </div>
@@ -55,7 +59,7 @@ export default function UserCustomerSupport() {
                     Response Times
                   </h3>
                   <p className="text-gray-500 text-sm">
-                    Weekdays: 24-48 hours Weekends: 48-72 hours
+                    Weekdays (Mon-Sat): 8 AM to 8 PM
                   </p>
                 </div>
                 <Clock className="w-8 h-8 text-green-500" />
@@ -76,8 +80,10 @@ export default function UserCustomerSupport() {
               </div>
             </div>
 
-            <button
-              onClick={handleSendMail}
+            <a
+              href={`mailto:${import.meta.env.VITE_EMAIL_EMAIL}`}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`
                 w-full py-4 rounded-xl transition-all duration-500 flex items-center justify-center
                 ${
@@ -96,7 +102,7 @@ export default function UserCustomerSupport() {
               {isHovered && (
                 <ArrowRight className="w-6 h-6 ml-2 opacity-0 animate-pulse" />
               )}
-            </button>
+            </a>
           </div>
         </div>
 
