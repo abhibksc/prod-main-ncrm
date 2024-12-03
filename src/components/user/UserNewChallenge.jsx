@@ -114,7 +114,7 @@ const UserNewChallenge = () => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const randomNumber = generateRandomNumber(7);
+  const randomNumber = generateRandomNumber(import.meta.env.VITE_MT5_DIGIT);
 
   const apiTestHandler = async () => {
     if (!creatingLoading) {

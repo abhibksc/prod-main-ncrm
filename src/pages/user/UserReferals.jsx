@@ -9,19 +9,9 @@ import {
   Wallet,
   Gift,
   HandCoins,
-  WheatIcon,
   Share2Icon,
 } from "lucide-react";
-import {
-  FaFacebook,
-  FaFacebookF,
-  FaFacebookMessenger,
-  FaFacebookSquare,
-  FaInstagram,
-  FaShareAlt,
-  FaTwitter,
-  FaWhatsapp,
-} from "react-icons/fa";
+import { FaFacebookF, FaShareAlt, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,7 +23,6 @@ import UserIBcards from "@/components/user/UserIBCards";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("commission");
-  const [isCopied, setIsCopied] = useState(false);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();
   const [isVisible, setIsVisible] = useState(false);
@@ -66,7 +55,7 @@ const UserReferal = () => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const randomNumber = generateRandomNumber(7);
+    const randomNumber = generateRandomNumber(import.meta.env.VITE_MT5_DIGIT);
 
     const toastId = toast.loading("Generating..");
     // const envGroup = "SK GROUP\\M10\\STANDARD";
