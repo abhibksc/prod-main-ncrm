@@ -10,6 +10,8 @@ import {
   BadgeCheck,
   UserRoundCog,
 } from "lucide-react";
+import { RiCustomerService2Line } from "react-icons/ri";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
@@ -56,13 +58,18 @@ const UserDropdown = ({ isOpen, onClose }) => {
       icon: <KeyRound className="w-4 h-4" />,
       label: "Change Password",
     },
+    {
+      to: "/user/customer-support",
+      icon: <RiCustomerService2Line className="w-4 h-4" />,
+      label: "Customer Support",
+    },
   ];
 
   return (
     <div ref={dropdownRef} className="relative">
       <AnimatePresence>
         {isOpen && (
-          <div className="absolute z-10 right-0 top-10 w-48">
+          <div className="absolute z-50 right-0 top-10 w-48">
             <motion.div
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}

@@ -51,6 +51,7 @@ import TestApi from "./pages/protected/TestApi";
 import UserReferralsDetails from "./pages/user/referral/UserReferralsDetails";
 import UserPendingReferrals from "./pages/user/referral/UserPendingReferrals";
 import AdminCustomEmail from "./pages/admin/AdminCustomEmail";
+import UserCustomerSupport from "./pages/user/UserCustomerSupport";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -232,6 +233,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/account-details",
         element: <UserAccountDetails></UserAccountDetails>,
+      },
+      {
+        path: "/user/customer-support",
+        element: <UserCustomerSupport></UserCustomerSupport>,
       },
     ],
   },
