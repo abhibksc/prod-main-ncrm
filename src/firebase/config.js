@@ -10,7 +10,7 @@
 //   appId: "1:212589801736:web:27579bf7c70acc4eeafcbd",
 // };
 
-// // Initialize Remote Config
+// // Initialize Remote Config --
 // const remoteConfig = getRemoteConfig(app);
 
 // // Set config settings
