@@ -436,15 +436,22 @@ const DepositsStatus = () => {
             selectedDeposit?.userId?.referralFromUserId &&
             selectedDeposit?.userId?.referalFromId
           ) {
+            console.log(
+              "commison amunt --",
+              (
+                Number(selectedDeposit.deposit) *
+                (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
+              ).toFixed(2)
+            );
             const addCommisonMt5Api = await axios.get(
               `${
                 import.meta.env.VITE_API_END_POINT
               }/MakeDepositBalance?Manager_Index=${
                 import.meta.env.VITE_MANAGER_INDEX
-              }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${
+              }&MT5Account=${selectedDeposit.userId.referalFromId}&Amount=${(
                 Number(selectedDeposit.deposit) *
                 (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
-              }&Comment=commissionDeposit`
+              ).toFixed(2)}&Comment=commissionDeposit`
             );
 
             const addCommissionDB = await axios.post(
@@ -456,9 +463,10 @@ const DepositsStatus = () => {
                 referralId: selectedDeposit?.userId?.referalFromId,
                 depositBalance: selectedDeposit.balance,
                 accountSize: selectedDeposit.deposit,
-                commission:
+                commission: (
                   Number(selectedDeposit.deposit) *
-                  (Number(import.meta.env.VITE_IB_COMMISSION) / 100),
+                  (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
+                ).toFixed(2),
                 accountType: selectedDeposit.accountType,
                 level: 1,
                 referralFrom: selectedDeposit.userId.referralFromUserId,
@@ -467,7 +475,8 @@ const DepositsStatus = () => {
             );
             // console.log("addCommissionDB---------", addCommissionDB);
             toast.success(
-              `${addCommissionDB.data.savedData.commission} Commission added to referral`
+              `$${addCommissionDB.data.savedData.commission} Commission added to referral account`,
+              { duration: 5000 }
             );
           }
 
@@ -531,12 +540,11 @@ const DepositsStatus = () => {
     0
   );
   // total pending deposits ----------
-  console.log("deposit data--", depositData);
 
   const TotalPendingDeposits = depositData
     .filter((item) => item.status === "pending")
     .reduce((total, item) => total + Number(item.deposit), 0);
-  console.log("total pending", TotalPendingDeposits);
+  // console.log("total pending", TotalPendingDeposits);
 
   // total Successfull deposits ----------
 
