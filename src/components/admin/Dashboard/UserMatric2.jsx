@@ -34,7 +34,7 @@ const MetricHexagon = ({ icon: Icon, label, value, color }) => (
 
 const CompactHexagonalMetricRow = () => {
   const dbUsers = useSelector((store) => store.admin.dbUsers);
-  const totalUsers = dbUsers.length;
+  const totalUsers = dbUsers?.length;
   const emailVerified = dbUsers?.filter(
     (value) => value.emailVerified === true
   ).length;

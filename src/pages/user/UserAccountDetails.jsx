@@ -4,6 +4,7 @@ import { CreditCard, User, Wallet } from "lucide-react";
 import UserBankDetails from "@/components/user/accountDetails/UserBankDetails";
 import UserWalletDetails from "@/components/user/accountDetails/UserWalletDetails";
 import UserKycDetails from "@/components/user/accountDetails/UserKycDetails";
+import ModernHeading from "@/lib/ModernHeading";
 
 const TabButton = ({ active, onClick, children, icon: Icon }) => (
   <motion.button
@@ -32,9 +33,9 @@ const UserAccountDetails = () => {
 
   return (
     <div className="max-w-full mx-auto p-4 sm:p-6 md:p-8">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center sm:text-left">
-        Account Details
-      </h1>
+      <div className=" mb-6">
+        <ModernHeading text={"Account Details"}></ModernHeading>
+      </div>
       <div className="flex flex-col sm:flex-row justify-start sm:justify-center mb-6 space-y-2 sm:space-y-0 sm:space-x-4">
         {tabs.map((tab) => (
           <TabButton

@@ -9,6 +9,10 @@ import store, { persistor } from "./redux/ReduxStore.js";
 
 document.title = import.meta.env.VITE_WEBSITE_NAME || "Forex Funding";
 
+// main.js or main.ts
+const themeColor = import.meta.env.VITE_THEME_COLOR;
+document.documentElement.style.setProperty("--theme-color", themeColor);
+
 // Function to dynamically set the favicon
 
 const setFavicon = (url) => {

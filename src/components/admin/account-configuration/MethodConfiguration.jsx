@@ -3,6 +3,7 @@ import { Trash2, Plus, Eye, Upload, X, XCircle } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
 
 export default function MethodConfiguration() {
   const [arrayData, setArrayData] = useState([]);
@@ -25,17 +26,11 @@ export default function MethodConfiguration() {
         formData.append("status", newField.status);
         formData.append("image", newField.image);
 
-        const res = await axios.post(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/add-payment-method`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const res = await backendApi.post(`/add-payment-method`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         if (res.data.status) {
           setArrayData([...arrayData, res.data.data]);
@@ -66,15 +61,10 @@ export default function MethodConfiguration() {
     const toastId = toast.loading("Updating status...");
     const newStatus = currentStatus === "active" ? "inactive" : "active";
     try {
-      const res = await axios.put(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/update-payment-method`,
-        {
-          id: id,
-          status: newStatus,
-        }
-      );
+      const res = await backendApi.put(`/update-payment-method`, {
+        id: id,
+        status: newStatus,
+      });
 
       if (res.data.status) {
         setArrayData(
@@ -97,11 +87,7 @@ export default function MethodConfiguration() {
   const deletePlatform = async (id) => {
     const toastId = toast.loading("Please wait...");
     try {
-      const res = await axios.delete(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/delete-payment-method/?id=${id}`
-      );
+      const res = await backendApi.delete(`/delete-payment-method/?id=${id}`);
 
       if (res.data.status) {
         setArrayData(arrayData.filter((platform) => platform._id !== id));
@@ -119,9 +105,7 @@ export default function MethodConfiguration() {
 
   const getAllPlatforms = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-payment-methods`
-      );
+      const res = await backendApi.get(`/get-payment-methods`);
       setArrayData(res.data.data);
     } catch (error) {
       console.log("error in getAllPlatform", error);
@@ -140,7 +124,7 @@ export default function MethodConfiguration() {
   const isAddButtonDisabled = !newField.name || !newField.details;
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-8">
+    <div className=" w-full mx-auto px-4 sm:px-6 py-8">
       <h2 className="text-3xl font-bold mb-6 text-white">Payment Method</h2>
 
       {/* Form Section */}
@@ -249,7 +233,7 @@ export default function MethodConfiguration() {
                     <button
                       onClick={() =>
                         handleViewImage(
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                             "/" +
                             platform?.image
                         )

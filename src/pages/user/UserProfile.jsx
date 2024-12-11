@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi } from "@/utils/apiClients";
 
 const UserProfile = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -36,21 +38,17 @@ const UserProfile = () => {
     setIsLoading(true);
     const toastID = toast.loading("Updating..");
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-        {
-          id: loggedUser._id,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          address: formData.address,
-          state: formData.state,
-          city: formData.city,
-          zipCode: formData.zipCode,
-        }
-      );
-      console.log(res);
+      const res = await backendApi.put(`/update-user`, {
+        id: loggedUser._id,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        address: formData.address,
+        state: formData.state,
+        city: formData.city,
+        zipCode: formData.zipCode,
+      });
       setIsLoading(false);
-      toast.success("Updated", { id: toastID });
+      toast.success("Updated Successfully", { id: toastID });
       getUpdateLoggedUser();
     } catch (error) {
       setIsLoading(false);
@@ -61,12 +59,14 @@ const UserProfile = () => {
 
   return (
     <motion.div
-      className="max-w-4xl mx-auto p-8 bg-gradient-to-br bg-secondary-800/60 rounded-xl shadow-lg"
+      className="max-w-8xl mx-auto p-8 bg-gradient-to-br bg-secondary-800/40 rounded-xl shadow-lg"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <h1 className="text-3xl font-bold mb-5">Profile Information</h1>
+      <div className=" mb-6">
+        <ModernHeading text={"Update Profile"}></ModernHeading>
+      </div>
 
       <motion.form
         className="space-y-6"
@@ -138,17 +138,18 @@ const UserProfile = () => {
             </motion.div>
           ))}
         </div>
-
-        <motion.button
-          type="submit"
-          className="w-full bg-blue-500  hover:bg-blue-500/80 text-white py-3 rounded-lg font-semibold transition duration-300 ease-in-out transform"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-          disabled={isLoading}
-        >
-          {isLoading ? "Updating..." : "Update Profile"}
-        </motion.button>
+        <div className=" flex justify-center items-center">
+          <motion.button
+            type="submit"
+            className=" px-12 hover:px-16 transition-all bg-secondary-500/90  hover:bg-secondary-500/80 text-white py-3 rounded-full font-semibold"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4 }}
+            disabled={isLoading}
+          >
+            {isLoading ? "Updating..." : "Update Profile"}
+          </motion.button>
+        </div>
       </motion.form>
     </motion.div>
   );
@@ -173,7 +174,7 @@ const InputField = ({
       {required && "*"}
     </label>
     <div className="relative rounded-md shadow-sm">
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary-500">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-secondary-300">
         {icon}
       </div>
       <input

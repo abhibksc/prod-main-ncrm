@@ -5,16 +5,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart2,
   Trophy,
-  DollarSign,
   Users,
   CreditCard,
   ArrowUpDown,
-  MessageSquare,
   ShieldAlertIcon,
-  Settings,
   ReceiptPoundSterlingIcon,
-  LucideDownload,
   HardDriveDownloadIcon,
+  ShieldEllipsis,
+  PiggyBankIcon,
+  LucideBadgeDollarSign,
+  ArrowLeftRight,
+  CircleFadingPlus,
+  ArrowDownCircleIcon,
 } from "lucide-react";
 import { handleToggleSidebar } from "@/redux/user/userSlice";
 
@@ -118,25 +120,30 @@ const UserSidebar = () => {
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
-    { icon: Trophy, label: "Challenges", link: "/user/challenges" },
+    { icon: ShieldEllipsis, label: "Accounts", link: "/user/challenges" },
     {
       icon: ArrowUpDown,
       label: "Transactions",
       link: "/user/transaction",
     },
     { icon: BarChart2, label: "Trades", link: "/user/trade-history" },
-    { icon: CreditCard, label: "Withdraw", link: "/user/withdraw" },
+    {
+      icon: CircleFadingPlus,
+      label: "Deposit",
+      link: "/user/deposit",
+    },
+    {
+      icon: ArrowLeftRight,
+      label: "Transfer",
+      link: "/user/transfer",
+    },
+    { icon: ArrowDownCircleIcon, label: "Withdraw", link: "/user/withdraw" },
     { icon: Users, label: "Referrals", link: "/user/referrals" },
     // {
-    //   icon: MessageSquare,
-    //   label: "Support Ticket",
-    //   link: "/user/support-ticket",
+    //   icon: ShieldAlertIcon,
+    //   label: "Rules",
+    //   link: "/user/rules",
     // },
-    {
-      icon: ShieldAlertIcon,
-      label: "Rules",
-      link: "/user/rules",
-    },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {
       icon: ReceiptPoundSterlingIcon,
@@ -177,8 +184,8 @@ const UserSidebar = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="mt-2 text-sm whitespace-nowrap mb-4 rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/50">
-                    New challenge
+                  <button className="mt-2 text-sm whitespace-nowrap mb-4 font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
+                    Open Account
                   </button>
                 </Link>
               </motion.div>

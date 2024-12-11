@@ -3,23 +3,20 @@ import { Trash2, Plus, Pencil } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
 
 export default function PlatformConfiguration() {
   const [platformData, setPlatformData] = useState([]);
-  const [newField, setNewField] = useState({ name: "", value: "" });
+  const [newField, setNewField] = useState({ name: "" });
 
   const addField = async () => {
     const toastId = toast.loading("Please wait...");
-    if (newField.name && newField.value) {
+    if (newField.name) {
       try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-platform`,
-          {
-            value: newField.value,
-            name: newField.name,
-            status: "active",
-          }
-        );
+        const res = await backendApi.post(`/add-platform`, {
+          name: newField.name,
+          status: "active",
+        });
         if (res.data.status) {
           setPlatformData([
             ...platformData,
@@ -39,7 +36,7 @@ export default function PlatformConfiguration() {
         toast.error("Something went wrong", { id: toastId });
         console.log("error in add platform", error);
       }
-      setNewField({ name: "", value: "" });
+      setNewField({ name: "" });
     }
   };
 
@@ -47,13 +44,10 @@ export default function PlatformConfiguration() {
     const toastId = toast.loading("Updating status...");
     const newStatus = currentStatus === "active" ? "inactive" : "active";
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-platform`,
-        {
-          id: id,
-          status: newStatus,
-        }
-      );
+      const res = await backendApi.put(`/update-platform`, {
+        id: id,
+        status: newStatus,
+      });
 
       if (res.data.status) {
         setPlatformData(
@@ -77,11 +71,7 @@ export default function PlatformConfiguration() {
   const deletePlatform = async (id) => {
     const toastId = toast.loading("Please wait...");
     try {
-      const res = await axios.delete(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/delete-platform/?id=${id}`
-      );
+      const res = await backendApi.delete(`/delete-platform/?id=${id}`);
       if (res.data.status) {
         setPlatformData(platformData.filter((platform) => platform._id !== id));
         toast.success("Platform deleted successfully", { id: toastId });
@@ -97,16 +87,14 @@ export default function PlatformConfiguration() {
 
   const getAllPlatforms = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-platforms`
-      );
+      const res = await backendApi.get(`/get-platforms`);
       setPlatformData(res.data.data);
     } catch (error) {
       console.log("error in getAllPlatform", error);
     }
   };
 
-  const isAddButtonDisabled = !newField.name || !newField.value;
+  const isAddButtonDisabled = !newField.name;
 
   useEffect(() => {
     getAllPlatforms();
@@ -127,15 +115,6 @@ export default function PlatformConfiguration() {
             value={newField.name}
             onChange={(e) => setNewField({ ...newField, name: e.target.value })}
             className="w-full px-4 py-2 border text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="text"
-            placeholder="Value"
-            value={newField.value}
-            onChange={(e) =>
-              setNewField({ ...newField, value: e.target.value })
-            }
-            className="w-full px-4 py-2 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={addField}
@@ -162,12 +141,7 @@ export default function PlatformConfiguration() {
                     >
                       S.No.
                     </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3 text-left text-xs font-medium sm:px-6"
-                    >
-                      Value
-                    </th>
+
                     <th
                       scope="col"
                       className="px-3 py-3 text-left text-xs font-medium sm:px-6"
@@ -194,9 +168,7 @@ export default function PlatformConfiguration() {
                       <td className="px-3 py-4 text-sm font-medium whitespace-nowrap sm:px-6">
                         {index + 1}
                       </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap sm:px-6">
-                        {platform.value}
-                      </td>
+
                       <td className="px-3 py-4 text-sm whitespace-nowrap sm:px-6">
                         {platform.name}
                       </td>
@@ -211,7 +183,13 @@ export default function PlatformConfiguration() {
                       <td className="px-3 py-4 text-sm text-right whitespace-nowrap sm:px-6">
                         <div className="flex justify-end">
                           <button
-                            onClick={() => deletePlatform(platform?._id)}
+                            onClick={() => {
+                              if (
+                                window.confirm("Are you sure want to delete?")
+                              ) {
+                                deletePlatform(platform?._id);
+                              }
+                            }}
                             className="text-red-600 hover:text-red-900 hover:scale-110 transition-all"
                           >
                             <Trash2 size={20} />

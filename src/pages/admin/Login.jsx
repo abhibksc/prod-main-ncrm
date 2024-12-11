@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BadgeDollarSign, ScanEyeIcon } from "lucide-react";
+import { backendApi } from "@/utils/apiClients";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -29,13 +30,10 @@ const Login = () => {
     e.preventDefault();
     const toastId = toast.loading("Authenticating...");
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/admin/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
+      const res = await backendApi.post(`/admin/login`, {
+        email: formData.email,
+        password: formData.password,
+      });
       if (res.data.status) {
         toast.success("Login successful", { id: toastId });
         dispatch(setAdminUser(res.data.userExist));

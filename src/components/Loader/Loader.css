@@ -14,7 +14,7 @@
   height: 30px;
   width: 30px;
   border-radius: 50%;
-  background: #22995b;
+  background: var(--theme-color);
   animation: loading-bounce 0.5s ease-in-out infinite alternate;
 }
 

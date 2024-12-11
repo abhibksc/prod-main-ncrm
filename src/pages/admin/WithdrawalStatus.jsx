@@ -21,6 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import { backendApi, metaApi } from "@/utils/apiClients";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -76,10 +77,7 @@ const WithdrawalStatus = () => {
   const fetchApiData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawals`
-      );
-      console.log("res all withdrawals---", res.data.data);
+      const res = await backendApi.get(`/withdrawals`);
       setDepositData(res.data.data.reverse());
       setLoading(false);
     } catch (error) {
@@ -99,8 +97,8 @@ const WithdrawalStatus = () => {
     );
   }
 
-  const handleActionClick = (deposit, action) => {
-    setSelectedDeposit(deposit);
+  const handleActionClick = (item, action) => {
+    setSelectedDeposit(item);
     setActionType(action);
     setIsDialogOpen(true);
   };
@@ -206,7 +204,7 @@ const WithdrawalStatus = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrwal Success</h1>
+          <h1>Withdrawal Success</h1>
         </div>
         <div class="content">
           <p>Dear ${
@@ -214,7 +212,7 @@ const WithdrawalStatus = () => {
             " " +
             selectedDeposit?.userId?.lastName
           },</p>
-  <p> Your withdrawal request has been successfully processed.</p>
+  <p> Your withdrawal request has been processed and the requested amount has been successfully added to your chosen account</p>
         <div class="withdrawal-details">
           <p>Account No: <span class="highlight">${
             selectedDeposit?.mt5Account
@@ -222,19 +220,8 @@ const WithdrawalStatus = () => {
             <p>Amount: <span class="highlight">${
               selectedDeposit?.amount
             }</span></p>
-            <p>Phase: <span class="highlight">${
-              selectedDeposit?.tradeAccount === "Beta Standard"
-                ? selectedDeposit.phase === 3
-                  ? "Live Account"
-                  : selectedDeposit?.phase
-                : selectedDeposit?.tradeAccount === "Beta Algo"
-                ? selectedDeposit.phase === 2
-                  ? "Live Account"
-                  : selectedDeposit?.phase
-                : null
-            }</span></p>
             <p>Account Type: <span class="highlight">${
-              selectedDeposit?.tradeAccount
+              selectedDeposit?.accountType
             }</span></p>
             <p>Time Stamp: <span class="highlight">${formattedDateTime}</span></p>
           </div>
@@ -280,36 +267,23 @@ const WithdrawalStatus = () => {
     const toastId = toast.loading("Plese wait..");
     try {
       if (actionType === "approve") {
-        const apiWithdrwalRes = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/MakeWithdrawBalance?Manager_Index=${
+        const apiWithdrawalRes = await metaApi.get(
+          `/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.amount
-          }&Comment=test`
+          }&Comment=withdrawal`
         );
-        const res = await axios.put(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-withdrawal`,
-          {
-            _id: selectedDeposit._id,
-            status: "approved",
-          }
-        );
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: selectedDeposit.userId.email,
-            content: customContent,
-            subject: "Withdrwal Success",
-          }
-        );
-        toast.success("Withdrwal Approved", { id: toastId });
-
-        console.log("updated confirm data", res);
-        console.log("updated apiWithdrawalRes data", apiWithdrwalRes);
+        const updateWithdrawal = await backendApi.put(`/update-withdrawal`, {
+          _id: selectedDeposit._id,
+          status: "approved",
+        });
+        const customMailRes = await backendApi.post(`/custom-mail`, {
+          email: selectedDeposit.userId.email,
+          content: customContent,
+          subject: "Withdrawal Success",
+        });
+        toast.success("Withdrawal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -322,16 +296,10 @@ const WithdrawalStatus = () => {
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
       } else if (actionType === "reject") {
-        const res = await axios.put(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-withdrawal`,
-          {
-            _id: selectedDeposit._id,
-            status: "rejected",
-          }
-        );
-        console.log("updated rejection data", res);
+        const res = await backendApi.put(`/update-withdrawal`, {
+          _id: selectedDeposit._id,
+          status: "rejected",
+        });
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
@@ -342,14 +310,14 @@ const WithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
-        toast.success("Withdrwal Rejected", { id: toastId });
+        toast.success("Withdrawal Rejected", { id: toastId });
       }
     } catch (error) {
       toast.success("Something went wrong", { id: toastId });
       console.error("Error updating deposit status:", error);
     }
   };
-  // total deposits ----------
+  // total withdrawal ----------
 
   const TotalDeposits = depositData.reduce(
     (total, item) => total + parseFloat(item.amount),
@@ -607,17 +575,17 @@ const WithdrawalStatus = () => {
             ))}
           </motion.div>
         )}
-        <table className="min-w-full bg-primary-700">
+        <table className="min-w-full whitespace-nowrap bg-primary-700">
           <thead className="bg-primary-400 text-white">
             <tr>
               <th className="py-2 px-4 text-left">User | Email</th>
-              <th className="py-2 px-4 text-left">Account</th>
-              <th className="py-2 px-4 text-left">Plan</th>
-              <th className="py-2 px-4 text-left">Profit</th>
-              <th className="py-2 px-4 text-left">Withdrwal</th>
-              <th className="py-2 px-4 text-left">Method</th>
-              <th className="py-2 px-4 text-left">Requested Date</th>
-              <th className="py-2 px-4 text-left">Status</th>
+              <th className="py-2 px-4 text-center">Account</th>
+              <th className="py-2 px-4 text-center">Type</th>
+              <th className="py-2 px-4 text-center">Last Balance</th>
+              <th className="py-2 px-4 text-center">Amount</th>
+              <th className="py-2 px-4 text-center">Method</th>
+              <th className="py-2 px-4 text-center">Requested Date</th>
+              <th className="py-2 px-4 text-center">Status</th>
               <th className="py-2 px-4 text-left">Action</th>
             </tr>
           </thead>
@@ -646,13 +614,17 @@ const WithdrawalStatus = () => {
                     </div>
                   </td>
                   <td className="py-2 px-4">{item?.mt5Account}</td>
-                  <td className="py-2 px-4">
-                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm">
-                      {"Silver"}
-                    </span>
+                  <td className="py-2  font-semibold px-4">
+                    <div className=" flex items-center justify-center">
+                      <span className="bg-primary-100/10 text-white px-2 py-1 rounded-full text-sm">
+                        {item?.accountType}
+                      </span>
+                    </div>
                   </td>
-                  <td className="py-2 px-4">{item?.pNl}</td>
-                  <td className="py-2 px-4">{item?.amount.toFixed(2)}</td>
+                  <td className="py-2 px-4 text-center">{item?.lastBalance}</td>
+                  <td className="py-2 px-4 text-center">
+                    {item?.amount.toFixed(2)}
+                  </td>
                   <td className="py-2 px-4">{item?.method}</td>
                   <td className="py-3 whitespace-nowrap px-4">
                     <div>{formatDate(item?.createdAt)}</div>
@@ -666,7 +638,7 @@ const WithdrawalStatus = () => {
                         item.status.slice(1)}
                     </span>
                   </td>
-                  <td className="py-2 px-4">
+                  <td className="py-2 font- px-4">
                     {item.status === "pending" && (
                       <div className="flex items-center gap-5">
                         <button

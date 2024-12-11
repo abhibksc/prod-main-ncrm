@@ -14,24 +14,17 @@ import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
 import UseUserHook from "@/hooks/user/UseUserHook";
 
 export default function UserDashboard() {
-  const { GetUserInfoAPI, getUpdateLoggedUser, GetOpenTradeApi } =
-    UseUserHook();
-  const { updatePhaseStats } = UsePhaseStats(); //don't remove it
-
-  // for update logged data and userInfo-------------
+  const { getUpdateLoggedUser } = UseUserHook();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         await getUpdateLoggedUser();
-        await GetUserInfoAPI();
-        await GetOpenTradeApi();
       } catch (error) {
         console.error("Error in dashboard:", error);
       }
     };
     fetchData();
-    // updatePhaseStats();
     const intervalId = setInterval(() => {
       fetchData();
     }, 3000);
@@ -86,8 +79,8 @@ export default function UserDashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
-        <UserDashboardAccountStats />
-        <UserDashboardBanner />
+        {/* <UserDashboardAccountStats /> */}
+        {/* <UserDashboardBanner /> */}
       </motion.div>
       {/* 4th row  */}
       <motion.div
@@ -97,7 +90,9 @@ export default function UserDashboard() {
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <UserDashboardTrades></UserDashboardTrades>
-        <UserDashboardCountdown />
+        <UserDashboardBanner />
+
+        {/* <UserDashboardCountdown /> */}
       </motion.div>
     </motion.div>
   );

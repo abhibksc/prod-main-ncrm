@@ -14,17 +14,20 @@ import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import { getCountryDataList } from "countries-list";
 import { getData } from "country-list";
+import { backendApi } from "@/utils/apiClients";
 
 // Dropdown Field Component
 const DropdownField = ({ label, options, value, onChange }) => (
   <div className="mb-6 w-full">
     <label className="block text-sm font-medium text-white mb-2">{label}</label>
     <select
-      className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 bg-white text-secondary-800"
+      className="w-full px-4 py-3 border text-white bg-secondary-900 border-gray-700/60 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 "
       value={value}
       onChange={(e) => onChange(e.target.value)} // Remove the label parameter
     >
-      <option value="">Select {label}</option>
+      <option value="" disabled>
+        Select {label}
+      </option>
       {options?.map((option, index) => (
         <option key={index} value={option}>
           {option}
@@ -47,10 +50,10 @@ const ImageUploadField = ({ label, onFileChange }) => {
       <label className="block text-sm font-medium text-white mb-2">
         {label}
       </label>
-      <div className="relative">
+      <div className="relative bg-black">
         <input
           type="file"
-          className="hidden"
+          className="hidden bg-black"
           id={`file-${label}`}
           onChange={(e) => {
             const file = e.target.files[0];
@@ -424,14 +427,11 @@ const UserKycDetails = () => {
           },
         }
       );
-      const customMailRes = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-        {
-          email: loggedUser.email,
-          content: customContent,
-          subject: "Kyc Submitted",
-        }
-      );
+      const customMailRes = await backendApi.post(`/custom-mail`, {
+        email: loggedUser.email,
+        content: customContent,
+        subject: "Kyc Submitted",
+      });
 
       console.log("res--", res.data);
       getUpdateLoggedUser();
@@ -473,7 +473,7 @@ const UserKycDetails = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className=" mx-auto p-2 bg-secondary-800/60 rounded-2xl"
+      className=" mx-auto p-2 bg-secondary-800/40 rounded-2xl"
     >
       {loggedUser?.kycDetails?.documentType && (
         <div className=" flex gap-2  font-semibold pt-5 items-center justify-center">

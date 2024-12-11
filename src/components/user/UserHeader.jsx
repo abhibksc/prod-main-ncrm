@@ -157,19 +157,19 @@ const UserHeader = () => {
 
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
-            loggedUser.phase > 0
+            loggedUser.accounts.length !== 0
               ? " text-green-500 bg-green-500/10"
               : "text-red-500 animate-pulse  bg-red-500/10"
           } `}
         >
           <p>
-            {loggedUser.phase > 0 ? (
+            {loggedUser.accounts.length !== 0 ? (
               <BadgeCheck></BadgeCheck>
             ) : (
               <ShieldBan></ShieldBan>
             )}
           </p>
-          <p>{loggedUser.phase > 0 ? "Active" : "Inactive"}</p>
+          <p>{loggedUser.accounts.length !== 0 ? "Active" : "Inactive"}</p>
         </div>
         <div className="relative flex items-center gap-2">
           <div className=" flex gap-1 items-center">
@@ -181,9 +181,9 @@ const UserHeader = () => {
           </div>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary-700 hover:bg-secondary-600 focus:outline-none transition-colors duration-300"
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary-500/10  hover:bg-secondary-500/30 focus:outline-none transition-colors duration-300"
           >
-            <User className="w-6 h-6 text-white" />
+            <User className="w-6 h-6 text-secondary-500" />
           </button>
           <UserDropdown
             isOpen={isDropdownOpen}

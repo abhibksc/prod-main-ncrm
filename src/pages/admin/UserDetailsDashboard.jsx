@@ -5,6 +5,7 @@ import UserTradeAccounts from "@/components/admin/user-detail/UserTradeAccounts"
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { backendApi } from "@/utils/apiClients";
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -73,35 +74,9 @@ const UserDetailDashboard = ({ username }) => {
 
   const fetchUserData = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
-      );
-      const depositRes = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
-      );
-      const withdrwalRes = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawals`
-      );
-      const challengesRes = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
-      );
-
-      // console.log(
-      //   "challengesRes#################",
-      //   challengesRes.data.data.filter(
-      //     (value) => value?.userId === res.data.data._id
-      //   ).reverse()
-      // );
-
-      // console.log(
-      //   "deposit res-###########",
-
-      //   depositRes.data.data
-      //     .filter((value) => value?.userId?._id === res.data.data._id)
-      //     .reduce((total, value) => total + (Number(value.deposit) || 0), 0)
-      // );
-      // console.log(
-      //   "withdrwal res-###########",
+      const res = await backendApi.get(`/get-user?id=${id}`);
+      const depositRes = await backendApi.get(`/deposits`);
+      const withdrwalRes = await backendApi.get(`/withdrawals`);
 
       //   withdrwalRes.data.data
       //     .filter((value) => value?.userId?._id === res.data.data._id)
@@ -114,12 +89,6 @@ const UserDetailDashboard = ({ username }) => {
       //     .filter((value) => value?.userId?._id === res.data.data._id)
       //     .reduce((total, value) => total + (Number(value.deposit) || 0), 0)
       // );
-
-      setChallengesData(
-        challengesRes.data.data
-          .filter((value) => value?.userId === res.data.data._id)
-          .reverse()
-      );
 
       setUserData(res.data.data);
       setTotalDeposit(
@@ -184,7 +153,7 @@ const UserDetailDashboard = ({ username }) => {
   }, []);
 
   return (
-    <div className="container mx-auto px-10 py-5 rounded-lg bg-primary-700 shadow-lg">
+    <div className=" w-full mx-auto px-10 py-5 rounded-lg bg-primary-700 shadow-lg">
       <motion.div
         variants={containerVariants}
         initial="hidden"
@@ -196,7 +165,7 @@ const UserDetailDashboard = ({ username }) => {
         ))}
       </motion.div>
       <UserInfoForm userData={userData}></UserInfoForm>
-      <UserTradeAccounts challengesData={challengesData}></UserTradeAccounts>
+      {/* <UserTradeAccounts challengesData={challengesData}></UserTradeAccounts> */}
     </div>
   );
 };

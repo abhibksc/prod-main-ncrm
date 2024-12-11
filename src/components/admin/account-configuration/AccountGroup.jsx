@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Edit2, Check, X } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 const AccountGroup = ({ refresh, setRefresh }) => {
   const [apiGroups, setApiGroups] = useState([]);
@@ -9,13 +10,9 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   const [editingId, setEditingId] = useState(null);
 
   const fetchApiGroups = async () => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_END_POINT}/GetGroups?Manager_Index=${
-        import.meta.env.VITE_MANAGER_INDEX
-      }`
+    const res = await metaApi.get(
+      `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
     );
-
-    // console.log("get api groups$$$$$$---", res.data.lstGroups);
     return res.data.lstGroups;
   };
 
@@ -25,13 +22,10 @@ const AccountGroup = ({ refresh, setRefresh }) => {
 
   const handleSave = async (group) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-custom-group`,
-        {
-          apiGroup: group,
-          customGroup: customGroups[group] || "",
-        }
-      );
+      const res = await backendApi.post(`/add-custom-group`, {
+        apiGroup: group,
+        customGroup: customGroups[group] || "",
+      });
       toast.success("Group added successfully");
       setRefresh(!refresh);
       //   console.log("add custom group res", res.data);
@@ -64,7 +58,7 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   }, [refresh]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className=" w-full mx-auto p-6">
       <h2 className="text-white text-3xl font-bold mb-4">Add group</h2>
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full table-auto">

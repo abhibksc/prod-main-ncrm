@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Trash } from "lucide-react";
+import { Delete, Trash, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
 
 export default function CustomGroupList({ refresh, setRefresh }) {
   const [customGroups, setCustomGroups] = useState([]);
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-custom-groups`
-      );
+      const res = await backendApi.get(`/get-custom-groups`);
       setCustomGroups(res.data.data);
     } catch (error) {
       console.log("error in custom list group", error);
@@ -20,11 +19,7 @@ export default function CustomGroupList({ refresh, setRefresh }) {
 
   const deleteHandler = async (id) => {
     try {
-      await axios.delete(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/delete-custom-group?id=${id}`
-      );
+      await backendApi.delete(`/delete-custom-group?id=${id}`);
       setRefresh(!refresh);
       toast.success("Group deleted successfully");
     } catch (error) {
@@ -49,6 +44,16 @@ export default function CustomGroupList({ refresh, setRefresh }) {
           >
             <div className="flex justify-between items-center">
               <span className="font-medium">#{index + 1}</span>
+              <button
+                onClick={() => {
+                  if (window.confirm("Are you sure you want to delete?")) {
+                    deleteHandler(value._id);
+                  }
+                }}
+                className=" text-red-500"
+              >
+                <Trash2></Trash2>
+              </button>
             </div>
             <div className="space-y-2">
               <div>
@@ -57,7 +62,9 @@ export default function CustomGroupList({ refresh, setRefresh }) {
               </div>
               <div>
                 <label className="text-gray-300 text-sm">Custom Group</label>
-                <div className="font-medium">{value?.customGroup}</div>
+                <div className="font-medium">
+                  <p>{value?.customGroup}</p>
+                </div>
               </div>
             </div>
           </div>
@@ -88,6 +95,12 @@ export default function CustomGroupList({ refresh, setRefresh }) {
                 >
                   Custom Group
                 </th>
+                <th
+                  scope="col"
+                  className="py-3 px-4 text-center text-xs font-medium uppercase tracking-wider"
+                >
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-500">
@@ -104,6 +117,18 @@ export default function CustomGroupList({ refresh, setRefresh }) {
                   </td>
                   <td className="py-3 px-4 text-sm text-center">
                     {value?.customGroup}
+                  </td>
+                  <td className="py-3 px-4 text-sm text-center">
+                    <div
+                      onClick={() => {
+                        if (window.confirm("Are you sure want to delete?")) {
+                          deleteHandler(value._id);
+                        }
+                      }}
+                      className=" flex justify-center cursor-pointer items-center"
+                    >
+                      <Trash2 className=" text-red-500"></Trash2>
+                    </div>
                   </td>
                 </tr>
               ))}

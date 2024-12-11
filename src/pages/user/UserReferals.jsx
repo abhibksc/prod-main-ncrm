@@ -349,7 +349,7 @@ const UserReferal = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <button
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-600/80 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="px-6 py-3 bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 onClick={generateHandler}
               >
                 <Users className="animate-pulse" size={20} />
@@ -487,7 +487,7 @@ const UserReferal = () => {
               Join our community of dedicated and successful affiliates.{" "}
             </p>
             <button
-              className="px-8 py-4 bg-blue-600 hover:bg-blue-600/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              className="px-8 py-4 bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
               onClick={generateHandler}
             >
               <Users className="animate-pulse" size={20} />

@@ -4,31 +4,27 @@ import {
   ArrowDownCircle,
   BadgeDollarSign,
   Loader2,
+  LoaderPinwheelIcon,
   WalletCardsIcon,
 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import UseUserHook from "../../hooks/user/UseUserHook";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const profitNloss = useSelector((store) => store.user.profitNloss);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
   const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
-  const [selectedAccount, setSelectedAccount] = useState(
-    loggedUser.accountType
-  );
-  const [amount, setAmount] = useState(profitNloss);
+  const [account, selectAccount] = useState("");
+  const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
-  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
-  const { GetUserInfoAPI, getUpdateLoggedUser } = UseUserHook();
-
-  // functions------------
-  const isLastPhase = phaseMaxLength === loggedUser.phase;
-  // console.log("isLastPhase---", isLastPhase);
-
+  const [balanceLoading, setBalanceLoading] = useState(false);
+  const [accountBalance, setAccountBalance] = useState("");
+  const [accountType, setAccountType] = useState("");
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -39,6 +35,26 @@ const UserWithdraw = () => {
       second: "2-digit",
       hour12: false, // 12-hour format with AM/PM
     });
+  // account info--
+
+  const fetchAccountInfo = async () => {
+    setBalanceLoading(true);
+    try {
+      setAccountBalance("");
+      const res = await metaApi.get(
+        `/GetUserInfo?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${account}`
+      );
+      setBalanceLoading(false);
+      if (res.data.Equity) {
+        setAccountBalance(res.data.Equity);
+      }
+    } catch (error) {
+      console.log(error);
+      setBalanceLoading(false);
+    }
+  };
 
   const customContent = `<!DOCTYPE html>
     <html lang="en">
@@ -127,339 +143,382 @@ const UserWithdraw = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrwal requested</h1>
+          <h1>Withdrawal Requested</h1>
         </div>
         <div class="content">
-          <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
+          <p>Dear ${loggedUser.firstName + " " + loggedUser.lastName},</p>
   <p>  We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
         <div class="withdrawal-details">
           <p>Username: <span class="highlight">${loggedUser.email}</span></p>
-            <p>Amount: <span class="highlight">${amount}</span></p>
+          <p>Withdrawal Amount: <span class="highlight">${amount}</span></p>
+          <p>Last Balance: <span class="highlight">${accountBalance}</span></p>
             <p>Processing time: <span class="highlight">${" 1-3 business days"}</span></p>
             <p>Updated Date: <span class="highlight">${formattedDateTime}</span></p>
           </div>
     
-    <p>Thank you for choosing us.</p>
-    <p>Happy trading!</p>
+          <p>Thank you for choosing us.</p>
+          <p>Happy trading!</p>
           
-          <p>Best regards,<br>The Beta Funded Team</p>
+           <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
           <hr>
      <div class="risk-warning">
       <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
       <br><br>
-      Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+      ${
+        import.meta.env.VITE_WEBSITE_NAME
+      } Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
     </div>
         
     
         </div>
-          <div class="footer">
+      <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+            <p>${import.meta.env.VITE_EMAIL_ADDRESS}</p>
+            <p>Website: <a href=${import.meta.env.VITE_EMAIL_WEBSITE}>${
+    import.meta.env.VITE_WEBSITE_NAME
+  }</a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL}">${
+    import.meta.env.VITE_EMAIL_EMAIL
+  }</a></p>
+            <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME
+            }. All Rights Reserved</p>
           </div>
         </div>
       </div>
     </body>
     </html>`;
 
-  const userInfo = useSelector((store) => store.user.userInfo);
   const withdrawalHandler = async (e) => {
     e.preventDefault();
-    setApiLoader(true);
     setError("");
+    setApiLoader(true);
     try {
-      if (!isLastPhase) {
-        setError("You have to be in Final phase for withdrawal !!");
+      if (accountBalance < amount) {
+        setError("You don't have balance for withdrawal !!");
         setApiLoader(false);
-      } else if (profitNloss > 0 && profitNloss >= amount) {
-        const withdrawalDBres = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawal`,
-          {
-            method:
-              selectedGateway === "Bank Transfer"
-                ? selectedGateway
-                : selectWallet,
-            tradeAccount: selectedAccount,
-            amount: amount,
-            mt5Account: userInfo.MT5Account,
-            status: "pending",
-            userId: loggedUser._id,
-            managerIndex: import.meta.env.VITE_MANAGER_INDEX,
-            pNl: "40",
-            phase: loggedUser.phase,
-          }
-        );
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: loggedUser.email,
-            content: customContent,
-            subject: "Withdrwal requested",
-          }
-        );
+      } else if (amount <= accountBalance && amount > 0) {
+        const withdrawalDBres = await backendApi.post(`/withdrawal`, {
+          method:
+            selectedGateway === "Bank Transfer"
+              ? selectedGateway
+              : selectWallet,
+          accountType: accountType,
+          amount: amount,
+          mt5Account: account,
+          status: "pending",
+          userId: loggedUser._id,
+          lastBalance: accountBalance,
+        });
+        console.log(withdrawalDBres);
+        const customMailRes = await backendApi.post(`/custom-mail`, {
+          email: loggedUser.email,
+          content: customContent,
+          subject: "Withdrawal requested",
+        });
         setApiLoader(false);
-        toast.success("Withdawal requested");
-        // GetUserInfoAPI();
-
-        console.log("withdrawal DB res--", withdrawalDBres.data.data);
+        toast.success("Withdrawal Requested.");
+        fetchAccountInfo();
+        setAmount("");
       } else {
-        setError("You don't have sufficient funds for withdrawal !!");
+        setError("Something went wrong!!");
         setApiLoader(false);
       }
     } catch (error) {
       setApiLoader(false);
-      toast.error("Withdawal Failed");
+      toast.error("Withdrawal Failed");
       console.log("error while withdraw", error);
     }
   };
-  // console.log(selectedGateway);
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getUpdateLoggedUser();
-        await GetUserInfoAPI();
-      } catch (error) {
-        console.error("Error in dashboard:", error);
-      }
-    };
-    fetchData();
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 3000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, []);
+    fetchAccountInfo();
+  }, [account]);
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
+    <div className="w-full flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-3xl bg-secondary-800/50 -mt-20 p-8 rounded-lg shadow-xl"
+        className=" w-full bg-secondary-800/20 p-8 rounded-lg shadow-xl"
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center">
-            <ArrowDownCircle className="w-8 text-secondary-500 h-8 mr-2" />
-            Withdraw Funds
-          </h2>
-          <div>
-            <h1 className=" font-semibold text-sm text-neutral-100">
-              Withdrawalable Balance
-            </h1>
-            <p
-              className={` text-center ${
-                profitNloss > 0
-                  ? "text-green-500 bg-secondary-700/30"
-                  : "text-red-500 bg-red-400/20"
-              }   mt-1 rounded-full py-1  font-bold`}
-            >
-              {Number(profitNloss) > 0
-                ? Number(profitNloss).toFixed(2)
-                : "0.00"}
-            </p>
+          <div className=" mb-4">
+            <ModernHeading text={"Withdraw Funds"}></ModernHeading>
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          {/* method and account type -- */}
-          <div className=" grid grid-cols-1 md:grid-cols-2 items-center   gap-6">
+          <div className=" flex justify-between items-center gap-5">
+            {/* select account */}
             <div className=" w-full">
               <label
-                htmlFor="gateway"
-                className="block text-sm font-medium text-white mb-2"
+                htmlFor="from-account"
+                className="text-sm flex justify-between font-medium text-gray-200"
               >
-                Method
+                <p>Select Account</p>
+                {balanceLoading ? (
+                  <LoaderPinwheelIcon className=" animate-spin text-secondary-500"></LoaderPinwheelIcon>
+                ) : (
+                  accountBalance && (
+                    <p className="px-4">
+                      Balance :{" "}
+                      <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                        ${accountBalance}
+                      </span>{" "}
+                    </p>
+                  )
+                )}
               </label>
               <select
-                id="gateway"
-                value={selectedGateway}
-                onChange={(e) => setSelectedGateway(e.target.value)}
-                className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
+                id="from-account"
+                onChange={(e) => {
+                  selectAccount(e.target.value);
+                  const selectedAccount = loggedUser?.accounts?.find(
+                    (value) => value.accountNumber === e.target.value
+                  );
+                  setAccountType(selectedAccount.accountType);
+                }}
+                className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >
-                {/* <option value="">Select Gateway</option> */}
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="Wallet Transfer">Wallet Transfer</option>
-              </select>
-            </div>
-            <div className=" w-full">
-              <label
-                htmlFor="account"
-                className="block text-sm font-medium text-white mb-2"
-              >
-                Trade Account
-              </label>
-              <select
-                id="account"
-                value={selectedAccount}
-                onChange={(e) => setSelectedAccount(e.target.value)}
-                className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
-              >
-                <option value="">{loggedUser.accountType}</option>
-              </select>
-            </div>
-            {selectedGateway === "Wallet Transfer" && (
-              <div className=" w-full">
-                <label
-                  htmlFor="account"
-                  className="block text-sm font-medium text-white mb-2"
+                <option
+                  className=" bg-secondary-800 text-white"
+                  value=""
+                  disabled
                 >
-                  Choose Wallet
+                  Select Account
+                </option>
+                {loggedUser?.accounts?.map((value, index) => (
+                  <option
+                    key={index}
+                    className=" bg-secondary-800 text-white"
+                    value={value.accountNumber}
+                  >
+                    {value.accountNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Gateway Selection */}
+            <div className="w-full space-y-4">
+              <div className="w-full">
+                <label
+                  htmlFor="gateway"
+                  className="block text-sm font-medium text-gray-200 mb-2"
+                >
+                  Withdrawal Method
                 </label>
                 <select
-                  id="account"
-                  value={selectWallet}
-                  onChange={(e) => setSelectWallet(e.target.value)}
-                  className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
+                  id="gateway"
+                  value={selectedGateway}
+                  onChange={(e) => setSelectedGateway(e.target.value)}
+                  className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                 >
-                  <option value="USDT(Trc20)">USDT {"(Trc20)"} </option>
-                  <option value="USDT(Erc20)">USDT {"(Erc20)"} </option>
-                  <option value="BinanceID">Binance ID </option>
-                  <option value="BTCAddress">BTC Address </option>
+                  <option
+                    className=" bg-secondary-800 text-white"
+                    value="Bank Transfer"
+                  >
+                    Bank Transfer
+                  </option>
+                  <option
+                    className=" bg-secondary-800 text-white"
+                    value="Wallet Transfer"
+                  >
+                    Wallet Transfer
+                  </option>
                 </select>
               </div>
-            )}
+
+              {/* Conditional Wallet Selection */}
+              {selectedGateway === "Wallet Transfer" && (
+                <div className="w-full">
+                  <label
+                    htmlFor="account"
+                    className="block text-sm font-medium text-gray-200 mb-2"
+                  >
+                    Choose Wallet
+                  </label>
+                  <select
+                    id="account"
+                    value={selectWallet}
+                    onChange={(e) => setSelectWallet(e.target.value)}
+                    className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+                  >
+                    <option
+                      className=" bg-secondary-800 text-white"
+                      value="USDT(Trc20)"
+                    >
+                      USDT (Trc20)
+                    </option>
+                    <option
+                      className=" bg-secondary-800 text-white"
+                      value="USDT(Erc20)"
+                    >
+                      USDT (Erc20)
+                    </option>
+                    <option
+                      className=" bg-secondary-800 text-white"
+                      value="BinanceID"
+                    >
+                      Binance ID
+                    </option>
+                    <option
+                      className=" bg-secondary-800 text-white"
+                      value="BTCAddress"
+                    >
+                      BTC Address
+                    </option>
+                  </select>
+                </div>
+              )}
+            </div>
           </div>
-          {/* account details -- */}
 
-          {selectedGateway === "Bank Transfer" ? (
-            <div>
-              <div className=" flex items-center gap-2 mb-3">
-                <WalletCardsIcon></WalletCardsIcon>
-                <h1 className=" text-lg font-bold">Account details</h1>
-              </div>
-              <div>
-                <p>
-                  Bank Name -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.bankName}{" "}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Holder Name -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.holderName}
-                  </span>{" "}
-                </p>
-              </div>
-              <div>
-                <p>
-                  Account Number -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.accountNumber}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  IFSC Code -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.ifscCode}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Swift Code -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.swiftCode}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  UPI ID -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.upiId}
-                  </span>
-                </p>
+          <div className=" flex justify-between items-center gap-10">
+            {/* enter amount */}
+            <div className="w-full">
+              <label
+                htmlFor="amount"
+                className="block text-sm font-medium text-gray-200 mb-2"
+              >
+                Enter Amount
+              </label>
+              <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
+                {/* Icon */}
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <BadgeDollarSign className="h-6 w-6 text-gray-400" />
+                </div>
+                {/* Input */}
+                <input
+                  type="text"
+                  id="amount"
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="w-full pl-10 py-3 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
+                  placeholder="Enter Amount"
+                  value={amount}
+                />
               </div>
             </div>
-          ) : selectedGateway === "Wallet Transfer" ? (
-            <div>
-              <div className=" flex items-center gap-2 mb-3">
-                <WalletCardsIcon></WalletCardsIcon>
-                <h1 className=" text-lg font-bold">Account details</h1>
-              </div>{" "}
-              {selectWallet === "USDT(Trc20)" && (
+            {/* account details */}
+
+            <div className=" w-full">
+              {selectedGateway === "Bank Transfer" ? (
                 <div>
-                  <p>
-                    USDT-Trc20 -{" "}
-                    <span className=" font-bold">
-                      {loggedUser?.walletDetails?.tetherAddress}{" "}
-                    </span>
-                  </p>
+                  <div className=" flex items-center gap-2 mb-3">
+                    <WalletCardsIcon></WalletCardsIcon>
+                    <h1 className=" text-lg font-bold">Account details</h1>
+                  </div>
+                  <div>
+                    <p>
+                      Bank Name -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.bankName}{" "}
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      Holder Name -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.holderName}
+                      </span>{" "}
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      Account Number -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.accountNumber}
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      IFSC Code -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.ifscCode}
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      Swift Code -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.swiftCode}
+                      </span>
+                    </p>
+                  </div>
+                  <div>
+                    <p>
+                      UPI ID -{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.bankDetails?.upiId}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              )}
-              {selectWallet === "USDT(Erc20)" && (
+              ) : selectedGateway === "Wallet Transfer" ? (
                 <div>
-                  <p>
-                    USDT-Erc20 -{" "}
-                    <span className=" font-bold">
-                      {loggedUser?.walletDetails?.ethAddress}
-                    </span>{" "}
-                  </p>
+                  <div className=" flex items-center gap-2 mb-3">
+                    <WalletCardsIcon></WalletCardsIcon>
+                    <h1 className=" text-lg font-bold">Account details</h1>
+                  </div>{" "}
+                  {selectWallet === "USDT(Trc20)" && (
+                    <div>
+                      <p>
+                        USDT-Trc20 -{" "}
+                        <span className=" font-bold">
+                          {loggedUser?.walletDetails?.tetherAddress}{" "}
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                  {selectWallet === "USDT(Erc20)" && (
+                    <div>
+                      <p>
+                        USDT-Erc20 -{" "}
+                        <span className=" font-bold">
+                          {loggedUser?.walletDetails?.ethAddress}
+                        </span>{" "}
+                      </p>
+                    </div>
+                  )}
+                  {selectWallet === "BinanceID" && (
+                    <div>
+                      <p>
+                        Binance ID -
+                        <span className=" font-bold">
+                          {loggedUser?.walletDetails?.accountNumber}
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                  {selectWallet === "BTCAddress" && (
+                    <div>
+                      <p>
+                        BTC Address -
+                        <span className=" font-bold">
+                          {loggedUser?.walletDetails?.trxAddress}
+                        </span>
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
-              {selectWallet === "BinanceID" && (
-                <div>
-                  <p>
-                    Binance ID -
-                    <span className=" font-bold">
-                      {loggedUser?.walletDetails?.accountNumber}
-                    </span>
-                  </p>
-                </div>
-              )}
-              {selectWallet === "BTCAddress" && (
-                <div>
-                  <p>
-                    BTC Address -
-                    <span className=" font-bold">
-                      {loggedUser?.walletDetails?.trxAddress}
-                    </span>
-                  </p>
-                </div>
+              ) : (
+                ""
               )}
             </div>
-          ) : (
-            ""
-          )}
-
-          <div>
-            <label
-              htmlFor="amount"
-              className="block text-sm font-medium text-white mb-2"
+          </div>
+          <div className=" flex items-center justify-center">
+            <button
+              onClick={withdrawalHandler}
+              type="submit"
+              className=" bg-secondary-500/80 flex px-12 py-3 shadow-md hover:bg-secondary-500/70 transition-all hover:px-16 rounded-full"
             >
-              Amount
-            </label>
-            <div className="relative bg-secondary-700 rounded-md cursor-not-allowed">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <BadgeDollarSign className="h-6 w-6 text-white" />
-              </div>
-              <input
-                type="text"
-                id="amount"
-                className="w-full pl-10 py-3 cursor-not-allowed bg-secondary-700 text-white border-none outline-none rounded-md placeholder-gray-300 "
-                placeholder="0.00"
-                value={profitNloss}
-              />
-            </div>
+              Request Withdrawal
+              {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
+            </button>
           </div>
-          <button
-            onClick={withdrawalHandler}
-            type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-blue-600 text-white py-3 rounded-md shadow-md hover:bg-blue-600/80 focus:outline-none focus:ring-2 focus:ring-secondary-500 transition duration-300"
-          >
-            Submit Withdrawal
-            {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
-          </button>
+
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>
           </div>

@@ -3,6 +3,8 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { CheckCircle, Mail, XCircle } from "lucide-react";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi } from "@/utils/apiClients";
 
 const UserVerify = () => {
   const { id, token } = useParams();
@@ -30,20 +32,16 @@ const UserVerify = () => {
     const toastId = toast.loading("Plese wait..");
 
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
-      );
-      await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/send-link`,
-        {
-          userId: id,
-          email: res.data.data.email,
-        }
-      );
+      const res = await backendApi.get(`/get-user?id=${id}`);
+      await backendApi.post(`/send-link`, {
+        userId: id,
+        email: res.data.data.email,
+      });
       setCooldownTime(60);
       setIsButtonDisabled(true);
-      toast.success("Varification link sent", { id: toastId });
-      console.log("res user data--", res.data.data);
+      toast.success(`Verification link sent to ${res.data.data.email}`, {
+        id: toastId,
+      });
     } catch (error) {
       console.log("error in fetching user--", error);
       toast.error("Something went wrong", { id: toastId });
@@ -150,18 +148,15 @@ const UserVerify = () => {
               <p style="margin: 10px 0; font-size: 13px;">Username: <span style="font-weight: bold; color: #0a2342;">${
                 userData?.email
               }</span></p>
-              <p style="margin: 10px 0; font-size: 13px;">Password: <span style="font-weight: bold; color: #0a2342;">${
-                userData?.password
-              }</span></p>
             </td>
           </tr>
         </table>
 
-<p>Thank you for choosing us.</p>
-<p>Happy trading!</p>
+          <p>Thank you for choosing us.</p>
+          <p>Happy trading!</p>
 
-      <p>Best regards,<br>The Beta Funded Team</p>
-  <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
+          <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
+           <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
           <tr>
             <td align="center" style="padding: 20px;">
@@ -194,16 +189,22 @@ const UserVerify = () => {
  <div class="risk-warning">
   <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
   <br><br>
-  Beta Funded Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
+  Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
 </div>
 
     </div>
     <div class="footer">
           <div class="footer-info">    
-            <p>2 King's Arms Yard, London EC2R 7AS, United Kingdom</p>
-            <p>Website: <a href="https://www.betafunded.com">betafunded.com</a> | E-mail: <a href="mailto:admin@betafunded.com">admin@betafunded.com</a></p>
-            <p>We sent out this message to all existing Beta Funded traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 Beta Funded. All Rights Reserved</p>
+            <p>${import.meta.env.VITE_EMAIL_ADDRESS}</p>
+            <p>Website: <a href=${import.meta.env.VITE_EMAIL_WEBSITE}>${
+    import.meta.env.VITE_WEBSITE_NAME
+  }</a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL}">${
+    import.meta.env.VITE_EMAIL_EMAIL
+  }</a></p>
+            <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2024 ${
+              import.meta.env.VITE_WEBSITE_NAME
+            }. All Rights Reserved</p>
           </div>
         </div>
   </div>
@@ -213,20 +214,18 @@ const UserVerify = () => {
   useEffect(() => {
     const verifyEmail = async () => {
       try {
-        const verifyRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/verify-link`,
-          { userId: id, token: token }
-        );
-        const userRes = await axios.get(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-user?id=${id}`
-        );
+        const verifyRes = await backendApi.post(`/verify-link`, {
+          userId: id,
+          token: token,
+        });
+        const userRes = await backendApi.get(`/get-user?id=${id}`);
         setUserData(userRes.data.data);
 
         setVerificationStatus("success");
         setTimeout(() => navigate("/user/login"), 5000); // Redirect to login after 5 seconds
       } catch (error) {
         setVerificationStatus("error");
-        console.log("error while verify--", error);
+        console.log("error while verifying--", error);
       } finally {
         setLoading(false);
       }
@@ -236,21 +235,16 @@ const UserVerify = () => {
       verifyEmail();
     }
   }, []);
-  // console.log("userdata---", userData);
+
   useEffect(() => {
     if (userData) {
       const sendCustomMail = async () => {
         try {
-          // console.log("Mail sent######################");
-          const customMailRes = await axios.post(
-            `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-            {
-              email: userData.email,
-              content: customContent,
-              subject: "Account Verified",
-            }
-          );
-          console.log("Mail sent successfully:", customMailRes);
+          const customMailRes = await backendApi.post(`/custom-mail`, {
+            email: userData.email,
+            content: customContent,
+            subject: "Account Verified",
+          });
         } catch (error) {
           console.log("Error sending custom mail:", error);
         }
@@ -259,18 +253,19 @@ const UserVerify = () => {
       sendCustomMail();
     }
   }, [userData]); // Runs when userData changes
+
   if (token === "000") {
     return (
       <div className="flex items-center px-5 justify-center min-h-screen bg-gray-900">
         <Toaster></Toaster>
-        <div className="max-w-md w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
-          <div className="bg-secondary-800/50 p-4 flex items-center justify-center">
+        <div className="max-w-md w-full bg-gray-800/80 shadow-lg rounded-lg overflow-hidden border border-gray-700">
+          <div className="bg-secondary-800/30 p-4 flex items-center justify-center">
             <Mail className="text-secondary-500 w-12 h-12" />
           </div>
           <div className="p-6">
-            <h2 className="text-2xl font-semibold text-gray-100 mb-4">
-              Verify Your Email
-            </h2>
+            <div className=" mb-4">
+              <ModernHeading text={"Verify Your Email"}></ModernHeading>
+            </div>
             <p className="text-gray-300 mb-6">
               We've sent a verification link to your email address. Please check
               your inbox and click the link to activate your account.
@@ -286,7 +281,7 @@ const UserVerify = () => {
                 className={`block w-full text-center ${
                   isButtonDisabled
                     ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-green-800 hover:bg-green-800/80 text-gray-100"
+                    : "border-secondary-500/90 border hover:border-[2px] hover:my-8  transition-all text-gray-100"
                 } font-semibold py-2 px-4 rounded transition duration-300 ease-in-out`}
                 onClick={resendHandler}
                 disabled={isButtonDisabled}
@@ -296,14 +291,14 @@ const UserVerify = () => {
                   : "Resend Verification Email"}
               </button>
               <Link className="" to={"/user/login"}>
-                <button className="bg-blue-600 block w-full mt-5 hover:bg-blue-700 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
+                <button className="bg-secondary-500/90 block w-full mt-5 hover:bg-secondary-500/70 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
                   Go to Login
                 </button>
               </Link>
             </div>
           </div>
           <div className=" bg-gray-900/40 px-6 py-4">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-gray-400">
               Didn't receive the email? Check your spam folder or contact
               support .
             </p>
@@ -342,7 +337,7 @@ const UserVerify = () => {
               </p>
               <button
                 onClick={() => navigate("/user/login")}
-                className="mt-4 w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out text-sm sm:text-base"
+                className="mt-4 w-full sm:w-auto bg-green-600 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out text-sm sm:text-base"
               >
                 Go to Login
               </button>
@@ -382,9 +377,9 @@ const UserVerify = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-5 bg-secondary-900">
       <div className="max-w-md w-full p-8 bg-secondary-800/40 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-center mb-6 text-white">
-          Email Verification
-        </h1>
+        <div className=" mb-8">
+          <ModernHeading text={" Email Verification"}></ModernHeading>
+        </div>
         {renderContent()}
       </div>
     </div>

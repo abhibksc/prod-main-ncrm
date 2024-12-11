@@ -9,6 +9,8 @@ import { getData } from "country-list";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import "../../css/phone-input.css";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi } from "@/utils/apiClients";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
@@ -78,22 +80,13 @@ const UserSignUp = () => {
     }
     const toastId = toast.loading("Creating account..");
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/signup/${id}`,
-        formData
-      );
+      const res = await backendApi.post(`/signup/${id}`, formData);
       if (res.data.status) {
-        const sendLinkRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/send-link`,
-          {
-            userId: res.data.user._id,
-            email: res.data.user.email,
-          }
-        );
-        toast.success("Varification link sent to your mail", { id: toastId });
-        // dispatch(setSignUpData(formData));
-        console.log("SignUp user res--", res.data);
-        console.log("Send link res--", sendLinkRes.data);
+        const sendLinkRes = await backendApi.post(`/send-link`, {
+          userId: res.data.user._id,
+          email: res.data.user.email,
+        });
+        toast.success("Verification link sent to your mail", { id: toastId });
         navigate(`/user/verify/${res.data.user._id}/000`);
       } else {
         setError("Signup failed. Please try again.");
@@ -161,10 +154,13 @@ const UserSignUp = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <h2 className="text-4xl font-bold mb-2 text-white">
-                  Create Your Account
-                </h2>
-                <p className="text-secondary-500 mb-8">
+                <div className=" mb-4">
+                  {" "}
+                  <ModernHeading
+                    text={"Start Your Journey"}
+                  ></ModernHeading>{" "}
+                </div>
+                <p className="text-gray-200 mb-8">
                   Join {import.meta.env.VITE_WEBSITE_NAME} and start your
                   trading journey today.
                 </p>
@@ -191,13 +187,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <User
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="firstName"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleChange}
@@ -211,13 +207,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <User
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="lastName"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleChange}
@@ -232,13 +228,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Mail
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="email"
                     name="email"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
@@ -257,8 +253,9 @@ const UserSignUp = () => {
                     onChange={handlePhoneChange}
                     defaultCountry="IN"
                     international
-                    inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     className="react-tel-input"
+                    // className="bg-secondary-800 text-white"
                     required={true}
                   />
                 </motion.div>
@@ -269,18 +266,23 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Globe
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <select
                     name="country"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 text-white bg-opacity-50 border border-secondary-600 rounded-lg placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     value={formData.country}
                     onChange={handleChange}
                     required
                   >
+                    <option value={"Country"}>Select Country</option>
                     {countriesArray.map((c) => (
-                      <option key={c.code} value={c.name}>
+                      <option
+                        className="bg-secondary-800 text-white"
+                        key={c.code}
+                        value={c.name}
+                      >
                         {c?.name}
                       </option>
                     ))}
@@ -293,13 +295,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="address"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Address"
                     value={formData.address}
                     onChange={handleChange}
@@ -312,13 +314,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="state"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="State"
                     value={formData.state}
                     onChange={handleChange}
@@ -332,13 +334,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="city"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="City"
                     value={formData.city}
                     onChange={handleChange}
@@ -351,13 +353,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <MapPin
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="text"
                     name="zipCode"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Zip code"
                     value={formData.zipCode}
                     onChange={handleChange}
@@ -370,13 +372,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Lock
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="password"
                     name="password"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
@@ -391,13 +393,13 @@ const UserSignUp = () => {
                   className="relative"
                 >
                   <Lock
-                    className="absolute top-3 left-3 text-secondary-500"
+                    className="absolute top-3 left-3 text-gray-200"
                     size={20}
                   />
                   <input
                     type="password"
                     name="confirmPassword"
-                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-secondary-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
+                    className="w-full pl-10 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     placeholder="Confirm Password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
@@ -435,7 +437,7 @@ const UserSignUp = () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.7 }}
                   type="submit"
-                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-blue-500 hover:bg-blue-500/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105"
+                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 transition transform hover:scale-105"
                 >
                   <Check className="mr-2" size={20} />
                   Create Account

@@ -36,13 +36,13 @@ const DepositWithdrawReport = () => {
   const deposits = useSelector((store) => store.admin.deposits);
   const withdrawals = useSelector((store) => store.admin.withdrawals);
 
-  const totalDeposits = deposits.length;
+  const totalDeposits = deposits?.length;
   const pendingDeposits = deposits?.filter(
     (value) => value.status === "pending"
-  ).length;
+  )?.length;
   const rejectedDeposits = deposits?.filter(
     (value) => value.status === "rejected"
-  ).length;
+  )?.length;
   console.log("dashboard deposits", deposits);
   console.log("dashboard total deposits", totalDeposits);
   console.log("dashboard pending deposits", pendingDeposits);

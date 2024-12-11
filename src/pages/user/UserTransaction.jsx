@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { DollarSign, ArrowUpDownIcon } from "lucide-react";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import Loader from "@/components/Loader/Loader";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
-import { data } from "autoprefixer";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
+import { backendApi } from "@/utils/apiClients";
+import ModernHeading from "@/lib/ModernHeading";
 
 export default function UserTransaction() {
-  const [activeTab, setActiveTab] = useState("withdrawal");
+  const [activeTab, setActiveTab] = useState("deposit");
   const [transactionData, setTransactionData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -20,24 +18,12 @@ export default function UserTransaction() {
     try {
       let res;
       if (tradeType === "withdrawal") {
-        res = await axios.get(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/withdrawals`
-        );
+        res = await backendApi.get(`/withdrawals/${loggedUser._id}`);
       }
       if (tradeType === "deposit") {
-        res = await axios.get(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/deposits`
-        );
+        res = await backendApi.get(`/deposit/${loggedUser._id}`);
       }
-      // console.log("privious data--", res.data.data);
-      const filteredData = res.data.data.reverse().filter((value) => {
-        return (
-          value.userId &&
-          value.userId._id &&
-          value.userId._id === loggedUser._id
-        );
-      });
-      console.log("filtered data--", filteredData);
+      const filteredData = res.data.data;
 
       if (filteredData.length === 0) {
         setError(`No ${tradeType} data available.`);
@@ -132,13 +118,9 @@ export default function UserTransaction() {
       animate="visible"
       className="bg-secondary-800/10 pb-20 rounded-lg shadow-lg p-3 text-white overflow-hidden"
     >
-      <motion.h1
-        variants={itemVariants}
-        className="mb-6 text-2xl font-bold flex items-center"
-      >
-        <ArrowUpDownIcon className="mr-2 text-secondary-500" />
-        Transaction History
-      </motion.h1>
+      <motion.div className=" mb-6">
+        <ModernHeading text={"Transaction History"}></ModernHeading>
+      </motion.div>
 
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
         <motion.button
@@ -146,7 +128,7 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "deposit"
-              ? "bg-secondary-500/60 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800/50 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("deposit")}
@@ -158,7 +140,7 @@ export default function UserTransaction() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "withdrawal"
-              ? "bg-secondary-500/60 text-white"
+              ? "bg-secondary-500/80 text-white"
               : "bg-secondary-800/50 text-gray-300 hover:bg-secondary-700/50"
           }`}
           onClick={() => handleTabClick("withdrawal")}
@@ -211,20 +193,16 @@ export default function UserTransaction() {
                     Amount
                   </th>
                 )}
-                {activeTab === "deposit" ? (
+                {activeTab === "deposit" && (
                   <>
                     <th className="text-center py-3 px-4 whitespace-nowrap">
                       Deposit
                     </th>
-                    <th className="text-center py-3 px-4 whitespace-nowrap">
-                      Ac size
-                    </th>
                   </>
-                ) : (
-                  <th className="text-center py-3 px-4 whitespace-nowrap">
-                    Method
-                  </th>
                 )}
+                <th className="text-center py-3 px-4 whitespace-nowrap">
+                  Method
+                </th>
 
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Requested on
@@ -232,6 +210,16 @@ export default function UserTransaction() {
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Updated on
                 </th>
+                {activeTab === "deposit" ? (
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Attachment
+                  </th>
+                ) : (
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Last Balance
+                  </th>
+                )}
+
                 <th className="text-center py-3 px-4 whitespace-nowrap">
                   Status
                 </th>
@@ -257,31 +245,47 @@ export default function UserTransaction() {
                         className="bg-secondary-500/10 whitespace-nowrap rounded-full px-3 py-1 inline-block"
                         whileHover={{ scale: 1.05 }}
                       >
-                        {activeTab === "withdrawal"
-                          ? item?.tradeAccount
-                          : item.accountType}
+                        {item?.accountType}
                       </motion.div>
                     </td>
                     {activeTab === "withdrawal" && (
                       <td className="py-2 px-4 text-center">${item?.amount}</td>
                     )}
-                    {activeTab === "deposit" ? (
+                    {activeTab === "deposit" && (
                       <>
                         <td className="py-2 text-center">${item?.deposit}</td>
-                        <td className="py-2 px-4 text-center">
-                          ${item?.balance}
-                        </td>
                       </>
-                    ) : (
-                      <td className="py-2 px-4 text-center">{item?.method}</td>
                     )}
+                    <td className="py-2 px-4 text-center capitalize">
+                      <p className=" capitalize"> {item?.method}</p>
+                    </td>
 
-                    <td className="text-center py-2 px-3">
+                    <td className="text-center text-xs py-2 px-3">
                       {formatDate(item?.createdAt)}
                     </td>
-                    <td className="text-center py-2 px-3">
+                    <td className="text-center text-xs py-2 px-3">
                       {formatDate(item?.updatedAt)}
                     </td>
+                    {activeTab === "deposit" ? (
+                      <td className="text-center py-2 px-3">
+                        <a
+                          target="_blank"
+                          className=" text-blue-500 hover:text-blue-600 transition-all"
+                          href={`${
+                            import.meta.env.VITE_BACKEND_BASE_URL +
+                            "/" +
+                            item.depositSS
+                          }`}
+                        >
+                          View
+                        </a>
+                      </td>
+                    ) : (
+                      <td className="text-center text-xs py-2 px-3">
+                        {item?.lastBalance}
+                      </td>
+                    )}
+
                     <td className="text-center py-2 px-2">
                       <motion.div
                         className={`inline-block px-2 py-1 font-semibold rounded-full ${

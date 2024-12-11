@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlusCircle, Trash2 } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
 
 const AccountTypes = () => {
   const [accountTypes, setAccountTypes] = useState([]);
@@ -15,9 +16,7 @@ const AccountTypes = () => {
 
   const fetchAccountTypes = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-custom-groups`
-      );
+      const res = await backendApi.get(`/get-custom-groups`);
       setAccountTypes(res.data.data);
     } catch (error) {
       console.log("Error fetching account types", error);
@@ -26,9 +25,7 @@ const AccountTypes = () => {
 
   const fetchExistingData = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-account-types`
-      );
+      const res = await backendApi.get(`/get-account-types`);
       setExistingData(res.data.data);
     } catch (error) {
       console.log("Error fetching existing account types data", error);
@@ -80,15 +77,12 @@ const AccountTypes = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/add-account-type`,
-        {
-          apiGroup: newAccountType.apiGroup,
-          accountType: newAccountType.accountType,
-          leverage: newAccountType.leverage,
-          accountSize: newAccountType.accountSize,
-        }
-      );
+      const res = await backendApi.post(`/add-account-type`, {
+        apiGroup: newAccountType.apiGroup,
+        accountType: newAccountType.accountType,
+        leverage: newAccountType.leverage,
+        accountSize: newAccountType.accountSize,
+      });
       if (res.data.status) {
         setNewAccountType({
           accountType: "",
@@ -105,11 +99,7 @@ const AccountTypes = () => {
 
   const deleteHandler = async (id) => {
     try {
-      await axios.delete(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/delete-account-type?id=${id}`
-      );
+      await backendApi.delete(`/delete-account-type?id=${id}`);
       toast.success("Account type deleted successfully!");
       fetchExistingData();
     } catch (error) {
@@ -132,8 +122,10 @@ const AccountTypes = () => {
         <h2 className="text-2xl font-semibold mb-4">Add New Account Type</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-            <div className="flex-1">
-              <label className="block mb-2 font-medium">Account Type</label>
+            <div className="flex-1  text-black">
+              <label className="block mb-2 font-medium text-white">
+                Account Type
+              </label>
               <select
                 name="accountType"
                 value={newAccountType.customGroup}
@@ -141,9 +133,15 @@ const AccountTypes = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option value="">Select an account type</option>
+                <option className=" text-black" disabled value="">
+                  Select an account type
+                </option>
                 {accountTypes?.map((type) => (
-                  <option key={type._id} value={type.customGroup}>
+                  <option
+                    className=" text-black"
+                    key={type._id}
+                    value={type.customGroup}
+                  >
                     {type.customGroup}
                   </option>
                 ))}
@@ -166,7 +164,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "leverage", "label")
                   }
                   required
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
@@ -176,7 +174,7 @@ const AccountTypes = () => {
                     handleInputChange(e, index, "leverage", "value")
                   }
                   required
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   type="button"

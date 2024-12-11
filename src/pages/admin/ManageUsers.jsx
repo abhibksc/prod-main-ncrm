@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setLoggedUser } from "@/redux/user/userSlice";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
 
 const ManageUsers = () => {
   const { subList } = useParams();
@@ -20,9 +21,8 @@ const ManageUsers = () => {
   const fetchUsersData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-users`
-      );
+      const res = await backendApi.get(`/get-users`);
+      console.log(res.data);
       const resData = res.data.data.reverse();
       if (subList === "email-verified") {
         const data = resData.filter((value) => value.emailVerified === true);

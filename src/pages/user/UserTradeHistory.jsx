@@ -4,54 +4,62 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
+import ModernHeading from "@/lib/ModernHeading";
+import { metaApi } from "@/utils/apiClients";
 
 export default function UserTradeHistory() {
-  const [activeTab, setActiveTab] = useState("closed");
+  const [activeTab, setActiveTab] = useState("open");
   const [tradeData, setTradeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const [currentAccount, setCurrentAccount] = useState(
+    loggedUser.accounts[0] || "000"
+  );
+
   const currentDate = new Date().toISOString().slice(0, 10);
 
-  const fetchTradeData = async (tradeType = "closed") => {
+  const fetchTradeData = async (tradeType) => {
+    console.log("trade type--", tradeType);
     setLoading(true);
     setError(null);
     try {
       let res;
       if (tradeType === "closed") {
-        res = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/GetCloseTradeAll?Manager_Index=${
+        res = await metaApi.get(
+          `/GetCloseTradeAll?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Accont=${
-            loggedUser.mt5Account
+            currentAccount.accountNumber
           }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
         );
-      } else {
-        res = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/getOpenTradeByAccount?Manager_Index=${
+      } else if (tradeType === "open") {
+        res = await metaApi.get(
+          `/getOpenTradeByAccount?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Accont=${loggedUser.mt5Account}`
+          }&MT5Accont=${currentAccount.accountNumber}`
         );
       }
       console.log("res trade history--", res.data);
-      setTradeData(res.data);
-      setActiveTab(tradeType);
+      if (Array.isArray(res.data)) {
+        setTradeData(res.data);
+      } else {
+        setTradeData([]);
+        setError("No data found. Please try again.");
+      }
+      // setActiveTab(tradeType);
     } catch (error) {
       console.error("Error fetching trade data:", error);
-      // setError("Failed to fetch trade data. Please try again.");
+      setError("Failed to fetch trade data. Please try again.");
+      setTradeData([]);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    fetchTradeData();
-  }, []);
+  // console.log("state trade history--", tradeData);
 
   const handleTabClick = (tradeType) => {
+    setActiveTab(tradeType);
     fetchTradeData(tradeType);
   };
 
@@ -98,6 +106,10 @@ export default function UserTradeHistory() {
     },
   };
 
+  useEffect(() => {
+    fetchTradeData(activeTab);
+  }, [currentAccount]);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -105,13 +117,42 @@ export default function UserTradeHistory() {
       animate="visible"
       className="bg-secondary-800/20 p-6 rounded-lg shadow-lg my-5 text-white"
     >
-      <motion.h1
-        variants={itemVariants}
-        className="mb-6 text-2xl font-bold flex items-center"
-      >
-        <BarChart2 className="mr-2 text-secondary-500" />
-        Trades History
-      </motion.h1>
+      <div className=" mb-5 flex justify-between">
+        <ModernHeading text={"Trades History"}></ModernHeading>
+        <div className=" text-sm">
+          {loggedUser?.accounts.length > 0 && (
+            <select
+              onChange={(e) => {
+                const selectedValue = loggedUser.accounts?.find(
+                  (value) => value.accountNumber === e.target.value
+                );
+                setCurrentAccount(selectedValue);
+              }}
+              id="accountNumber"
+              name="accountNumber"
+              className="w-full border-none  py-2 rounded-full border bg-secondary-500/10 px-4 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
+            >
+              <option
+                disabled
+                className=" bg-secondary-800 text-gray-500"
+                value=""
+              >
+                Select Account
+              </option>
+              {loggedUser.accounts?.map((value, index) => (
+                <option
+                  key={index}
+                  className=" bg-secondary-800 font-semibold text-white/90"
+                  onClick={() => setCurrentAccount(value)}
+                  value={value.accountNumber}
+                >
+                  {value.accountNumber}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -196,20 +237,22 @@ export default function UserTradeHistory() {
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <td className="py-1 px-4">{trade?.MT5Account}</td>
+                    <td className="py-1 px-4 text-center">
+                      {trade?.MT5Account}
+                    </td>
                     <td className="py-1 px-4">{trade?.Symbol}</td>
                     <td className="py-1">
                       {activeTab === "open"
                         ? trade?.Open_Time
                         : trade?.Close_Time}
                     </td>
-                    <td className="text-left py-1 px-6">
+                    <td className="text-center py-1 px-6">
                       {trade?.Open_Price.toFixed(2)}
                     </td>
 
                     {activeTab === "closed" && (
                       <td className="text-left py-2 px-6 ">
-                        {trade?.Close_Price.toFixed(2)}
+                        {trade?.Close_Price?.toFixed(2)}
                       </td>
                     )}
                     {activeTab === "closed" && (
@@ -236,8 +279,8 @@ export default function UserTradeHistory() {
                       </td>
                     )}
                     {activeTab === "open" ? (
-                      <td className="text-right py-3 px-4">
-                        {trade?.Lot / 100000}
+                      <td className="text-center py-3 px-4">
+                        {trade?.Volume / 10000}
                       </td>
                     ) : (
                       <td className="text-right py-3 px-4">{trade?.Lot}</td>
@@ -248,7 +291,7 @@ export default function UserTradeHistory() {
                       }`}
                     >
                       <span className="flex items-center justify-end">
-                        {trade?.Profit}
+                        {trade?.Profit?.toFixed(2)}
                       </span>
                     </td>
                   </motion.tr>

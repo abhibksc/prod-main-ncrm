@@ -52,6 +52,11 @@ import UserReferralsDetails from "./pages/user/referral/UserReferralsDetails";
 import UserPendingReferrals from "./pages/user/referral/UserPendingReferrals";
 import AdminCustomEmail from "./pages/admin/AdminCustomEmail";
 import UserCustomerSupport from "./pages/user/UserCustomerSupport";
+import UserResetPassword from "./pages/user/UserResetPassword";
+import UserDeposit from "./pages/user/UserDeposit";
+import UserTradeAccounts from "./components/admin/user-detail/UserTradeAccounts";
+import UserTransfer from "./pages/user/UserTransfer";
+import UserForexNews from "./pages/user/UserForexNews";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -238,6 +243,18 @@ const Router = createBrowserRouter([
         path: "/user/customer-support",
         element: <UserCustomerSupport></UserCustomerSupport>,
       },
+      {
+        path: "/user/deposit",
+        element: <UserDeposit></UserDeposit>,
+      },
+      {
+        path: "/user/transfer",
+        element: <UserTransfer></UserTransfer>,
+      },
+      {
+        path: "/user/forex-news",
+        element: <UserForexNews></UserForexNews>,
+      },
     ],
   },
   {
@@ -257,6 +274,11 @@ const Router = createBrowserRouter([
     path: "/user/login",
     element: <UserLogin></UserLogin>,
   },
+  {
+    path: "/user/reset-password/:token",
+    element: <UserResetPassword></UserResetPassword>,
+  },
+
   {
     path: "/test/000",
     element: <TestApi></TestApi>,

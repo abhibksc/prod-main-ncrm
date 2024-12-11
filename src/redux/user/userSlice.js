@@ -2,18 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isSidebarOpen: false,
-  depositBalance: 0,
-  availableBalance: 0,
   profitNloss: 0,
   openTrades: [],
   closeTrades: [],
-  userInfo: "",
   loggedUser: "",
   platforms: [],
   paymentMethods: [],
-  phaseMaxLength: 0,
   totalFinalPnL: 0,
-  phaseStats: "",
 };
 
 export const userSlice = createSlice({

@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { CheckCircle, Edit, Info } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Info } from "lucide-react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -15,6 +14,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
+import ModernHeading from "@/lib/ModernHeading";
 
 const UserChallenges = () => {
   const [challengesData, setChallengesData] = useState();
@@ -82,55 +82,56 @@ const UserChallenges = () => {
     return timeString.join(", ") + " ago";
   }
 
-  const fetchChallengesData = async () => {
-    setLoader(true);
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
-      );
-      // console.log("challenges res--", res.data.data);
-      const loggedUserData = res.data.data
-        .reverse()
-        .filter((value) => value?.userId?._id === logggedUser?._id);
+  // const fetchAccount = async () => {
+  //   setLoader(true);
+  //   try {
+  //     const res = await axios.get(
+  //       `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
+  //     );
+  //     // console.log("challenges res--", res.data.data);
+  //     const loggedUserData = res.data.data
+  //       .reverse()
+  //       .filter((value) => value?.userId?._id === logggedUser?._id);
 
-      setChallengesData(loggedUserData);
-      setLoader(false);
-    } catch (error) {
-      console.log("error in fetch user challenges", error);
-      toast.error("Data fetching failed!!");
-      setLoader(false);
-    }
-  };
+  //     setChallengesData(loggedUserData);
+  //     setLoader(false);
+  //   } catch (error) {
+  //     console.log("error in fetch user challenges", error);
+  //     toast.error("Data fetching failed!!");
+  //     setLoader(false);
+  //   }
+  // };
   console.log("challenges data --", challengesData);
 
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
   };
-  useEffect(() => {
-    fetchChallengesData();
-  }, []);
+  // useEffect(() => {
+  //   fetchChallengesData();
+  // }, []);
 
   return (
-    <div className=" mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+    <div className=" mx-auto sm:p-6 rounded-lg shadow-lg overflow-x-auto">
+      <div className=" mb-6">
+        <ModernHeading text={"MT5 Accounts"}></ModernHeading>
+      </div>
       <table className="w-full border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-500/50 rounded text-white">
+          <tr className="bg-secondary-500/50 whitespace-nowrap rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
             </th>
             <th className="p-2 sm:p-3 text-center font-semibold">Type</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Deposit</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Leverage</th>
             <th className="p-2 sm:p-3 text-center font-semibold">
-              Account Size
+              MasterPassword
             </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Last P/L</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Phase</th>
             <th className="p-2 sm:p-3 text-center font-semibold">
-              Dropdown status
+              InvestorPassword
             </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Updated At</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Status</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Platform</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Timestamp</th>
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tr-lg">
               Action
             </th>
@@ -145,56 +146,44 @@ const UserChallenges = () => {
             </tr>
           )}
 
-          {challengesData?.map((value, index) => (
+          {logggedUser.accounts?.map((value, index) => (
             <tr
               key={index}
-              className="border-b border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
+              className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
             >
               <td className="p-2 sm:p-3 text-sm sm:text-base">
-                {value?.mt5Account}
+                {value?.accountNumber}
               </td>
               <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
-                {value?.type}
+                {value?.accountType}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.deposit}
+                {value?.leverage}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.accountSize}
+                {value?.masterPassword}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {Number(value?.balance).toFixed(2)}
+                {value?.investorPassword}
               </td>
               <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.phase}
-              </td>
-              <td className="p-2 first-letter:capitalize text-center whitespace-nowrap sm:p-3 text-sm sm:text-base">
-                {value?.reason}
+                {value?.platform || "NULL"}
               </td>
               <td className="py-3 text-center px-4">
-                <div>{formatDate(value?.updatedAt)}</div>
+                <div>{formatDate(value?.createdAt)}</div>
                 <div className="text-sm text-gray-400">
-                  {calculateTimeSinceJoined(value?.updatedAt)}
+                  {calculateTimeSinceJoined(value?.createdAt)}
                 </div>
               </td>
-              <td className="text-center py-2 px-2">
-                <div
-                  className={`inline-block px-2 py-1 font-semibold rounded-full ${
-                    value?.status === "active"
-                      ? "bg-green-500/20 text-green-500"
-                      : " bg-red-500/20  text-red-400"
-                  }`}
-                >
-                  <p className="first-letter:capitalize">{value?.status}</p>
-                </div>
-              </td>{" "}
               <td className="p-2 sm:p-3 text-center">
-                <button
-                  onClick={() => handleMoreInfo(value)}
-                  className="text-blue-500 hover:text-blue-600 transition-colors"
-                >
-                  <Info></Info>
-                </button>
+                <div className=" flex justify-center items-center mr-4">
+                  <button
+                    onClick={() => handleMoreInfo(value)}
+                    className="text-blue-500 hover:text-blue-600 transition-colors"
+                  >
+                    <Info></Info>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -208,40 +197,30 @@ const UserChallenges = () => {
               <AlertDialogDescription>
                 {true && (
                   <div className=" flex gap-[2px] font-semibold flex-col">
-                    <p>Mt5 Amount - {selectedchallenge?.mt5Account}</p>
+                    <p>Mt5 Amount - {selectedchallenge?.accountNumber}</p>
                     <p>Leverage - {selectedchallenge?.leverage}</p>
                     <div className=" flex gap-4">
                       <p>
                         Master password - {selectedchallenge?.masterPassword}
                       </p>
-                      {(selectedchallenge?.phase === "1") &
-                      (selectedchallenge.status === "active") ? (
-                        <Link
-                          to={"/user/master-password"}
-                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                        >
-                          change
-                        </Link>
-                      ) : (
-                        ""
-                      )}
+                      <Link
+                        to={"/user/master-password"}
+                        className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
+                      >
+                        change
+                      </Link>
                     </div>
                     <div className=" flex gap-4">
                       <p>
                         Investar password -{" "}
-                        {selectedchallenge?.investarPassword}
+                        {selectedchallenge?.investorPassword}
                       </p>
-                      {(selectedchallenge?.phase === "1") &
-                      (selectedchallenge.status === "active") ? (
-                        <Link
-                          to={"/user/investor-password"}
-                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                        >
-                          change
-                        </Link>
-                      ) : (
-                        ""
-                      )}
+                      <Link
+                        to={"/user/investor-password"}
+                        className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
+                      >
+                        change
+                      </Link>
                     </div>
                   </div>
                 )}

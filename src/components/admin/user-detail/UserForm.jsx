@@ -12,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { backendApi } from "@/utils/apiClients";
 
 const UserInfoForm = ({ userData }) => {
   console.log("userData props--", userData);
@@ -67,15 +68,12 @@ const UserInfoForm = ({ userData }) => {
     const toastId = toast.loading("Plese pait..");
 
     try {
-      const updateLoggedUser = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-        {
-          id: userData._id,
-          ...formData,
-          emailVerified: verificationStatuses.email,
-          kycVerified: verificationStatuses.kyc,
-        }
-      );
+      const updateLoggedUser = await backendApi.put(`/update-user`, {
+        id: userData._id,
+        ...formData,
+        emailVerified: verificationStatuses.email,
+        kycVerified: verificationStatuses.kyc,
+      });
       toast.success("User Updated", { id: toastId });
       console.log("update logged user--", updateLoggedUser.data.data);
       // console.log("Form submitted:", { ...formData, ...verificationStatuses });

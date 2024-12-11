@@ -12,7 +12,7 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #7b2cbf; /* primary-400 */
+  background-color: var(--theme-color);
   border-radius: 10px;
 }
 
@@ -31,12 +31,12 @@ html {
 }
 
 .user-custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #52b788; /* primary-400 */
+  background-color: var(--theme-color); /* primary-400 */
   border-radius: 10px;
 }
 
 .user-custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #5ed69a; /* primary-300 */
+  background-color: var(--theme-color); /* primary-300 */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

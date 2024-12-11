@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CredentialItem = ({
   icon: Icon,
@@ -49,53 +49,83 @@ const CredentialItem = ({
 );
 
 const UserDashboardAccount = () => {
-  const userInfo = useSelector((store) => store.user.userInfo);
-  const masterPassword = useSelector((store) => store.user.masterPassword);
-  const investorPassword = useSelector((store) => store.user.investorPassword);
-  const currentAccount = useSelector((store) => store.user.currentAccount);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-
-  // console.log("userInfo-", userInfo);
-
-  useEffect(() => {}, [userInfo]);
+  const [currentAccount, setCurrentAccount] = useState(
+    loggedUser.accounts[0] || "000"
+  );
   return (
     <motion.div
-      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 min-w-5xl w-full  md:max-w-lg "
+      className="bg-secondary-800/70  shadow-lg rounded-lg p-6 min-w-5xl w-full  md:max-w-lg "
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <motion.h2
-        className="text-2xl font-bold mb-4 whitespace-nowrap  text-gray-200"
+      <motion.div
+        className="text-2xl flex justify-between items-center gap-10 mb-2 whitespace-nowrap  text-gray-200"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        Server -{" "}
-        <span className=" bg-secondary-500/20 text-xl rounded-full py-1 px-3">
-          {import.meta.env.VITE_SERVER_NAME}
-        </span>
-      </motion.h2>
+        <div className=" font-semibold text-lg">
+          Server :
+          <span className=" bg-secondary-500/10 text-lg rounded-full py-1 px-3">
+            {import.meta.env.VITE_SERVER_NAME}
+          </span>
+        </div>
+        <div className=" text-sm">
+          {loggedUser?.accounts.length > 0 && (
+            <select
+              onChange={(e) => {
+                const selectedValue = loggedUser.accounts?.find(
+                  (value) => value.accountNumber === e.target.value
+                );
+                setCurrentAccount(selectedValue);
+              }}
+              id="accountNumber"
+              name="accountNumber"
+              className="w-full border-none  py-1 rounded-full border bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
+            >
+              <option
+                disabled
+                className=" bg-secondary-800 text-gray-500"
+                value=""
+              >
+                Select Account
+              </option>
+              {loggedUser.accounts?.map((value, index) => (
+                <option
+                  key={index}
+                  className=" bg-secondary-800 font-semibold text-white"
+                  onClick={() => setCurrentAccount(value)}
+                  value={value.accountNumber}
+                >
+                  {value.accountNumber}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </motion.div>
       <div className="space-y-1">
-        <CredentialItem
-          icon={CheckCircle}
-          label="Deposit Balance"
-          value={"$" + loggedUser.depositBalance}
-          badgeColor="bg-indigo-100 text-indigo-800"
-          delay={0.45}
-        />
         <CredentialItem
           icon={User}
           label="MT5 Account Id"
-          value={loggedUser.mt5Account}
+          value={currentAccount.accountNumber}
           badgeColor="bg-blue-100 text-blue-800"
           delay={0.15}
+        />
+        <CredentialItem
+          icon={CheckCircle}
+          label="Leverage"
+          value={currentAccount.leverage}
+          badgeColor="bg-indigo-100 text-indigo-800"
+          delay={0.45}
         />
 
         <CredentialItem
           icon={Key}
           label="Master Password"
-          value={loggedUser.masterPassword}
+          value={currentAccount.masterPassword}
           badgeColor="bg-yellow-100 text-yellow-800"
           delay={0.25}
           link="/user/master-password"
@@ -103,7 +133,7 @@ const UserDashboardAccount = () => {
         <CredentialItem
           icon={Shield}
           label="Investor Password"
-          value={loggedUser.investorPassword}
+          value={currentAccount.investorPassword}
           badgeColor="bg-yellow-100 text-yellow-800"
           delay={0.3}
           link="/user/investor-password"
@@ -111,20 +141,14 @@ const UserDashboardAccount = () => {
         <CredentialItem
           icon={PanelTopInactiveIcon}
           label="Account Type"
-          value={loggedUser.phase > 0 ? loggedUser?.accountType : "Null"}
+          value={currentAccount.accountType}
           badgeColor="bg-orange-100 text-orange-800"
           delay={0.35}
         />
         <CredentialItem
           icon={Info}
           label="Kyc Status"
-          value={
-            loggedUser.phase > 0
-              ? loggedUser?.kycVerified
-                ? "Active"
-                : "Inactive"
-              : "Null"
-          }
+          value={loggedUser?.kycVerified ? "Active" : "Inactive"}
           badgeColor={`${
             loggedUser?.kycVerified
               ? "bg-green-100 text-green-800"
