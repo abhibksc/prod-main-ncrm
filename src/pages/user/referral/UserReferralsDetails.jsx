@@ -1,62 +1,25 @@
 import { useEffect, useState } from "react";
-import { ArrowUpDown, Info, Loader, RefreshCw } from "lucide-react"; // Import refresh icon
+import { ArrowRight, ArrowUpDown, Info, Loader, RefreshCw } from "lucide-react"; // Import refresh icon
 import axios from "axios";
 import { useSelector } from "react-redux";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
+import { backendApi } from "@/utils/apiClients";
+import { Link } from "react-router-dom";
 
 const UserReferralsDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [commissionsData, setCommissionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loader state
 
-  // format date ---------------------
-  function formatDate(isoDateString) {
-    const date = new Date(isoDateString);
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    });
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-    });
-    return `${formattedDate}, ${formattedTime}`;
-  }
-
-  // since joined ---------------
-  function calculateTimeSinceJoined(isoDateString) {
-    const joinDate = new Date(isoDateString);
-    const today = new Date();
-    const timeDifference = today - joinDate;
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-    let timeString = [];
-    if (days > 0) timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
-    if (hours > 0) timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
-    if (minutes > 0)
-      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
-    if (timeString.length === 0) return "less than a minute ago";
-    return timeString.join(", ") + " ago";
-  }
-
   // fetch all commissions data------------
   const fetchCommissions = async () => {
     setIsLoading(true); // Start loading
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-commissions`
+      const res = await backendApi.get(
+        `/user-zone-ibs/${loggedUser?.referralAccount}`
       );
-      const commissions = res.data.data
-        .reverse()
-        .filter((value) => value?.referralId === loggedUser.referalId);
+      const commissions = res.data.data.reverse();
+      // .filter((value) => value?.referralId === loggedUser.referalId);
       setCommissionsData(commissions);
     } catch (error) {
       console.log(error);
@@ -98,32 +61,29 @@ const UserReferralsDetails = () => {
               <th className="p-3 sm:p-4 text-left text-sm sm:text-base rounded-tl-md ">
                 Name/Email
               </th>
+              <th className="p-3 sm:p-4 text-left text-sm sm:text-base rounded-tl-md ">
+                Country
+              </th>
               <th className="p-3 sm:p-4 whitespace-nowrap text-center text-sm sm:text-base">
                 AC NO
               </th>
-              <th className="p-3 whitespace-nowrap  sm:p-4 text-center text-sm sm:text-base">
-                AC Type
+              <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
+                Level
               </th>
               <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
-                Country
+                Total Volume
               </th>
               <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
-                Deposit
+                Total Earned
               </th>
               <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
-                Account Size
-              </th>
-              <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
-                Commission
-              </th>
-              <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base rounded-tr-md">
-                Time Stamp
+                Action
               </th>
             </tr>
           </thead>
           <tbody>
             {commissionsData.length === 0 && (
-              <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500/10">
+              <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500/10 ">
                 <td className="text-center align-middle py-6" colSpan="8">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                     <Info />
@@ -139,35 +99,35 @@ const UserReferralsDetails = () => {
               >
                 <td className="pl-6 py-3 text-sm sm:text-base">
                   <div>
-                    <p> {value?.currentReferral?.firstName} </p>
-                    <p className="text-gray-400">
-                      {value?.currentReferral?.email}
-                    </p>
+                    <p> {value?.name} </p>
+                    <p className="text-gray-400">{value?.email}</p>
                   </div>
                 </td>
                 <td className="text-sm text-center sm:text-base">
-                  {value?.mt5Account}
-                </td>
-                <td className="text-center text-sm sm:text-base">
-                  {value?.accountType}
-                </td>
-                <td className="text-center text-sm sm:text-base">
-                  {value?.currentReferral?.country || "null"}
-                </td>
-                <td className="text-center text-sm sm:text-base">
-                  ${value?.accountSize}
-                </td>
-                <td className="text-center text-sm sm:text-base">
-                  ${value?.depositBalance}
-                </td>
-                <td className="text-center text-sm sm:text-base">
-                  ${value?.commission}
-                </td>
-                <td className="py-3 text-center px-4">
-                  <div>{formatDate(value?.createdAt)}</div>
-                  <div className="text-sm text-gray-400">
-                    {calculateTimeSinceJoined(value?.createdAt)}
+                  <div className=" flex  justify-center items-center">
+                    {value?.country || "-"}
                   </div>
+                </td>
+                <td className="text-sm text-center sm:text-base">
+                  {value?.accountNumber}
+                </td>
+                <td className="text-center text-sm sm:text-base">
+                  {value?.level}
+                </td>
+                <td className="text-center text-sm sm:text-base">
+                  {value?.totalLot?.toFixed(2) || "0"}
+                </td>
+                <td className="text-center text-sm sm:text-base">
+                  {value?.totalCommission?.toFixed(2) || "0"}
+                </td>
+                <td className=" text-sm sm:text-base">
+                  <Link
+                    to={`/user/referral-close-trades/${value?.accountNumber}`}
+                  >
+                    <div className="flex justify-center text-blue-500 hover:text-blue-600 hover:scale-105 items-center transition-all">
+                      <ArrowRight></ArrowRight>
+                    </div>
+                  </Link>
                 </td>
               </tr>
             ))}

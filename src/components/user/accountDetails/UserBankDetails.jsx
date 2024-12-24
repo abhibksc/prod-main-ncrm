@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { backendApi } from "@/utils/apiClients";
 
 const InputField = ({ label, placeholder, value, onChange, name }) => (
   <div className="mb-6">
@@ -14,7 +15,7 @@ const InputField = ({ label, placeholder, value, onChange, name }) => (
       value={value}
       onChange={onChange}
       name={name}
-      className="w-full px-4 py-3 border text-secondary-800 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300"
+      className="w-full px-4 py-3 border text-gray-100 bg-secondary-900/80 border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300"
     />
   </div>
 );
@@ -41,12 +42,10 @@ const UserBankDetails = () => {
   };
 
   const submitHandler = async () => {
-    const toastId = toast.loading("Plese wait..");
+    const toastId = toast.loading("Please wait..");
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/${
-          loggedUser._id
-        }/bank-details`,
+      const res = await backendApi.put(
+        `/${loggedUser._id}/bank-details`,
         formData
       );
       console.log(res);
@@ -61,7 +60,7 @@ const UserBankDetails = () => {
     getUpdateLoggedUser();
   }, []);
   return (
-    <div className=" p-4 bg-secondary-800/60  rounded-2xl">
+    <div className=" p-4 bg-secondary-800/40  rounded-2xl">
       <div className="grid grid-cols-1 md:grid-cols-2 p-4 gap-6 text-white">
         <InputField
           label="Name of Bank"
@@ -118,9 +117,10 @@ const UserBankDetails = () => {
 
       <div className="flex items-center justify-center">
         <motion.button
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={submitHandler}
-          className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-500/80 hover:px-8 transition-all shadow-lg"
+          className="px-6 py-3 bg-secondary-500/90 text-white font-semibold rounded-full hover:bg-secondary-500/80 hover:px-8 transition-all shadow-lg"
         >
           Update Details
         </motion.button>

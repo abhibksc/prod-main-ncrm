@@ -146,7 +146,8 @@ const PlatformDownloadSection = () => (
       comprehensive market insights.
     </p>
 
-    <div className="flex space-x-4 mb-6">
+    {/* Highlights Section */}
+    <div className="flex flex-wrap gap-y-2  space-x-4 mb-6">
       {[
         { icon: <BarChart2 />, text: "Advanced Analytics" },
         { icon: <Globe />, text: "Global Market Access" },
@@ -154,7 +155,7 @@ const PlatformDownloadSection = () => (
       ].map((highlight, index) => (
         <div
           key={index}
-          className="flex items-center space-x-2 bg-secondary-900/50 px-3 py-2 rounded-lg hover:bg-secondary-900/70 transition-all"
+          className="flex items-center space-x-2 bg-secondary-900/50 px-3 py-2 rounded-lg hover:bg-secondary-900/70 transition-all w-full sm:w-auto mb-4 sm:mb-0"
         >
           <div className="text-secondary-500">{highlight.icon}</div>
           <span className="text-white text-sm">{highlight.text}</span>
@@ -162,7 +163,8 @@ const PlatformDownloadSection = () => (
       ))}
     </div>
 
-    <div className="grid grid-cols-3 gap-4">
+    {/* Platform Download Section */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {[
         {
           icon: <Smartphone className="w-6 h-6 text-secondary-500" />,
@@ -207,6 +209,7 @@ const PlatformDownloadSection = () => (
       ))}
     </div>
 
+    {/* Security Section */}
     <div className="bg-secondary-900/30 rounded-xl p-4 mt-4">
       <div className="flex items-center space-x-3">
         <Shield className="text-secondary-500 w-6 h-6" />

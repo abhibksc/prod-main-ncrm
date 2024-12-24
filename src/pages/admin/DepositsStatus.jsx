@@ -594,7 +594,7 @@ const DepositsStatus = () => {
   }, [status]);
 
   return (
-    <div className="container mx-auto px-5">
+    <div className=" mx-auto p-5">
       <div>
         <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
           {status} Deposits

@@ -179,7 +179,7 @@ const InputField = ({
       </div>
       <input
         type="text"
-        className="block w-full pl-10 pr-3 py-3 rounded-md leading-5 bg-secondary-700 outline-none sm:text-sm focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+        className="block w-full pl-10 pr-3 py-3 rounded-md leading-5 bg-secondary-900/20 border-2 border-gray-700/80 outline-none sm:text-sm focus:ring-1 focus:ring-secondary-500 focus:border-secondary-500"
         value={value}
         onChange={onChange}
         name={name}
@@ -203,7 +203,7 @@ const ReadOnlyField = ({ label, icon, value }) => (
       </div>
       <input
         type="text"
-        className="block w-full pl-10 pr-3 cursor-not-allowed py-3 border-none outline-none rounded-md leading-5 bg-secondary-700 text-gray-400 sm:text-sm"
+        className="block w-full pl-10 pr-3 cursor-not-allowed py-3 border-none outline-none rounded-md leading-5 bg-secondary-800/60 text-gray-400 sm:text-sm"
         value={value}
         readOnly
       />

@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { CheckCircle, Edit, Info, Search } from "lucide-react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
 
-const AccountChallenges = () => {
+import toast from "react-hot-toast";
+import { backendApi } from "@/utils/apiClients";
+import { Search } from "lucide-react";
+const LoginLogs = () => {
   const [challengesData, setChallengesData] = useState([]);
-  const [selectedChallenge, setSelectedChallenge] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [loader, setLoader] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,9 +13,8 @@ const AccountChallenges = () => {
   const fetchChallengesData = async () => {
     setLoader(true);
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
-      );
+      const res = await backendApi.get(`/logs`);
+      console.log(res.data.data);
       setChallengesData(res.data.data.reverse());
       setLoader(false);
     } catch (error) {
@@ -43,12 +39,11 @@ const AccountChallenges = () => {
     const searchableFields = [
       item?.userId?.firstName,
       item?.userId?.email,
-      item?.mt5Account,
-      item?.type,
-      item?.accountSize?.toString(),
-      item?.phase,
-      item?.reason,
-      item?.status,
+      item?.ip,
+      item?.browser,
+      item?.os,
+      item?.userId?.phone,
+      item?.country,
     ];
 
     return searchableFields.some((field) =>
@@ -166,17 +161,17 @@ const AccountChallenges = () => {
     <div className="m-5 p-5 sm:px-6 bg-primary-700 text-white rounded-xl shadow-2xl">
       <div className="py-6">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-          <h2 className="text-xl md:text-3xl font-bold">Account Challenges</h2>
+          <h2 className="text-xl md:text-3xl font-bold">Login Logs</h2>
           <div className="relative w-full md:w-96">
             <input
               type="text"
               placeholder="Search by any field"
               value={searchQuery}
               onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
+              className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-gray-300"
             />
             <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300"
               size={18}
             />
             {searchQuery && (
@@ -197,14 +192,12 @@ const AccountChallenges = () => {
                 <th className="p-3 text-left font-semibold rounded-tl-lg">
                   Name/Email
                 </th>
-                <th className="p-3 text-left font-semibold">AC No</th>
-                <th className="p-3 text-center font-semibold">AC Type</th>
-                <th className="p-3 text-center font-semibold">AC Size</th>
-                <th className="p-3 text-center font-semibold">Last P/L</th>
-                <th className="p-3 text-center font-semibold">Phase</th>
-                <th className="p-3 text-center font-semibold">Dropdown</th>
+                <th className="p-3 text-center font-semibold">Phone</th>
+                <th className="p-3 text-center font-semibold">IP</th>
+                <th className="p-3 text-center font-semibold">Browser</th>
+                <th className="p-3 text-center font-semibold">OS</th>
+                <th className="p-3 text-center font-semibold">Country</th>
                 <th className="p-3 text-center font-semibold">Timestamp</th>
-                <th className="p-3 text-center font-semibold">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -230,34 +223,21 @@ const AccountChallenges = () => {
                         </p>
                       </div>
                     </td>
-                    <td className="p-3 text-sm">{value?.mt5Account}</td>
-                    <td className="p-3 text-sm text-center">{value?.type}</td>
+                    <td className="p-3 text-sm">{value?.userId?.phone}</td>
+                    <td className="p-3 text-sm">{value?.ip}</td>
                     <td className="p-3 text-sm text-center">
-                      {value?.accountSize}
+                      {value?.browser}
                     </td>
+                    <td className="p-3 text-sm text-center">{value?.os}</td>
                     <td className="p-3 text-sm text-center">
-                      {Number(value?.balance).toFixed(2)}
+                      {value?.country}
                     </td>
-                    <td className="p-3 text-sm text-center">{value?.phase}</td>
-                    <td className="p-3 text-sm text-center capitalize">
-                      {value?.reason}
-                    </td>
+
                     <td className="py-3 text-center whitespace-nowrap px-4">
                       <div>{formatDate(value?.updatedAt)}</div>
                       <div className="text-sm text-gray-400">
                         {calculateTimeSinceJoined(value?.updatedAt)}
                       </div>
-                    </td>
-                    <td className="p-3 text-center first-letter:capitalize">
-                      <span
-                        className={`px-3 py-1 text-sm font-medium rounded-full ${
-                          value?.status === "active"
-                            ? "bg-green-500/20 text-green-500"
-                            : "bg-red-500/10 text-red-500"
-                        }`}
-                      >
-                        {value?.status}
-                      </span>
                     </td>
                   </tr>
                 ))
@@ -321,4 +301,4 @@ const AccountChallenges = () => {
   );
 };
 
-export default AccountChallenges;
+export default LoginLogs;

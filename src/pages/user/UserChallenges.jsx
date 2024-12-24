@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Info } from "lucide-react";
 import {
   AlertDialog,
@@ -9,20 +10,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import DynamicLoder from "@/components/Loader/DynamicLoder";
 import ModernHeading from "@/lib/ModernHeading";
 
 const UserChallenges = () => {
-  const [challengesData, setChallengesData] = useState();
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [loader, setLoader] = useState(false);
   const logggedUser = useSelector((store) => store.user.loggedUser);
-
   // format date ---------------------
 
   function formatDate(isoDateString) {
@@ -82,43 +77,30 @@ const UserChallenges = () => {
     return timeString.join(", ") + " ago";
   }
 
-  // const fetchAccount = async () => {
-  //   setLoader(true);
-  //   try {
-  //     const res = await axios.get(
-  //       `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-challenges`
-  //     );
-  //     // console.log("challenges res--", res.data.data);
-  //     const loggedUserData = res.data.data
-  //       .reverse()
-  //       .filter((value) => value?.userId?._id === logggedUser?._id);
-
-  //     setChallengesData(loggedUserData);
-  //     setLoader(false);
-  //   } catch (error) {
-  //     console.log("error in fetch user challenges", error);
-  //     toast.error("Data fetching failed!!");
-  //     setLoader(false);
-  //   }
-  // };
-  console.log("challenges data --", challengesData);
-
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
   };
-  // useEffect(() => {
-  //   fetchChallengesData();
-  // }, []);
 
   return (
-    <div className=" mx-auto sm:p-6 rounded-lg shadow-lg overflow-x-auto">
-      <div className=" mb-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="mx-auto rounded-lg shadow-lg overflow-x-auto user-custom-scrollbar "
+    >
+      <div className="mb-6">
         <ModernHeading text={"MT5 Accounts"}></ModernHeading>
       </div>
-      <table className="w-full border-collapse min-w-[640px]">
+      <motion.table
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="w-full border-collapse min-w-[640px]"
+      >
         <thead>
           <tr className="bg-secondary-500/50 whitespace-nowrap rounded text-white">
+            {/* Table headers remain the same */}
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
             </th>
@@ -138,108 +120,118 @@ const UserChallenges = () => {
           </tr>
         </thead>
         <tbody>
-          {loader && (
-            <tr>
-              <td colSpan="9" className="p-4">
-                <DynamicLoder></DynamicLoder>
-              </td>
-            </tr>
-          )}
-
-          {logggedUser.accounts?.map((value, index) => (
-            <tr
-              key={index}
-              className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
-            >
-              <td className="p-2 sm:p-3 text-sm sm:text-base">
-                {value?.accountNumber}
-              </td>
-              <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
-                {value?.accountType}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.leverage}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.masterPassword}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.investorPassword}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.platform || "NULL"}
-              </td>
-              <td className="py-3 text-center px-4">
-                <div>{formatDate(value?.createdAt)}</div>
-                <div className="text-sm text-gray-400">
-                  {calculateTimeSinceJoined(value?.createdAt)}
-                </div>
-              </td>
-              <td className="p-2 sm:p-3 text-center">
-                <div className=" flex justify-center items-center mr-4">
-                  <button
-                    onClick={() => handleMoreInfo(value)}
-                    className="text-blue-500 hover:text-blue-600 transition-colors"
-                  >
-                    <Info></Info>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className=" ">{"More info"}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {true && (
-                  <div className=" flex gap-[2px] font-semibold flex-col">
-                    <p>Mt5 Amount - {selectedchallenge?.accountNumber}</p>
-                    <p>Leverage - {selectedchallenge?.leverage}</p>
-                    <div className=" flex gap-4">
-                      <p>
-                        Master password - {selectedchallenge?.masterPassword}
-                      </p>
-                      <Link
-                        to={"/user/master-password"}
-                        className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                      >
-                        change
-                      </Link>
-                    </div>
-                    <div className=" flex gap-4">
-                      <p>
-                        Investar password -{" "}
-                        {selectedchallenge?.investorPassword}
-                      </p>
-                      <Link
-                        to={"/user/investor-password"}
-                        className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
-                      >
-                        change
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
-                Cancel
-              </AlertDialogCancel>
-              {/* <AlertDialogAction
-                onClick={() => handleConfirmAction(selectedDeposit)}
+          <AnimatePresence>
+            {logggedUser.accounts?.map((value, index) => (
+              <motion.tr
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.3,
+                }}
+                className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
               >
-                Confirm {actionType === "approve" ? "Approval" : "Rejection"}
-              </AlertDialogAction> */}
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </div>
+                {/* Table row content remains the same */}
+                <td className="p-2 sm:p-3 text-sm sm:text-base">
+                  {value?.accountNumber}
+                </td>
+                <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
+                  {value?.accountType}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.leverage}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.masterPassword}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.investorPassword}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.platform || "NULL"}
+                </td>
+                <td className="py-3 text-center px-4">
+                  <div>{formatDate(value?.createdAt)}</div>
+                  <div className="text-sm text-gray-400">
+                    {calculateTimeSinceJoined(value?.createdAt)}
+                  </div>
+                </td>
+                <td className="p-2 sm:p-3 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <button
+                      onClick={() => handleMoreInfo(value)}
+                      className="text-blue-500 hover:text-blue-600 transition-colors"
+                    >
+                      <Info />
+                    </button>
+                  </motion.div>
+                </td>
+              </motion.tr>
+            ))}
+          </AnimatePresence>
+        </tbody>
+      </motion.table>
+
+      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <AnimatePresence>
+          {isDialogOpen && (
+            <AlertDialogContent
+              as={motion.div}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Dialog content remains the same */}
+              <AlertDialogHeader>
+                <AlertDialogTitle className=" ">{"More info"}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {true && (
+                    <div className=" flex gap-[2px] font-semibold flex-col">
+                      <p>Mt5 Amount - {selectedchallenge?.accountNumber}</p>
+                      <p>Leverage - {selectedchallenge?.leverage}</p>
+                      <div className=" flex gap-4">
+                        <p>
+                          Master password - {selectedchallenge?.masterPassword}
+                        </p>
+                        <Link
+                          to={"/user/master-password"}
+                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
+                        >
+                          change
+                        </Link>
+                      </div>
+                      <div className=" flex gap-4">
+                        <p>
+                          Investar password -{" "}
+                          {selectedchallenge?.investorPassword}
+                        </p>
+                        <Link
+                          to={"/user/investor-password"}
+                          className=" text-blue-500 hover:text-blue-700 hover:scale-110 transition-all"
+                        >
+                          change
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          )}
+        </AnimatePresence>
+      </AlertDialog>
+    </motion.div>
   );
 };
 

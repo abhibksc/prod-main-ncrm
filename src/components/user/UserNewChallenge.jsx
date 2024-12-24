@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -7,8 +8,10 @@ import { useNavigate } from "react-router-dom";
 import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
+
 const UserNewChallenge = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     accountType: "",
@@ -26,7 +29,6 @@ const UserNewChallenge = () => {
     (value) => value.accountType === formData.accountType
   );
 
-  const navigate = useNavigate();
   const { getPlatforms, getPaymentMethod } = UserNewChallengeHook();
   const { getUpdateLoggedUser } = UseUserHook();
   const platformData = useSelector((store) => store.user.platforms);
@@ -34,6 +36,7 @@ const UserNewChallenge = () => {
   const filteredPlatformData = platformData?.filter(
     (value) => value.status === "active"
   );
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -57,8 +60,6 @@ const UserNewChallenge = () => {
     }
   };
 
-  // add main api handler---------------
-
   function generateRandomNumber(digits) {
     if (digits <= 0) throw new Error("Digits must be a positive number");
     const min = Math.pow(10, digits - 1);
@@ -79,7 +80,6 @@ const UserNewChallenge = () => {
           Leverage: formData.leverage,
           Group_Name: formData.apiGroup,
         });
-        console.log(generateMt5);
 
         if (generateMt5.data.MT5Account > 0) {
           const addAccountToDB = await backendApi.post(
@@ -110,12 +110,9 @@ const UserNewChallenge = () => {
     }
   };
 
-  // fetch Account Configurations --------------
-
   const fetchAccountConfigurations = async () => {
     try {
       const res = await backendApi.get(`/get-account-types`);
-
       setAccountConfigurations(res.data.data);
     } catch (error) {
       console.log("Error fetching existing ac types data", error);
@@ -143,12 +140,22 @@ const UserNewChallenge = () => {
   }, []);
 
   return (
-    <div className="bg-secondary-800/30 p-10 mb-20 text-white rounded-lg w-full mx-auto">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="bg-secondary-800/30 p-10 mb-20 text-white rounded-lg w-full mx-auto"
+    >
       <div className="space-y-6">
         <ModernHeading text={"Open MT5 Account"}></ModernHeading>
 
-        <div className=" flex gap-6 items-center justify-between w-full">
-          <div className=" w-full">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex gap-6 items-center justify-between w-full"
+        >
+          <div className="w-full">
             <label className="block mb-2 text-sm font-medium">
               1. Choose your account type
             </label>
@@ -171,8 +178,8 @@ const UserNewChallenge = () => {
               <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             </div>
           </div>
-          <div className=" w-full">
-            <div className=" my-5">
+          <div className="w-full">
+            <div className="my-5">
               <label className="block mb-2 text-sm font-medium">
                 2. Choose your Leverage
               </label>
@@ -196,16 +203,22 @@ const UserNewChallenge = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <label className="block mb-2 text-sm font-medium">
             3. Choose your platform
           </label>
           <div className="grid grid-cols-2 gap-4">
             {filteredPlatformData?.map((plt) => (
-              <button
+              <motion.button
                 key={plt.name}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setFormData({ ...formData, platform: plt.name })}
                 className={`p-4 flex rounded-full items-center justify-center transition-colors ${
                   formData.platform === plt.name
@@ -215,20 +228,22 @@ const UserNewChallenge = () => {
               >
                 <span className="mr-2 text-2xl">{plt.logo}</span>
                 <span>{plt.name}</span>
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
-        <div className=" w-full flex items-center justify-center pt-10">
-          <button
+        </motion.div>
+        <div className="w-full flex items-center justify-center pt-10">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
             onClick={createAccountHandler}
-            className=" bg-secondary-500/80 px-12 py-3 shadow-md hover:bg-secondary-500/70 transition-all hover:px-16 rounded-full"
+            className="bg-secondary-500/80 px-12 py-3 shadow-md hover:bg-secondary-500/70 transition-all hover:px-16 rounded-full"
           >
             Create Account
-          </button>
+          </motion.button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

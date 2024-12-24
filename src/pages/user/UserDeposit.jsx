@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 import { useNavigate } from "react-router-dom";
@@ -17,11 +18,13 @@ import { backendApi, metaApi } from "@/utils/apiClients";
 
 export default function UserDeposit() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     apiGroup: "",
     depositAmount: "",
     accountNumber: "",
+    // accountNumber: loggedUser?.accounts[0]?.accountNumber,
   });
   // console.log("formdata--", formData);
 
@@ -124,6 +127,7 @@ export default function UserDeposit() {
         console.log(depositDBres);
         toast.success("Submitted successfully", { id: toastID });
         setCreatingLoading(false);
+        navigate("/user/dashboard");
       } catch (error) {
         setCreatingLoading(false);
         toast.error("Please try again", { id: toastID });
@@ -207,14 +211,29 @@ export default function UserDeposit() {
   useEffect(() => {
     fetchAccountInfo();
   }, [formData.accountNumber]);
-
   return (
-    <div className=" w-full bg-secondary-800/20 p-8 rounded-xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full bg-secondary-800/20 p-8 rounded-xl mx-auto"
+    >
       <div className="space-y-6 text-white">
-        <div>
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <ModernHeading text={"Deposit Funds"}></ModernHeading>
-        </div>
-        <div className=" flex justify-between gap-10">
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="flex flex-col md:flex-row justify-between gap-10"
+        >
+          {/* Account and Deposit Amount Selects */}
           <div className="flex flex-col gap-2 w-full">
             <label
               htmlFor="currency"
@@ -222,14 +241,14 @@ export default function UserDeposit() {
             >
               <p>Select Account</p>
               {balanceLoading ? (
-                <LoaderPinwheelIcon className=" animate-spin text-secondary-500"></LoaderPinwheelIcon>
+                <LoaderPinwheelIcon className="animate-spin text-secondary-500" />
               ) : (
                 accountBalance && (
                   <p className="px-4">
-                    Balance :{" "}
+                    Balance:{" "}
                     <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
                       ${accountBalance}
-                    </span>{" "}
+                    </span>
                   </p>
                 )
               )}
@@ -246,11 +265,7 @@ export default function UserDeposit() {
               name="accountNumber"
               className="w-full px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
             >
-              <option
-                disabled
-                className=" bg-secondary-800 text-white"
-                value=""
-              >
+              <option className=" bg-secondary-800 text-white" value="">
                 Select Account
               </option>
               {loggedUser.accounts?.map((value, index) => (
@@ -262,9 +277,10 @@ export default function UserDeposit() {
                 >
                   {value.accountNumber}
                 </option>
-              ))}
+              ))}{" "}
             </select>
           </div>
+          {/* ... other input fields remain the same */}
           <div className=" flex flex-col gap-2 w-full">
             <label
               htmlFor="deposit-amount"
@@ -289,16 +305,28 @@ export default function UserDeposit() {
               &#8377; {formData.depositAmount * 85}
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
           <label className="block mb-2 text-sm font-medium">
             Select Payment Method
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMethodsData.map((method) => (
-              <button
+            {filteredMethodsData.map((method, index) => (
+              <motion.button
                 key={method.name}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  delay: index * 0.1,
+                  duration: 0.3,
+                }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedPayment(method.name)}
                 className={`p-4 flex flex-col items-center font-semibold justify-center rounded-xl transition-colors ${
                   selectedPayment === method.name
@@ -308,98 +336,82 @@ export default function UserDeposit() {
               >
                 <span className="text-2xl mb-2">{method.icon}</span>
                 <span className="text-sm">{method.name}</span>
-              </button>
+              </motion.button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        {selectedPayment && (
-          <div className="bg-secondary-800/80 p-4 rounded-lg">
-            <h3 className="font-medium mb-2">Account Details</h3>
-
-            {paymentDetails && selectedPayment !== "Online Payment" ? (
-              <button
-                onClick={() => copyText(paymentDetails)}
-                className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
-              >
-                <p className="text-sm text-white">
-                  {formatTextWithLinks(paymentDetails) ||
-                    "No details available"}
-                </p>
-                <ClipboardIcon className="h-5 w-5" />
-                <span className="text-xs">{copied ? "Copied!" : "Copy"}</span>
-              </button>
-            ) : (
-              ""
-            )}
-            {selectedPayment === "Online Payment" && (
-              <div className=" mt-6 my-4">
-                <a
-                  href={paymentDetails}
-                  target="_blank"
-                  className=" bg-green-700 hover:bg-green-700/80 transition-all font-semibold  rounded-full px-6 py-2"
-                >
-                  Pay now
-                </a>
-              </div>
-            )}
-
-            {paymentImage && (
-              <div className="  mt-6 my-4 w-full flex gap-2 justify-center items-center rounded-md">
-                <a
-                  className=" flex gap-2 text-blue-400 hover:text-blue-500 transition-all"
-                  target="_blank"
-                  href={`${
-                    import.meta.env.VITE_BACKEND_BASE_URL
-                  }/${paymentImage}`}
-                >
-                  <Image className=""></Image>
-                  View image
-                </a>
-
-                {/* <img
-                  src={`${
-                    import.meta.env.VITE_BACKEND_BASE_URL
-                  }/${paymentImage}`}
-                  alt=""
-                  className=" rounded-md w-[20%]"
-                /> */}
-              </div>
-            )}
-          </div>
-        )}
-        {/* <div className="flex justify-between items-center gap-10 w-full]">
-          <div className=" flex flex-col gap-2 w-[40%]">
-            <label
-              htmlFor="deposit-amount"
-              className="text-sm font-medium text-gray-200"
+        <AnimatePresence>
+          {selectedPayment && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-secondary-800/80 p-4 rounded-lg overflow-hidden"
             >
-              Depositable Amount
-            </label>
-            <input
-              type="number"
-              id="deposit-amount"
-              name="deposit-amount"
-              placeholder="Enter amount"
-              className="w-full px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-            />
-          </div>
-          <div className="flex gap-3 md:mt-5 items-center w-[60%]">
-            <h1 className="sm:text-sm font-semibold text-gray-300">
-              INR Figure
-            </h1>
-            <p className="bg-secondary-500/10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
-              &#8377; {12 * 84}
-            </p>
-          </div>
-        </div> */}
+              {/* Payment details content remains the same */}
+              <h3 className="font-medium mb-2">Account Details</h3>
 
-        <div>
+              {paymentDetails && selectedPayment !== "Online Payment" ? (
+                <button
+                  onClick={() => copyText(paymentDetails)}
+                  className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
+                >
+                  <p className="text-sm text-white">
+                    {formatTextWithLinks(paymentDetails) ||
+                      "No details available"}
+                  </p>
+                  <ClipboardIcon className="h-5 w-5" />
+                  <span className="text-xs">{copied ? "Copied!" : "Copy"}</span>
+                </button>
+              ) : (
+                ""
+              )}
+              {selectedPayment === "Online Payment" && (
+                <div className=" mt-6 my-4">
+                  <a
+                    href={paymentDetails}
+                    target="_blank"
+                    className=" bg-green-700 hover:bg-green-700/80 transition-all font-semibold  rounded-full px-6 py-2"
+                  >
+                    Pay now
+                  </a>
+                </div>
+              )}
+
+              {paymentImage && (
+                <div className="  mt-6 my-4 w-full flex gap-2 justify-center items-center rounded-md">
+                  <a
+                    className=" flex gap-2 text-blue-400 hover:text-blue-500 transition-all"
+                    target="_blank"
+                    href={`${
+                      import.meta.env.VITE_BACKEND_BASE_URL
+                    }/${paymentImage}`}
+                  >
+                    <Image className=""></Image>
+                    View image
+                  </a>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
           <label className="block mb-2 text-sm font-medium">
             Upload proof of payment
           </label>
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <label className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-500/50 transition-colors py-2 px-4 rounded-lg flex items-center">
+            <motion.label
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-500/50 transition-colors py-2 px-4 rounded-lg flex items-center"
+            >
               <Upload className="mr-2" />
               Choose file
               <input
@@ -409,48 +421,45 @@ export default function UserDeposit() {
                 ref={fileInputRef}
                 accept="image/*"
               />
-            </label>
+            </motion.label>
             {file ? (
-              <div className="flex items-center space-x-2">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center space-x-2"
+              >
                 <span className="text-sm">{file.name}</span>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleRemoveFile}
                   className="text-red-500 hover:text-red-600"
                 >
                   <X size={20} />
-                </button>
+                </motion.button>
                 {previewUrl && (
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={togglePreview}
                     className="text-blue-500 hover:text-blue-600"
                   >
                     <Eye size={20} />
-                  </button>
+                  </motion.button>
                 )}
-              </div>
+              </motion.div>
             ) : (
               <span className="text-sm">No file chosen</span>
             )}
           </div>
-        </div>
-        {showPreview && previewUrl && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-secondary-900 p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto">
-              <img
-                src={previewUrl}
-                alt="Preview"
-                className="max-w-full h-auto rounded"
-              />
-              <button
-                onClick={togglePreview}
-                className="mt-4 bg-red-500/80 text-white px-6 py-2 rounded-full hover:bg-red-600/70"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-        <div className="flex items-center">
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          className="flex items-center"
+        >
           <input
             type="checkbox"
             id="agreeToTerms"
@@ -468,14 +477,22 @@ export default function UserDeposit() {
               Terms & Conditions
             </a>
           </label>
-        </div>
-        <div className=" flex justify-center items-center">
-          <button
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="flex justify-center items-center"
+        >
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={submitHandler}
             disabled={
               !agreeToTerms || creatingLoading || !selectedPayment || !file
             }
-            className={` flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
+            className={`flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
               selectedPayment && agreeToTerms && file
                 ? "bg-secondary-500/90 hover:bg-secondary-500/80 "
                 : "bg-gray-600  pointer-events-none"
@@ -485,9 +502,42 @@ export default function UserDeposit() {
             {creatingLoading && (
               <Loader2 className="animate-spin mx-2"></Loader2>
             )}
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
-    </div>
+
+      {/* Preview Modal with Animation */}
+      <AnimatePresence>
+        {showPreview && previewUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-secondary-900 p-4 rounded-lg max-w-3xl max-h-[90vh] overflow-auto"
+            >
+              <img
+                src={previewUrl}
+                alt="Preview"
+                className="max-w-full h-auto rounded"
+              />
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={togglePreview}
+                className="mt-4 bg-red-500/80 text-white px-6 py-2 rounded-full hover:bg-red-600/70"
+              >
+                Close
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

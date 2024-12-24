@@ -1,11 +1,17 @@
-import { Wallet, CreditCard, ArrowLeftRight, Users } from "lucide-react";
+import {
+  Wallet,
+  CreditCard,
+  ArrowLeftRight,
+  Users,
+  BoxIcon,
+} from "lucide-react";
 import UserInfoForm from "@/components/admin/user-detail/UserForm";
 import { useParams } from "react-router-dom";
 import UserTradeAccounts from "@/components/admin/user-detail/UserTradeAccounts";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { backendApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 const containerVariants = {
   hidden: { opacity: 1 },
@@ -49,11 +55,11 @@ const StatCard = ({ icon, amount, label, bgColor }) => (
 const UserDetailDashboard = ({ username }) => {
   const { id } = useParams();
   const [userData, setUserData] = useState();
-  const [challengesData, setChallengesData] = useState([]);
   const [totalDeposit, setTotalDeposit] = useState([]);
   const [totalWithdrwal, setTotalWithdrwal] = useState([]);
   const totalTransactions = [...totalDeposit, ...totalWithdrwal];
   const totalTransactionsLength = totalTransactions.length;
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const totalBalanceAmount = totalDeposit.reduce(
     (total, value) => total + (Number(value.balance) || 0),
@@ -67,10 +73,23 @@ const UserDetailDashboard = ({ username }) => {
     (total, value) => total + (Number(value.amount) || 0),
     0
   );
-  const xyz = totalWithdrwal.reduce(
-    (total, value) => total + (Number(value.amount) || 0),
-    0
-  );
+  const fetchAccountsInfo = async () => {
+    try {
+      let Balance = 0;
+      for (const account of userData.accounts) {
+        console.log("user details called");
+        const res = await metaApi.get(
+          `/GetUserInfo?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${account.accountNumber}`
+        );
+        Balance += Number(res.data.Equity);
+      }
+      setTotalBalance(Number(Balance.toFixed(2)));
+    } catch (error) {
+      console.error("Error fetching accounts info:", error);
+    }
+  };
 
   const fetchUserData = async () => {
     try {
@@ -109,20 +128,20 @@ const UserDetailDashboard = ({ username }) => {
 
   const stats = [
     {
-      icon: <Wallet size={24} />,
-      amount: `$ 000`,
-      label: "Available Balance",
+      icon: <BoxIcon size={24} />,
+      amount: `${userData?.accounts?.length}`,
+      label: "Total MT5 ID",
       bgColor: "bg-green-800",
     },
     {
       icon: <CreditCard size={24} />,
-      amount: `$ ${totalBalanceAmount}`,
-      label: "Account Size",
+      amount: `$${totalBalance}`,
+      label: "Total Available Balance",
       bgColor: "bg-indigo-800",
     },
     {
       icon: <ArrowLeftRight size={24} />,
-      amount: `$ ${totalWithdrwalAmount}`,
+      amount: `$${totalWithdrwalAmount}`,
       label: "Withdrawals",
       bgColor: "bg-teal-800",
     },
@@ -134,13 +153,13 @@ const UserDetailDashboard = ({ username }) => {
     },
     {
       icon: <Wallet size={24} />,
-      amount: `$ ${totalInvestAmount}`,
+      amount: `$${totalInvestAmount}`,
       label: "Deposits",
       bgColor: "bg-sky-900",
     },
     {
       icon: <Users size={24} />,
-      amount: "$ 000",
+      amount: "$0",
       label: "Total Referral Commission",
       bgColor: "bg-yellow-900/80",
     },
@@ -151,6 +170,14 @@ const UserDetailDashboard = ({ username }) => {
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    fetchAccountsInfo();
+    if (userData?.accounts) {
+      console.log("length is true");
+      fetchAccountsInfo();
+    }
+  }, [userData]);
 
   return (
     <div className=" w-full mx-auto px-10 py-5 rounded-lg bg-primary-700 shadow-lg">
@@ -165,7 +192,7 @@ const UserDetailDashboard = ({ username }) => {
         ))}
       </motion.div>
       <UserInfoForm userData={userData}></UserInfoForm>
-      {/* <UserTradeAccounts challengesData={challengesData}></UserTradeAccounts> */}
+      <UserTradeAccounts userData={userData}></UserTradeAccounts>
     </div>
   );
 };

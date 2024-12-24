@@ -87,7 +87,7 @@ const UserInfoForm = ({ userData }) => {
   }, []);
 
   return (
-    <div className="container mx-auto p-5 rounded-lg bg-primary-700 shadow-lg text-white">
+    <div className=" mx-auto p-5 rounded-lg bg-primary-700 shadow-lg text-white">
       <h1 className="text-xl font-bold mb-6">Information of User</h1>
 
       <form
@@ -279,7 +279,7 @@ const UserInfoForm = ({ userData }) => {
                       <img
                         className=" mx-auto size-[40%]"
                         src={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.frontSideOfDocument
                         }
@@ -289,7 +289,7 @@ const UserInfoForm = ({ userData }) => {
                         target="_blank"
                         className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
                         href={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.selfieWithDocument
                         }
@@ -302,7 +302,7 @@ const UserInfoForm = ({ userData }) => {
                       <img
                         className=" mx-auto size-[40%]"
                         src={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.backSideOfDocument
                         }
@@ -312,7 +312,7 @@ const UserInfoForm = ({ userData }) => {
                         target="_blank"
                         className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
                         href={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.selfieWithDocument
                         }
@@ -325,7 +325,7 @@ const UserInfoForm = ({ userData }) => {
                       <img
                         className=" mx-auto size-[40%]"
                         src={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.selfieWithDocument
                         }
@@ -335,7 +335,7 @@ const UserInfoForm = ({ userData }) => {
                         target="_blank"
                         className=" flex justify-end px-5 text-blue-500 hover:text-blue-600"
                         href={
-                          import.meta.env.VITE_BECKEND_END_POINT +
+                          import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
                           userData?.kycDetails?.selfieWithDocument
                         }

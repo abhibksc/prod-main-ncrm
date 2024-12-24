@@ -6,24 +6,16 @@ import {
   ChevronDown,
   ChevronUp,
   Home,
-  Settings,
-  Info,
-  ContactIcon,
-  ArrowRightCircle,
   Users,
-  LogIn,
   ChevronsRight,
   LogOut,
   CreditCard,
   LucideBadgeDollarSign,
   Banknote,
-  ListCollapseIcon,
-  Ticket,
-  Settings2Icon,
   HandCoins,
   LucideBookText,
-  RouteIcon,
   Mails,
+  SquareStackIcon,
 } from "lucide-react";
 
 const sidebarVariants = {
@@ -72,15 +64,15 @@ const Sidebar = () => {
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
     {
-      label: "Account Challenges",
+      label: "Login Logs",
       icon: <ChevronsRight />,
-      route: "/admin/account-challenges",
+      route: "/admin/login-logs",
     },
-    {
-      label: "Rules",
-      icon: <LucideBookText />,
-      route: "/admin/rules",
-    },
+    // {
+    //   label: "Rules",
+    //   icon: <LucideBookText />,
+    //   route: "/admin/rules",
+    // },
     {
       label: "Manage Users",
       icon: <Users />,
@@ -149,6 +141,11 @@ const Sidebar = () => {
       label: "Custom Mail",
       icon: <Mails />,
       route: "/admin/custom-email",
+    },
+    {
+      label: "IB Zone",
+      icon: <SquareStackIcon />,
+      route: "/admin/ib-zone",
     },
     { label: "Logout", icon: <LogOut />, route: "/admin/login" },
   ];

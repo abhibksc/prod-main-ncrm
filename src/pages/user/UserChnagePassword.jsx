@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setLoggedUser } from "../../redux/user/userSlice";
 import { motion } from "framer-motion";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import { backendApi } from "@/utils/apiClients";
+import ModernHeading from "@/lib/ModernHeading";
 
 const UserChnagePassword = () => {
   const [passwords, setPasswords] = useState({
@@ -22,7 +22,7 @@ const UserChnagePassword = () => {
   const [error, setError] = useState("");
 
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -138,13 +138,6 @@ const UserChnagePassword = () => {
           <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
   <p>Your account password has been successfully updated.</p>
          <div class="withdrawal-details">
-          
-          <p>Account No: <span class="highlight">${
-            loggedUser.mt5Account
-          }</span></p>
-            <p>Old password: <span class="highlight">${
-              loggedUser.password
-            }</span></p>
             <p>New password: <span class="highlight">${
               passwords.confirm
             }</span></p>
@@ -195,46 +188,38 @@ const UserChnagePassword = () => {
     if (passwords.new !== passwords.confirm) {
       setError("Passwords do not match. Please try again.");
       toast.error("Passwords do not match", { id: toastId });
-    }
-    if (loggedUser.password !== passwords.current) {
-      setError("Privious Password do not match. Please try again.");
-      toast.error("Privious Password do not match", { id: toastId });
     } else {
       try {
-        const res = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-          {
-            id: loggedUser._id,
-            password: passwords.confirm,
-          }
-        );
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: loggedUser.email,
-            content: customContent,
-            subject: "Account password changed",
-          }
-        );
-        toast.success("Password updated", { id: toastId });
+        const res = await backendApi.post(`/update-password`, {
+          userId: loggedUser._id,
+          currentPassword: passwords.current,
+          newPassword: passwords.confirm,
+        });
+        const customMailRes = await backendApi.post(`/custom-mail`, {
+          email: loggedUser.email,
+          content: customContent,
+          subject: "Account Password Changed",
+        });
+        toast.success(res.data.msg, { id: toastId });
+        navigate("/user/dashboard");
         getUpdateLoggedUser();
       } catch (error) {
-        console.log("error while changing password--", error.response.data);
-        toast.error(error.response.data.msg, { id: toastId });
+        console.log("error while changing password--", error);
+        toast.error(error.response.data.message, { id: toastId });
       }
     }
   };
 
   return (
     <motion.div
-      className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-gradient-to-br from-secondary-800/40 to-secondary-800/60 rounded-xl shadow-2xl"
+      className="w-full max-w-4xl mx-auto p-6 sm:p-10 bg-secondary-800/30 rounded-xl shadow-2xl"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
-        Change Password
-      </h2>
+      <div className="mb-6">
+        <ModernHeading text={"Change Password"}></ModernHeading>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         {["current", "new", "confirm"].map((field) => (
           <motion.div
@@ -254,7 +239,7 @@ const UserChnagePassword = () => {
                 name={field}
                 value={passwords[field]}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border-none bg-secondary-800 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-700 focus:border-secondary-700 transition duration-300"
+                className="w-full px-4 py-3 border-none bg-secondary-800/50 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-500 transition duration-300"
                 required
               />
               <Lock
@@ -286,17 +271,17 @@ const UserChnagePassword = () => {
             {error}
           </motion.div>
         )}
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+        <div className="flex flex-col-reverse gap-4 sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
           <Link
             to={"/user/dashboard"}
             type="button"
-            className="w-full sm:w-auto bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+            className="w-full sm:w-auto text-center bg-gray-500/40 text-gray-200 py-3 px-6 rounded-lg hover:bg-gray-300/10 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
           >
             Cancel
           </Link>
           <motion.button
             type="submit"
-            className="w-full sm:w-auto bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-500/80 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 flex items-center justify-center"
+            className="w-full sm:w-auto bg-secondary-500 text-white py-3 px-6 rounded-lg hover:bg-secondary-500/80 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-opacity-50 flex items-center justify-center"
             initial={{ scale: 0.99 }}
             whileHover={{ scale: 1.01 }}
             transition={{ duration: 0.3 }}

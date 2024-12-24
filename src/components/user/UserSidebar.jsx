@@ -8,19 +8,17 @@ import {
   Users,
   CreditCard,
   ArrowUpDown,
-  ShieldAlertIcon,
+  ShieldEllipsis,
   ReceiptPoundSterlingIcon,
   HardDriveDownloadIcon,
-  ShieldEllipsis,
-  PiggyBankIcon,
-  LucideBadgeDollarSign,
-  ArrowLeftRight,
   CircleFadingPlus,
+  ArrowLeftRight,
   ArrowDownCircleIcon,
+  SquareStackIcon,
 } from "lucide-react";
 import { handleToggleSidebar } from "@/redux/user/userSlice";
 
-const MenuItem = ({ icon: Icon, label, link }) => (
+const MenuItem = ({ icon: Icon, label, link, onClick }) => (
   <motion.div whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
     <NavLink
       to={link}
@@ -31,6 +29,7 @@ const MenuItem = ({ icon: Icon, label, link }) => (
             : "text-white/80 transition-colors duration-300"
         }`
       }
+      onClick={onClick}
     >
       <Icon size={28} />
       <span className="mt-1 font-semibold text-xs">{label}</span>
@@ -74,15 +73,20 @@ const contentVariants = {
 };
 
 const UserSidebar = () => {
-  const dispatch = useDispatch();
+  const loggedUser = useSelector((store) => store.user.loggedUser);
   const reduxSidebarState = useSelector((store) => store.user.isSidebarOpen);
   const [isOpen, setIsOpen] = useState(reduxSidebarState);
-  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 640);
+  const dispatch = useDispatch();
   const sidebarRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsLargeScreen(window.innerWidth >= 1024);
+      const smallScreen = window.innerWidth < 640;
+      setIsSmallScreen(smallScreen);
+      if (!smallScreen) {
+        setIsOpen(true); // Ensure the sidebar is open on larger screens
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -90,11 +94,15 @@ const UserSidebar = () => {
   }, []);
 
   useEffect(() => {
-    setIsOpen(reduxSidebarState || isLargeScreen);
-  }, [reduxSidebarState, isLargeScreen]);
+    if (isSmallScreen) {
+      setIsOpen(reduxSidebarState);
+    } else {
+      setIsOpen(true); // Keep sidebar open on larger screens
+    }
+  }, [reduxSidebarState, isSmallScreen]);
 
   const closeSidebar = () => {
-    if (!isLargeScreen) {
+    if (isSmallScreen) {
       setIsOpen(false);
       dispatch({ type: "SET_SIDEBAR_OPEN", payload: false });
     }
@@ -106,7 +114,7 @@ const UserSidebar = () => {
         sidebarRef.current &&
         !sidebarRef.current.contains(event.target) &&
         isOpen &&
-        !isLargeScreen
+        isSmallScreen
       ) {
         closeSidebar();
       }
@@ -116,34 +124,17 @@ const UserSidebar = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, isLargeScreen]);
+  }, [isOpen, isSmallScreen]);
 
   const menuItems = [
     { icon: BarChart2, label: "Dashboard", link: "/user/dashboard" },
     { icon: ShieldEllipsis, label: "Accounts", link: "/user/challenges" },
-    {
-      icon: ArrowUpDown,
-      label: "Transactions",
-      link: "/user/transaction",
-    },
+    { icon: ArrowUpDown, label: "Transactions", link: "/user/transaction" },
     { icon: BarChart2, label: "Trades", link: "/user/trade-history" },
-    {
-      icon: CircleFadingPlus,
-      label: "Deposit",
-      link: "/user/deposit",
-    },
-    {
-      icon: ArrowLeftRight,
-      label: "Transfer",
-      link: "/user/transfer",
-    },
+    { icon: CircleFadingPlus, label: "Deposit", link: "/user/deposit" },
+    { icon: ArrowLeftRight, label: "Transfer", link: "/user/transfer" },
     { icon: ArrowDownCircleIcon, label: "Withdraw", link: "/user/withdraw" },
-    { icon: Users, label: "Referrals", link: "/user/referrals" },
-    // {
-    //   icon: ShieldAlertIcon,
-    //   label: "Rules",
-    //   link: "/user/rules",
-    // },
+    { icon: SquareStackIcon, label: "IB Zone", link: "/user/referrals" },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {
       icon: ReceiptPoundSterlingIcon,
@@ -151,26 +142,20 @@ const UserSidebar = () => {
       link: "/user/economic-calendar",
     },
   ];
-  const loggedUser = useSelector((store) => store.user.loggedUser);
-  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
-
-  const isMax = phaseMaxLength === loggedUser.phase;
 
   return (
     <>
-      {isOpen && !isLargeScreen && (
+      {isOpen && isSmallScreen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"
           onClick={closeSidebar}
         />
       )}
       <motion.div
         ref={sidebarRef}
-        className={`fixed left-0 h-100vh h-screen top-0 bg-secondary-900 text-white overflow-hidden z-50 ${
-          isLargeScreen ? "lg:relative lg:top-0 lg:h-screen" : ""
-        }`}
+        className={`fixed left-0 h-screen top-0 bg-secondary-900 text-white overflow-hidden z-50`}
         initial={false}
-        animate={isOpen || isLargeScreen ? "open" : "closed"}
+        animate={isOpen ? "open" : "closed"}
         variants={sidebarVariants}
       >
         <motion.div
@@ -191,24 +176,23 @@ const UserSidebar = () => {
               </motion.div>
             )}
             <AnimatePresence>
-              {(isOpen || isLargeScreen) &&
-                menuItems.map((item) => (
-                  <motion.div
-                    key={item.label}
-                    onClick={() => dispatch(handleToggleSidebar(false))}
-                    className="w-full"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <MenuItem
-                      icon={item.icon}
-                      label={item.label}
-                      link={item.link}
-                    />
-                  </motion.div>
-                ))}
+              {menuItems.map((item) => (
+                <motion.div
+                  key={item.label}
+                  className="w-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <MenuItem
+                    icon={item.icon}
+                    label={item.label}
+                    link={item.link}
+                    onClick={isSmallScreen ? closeSidebar : null}
+                  />
+                </motion.div>
+              ))}
             </AnimatePresence>
           </div>
         </motion.div>

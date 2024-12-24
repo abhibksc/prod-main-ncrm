@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
+import DynamicLoder from "@/components/Loader/DynamicLoder";
 
-const UserTradeAccounts = ({ challengesData }) => {
-  console.log("challenge account -----", challengesData);
+const UserTradeAccounts = ({ userData }) => {
+  // console.log("challenge account -----", challengesData);
   // format date ---------------------
 
   function formatDate(isoDateString) {
@@ -64,51 +65,61 @@ const UserTradeAccounts = ({ challengesData }) => {
   }
   // console.log("challenges data --", challengesData);
   return (
-    <div className="container mx-auto mt-4 ">
+    <div className=" mx-auto mt-4 ">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-white">Trade Accounts</h2>\
+        <h2 className="text-2xl font-bold text-white">User Accounts</h2>
       </div>
       <div className="overflow-x-auto custom-scrollbar">
-        <table className="min-w-full bg-primary-700 rounded-lg text-white">
-          <thead className=" rounded-lg">
-            <tr className="bg-primary-500 uppercase text-sm ">
-              <th className="py-3 px-6 text-left">Account No</th>
-              <th className="py-3 px-6 text-left">Account Type</th>
-              <th className="py-3 px-6 text-left">Account Size</th>
-              <th className="py-3 px-6 text-left">Balance</th>
-              <th className="py-3 px-6 text-left">Leverage</th>
-              <th className="py-3 px-6 text-left">Phase</th>
-              <th className="py-3 px-6 text-left">Dropdown status</th>
-              <th className="py-3 px-6 text-left">Updated At</th>
-              <th className="py-3 px-6 text-left">Status</th>
+        <table className="w-full border-collapse min-w-[640px]">
+          <thead>
+            <tr className="bg-secondary-500/50 whitespace-nowrap rounded text-white">
+              <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
+                AC NO:
+              </th>
+              <th className="p-2 sm:p-3 text-center font-semibold">Type</th>
+              <th className="p-2 sm:p-3 text-center font-semibold">Leverage</th>
+              <th className="p-2 sm:p-3 text-center font-semibold">
+                MasterPassword
+              </th>
+              <th className="p-2 sm:p-3 text-center font-semibold">
+                InvestorPassword
+              </th>
+              <th className="p-2 sm:p-3 text-center font-semibold">Platform</th>
+              <th className="p-2 sm:p-3 text-center font-semibold">
+                Timestamp
+              </th>
             </tr>
           </thead>
-          <tbody className=" text-sm">
-            {challengesData?.map((account) => (
+          <tbody>
+            {userData?.accounts?.map((value, index) => (
               <tr
-                key={account.id}
-                className="border-b border-gray-200 hover:bg-primary-600/80"
+                key={index}
+                className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
               >
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {account?.mt5Account}
+                <td className="p-2 sm:p-3 text-sm sm:text-base">
+                  {value?.accountNumber}
                 </td>
-                <td className="py-3 px-6 text-left">{account?.type}</td>
-                <td className="py-3 px-6 text-left">{account?.accountSize}</td>
-                <td className="py-3 px-6 text-left">{account?.balance}</td>
-                {/* <td className="py-3 px-6 text-left">{account?.balance}</td> */}
-                <td className="py-3 px-6 text-left">{account?.leverage}</td>
-                <td className="py-3 px-6 text-left">{account?.phase}</td>
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  {account?.reason}
+                <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
+                  {value?.accountType}
                 </td>
-
-                <td className="py-3 px-4">
-                  <div>{formatDate(account?.updatedAt)}</div>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.leverage}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.masterPassword}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.investorPassword}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.platform || "NULL"}
+                </td>
+                <td className="py-3 text-center px-4">
+                  <div>{formatDate(value?.createdAt)}</div>
                   <div className="text-sm text-gray-400">
-                    {calculateTimeSinceJoined(account?.updatedAt)}
+                    {calculateTimeSinceJoined(value?.createdAt)}
                   </div>
                 </td>
-                <td className="py-3 px-6 text-left">{account?.status}</td>
               </tr>
             ))}
           </tbody>

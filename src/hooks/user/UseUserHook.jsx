@@ -118,8 +118,8 @@ export default function UseUserHook() {
   };
   return {
     GetOpenTradeApi,
-    GetUserInfoAPI,
-    GetCloseTradeApi,
+    // GetUserInfoAPI,
+    // GetCloseTradeApi,
     getAllTradeApi,
     getUpdateLoggedUser,
     getReset,

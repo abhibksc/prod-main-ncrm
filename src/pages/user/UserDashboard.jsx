@@ -1,16 +1,11 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import UserDashboardAccount from "@/components/user/dashboard/UserDashboardAccount";
-import UserDashboardAccountStats from "@/components/user/dashboard/UserDashboardAccountStats";
 import UserDashboardBanner from "@/components/user/dashboard/UserDashboardBanner";
-import UserDashboardCountdown from "@/components/user/dashboard/UserDashboardCountdown";
 import UserDashboardTrades from "@/components/user/dashboard/UserDashboardTrades";
 import UserDashboardBalanceCards from "@/components/user/dashboard/UserDashboardCards";
 import TradingViewWidget from "@/components/user/dashboard/TradingViewWidget";
-import UsePhaseStats from "@/hooks/user/UsePhaseStats";
-import VisitorHoursGraph from "@/components/user/graph/VisitorHoursGraph";
-import VisitorChart from "@/components/user/graph/VisitorChart";
-import VisitorsLineChart from "@/components/user/graph/VisitorsLineChart";
+
 import UseUserHook from "@/hooks/user/UseUserHook";
 
 export default function UserDashboard() {
@@ -59,30 +54,14 @@ export default function UserDashboard() {
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         <div className="">
-          {/* <UserLineChart /> */}
           <TradingViewWidget />
-          {/* <VisitorChart /> */}
         </div>
         <div className="flex  justify-center items-center">
           <UserDashboardAccount />
-          {/* <VisitorHoursGraph /> */}
-          {/* <VisitorHoursGraph /> */}
-          {/* <VisitorChart /> */}
-          {/* <VisitorsLineChart /> */}
         </div>
       </motion.div>
       {/* 3rd row  */}
 
-      <motion.div
-        className="grid  gap-6 md:grid-cols-2 grid-cols-1 my-4  w-full"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-      >
-        {/* <UserDashboardAccountStats /> */}
-        {/* <UserDashboardBanner /> */}
-      </motion.div>
-      {/* 4th row  */}
       <motion.div
         className="grid md:grid-cols-2 grid-cols-1 my-4 gap-6 w-full"
         initial={{ opacity: 0, y: 20 }}
@@ -91,8 +70,6 @@ export default function UserDashboard() {
       >
         <UserDashboardTrades></UserDashboardTrades>
         <UserDashboardBanner />
-
-        {/* <UserDashboardCountdown /> */}
       </motion.div>
     </motion.div>
   );

@@ -1,23 +1,23 @@
 import { useState } from "react";
-import { Eye, EyeOff, Lock, CheckCircle, AlertCircle } from "lucide-react";
+import { Lock, CheckCircle, AlertCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 const UserMasterPassword = () => {
   const [passwords, setPasswords] = useState({
     new: "",
     confirm: "",
   });
-  const [showPasswords, setShowPasswords] = useState({
-    new: false,
-    confirm: false,
-  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const [currentAccount, setCurrentAccount] = useState(
+    loggedUser.accounts[0] || "000"
+  );
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -29,17 +29,6 @@ const UserMasterPassword = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=<>?]).{8,}$/;
     return passwordRegex.test(password);
   };
-
-  const currentDateTime = new Date();
-  const formattedDateTime =
-    currentDateTime.toLocaleDateString("en-GB") +
-    ", " +
-    currentDateTime.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
 
   const customContent = `<!DOCTYPE html>
     <html lang="en">
@@ -128,7 +117,7 @@ const UserMasterPassword = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Master password updated</h1>
+          <h1>Master Password Updated</h1>
         </div>
         <div class="content">
           <p>Dear ${loggedUser?.firstName + " " + loggedUser?.lastName},</p>
@@ -136,15 +125,14 @@ const UserMasterPassword = () => {
          <div class="withdrawal-details">
           
           <p>Account No: <span class="highlight">${
-            loggedUser.mt5Account
+            currentAccount.accountNumber
           }</span></p>
             <p>Old password: <span class="highlight">${
-              loggedUser.masterPassword
+              currentAccount.masterPassword
             }</span></p>
             <p>New password: <span class="highlight">${
               passwords.confirm
             }</span></p>
-            <p>Updated Date: <span class="highlight">${formattedDateTime}</span></p>
           </div>
     
     <p>Thank you for choosing us.</p>
@@ -192,6 +180,7 @@ const UserMasterPassword = () => {
       toast.error("Invalid password format", { id: toastId });
       return;
     }
+    // Validate confirm password
 
     if (passwords.new !== passwords.confirm) {
       setError("Passwords do not match. Please try again.");
@@ -200,38 +189,23 @@ const UserMasterPassword = () => {
     }
 
     try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_API_END_POINT
-        }/ChangeMasterPassword?Manager_Index=${
+      const res = await metaApi.get(
+        `/ChangeMasterPassword?Manager_Index=${
           import.meta.env.VITE_MANAGER_INDEX
-        }&Account=${loggedUser.mt5Account}&password=${passwords.confirm}`
+        }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
       );
 
-      await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-challenge`,
-        {
-          mt5Account: loggedUser.mt5Account,
-          masterPassword: passwords.confirm,
-        }
-      );
+      const backendRes = await backendApi.post(`/update-master-password`, {
+        userId: loggedUser._id,
+        accountId: currentAccount._id,
+        newPassword: passwords.confirm,
+      });
 
-      await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-        {
-          id: loggedUser._id,
-          masterPassword: passwords.confirm,
-        }
-      );
-
-      await axios.post(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-        {
-          email: loggedUser.email,
-          content: customContent,
-          subject: "Master password changed",
-        }
-      );
+      await backendApi.post(`/custom-mail`, {
+        email: loggedUser.email,
+        content: customContent,
+        subject: "Master password changed",
+      });
 
       toast.success(res.data.MESSAGE, { id: toastId });
       navigate("/user/dashboard");
@@ -250,9 +224,44 @@ const UserMasterPassword = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">
-        Change your master password
-      </h2>
+      <div className=" flex flex-col md:flex-row justify-between">
+        <div className=" mb-6">
+          <ModernHeading text={"Change Master Password"}></ModernHeading>
+        </div>
+        <div className=" my-2">
+          {loggedUser?.accounts.length > 0 && (
+            <select
+              onChange={(e) => {
+                const selectedValue = loggedUser.accounts?.find(
+                  (value) => value.accountNumber === e.target.value
+                );
+                setCurrentAccount(selectedValue);
+              }}
+              id="accountNumber"
+              name="accountNumber"
+              className="w-full border-none  py-2 text-sm md:py1 rounded-full border bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
+            >
+              <option
+                disabled
+                className=" bg-secondary-800 text-gray-500"
+                value=""
+              >
+                Select Account
+              </option>
+              {loggedUser.accounts?.map((value, index) => (
+                <option
+                  key={index}
+                  className=" bg-secondary-800 font-semibold text-white"
+                  onClick={() => setCurrentAccount(value)}
+                  value={value.accountNumber}
+                >
+                  {value.accountNumber}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         {["new", "confirm"].map((field) => (
           <motion.div
@@ -267,12 +276,12 @@ const UserMasterPassword = () => {
             </label>
             <div className="relative group">
               <input
-                type={showPasswords[field] ? "text" : "password"}
                 id={field}
+                type="password"
                 name={field}
                 value={passwords[field]}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border-none bg-secondary-800 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-700 focus:border-secondary-700 transition duration-300 ${
+                className={`w-full px-4 py-3 border-none bg-secondary-800 pl-12 pr-10 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition duration-300 ${
                   error && "ring-red-500 border-red-500"
                 }`}
                 required
@@ -281,17 +290,6 @@ const UserMasterPassword = () => {
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 group-focus-within:secondary-700 transition-colors duration-300"
                 size={20}
               />
-              <button
-                type="button"
-                onClick={() => togglePasswordVisibility(field)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-200 hover:secondary-700 focus:outline-none"
-              >
-                {showPasswords[field] ? (
-                  <EyeOff size={20} />
-                ) : (
-                  <Eye size={20} />
-                )}
-              </button>
             </div>
           </motion.div>
         ))}
@@ -306,11 +304,11 @@ const UserMasterPassword = () => {
             {error}
           </motion.div>
         )}
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
+        <div className="flex flex-col-reverse gap-4 sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-8">
           <Link
             to={"/user/dashboard"}
             type="button"
-            className="w-full sm:w-auto bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+            className="w-full text-center sm:w-auto bg-red-600/10 text-red-200 py-3 px-6 rounded-lg hover:bg-red-600/30 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
           >
             Cancel
           </Link>

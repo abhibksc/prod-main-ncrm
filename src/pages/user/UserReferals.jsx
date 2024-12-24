@@ -20,6 +20,7 @@ import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("commission");
@@ -61,35 +62,28 @@ const UserReferal = () => {
     // const envGroup = "SK GROUP\\M10\\STANDARD";
     const envGroup = String(import.meta.env.VITE_IB_GROUP_NAME);
     const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
-    // console.log(doubleQuotedEnvGroup); // Prints the string with single backslashes
 
     try {
-      const generateMtId = await axios.post(
-        `${import.meta.env.VITE_API_END_POINT}/Adduser`,
-        {
-          Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
-          MT5Account: randomNumber,
-          Name: loggedUser.firstName + " " + loggedUser.lastName,
-          Leverage: import.meta.env.VITE_IB_LEVERAGE,
-          Group_Name: doubleQuotedEnvGroup,
-        }
-      );
-      console.log(generateMtId);
+      const generateMtId = await metaApi.post(`/Adduser`, {
+        Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
+        MT5Account: randomNumber,
+        Name: loggedUser.firstName + " " + loggedUser.lastName,
+        Leverage: import.meta.env.VITE_IB_LEVERAGE,
+        Group_Name: doubleQuotedEnvGroup,
+      });
       if (generateMtId.data.MT5Account > 0) {
-        const updateLoggedUser = await axios.put(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/update-user`,
-          {
-            id: loggedUser._id,
-            referalId: generateMtId.data.MT5Account,
-          }
-        );
+        const updateLoggedUser = await backendApi.put(`/update-user`, {
+          id: loggedUser._id,
+          referralAccount: generateMtId.data.MT5Account,
+        });
+
         toast.success("IB account created", { id: toastId });
         getUpdateLoggedUser();
       } else {
         toast.error("Please try again", { id: toastId });
       }
     } catch (error) {
-      console.log("error");
+      console.log("error", error);
       toast.error(" Something went wrong", { id: toastId });
     }
   };
@@ -97,21 +91,18 @@ const UserReferal = () => {
 
   const fetchCommissions = async () => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/get-commissions`
+      const res = await backendApi.get(
+        `/user-zone-ibs/${loggedUser?.referralAccount}`
       );
 
-      const commissions = res.data.data.filter(
-        (value) => value?.referralId === loggedUser.referalId
-      );
-      setCommissionsData(commissions);
+      setCommissionsData(res.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
   const ReferralsView = () => {
-    const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referalId}`;
+    const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referralAccount}`;
 
     const [isCopied, setIsCopied] = useState(false);
     const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
@@ -285,7 +276,7 @@ const UserReferal = () => {
       className=" w-full mx-auto p-4 sm:p-8 rounded-xl bg-secondary-800/10"
     >
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 sm:mb-8 space-y-2 sm:space-y-0">
-        {!loggedUser.referalId ? (
+        {!loggedUser?.referralAccount ? (
           ""
         ) : (
           <div className="space-x-2 sm:space-x-4 flex">
@@ -301,7 +292,7 @@ const UserReferal = () => {
             />
           </div>
         )}
-        {loggedUser.referalId && (
+        {loggedUser?.referralAccount && (
           <div>
             <div className=" flex font-semibold gap-2">
               <HandCoins className=" text-yellow-500"></HandCoins>
@@ -309,13 +300,13 @@ const UserReferal = () => {
             </div>
             <div className=" bg-yellow-500/10 ml-4 shadow-2xl px-2 my-1 py-1 rounded-full text-center">
               <p className=" text-gray-200  font-semibold  text-lg">
-                {loggedUser?.referalId}
+                {loggedUser?.referralAccount}
               </p>
             </div>
           </div>
         )}
       </div>
-      {loggedUser.referalId ? (
+      {loggedUser?.referralAccount ? (
         <AnimatePresence mode="wait">
           {activeTab === "referrals" ? (
             <ReferralsView key="referrals" />
@@ -486,17 +477,19 @@ const UserReferal = () => {
             <p className="text-gray-300 mb-6">
               Join our community of dedicated and successful affiliates.{" "}
             </p>
-            <button
-              className="px-8 py-4 bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              onClick={generateHandler}
-            >
-              <Users className="animate-pulse" size={20} />
-              Generate affiliate Account
-              <ArrowRight
-                className="transform transition-transform group-hover:translate-x-2"
-                size={20}
-              />
-            </button>
+            <div>
+              <button
+                className="px-8 py-4 text-xs md:text-sm  bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                onClick={generateHandler}
+              >
+                <Users className="animate-pulse" size={20} />
+                Generate affiliate Account
+                <ArrowRight
+                  className="transform transition-transform group-hover:translate-x-2"
+                  size={20}
+                />
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Scale,
-  Activity,
+  Coins,
   TrendingUp,
   TrendingDown,
-  CircleDot,
   ArrowUpCircle,
   ArrowDownCircle,
-  Coins,
 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { setTotalFinalPnL } from "@/redux/user/userSlice";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (delay) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay },
+  }),
+};
 
 const BalanceCard = ({
   icon: Icon,
@@ -22,33 +28,22 @@ const BalanceCard = ({
   delay,
   isProfit,
 }) => {
-  const getPhaseColor = (phase, isMax) => {
-    if (isMax) return "text-red-500";
-    switch (phase) {
-      case 1:
-        return "text-green-500";
-      case 2:
-        return "text-yellow-500";
-      default:
-        return "";
-    }
-  };
-
   return (
     <motion.div
-      className={`flex items-center space-y-2 p-3 border-l-4 bg-secondary-800 rounded-r-lg flex-1 min-w-[200px]`}
+      className="flex items-center space-y-2 p-3 border-l-4 bg-secondary-800 rounded-r-lg flex-1 min-w-[200px]"
       style={{
         borderColor,
         backgroundImage:
-          'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),url("https://static.vecteezy.com/system/resources/thumbnails/021/915/647/small/gray-color-luxury-square-seamless-pattern-vector.jpg")',
+          'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)),url("https://img.freepik.com/premium-vector/triangle-future-abstract-white-texture-background_34679-80.jpg")',
         backgroundBlendMode: "overlay",
         backgroundSize: "cover",
       }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay }}
+      variants={cardVariants}
+      initial="hidden"
+      animate="visible"
+      custom={delay}
     >
-      <div className={`flex items-center space-x-3`}>
+      <div className="flex items-center space-x-3">
         <Icon
           className={`w-6 h-6  ${
             isProfit !== undefined
@@ -78,12 +73,8 @@ const BalanceCard = ({
 };
 
 const UserDashboardBalanceCards = () => {
-  const availableBalance = useSelector((store) => store.user.availableBalance);
-  const profitNloss = useSelector((store) => store.user.profitNloss);
-  const phaseMaxLength = useSelector((store) => store.user.phaseMaxLength);
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const totalFinalPnL = useSelector((store) => store.user.totalFinalPnL);
-  const [totalBalance, setTotalBalance] = useState(0);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalWithdrawals, setTotalWithdrawals] = useState(0);
   const dispatch = useDispatch();
@@ -106,22 +97,19 @@ const UserDashboardBalanceCards = () => {
       console.error("Error fetching accounts info:", error);
     }
   };
-  // deposit data--
 
   const fetchTotalDeposits = async () => {
     try {
       const res = await backendApi.get(`/deposit/${loggedUser._id}`);
-      // console.log("totalWithdrawals", res.data.data);
       const balance = res.data.data.reduce(
         (total, current) => total + Number(current.deposit),
         0
       );
       setTotalDeposits(balance);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
-  // withdrawals data--
 
   const fetchTotalWithdrawals = async () => {
     try {
@@ -132,9 +120,10 @@ const UserDashboardBalanceCards = () => {
       );
       setTotalWithdrawals(balance);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
+
   useEffect(() => {
     fetchAccountsInfo();
     fetchTotalDeposits();
@@ -142,7 +131,19 @@ const UserDashboardBalanceCards = () => {
   }, []);
 
   return (
-    <div className="flex flex-wrap justify-between items-stretch bg-secondary-800/40 shadow-md rounded-lg p-4 gap-4">
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  justify-between items-stretch bg-secondary-800/40 shadow-md rounded-lg p-4 gap-4"
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.1,
+          },
+        },
+      }}
+    >
       <BalanceCard
         icon={Coins}
         title="Total MT5 Account"
@@ -163,16 +164,16 @@ const UserDashboardBalanceCards = () => {
         title="Total Deposits"
         value={`${totalDeposits} USD`}
         borderColor={import.meta.env.VITE_THEME_COLOR}
-        delay={0.3}
+        delay={0.6}
       />
       <BalanceCard
         icon={ArrowDownCircle}
         title="Total Withdrawals"
         value={`${totalWithdrawals} USD`}
         borderColor={import.meta.env.VITE_THEME_COLOR}
-        delay={0.3}
+        delay={0.8}
       />
-    </div>
+    </motion.div>
   );
 };
 

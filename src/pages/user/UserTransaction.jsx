@@ -116,7 +116,7 @@ export default function UserTransaction() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-secondary-800/10 pb-20 rounded-lg shadow-lg p-3 text-white overflow-hidden"
+      className="bg-secondary-800/10 pb-20 rounded-lg shadow-lg p-3 text-white overflow-hidden user-custom-scrollbar"
     >
       <motion.div className=" mb-6">
         <ModernHeading text={"Transaction History"}></ModernHeading>
@@ -177,9 +177,9 @@ export default function UserTransaction() {
           variants={tableVariants}
           initial="hidden"
           animate="visible"
-          className="overflow-x-auto"
+          className=" overflow-x-auto user-custom-scrollbar"
         >
-          <table className="w-full text-sm overflow-y-hidden">
+          <table className="w-full text-sm overflow-y-hidden overflow-x-auto user-custom-scrollbar">
             <thead>
               <tr className="text-gray-400 border-b border-gray-700">
                 <th className="text-center py-3 px-4 whitespace-nowrap">
@@ -282,7 +282,7 @@ export default function UserTransaction() {
                       </td>
                     ) : (
                       <td className="text-center text-xs py-2 px-3">
-                        {item?.lastBalance}
+                        ${item?.lastBalance}
                       </td>
                     )}
 

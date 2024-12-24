@@ -1,4 +1,5 @@
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
+import { backendApi } from "@/utils/apiClients";
 import axios from "axios";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -6,27 +7,20 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const UserIBcards = ({ commissionsData }) => {
-  const totalCommissionLength = commissionsData.length;
+  const totalCommissionLength = commissionsData?.length;
   const totalCommissionValue = commissionsData.reduce(
-    (increment, value) => increment + Number(value.commission),
+    (increment, value) => increment + Number(value.totalCommission),
     0
   );
   const [balance, userInfoData] = UseCommissionBalance();
   const [WithdarwalSum, setWithdrawalSum] = useState(0);
-  const logggedUser = useSelector((store) => store.user.loggedUser);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   // fetch withdrawal history ---
   const fetchHistoryData = async () => {
     try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/referral-withdrawals`
-      );
-      const filteredData = res.data.data.filter(
-        (value) => value.userId._id === logggedUser._id
-      );
-      const totalSum = filteredData.reduce(
+      const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
+      const totalSum = res.data.data.reduce(
         (total, value) => total + value.amount,
         0
       );
@@ -51,7 +45,7 @@ const UserIBcards = ({ commissionsData }) => {
     <div className="p-6 w-full max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* IB ID Card */}
-        <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
+        {/* <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
@@ -82,7 +76,7 @@ const UserIBcards = ({ commissionsData }) => {
               <span>Total Deposit Entries</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Total Commission Card */}
         <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
@@ -118,7 +112,7 @@ const UserIBcards = ({ commissionsData }) => {
             </div>
           </div>
         </div>
-        {/* Withdrawal Hisstory Card */}
+        {/* Withdrawal History Card */}
         <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
@@ -148,7 +142,7 @@ const UserIBcards = ({ commissionsData }) => {
           <div className="mt-4">
             <Link to={"/user/referrals/withdrawal-history"}>
               <div className="text-sm text-blue-400 hover:text-blue-500 hover:pl-1  transition-all flex gap-1 items-center">
-                <span>Withdrwal History </span>
+                <span>Withdrawal History </span>
                 <ArrowRight></ArrowRight>
               </div>
             </Link>
@@ -195,7 +189,7 @@ const UserIBcards = ({ commissionsData }) => {
         </div>
 
         {/* Pending Deposits Card */}
-        <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
+        {/* <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
@@ -231,17 +225,17 @@ const UserIBcards = ({ commissionsData }) => {
               </button>
             </Link>
           </div>
-        </div>
+        </div> */}
 
-        {/* Active Clients Card */}
+        {/*  IB Details Card */}
         <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col space-y-1">
               <span className="text-sm font-medium text-gray-300">
-                Referrals Details
+                IB Details
               </span>
               <span className=" text-gray-300/60 text-sm py-2">
-                Users with deposits
+                Users with IB's
               </span>
             </div>
             <div className="p-3 bg-indigo-100 rounded-full">

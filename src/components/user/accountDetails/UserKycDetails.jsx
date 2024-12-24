@@ -21,7 +21,7 @@ const DropdownField = ({ label, options, value, onChange }) => (
   <div className="mb-6 w-full">
     <label className="block text-sm font-medium text-white mb-2">{label}</label>
     <select
-      className="w-full px-4 py-3 border text-white bg-secondary-900 border-gray-700/60 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 "
+      className="w-full px-4 py-3 border text-white bg-secondary-900/80 border-gray-700/60 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 "
       value={value}
       onChange={(e) => onChange(e.target.value)} // Remove the label parameter
     >
@@ -29,7 +29,7 @@ const DropdownField = ({ label, options, value, onChange }) => (
         Select {label}
       </option>
       {options?.map((option, index) => (
-        <option key={index} value={option}>
+        <option className=" bg-secondary-900" key={index} value={option}>
           {option}
         </option>
       ))}
@@ -46,14 +46,14 @@ const ImageUploadField = ({ label, onFileChange }) => {
   };
 
   return (
-    <div className="mb-6 w-full">
+    <div className="mb-6  w-full">
       <label className="block text-sm font-medium text-white mb-2">
         {label}
       </label>
-      <div className="relative bg-black">
+      <div className="relative">
         <input
           type="file"
-          className="hidden bg-black"
+          className="hidden"
           id={`file-${label}`}
           onChange={(e) => {
             const file = e.target.files[0];
@@ -73,7 +73,7 @@ const ImageUploadField = ({ label, onFileChange }) => {
         />
         <label
           htmlFor={`file-${label}`}
-          className="flex items-center justify-center w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-white text-secondary-800 cursor-pointer hover:bg-gray-50"
+          className="flex items-center justify-center w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 bg-secondary-900/80 text-gray-100 cursor-pointer hover:bg-secondary-900/60"
         >
           <Upload className="mr-2" size={18} />
           Choose file
@@ -183,7 +183,7 @@ const UserKycDetails = () => {
     if (!path) return "";
     return path.startsWith("http")
       ? path
-      : `${import.meta.env.VITE_BECKEND_END_POINT}/${path.replace(/\\/g, "/")}`;
+      : `${import.meta.env.VITE_BACKEND_BASE_URL}/${path.replace(/\\/g, "/")}`;
   };
 
   const [imagePreviews, setImagePreviews] = useState({
@@ -408,10 +408,8 @@ const UserKycDetails = () => {
         }
       });
 
-      const res = await axios.put(
-        `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/${
-          loggedUser._id
-        }/kyc-details`,
+      const res = await backendApi.put(
+        `/${loggedUser._id}/kyc-details`,
         {
           documentType: formData.documentType,
           countryOfIssue: formData.countryOfIssue,
@@ -447,7 +445,7 @@ const UserKycDetails = () => {
       if (!path) return "";
       return path.startsWith("http")
         ? path
-        : `${import.meta.env.VITE_BECKEND_END_POINT}/${path.replace(
+        : `${import.meta.env.VITE_BACKEND_BASE_URL}/${path.replace(
             /\\/g,
             "/"
           )}`;
@@ -554,7 +552,7 @@ const UserKycDetails = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-full hover:bg-blue-500/80 hover:px-8 transition-all shadow-lg"
+            className="px-6 py-3 bg-secondary-500/90 text-white font-semibold rounded-full hover:bg-secondary-500/80 hover:px-8 transition-all shadow-lg"
           >
             Update Details
           </motion.button>

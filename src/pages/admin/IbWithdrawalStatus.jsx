@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import { backendApi, metaApi } from "@/utils/apiClients";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -77,11 +78,7 @@ const IbWithdrawalStatus = () => {
   const fetchApiData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/referral-withdrawals`
-      );
+      const res = await backendApi.get(`/referral-withdrawals`);
       // console.log("res all withdrawals---", res.data.data);
       setDepositData(res.data.data.reverse());
       setLoading(false);
@@ -231,7 +228,7 @@ const IbWithdrawalStatus = () => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>Referral Withdrwal Success</h1>
+          <h1>IB Withdrawal Success</h1>
         </div>
         <div class="content">
           <p>Dear ${
@@ -241,7 +238,7 @@ const IbWithdrawalStatus = () => {
           },</p>
   <p> Your withdrawal request has been successfully processed.</p>
         <div class="withdrawal-details">
-          <p>Referal ID: <span class="highlight">${
+          <p>IB ID: <span class="highlight">${
             selectedDeposit?.referralId
           }</span></p>
             <p>Withdrawal Amount: <span class="highlight">${
@@ -293,33 +290,26 @@ const IbWithdrawalStatus = () => {
     const toastId = toast.loading("Plese wait..");
     try {
       if (actionType === "approve") {
-        const apiWithdrwalRes = await axios.get(
-          `${
-            import.meta.env.VITE_API_END_POINT
-          }/MakeWithdrawBalance?Manager_Index=${
+        const apiWithdrwalRes = await metaApi.get(
+          `/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.referralId}&Amount=${
             selectedDeposit.amount
           }&Comment=ib-withdrawal`
         );
-        const DBresWithdarwal = await axios.put(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-referral-withdrawal`,
+        const DBresWithdarwal = await backendApi.put(
+          `/update-referral-withdrawal`,
           {
             id: selectedDeposit._id,
             status: "approved",
           }
         );
 
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: selectedDeposit.userId.email,
-            content: customContent,
-            subject: " Referral Withdrawal Success",
-          }
-        );
+        const customMailRes = await backendApi.post(`/custom-mail`, {
+          email: selectedDeposit.userId.email,
+          content: customContent,
+          subject: " IB Withdrawal Success",
+        });
         toast.success("IB Withdrwal Approved", { id: toastId });
 
         // console.log("updated confirm data", res);
@@ -336,15 +326,10 @@ const IbWithdrawalStatus = () => {
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
       } else if (actionType === "reject") {
-        const res = await axios.put(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/update-referral-withdrawal`,
-          {
-            id: selectedDeposit._id,
-            status: "rejected",
-          }
-        );
+        const res = await backendApi.put(`/update-referral-withdrawal`, {
+          id: selectedDeposit._id,
+          status: "rejected",
+        });
         // console.log("updated rejection data", res);
         // toast.success("Withdrwal Rejected");
 
@@ -538,7 +523,7 @@ const IbWithdrawalStatus = () => {
   }, [status]);
 
   return (
-    <div className="container mx-auto px-10 py-5">
+    <div className=" whitespace-nowrap mx-auto px-10 py-5">
       <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
         {status} IB Withdrawals
       </h1>
@@ -606,9 +591,9 @@ const IbWithdrawalStatus = () => {
           <thead className="bg-primary-400 text-white">
             <tr>
               <th className="py-2 px-4 text-left">User | Email</th>
-              <th className="py-2 px-4 text-left">Referral ID</th>
-              <th className="py-2 px-4 text-left">Total Balance</th>
-              <th className="py-2 px-4 text-left">Withdrwal Amount</th>
+              <th className="py-2 px-4 text-left">IB ID</th>
+              <th className="py-2 px-4 text-left">Last Balance</th>
+              <th className="py-2 px-4 text-left">Withdrawal Amount</th>
               <th className="py-2 px-4 text-left">Method</th>
               <th className="py-2 px-4 text-left">Requested Date</th>
               <th className="py-2 px-4 text-left">Status</th>

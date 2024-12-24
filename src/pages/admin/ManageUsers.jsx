@@ -147,7 +147,7 @@ const ManageUsers = () => {
   }, [subList]);
 
   return (
-    <div className="container mx-auto p-5">
+    <div className=" mx-auto p-5">
       <div className="flex flex-col md:flex-row gap-2 justify-between items-center mb-4">
         <h1 className="text-2xl text-white font-bold">
           {capitalizeFirstLetter(subList || "Manage Users")}
@@ -176,8 +176,8 @@ const ManageUsers = () => {
               <th className="py-3 px-4 text-left">Country</th>
               <th className="py-3 px-4 text-left">Email Verified</th>
               <th className="py-3 px-4 text-left">Kyc Verified</th>
-              <th className="py-3 px-4 text-left">MT5 account</th>
-              <th className="py-3 px-4 pl-10 text-left">Joined At</th>
+              <th className="py-3 px-4 text-left">Total MT5 ID</th>
+              <th className="py-3 px-4 pl-10 text-center">Joined At</th>
               <th className="py-3 px-4 text-left">Action</th>
             </tr>
           </thead>
@@ -217,14 +217,16 @@ const ManageUsers = () => {
                     </div>
                   </td>
                   <td className="py-3 px-4">{user?.country}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-center">
                     {user?.emailVerified ? "Active" : "Inactive"}
                   </td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-center">
                     {user?.kycVerified ? "Active" : "Inactive"}
                   </td>
-                  <td className="py-3 px-4 text-center">{user?.mt5Account}</td>
-                  <td className="py-3 px-4 whitespace-nowrap">
+                  <td className="py-3 px-4 text-center">
+                    {user?.accounts?.length}
+                  </td>
+                  <td className="py-3 px-4 text-center whitespace-nowrap">
                     <div>{formatDate(user?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {calculateTimeSinceJoined(user?.createdAt)}

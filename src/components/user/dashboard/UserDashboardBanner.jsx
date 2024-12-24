@@ -7,39 +7,32 @@ const UserDashboardBanner = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
 
   return (
-    <div className="bg-gradient-to-br from-secondary-800 to-secondary-800/30 text-white p-8 rounded-xl shadow-xl max-w-lg mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        Welcome,{" "}
+    <div className="bg-gradient-to-br sm:max-h-[300px] sm:my-auto from-secondary-800 to-secondary-800/30 text-white p-6 sm:p-8 rounded-xl shadow-xl max-w-xl lg:max-w-2xl mx-auto">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">
+        Welcome{" "}
         <span className="text-secondary-500">
           {loggedUser?.firstName} {loggedUser?.lastName}
         </span>
       </h1>
-      <div className="flex items-center justify-between mb-8 gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold mb-2">
-            Ready for Your First Challenge?
-          </h2>
-          <p className="text-sm text-secondary-300 leading-relaxed">
-            Before you begin, check out our FAQ section for helpful tips and
-            guidance.
+      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-6 gap-4">
+        <div className="text-center sm:text-left">
+          <p className="text-sm sm:text-base text-secondary-300 font-semibold leading-relaxed">
+            We’re excited to have you here! Visit our FAQ for helpful guidance.
           </p>
         </div>
         <div className="flex-shrink-0">
-          <Trophy className="w-14 h-14 text-secondary-500 drop-shadow-md" />
+          <Trophy className="w-12 h-12 sm:w-14 sm:h-14 text-secondary-500 drop-shadow-md" />
         </div>
       </div>
-
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        {loggedUser.phase === 0 && (
-          <Link to={"/user/new-challenge"}>
-            <button className="bg-secondary-700/80 text-white py-3 px-6 rounded-full font-semibold shadow hover:bg-secondary-500 transition-all duration-300">
-              Start New Challenge
-            </button>
-          </Link>
-        )}
-        <Link to={"/user/rules"}>
-          <button className="bg-secondary-700/90 text-white py-3 px-6 rounded-full font-semibold shadow hover:bg-secondary-700/70 hover:shadow-lg transition-all duration-300">
-            Trading Rules
+        <Link to={"/user/new-challenge"}>
+          <button className="w-full sm:w-auto border-t-2 border-secondary-500 text-white py-3 px-6 rounded-full font-semibold hover:bg-secondary-500/70 transition-all duration-300">
+            Create An Account
+          </button>
+        </Link>
+        <Link to={"/user/challenges"}>
+          <button className="w-full sm:w-auto border-secondary-500 border-b-2 text-white py-3 px-6 rounded-full font-semibold shadow hover:text-secondary-500 hover:shadow-lg transition-all duration-300">
+            Account Details
           </button>
         </Link>
       </div>

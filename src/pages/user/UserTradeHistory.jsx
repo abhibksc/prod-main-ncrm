@@ -220,9 +220,9 @@ export default function UserTradeHistory() {
                 {activeTab === "closed" && (
                   <th className="text-left py-3 px-4">Close Price</th>
                 )}
-                <th className="text-center py-3 px-4">Buy/Sell</th>
-                <th className="text-right py-3 px-4">Volume</th>
-                <th className="text-right py-3 px-4">P/L</th>
+                <th className="text-left py-3 px-4">Buy/Sell</th>
+                <th className="text-left py-3 px-4">Volume</th>
+                <th className="text-left py-3 px-4">P/L</th>
               </tr>
             </thead>
             <AnimatePresence>
@@ -237,8 +237,10 @@ export default function UserTradeHistory() {
                       transition: { duration: 0.2 },
                     }}
                   >
-                    <td className="py-1 px-4 text-center">
-                      {trade?.MT5Account}
+                    <td className="py-1 px-4 text-left">
+                      <div className=" flex justify-left ml-4">
+                        {trade?.MT5Account}
+                      </div>
                     </td>
                     <td className="py-1 px-4">{trade?.Symbol}</td>
                     <td className="py-1">
@@ -246,8 +248,8 @@ export default function UserTradeHistory() {
                         ? trade?.Open_Time
                         : trade?.Close_Time}
                     </td>
-                    <td className="text-center py-1 px-6">
-                      {trade?.Open_Price.toFixed(2)}
+                    <td className="text-left py-1 px-6">
+                      {trade?.Open_Price?.toFixed(2)}
                     </td>
 
                     {activeTab === "closed" && (
@@ -257,7 +259,7 @@ export default function UserTradeHistory() {
                     )}
                     {activeTab === "closed" && (
                       <td
-                        className={`text-center py-2 px-6 ${
+                        className={`text-left py-2 px-6 ${
                           trade?.OrderType === 0
                             ? "text-red-500"
                             : "text-green-500"
@@ -283,7 +285,7 @@ export default function UserTradeHistory() {
                         {trade?.Volume / 10000}
                       </td>
                     ) : (
-                      <td className="text-right py-3 px-4">{trade?.Lot}</td>
+                      <td className="text-centr py-3 px-4">{trade?.Lot}</td>
                     )}
                     <td
                       className={`text-right py-3 px-4 ${

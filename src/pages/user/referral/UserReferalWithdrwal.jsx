@@ -11,6 +11,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
+import ModernHeading from "@/lib/ModernHeading";
+import { backendApi } from "@/utils/apiClients";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -184,12 +186,10 @@ export const UserReferralWithdrawal = () => {
         setError(`Amount must be less then or equal to $${balance}`);
         setApiLoader(false);
       } else if (amount <= balance && amount > 0) {
-        const withdrawalDBres = await axios.post(
-          `${
-            import.meta.env.VITE_BECKEND_END_POINT
-          }/api/auth/add-referral-withdrawal`,
+        const withdrawalDBres = await backendApi.post(
+          `/add-referral-withdrawal`,
           {
-            referralId: loggedUser.referalId,
+            referralId: loggedUser.referralAccount,
             method:
               selectedGateway === "Bank Transfer"
                 ? selectedGateway
@@ -202,14 +202,11 @@ export const UserReferralWithdrawal = () => {
             level: 1,
           }
         );
-        const customMailRes = await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: loggedUser.email,
-            content: customContent,
-            subject: "Commission Withdrwal requested",
-          }
-        );
+        const customMailRes = await backendApi.post(`/custom-mail`, {
+          email: loggedUser.email,
+          content: customContent,
+          subject: "IB Withdrawal Requested",
+        });
         console.log("withdraw db res--", withdrawalDBres.data);
 
         setApiLoader(false);
@@ -226,25 +223,24 @@ export const UserReferralWithdrawal = () => {
   useEffect(() => {}, [balance, userInfoData]);
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-gradient-to-r">
+    <div className="w-full flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-3xl bg-secondary-800/50 -mt-20 p-8 rounded-lg shadow-xl"
+        className="w-full bg-secondary-800/50  p-8 rounded-lg shadow-xl"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center">
-            <ArrowDownCircle className="w-8 h-8 mr-2" />
-            Withdraw Commision
-          </h2>
+        <div className="flex flex-col md:flex-row items-center justify-between mb-6">
+          <div className=" mb-6">
+            <ModernHeading text={"Withdraw IB Commission"}></ModernHeading>
+          </div>
           <div>
             <h1 className=" font-semibold text-sm text-neutral-100">
-              Withdrawalable amount
+              Withdrawable amount
             </h1>
             <p
               className={` text-center 
-                text-green-500 bg-secondary-600/20 "
+                text-secondary-500 bg-secondary-500/10 "
               }   mt-1 rounded-full py-1  font-bold`}
             >
               ${Number(balance)}
@@ -416,7 +412,7 @@ export const UserReferralWithdrawal = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-green-600/80 text-white py-3 rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-secondary-500/90 hover:bg-secondary-500/80 text-white py-3 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}

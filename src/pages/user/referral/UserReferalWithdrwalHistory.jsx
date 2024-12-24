@@ -4,11 +4,13 @@ import { ArrowUpDown } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { backendApi } from "@/utils/apiClients";
+import ModernHeading from "@/lib/ModernHeading";
 
 const UserReferalWithdrwalHistory = () => {
   const [challengesData, setChallengesData] = useState();
   const [loader, setLoader] = useState(false);
-  const logggedUser = useSelector((store) => store.user.loggedUser);
+  const loggedUser = useSelector((store) => store.user.loggedUser);
 
   // format date ---------------------
 
@@ -72,18 +74,9 @@ const UserReferalWithdrwalHistory = () => {
   const fetchChallengesData = async () => {
     setLoader(true);
     try {
-      const res = await axios.get(
-        `${
-          import.meta.env.VITE_BECKEND_END_POINT
-        }/api/auth/referral-withdrawals`
-      );
-
-      const filderedData = res.data.data
-        .reverse()
-        .filter((value) => value.userId._id === logggedUser._id);
-
+      const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
       // console.log("filderedData", filderedData);
-      setChallengesData(filderedData);
+      setChallengesData(res.data.data);
       setLoader(false);
     } catch (error) {
       console.log("error in fetch user challenges", error);
@@ -98,15 +91,15 @@ const UserReferalWithdrwalHistory = () => {
   }, []);
 
   return (
-    <div className=" mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+    <div className=" p-5 mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
       <div className=" flex items-center gap-2 mb-6 text-3xl font-bold">
-        <ArrowUpDown></ArrowUpDown>
-
-        <h1 className=" ">Referral Withdrwal History</h1>
+        <div className="mb-6">
+          <ModernHeading text={"IB Withdrawal History"}></ModernHeading>
+        </div>
       </div>
-      <table className="w-full border-collapse min-w-[640px]">
+      <table className="w-full whitespace-nowrap border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-700/80 rounded text-white">
+          <tr className="bg-secondary-500/60 rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               Total Amount
             </th>

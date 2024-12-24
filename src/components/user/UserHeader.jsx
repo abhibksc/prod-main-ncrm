@@ -138,9 +138,12 @@ const UserHeader = () => {
   };
   return (
     <nav className="bg-secondary-900 p-4 w-full h-16">
-      <div className=" px-5  flex justify-between items-center">
+      <div className=" md:px-5  flex justify-between items-center">
         <div className=" flex gap-2">
-          <button className=" lg:hidden" onClick={sidebarHandler}>
+          <button
+            className=" sm:hidden outline-none border-none"
+            onClick={sidebarHandler}
+          >
             <Menu></Menu>
           </button>
           <a
@@ -157,33 +160,33 @@ const UserHeader = () => {
 
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
-            loggedUser.accounts.length !== 0
+            loggedUser?.accounts?.length !== 0
               ? " text-green-500 bg-green-500/10"
               : "text-red-500 animate-pulse  bg-red-500/10"
           } `}
         >
           <p>
-            {loggedUser.accounts.length !== 0 ? (
+            {loggedUser?.accounts?.length !== 0 ? (
               <BadgeCheck></BadgeCheck>
             ) : (
               <ShieldBan></ShieldBan>
             )}
           </p>
-          <p>{loggedUser.accounts.length !== 0 ? "Active" : "Inactive"}</p>
+          <p>{loggedUser?.accounts?.length !== 0 ? "Active" : "Inactive"}</p>
         </div>
         <div className="relative flex items-center gap-2">
-          <div className=" flex gap-1 items-center">
-            <CheckCircle className=" w-4 mt-1 text-secondary-500  " />
+          <div className=" flex gap-1 items-center text-gray-200">
+            <CheckCircle className=" w-4 mt-1  " />
 
-            <p className="text-sm text-secondary-500  font-semibold">
+            <p className="md:text-sm whitespace-nowrap text-[10px] font-semibold">
               {loggedUser.firstName}
             </p>
           </div>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-center w-10 h-10 rounded-full bg-secondary-500/10  hover:bg-secondary-500/30 focus:outline-none transition-colors duration-300"
+            className="flex items-center justify-center md:w-10 md:h-10 w-8 h-8 rounded-full bg-secondary-500/10  hover:bg-secondary-500/30 focus:outline-none transition-colors duration-300"
           >
-            <User className="w-6 h-6 text-secondary-500" />
+            <User className="md:w-6 md:h-6 w-4 h-4  text-secondary-500" />
           </button>
           <UserDropdown
             isOpen={isDropdownOpen}

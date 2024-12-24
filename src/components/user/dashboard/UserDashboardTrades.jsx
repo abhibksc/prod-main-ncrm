@@ -41,7 +41,7 @@ export default function UserDashboardTrades() {
       if (loggedUser.accounts.length > 0) {
         let data = [];
         for (const account of loggedUser.accounts) {
-          console.log("api called");
+          console.log("open trade api called");
           const res = await metaApi.get(
             `/getOpenTradeByAccount?Manager_Index=${
               import.meta.env.VITE_MANAGER_INDEX
@@ -73,7 +73,7 @@ export default function UserDashboardTrades() {
     netProfit: calculateTotalNetProfit(),
   };
   useEffect(() => {
-    fetchOpenTrades();
+    // fetchOpenTrades();
     return () => {
       setShouldFetch(false); // Stop fetching when the component unmounts
     };

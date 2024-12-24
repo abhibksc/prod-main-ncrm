@@ -5,21 +5,11 @@ import Login from "./pages/admin/Login";
 import Deposit from "./pages/admin/commision-level/Deposit";
 import Withdraw from "./pages/admin/commision-level/Withdraw";
 import SetupChallenges from "./pages/admin/SetupChallenges";
-import WithdrawlConditions from "./pages/admin/WithdrawlConditions";
-import TradeAccounts from "./pages/admin/TradeAccounts";
 import ManageUsers from "./pages/admin/ManageUsers";
 import UserDetailDashboard from "./pages/admin/UserDetailsDashboard";
-import KYCSetting from "./pages/admin/KycSetting";
-import PasswordSetting from "./pages/admin/PasswordSetting";
-import ProfileSetting from "./pages/admin/ProfileSetting";
-import AutomaticGetways from "./pages/admin/AutomaticGetways";
 import ManualGetways from "./pages/admin/ManualGetways";
 import DepositsStatus from "./pages/admin/DepositsStatus";
 import WithdrawalStatus from "./pages/admin/WithdrawalStatus";
-import SupportTicketStatus from "./pages/admin/SupportTicketStatus";
-import TransactionReport from "./pages/admin/TransactionReport";
-import ReportStatus from "./pages/admin/ReportStatus";
-import LoginReport from "./pages/admin/LoginReport";
 import UserOutlet from "./UserOutlet";
 import UserDashboard from "./pages/user/UserDashboard";
 import UserLogin from "./pages/user/UserLogin";
@@ -39,7 +29,6 @@ import UserChallenges from "./pages/user/UserChallenges";
 import UserNewChallenge from "./components/user/UserNewChallenge";
 import AccountConfiguration from "./pages/admin/AccountConfiguration";
 import UserTradeHistory from "./pages/user/UserTradeHistory";
-import AccountChallenges from "./pages/admin/AccountChallenges";
 import UserVerify from "./pages/user/UserVerify";
 import UserAccountDetails from "./pages/user/UserAccountDetails";
 import { UserReferralWithdrawal } from "./pages/user/referral/UserReferalWithdrwal";
@@ -54,9 +43,11 @@ import AdminCustomEmail from "./pages/admin/AdminCustomEmail";
 import UserCustomerSupport from "./pages/user/UserCustomerSupport";
 import UserResetPassword from "./pages/user/UserResetPassword";
 import UserDeposit from "./pages/user/UserDeposit";
-import UserTradeAccounts from "./components/admin/user-detail/UserTradeAccounts";
 import UserTransfer from "./pages/user/UserTransfer";
 import UserForexNews from "./pages/user/UserForexNews";
+import LoginLogs from "./pages/admin/LoginLogs";
+import AdminIbZone from "./pages/admin/AdminIbZone";
+import UserReferralCloseTrades from "./pages/user/referral/UserReferralCloseTrades";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -77,10 +68,6 @@ const Router = createBrowserRouter([
       {
         path: "/admin/setup-challenges",
         element: <SetupChallenges></SetupChallenges>,
-      },
-      {
-        path: "/admin/trade-accounts",
-        element: <TradeAccounts></TradeAccounts>,
       },
       {
         path: "/admin/manage-users/:subList",
@@ -107,18 +94,6 @@ const Router = createBrowserRouter([
         element: <RulesManagement></RulesManagement>,
       },
       {
-        path: "/admin/report/transaction",
-        element: <TransactionReport></TransactionReport>,
-      },
-      {
-        path: "/admin/report/:status",
-        element: <ReportStatus></ReportStatus>,
-      },
-      {
-        path: "/admin/report/login",
-        element: <LoginReport></LoginReport>,
-      },
-      {
         path: "/admin/getway/manual",
         element: <ManualGetways></ManualGetways>,
       },
@@ -133,12 +108,16 @@ const Router = createBrowserRouter([
         element: <Phases></Phases>,
       },
       {
-        path: "/admin/account-challenges",
-        element: <AccountChallenges></AccountChallenges>,
+        path: "/admin/login-logs",
+        element: <LoginLogs></LoginLogs>,
       },
       {
         path: "/admin/custom-email",
         element: <AdminCustomEmail></AdminCustomEmail>,
+      },
+      {
+        path: "/admin/ib-zone",
+        element: <AdminIbZone></AdminIbZone>,
       },
     ],
   },
@@ -254,6 +233,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/forex-news",
         element: <UserForexNews></UserForexNews>,
+      },
+      {
+        path: "/user/referral-close-trades/:id",
+        element: <UserReferralCloseTrades></UserReferralCloseTrades>,
       },
     ],
   },

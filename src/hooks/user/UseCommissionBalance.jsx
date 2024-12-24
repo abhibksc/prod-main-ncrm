@@ -1,4 +1,4 @@
-import axios from "axios";
+import { metaApi } from "@/utils/apiClients";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -10,20 +10,20 @@ export default function UseCommissionBalance() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_END_POINT}/GetUserInfo?Manager_Index=${
+        const res = await metaApi.get(
+          `/GetUserInfo?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${loggedUser.referalId}`
+          }&MT5Account=${loggedUser.referralAccount}`
         );
         setBalance(res.data.Balance);
-        console.log("res data--", res.data);
+        console.log("fetchData ib--", res.data);
         setUserInfoData(res.data);
       } catch (error) {
         console.error("Error fetching user info:", error);
       }
     };
     fetchData();
-  }, [loggedUser.referalId]);
+  }, [loggedUser.referralAccount]);
 
   return [balance, userInfoData];
 }
