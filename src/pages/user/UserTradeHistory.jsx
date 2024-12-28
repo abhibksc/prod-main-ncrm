@@ -20,32 +20,41 @@ export default function UserTradeHistory() {
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const fetchTradeData = async (tradeType) => {
-    console.log("trade type--", tradeType);
     setLoading(true);
     setError(null);
     try {
-      let res;
-      if (tradeType === "closed") {
-        res = await metaApi.get(
-          `/GetCloseTradeAll?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Accont=${
-            currentAccount.accountNumber
-          }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
-        );
-      } else if (tradeType === "open") {
-        res = await metaApi.get(
-          `/getOpenTradeByAccount?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Accont=${currentAccount.accountNumber}`
-        );
-      }
-      console.log("res trade history--", res.data);
-      if (Array.isArray(res.data)) {
-        setTradeData(res.data);
-      } else {
-        setTradeData([]);
-        setError("No data found. Please try again.");
+      setTradeData([]);
+      const data = [];
+      for (const account of loggedUser.accounts) {
+        console.log("account,", account.accountNumber);
+        let res;
+        if (tradeType === "closed") {
+          res = await metaApi.get(
+            `/GetCloseTradeAll?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&MT5Accont=${
+              account.accountNumber
+            }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
+          );
+        } else if (tradeType === "open") {
+          res = await metaApi.get(
+            `/GetOpenTradeByAccount?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&MT5Accont=${account.accountNumber}`
+          );
+        }
+        // console.log("res trade history--", res.data);
+        if (Array.isArray(res.data)) {
+          data.push(...res.data);
+        } else {
+          console.error("No data found for account:", account.accountNumber);
+        }
+        // After all data is collected, update the state once
+        if (data.length > 0) {
+          setTradeData(data);
+        } else {
+          setError("No data found. Please try again.");
+        }
       }
       // setActiveTab(tradeType);
     } catch (error) {
@@ -115,43 +124,10 @@ export default function UserTradeHistory() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="bg-secondary-800/20 p-6 rounded-lg shadow-lg my-5 text-white"
+      className="bg-secondary-800/20 p-5 rounded-lg shadow-lg  text-white"
     >
       <div className=" mb-5 flex justify-between">
         <ModernHeading text={"Trades History"}></ModernHeading>
-        <div className=" text-sm">
-          {loggedUser?.accounts.length > 0 && (
-            <select
-              onChange={(e) => {
-                const selectedValue = loggedUser.accounts?.find(
-                  (value) => value.accountNumber === e.target.value
-                );
-                setCurrentAccount(selectedValue);
-              }}
-              id="accountNumber"
-              name="accountNumber"
-              className="w-full border-none  py-2 rounded-full border bg-secondary-500/10 px-4 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
-            >
-              <option
-                disabled
-                className=" bg-secondary-800 text-gray-500"
-                value=""
-              >
-                Select Account
-              </option>
-              {loggedUser.accounts?.map((value, index) => (
-                <option
-                  key={index}
-                  className=" bg-secondary-800 font-semibold text-white/90"
-                  onClick={() => setCurrentAccount(value)}
-                  value={value.accountNumber}
-                >
-                  {value.accountNumber}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
       </div>
       <motion.div variants={itemVariants} className="flex flex-wrap gap-4 mb-6">
         <motion.button
@@ -206,9 +182,9 @@ export default function UserTradeHistory() {
           animate="visible"
           className="overflow-x-auto"
         >
-          <table className="w-full text-sm">
+          <table className="w-full  text-sm">
             <thead>
-              <tr className="text-gray-400 border-b border-gray-700">
+              <tr className="text-gray-400 border-b whitespace-nowrap border-gray-700">
                 <th className="text-left py-3 px-4">Account No</th>
                 <th className="text-left py-3 px-4">Symbol</th>
                 {activeTab === "open" ? (

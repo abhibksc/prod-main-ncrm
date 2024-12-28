@@ -79,14 +79,14 @@ const UserDashboardAccount = () => {
       transition={{ duration: 0.3 }}
     >
       <motion.div
-        className="text-2xl flex justify-between items-center gap-10 mb-2 whitespace-nowrap text-gray-200"
+        className="text-2xl flex justify-between items-center gap-5 mb-2 whitespace-nowrap text-gray-200"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        <div className="font-semibold text-lg">
-          Server :
-          <span className="bg-secondary-500/10 text-lg rounded-full py-1 px-3">
+        <div className="font-semibold justify-center items-center flex sm:flex-row flex-col text-lg">
+          <p>Server :</p>
+          <span className="bg-secondary-500/10 text-sm md:text-lg mt-1 rounded-full py-1 px-3">
             {import.meta.env.VITE_SERVER_NAME}
           </span>
         </div>

@@ -263,9 +263,9 @@ const DepositsStatus = () => {
         </div>
         <div class="content">
           <p>Dear ${
-            selectedDeposit?.userId.firstName +
+            selectedDeposit?.userId?.firstName +
             " " +
-            selectedDeposit?.userId.lastName
+            selectedDeposit?.userId?.lastName
           },</p>
   <p>We are pleased to inform you that your deposit has been successfully credited to your MT5 account</p>
          <div class="withdrawal-details">
@@ -727,7 +727,7 @@ const DepositsStatus = () => {
                     </button>
                     {showPreview && (
                       <div className="fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-primary-800 p-4  rounded-lg w-[30%] overflow-auto">
+                        <div className="bg-primary-800 p-4  rounded-lg max-w-md overflow-auto">
                           <img
                             src={
                               import.meta.env.VITE_BACKEND_BASE_URL +

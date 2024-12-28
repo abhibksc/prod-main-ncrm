@@ -153,7 +153,7 @@ const UserNewChallenge = () => {
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex gap-6 items-center justify-between w-full"
+          className="flex flex-col md:flex-row gap-6 items-center justify-between w-full"
         >
           <div className="w-full">
             <label className="block mb-2 text-sm font-medium">

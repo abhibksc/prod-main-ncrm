@@ -152,7 +152,7 @@ const UserHeader = () => {
           >
             <img
               src={import.meta.env.VITE_LOGO_LINK}
-              alt="Forex Funding Logo"
+              alt="Forex Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
           </a>

@@ -48,6 +48,7 @@ import UserForexNews from "./pages/user/UserForexNews";
 import LoginLogs from "./pages/admin/LoginLogs";
 import AdminIbZone from "./pages/admin/AdminIbZone";
 import UserReferralCloseTrades from "./pages/user/referral/UserReferralCloseTrades";
+import SadminHome from "./pages/sadmin/SadminHome";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -121,7 +122,10 @@ const Router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/s-admin/home",
+    element: <SadminHome></SadminHome>,
+  },
   {
     path: "/admin/login",
     element: <Login></Login>,

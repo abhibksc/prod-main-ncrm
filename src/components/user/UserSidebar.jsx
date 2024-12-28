@@ -162,19 +162,29 @@ const UserSidebar = () => {
           className="flex flex-col items-center py-4 pl-3 pr-0 h-full"
           variants={contentVariants}
         >
+          <div>
+            <a
+              href="/user/dashboard"
+              className=" items-center mr-4 outline-none border-none"
+            >
+              <img
+                src={import.meta.env.VITE_LOGO_LINK}
+                alt="Forex Logo"
+                className=" object-contain w-auto h-10 md:h-12 sm:h-8"
+              />
+            </a>
+          </div>
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
-            {loggedUser.phase === 0 && (
-              <motion.div
-                className=" hover:py-2 transition-all"
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link to={"/user/new-challenge"}>
-                  <button className="mt-2 text-sm whitespace-nowrap mb-4 font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
-                    Open Account
-                  </button>
-                </Link>
-              </motion.div>
-            )}
+            <motion.div
+              className=" hover:py-2 transition-all"
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to={"/user/new-challenge"}>
+                <button className="mt-2 text-sm whitespace-nowrap mb-4 font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
+                  Open Account
+                </button>
+              </Link>
+            </motion.div>
             <AnimatePresence>
               {menuItems.map((item) => (
                 <motion.div

@@ -82,6 +82,7 @@ const UserDashboardBalanceCards = () => {
   const isPositive = parseFloat(totalFinalPnL) >= 0;
 
   const fetchAccountsInfo = async () => {
+    console.log("calling info api..");
     try {
       let Balance = 0;
       for (const account of loggedUser.accounts) {
@@ -125,9 +126,12 @@ const UserDashboardBalanceCards = () => {
   };
 
   useEffect(() => {
-    fetchAccountsInfo();
     fetchTotalDeposits();
     fetchTotalWithdrawals();
+    const fetchBalance = setInterval(() => {
+      fetchAccountsInfo();
+    }, 4000);
+    return () => clearInterval(fetchBalance);
   }, []);
 
   return (

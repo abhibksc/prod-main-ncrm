@@ -216,7 +216,7 @@ export default function UserDeposit() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="w-full bg-secondary-800/20 p-8 rounded-xl mx-auto"
+      className="w-full bg-secondary-800/20 p-5 rounded-xl mx-auto"
     >
       <div className="space-y-6 text-white">
         <motion.div
@@ -231,27 +231,29 @@ export default function UserDeposit() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="flex flex-col md:flex-row justify-between gap-10"
+          className="flex flex-col items-center md:flex-row justify-between gap-10"
         >
           {/* Account and Deposit Amount Selects */}
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex whitespace-nowrap flex-col gap-2 w-full">
             <label
               htmlFor="currency"
-              className="text-sm font-medium flex justify-between text-gray-200"
+              className="text-sm font-medium w-full flex justify-between text-gray-200"
             >
               <p>Select Account</p>
-              {balanceLoading ? (
-                <LoaderPinwheelIcon className="animate-spin text-secondary-500" />
-              ) : (
-                accountBalance && (
-                  <p className="px-4">
-                    Balance:{" "}
-                    <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
-                      ${accountBalance}
-                    </span>
-                  </p>
-                )
-              )}
+              <div>
+                {balanceLoading ? (
+                  <LoaderPinwheelIcon className="animate-spin text-secondary-500" />
+                ) : (
+                  accountBalance && (
+                    <p className="px-4">
+                      Balance:{" "}
+                      <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                        ${accountBalance}
+                      </span>
+                    </p>
+                  )
+                )}
+              </div>
             </label>
             <select
               onChange={(e) => {
@@ -344,53 +346,74 @@ export default function UserDeposit() {
         <AnimatePresence>
           {selectedPayment && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="bg-secondary-800/80 p-4 rounded-lg overflow-hidden"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.4 }}
+              className="bg-secondary-800/40 rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4"
             >
-              {/* Payment details content remains the same */}
-              <h3 className="font-medium mb-2">Account Details</h3>
+              {/* Section Header */}
+              <div className="w-full flex justify-between items-center">
+                <h3 className="text-lg font-bold text-gray-100">
+                  Account Details
+                </h3>
+                <span className="text-xs text-gray-400 bg-secondary-700 py-1 px-3 rounded-md">
+                  {selectedPayment || "Payment Info"}
+                </span>
+              </div>
 
+              {/* Payment Details Section */}
               {paymentDetails && selectedPayment !== "Online Payment" ? (
-                <button
-                  onClick={() => copyText(paymentDetails)}
-                  className="flex items-center space-x-1 text-blue-400 hover:text-blue-500 focus:outline-none"
-                >
-                  <p className="text-sm text-white">
+                <div className="w-full flex flex-col space-y-2 bg-secondary-700/50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-300 leading-tight">
                     {formatTextWithLinks(paymentDetails) ||
                       "No details available"}
                   </p>
-                  <ClipboardIcon className="h-5 w-5" />
-                  <span className="text-xs">{copied ? "Copied!" : "Copy"}</span>
-                </button>
-              ) : (
-                ""
-              )}
-              {selectedPayment === "Online Payment" && (
-                <div className=" mt-6 my-4">
-                  <a
-                    href={paymentDetails}
-                    target="_blank"
-                    className=" bg-green-700 hover:bg-green-700/80 transition-all font-semibold  rounded-full px-6 py-2"
+                  <button
+                    onClick={() => copyText(paymentDetails)}
+                    className="flex items-center self-end text-blue-400 hover:text-blue-500 focus:outline-none space-x-1 text-xs"
                   >
-                    Pay now
-                  </a>
+                    <ClipboardIcon className="h-4 w-4" />
+                    <span>{copied ? "Copied!" : "Copy Details"}</span>
+                  </button>
                 </div>
+              ) : (
+                <p className="text-sm text-gray-400">
+                  No payment details available.
+                </p>
               )}
 
+              {/* Online Payment Section */}
+              {selectedPayment === "Online Payment" && (
+                <a
+                  href={paymentDetails}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full text-center bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-2 rounded-lg hover:scale-105 transition-all"
+                >
+                  Pay Now
+                </a>
+              )}
+
+              {/* Payment Image Section */}
               {paymentImage && (
-                <div className="  mt-6 my-4 w-full flex gap-2 justify-center items-center rounded-md">
+                <div className="w-full flex flex-col items-center space-y-2">
+                  <img
+                    src={`${
+                      import.meta.env.VITE_BACKEND_BASE_URL
+                    }/${paymentImage}`}
+                    alt="Payment Receipt"
+                    className="w-24 h-24 object-cover rounded-lg shadow-md"
+                  />
                   <a
-                    className=" flex gap-2 text-blue-400 hover:text-blue-500 transition-all"
-                    target="_blank"
                     href={`${
                       import.meta.env.VITE_BACKEND_BASE_URL
                     }/${paymentImage}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-blue-400 hover:text-blue-500"
                   >
-                    <Image className=""></Image>
-                    View image
+                    View Receipt
                   </a>
                 </div>
               )}

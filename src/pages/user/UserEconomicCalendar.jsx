@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import Loader from "../../components/Loader/Loader";
-import ModernHeading from "@/lib/ModernHeading";
-
 export default function UserEconomicCalendar() {
   const [loading, setLoading] = useState(true);
 
   return (
     <div className="h-screen w-full mx-auto">
       <div className="py-2 mb-4">
-        <ModernHeading text={"Economic Calendar"}></ModernHeading>
+        <h1>Economic Calendar</h1>
       </div>
       <div className="w-full flex flex-col items-center h-full relative">
         {loading && (

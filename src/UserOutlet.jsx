@@ -16,11 +16,9 @@ export default function UserOutlet() {
   };
 
   useEffect(() => {
-    if (loggedUser) {
-      setTimeout(() => {
-        verifyUser();
-      }, 2000);
-    }
+    setTimeout(() => {
+      verifyUser();
+    }, 2000);
   }, [navigate, loggedUser]);
 
   if (!loggedUser) {
@@ -32,7 +30,7 @@ export default function UserOutlet() {
       <Toaster />
       <UserHeader className="fixed top-0 w-full z-10" />
       <div className="flex h-full">
-        <UserSidebar className="fixed top-0 left-0 z-10" />
+        <UserSidebar className="fixed left-0 z-10" />
         <div className="flex-1 ml-0 sm:ml-[168px] user-custom-scrollbar pb-20 overflow-y-auto p-5 bg-secondary-800/50 h-screen">
           <Outlet />
         </div>
