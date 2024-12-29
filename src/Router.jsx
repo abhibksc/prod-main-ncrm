@@ -123,7 +123,7 @@ const Router = createBrowserRouter([
     ],
   },
   {
-    path: "/s-admin/home",
+    path: "/admin/s-admin",
     element: <SadminHome></SadminHome>,
   },
   {
