@@ -180,7 +180,7 @@ const UserReferal = () => {
                 onClick={copyToClipboard}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-auto flex items-center justify-center text-white px-4 py-2 rounded-lg transition-colors"
+                className=" sm:w-auto flex items-center justify-center text-white px-4 py-2 rounded-lg transition-colors"
               >
                 {isCopied ? <Check size={18} /> : <Copy size={18} />}
                 {isCopied && (
@@ -262,12 +262,8 @@ const UserReferal = () => {
   useEffect(() => {
     getUpdateLoggedUser();
     fetchCommissions();
-  }, []);
-
-  useEffect(() => {
     setIsVisible(true);
   }, []);
-
   return (
     <motion.div
       initial={{ opacity: 0 }}

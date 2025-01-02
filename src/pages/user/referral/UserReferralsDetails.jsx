@@ -33,7 +33,7 @@ const UserReferralsDetails = () => {
   }, []);
 
   return (
-    <div className="mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+    <div className="mx-auto sm:p-6 md:bg-secondary-800/20 rounded-lg md:shadow-lg overflow-x-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2 text-3xl font-bold">
           <ArrowUpDown />

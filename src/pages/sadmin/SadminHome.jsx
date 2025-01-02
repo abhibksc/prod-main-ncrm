@@ -140,11 +140,11 @@ const SadminHome = () => {
   };
 
   const routes = [
-    {
-      id: "phases",
-      name: "Phases",
-      component: () => <Phases></Phases>,
-    },
+    // {
+    //   id: "phases",
+    //   name: "Phases",
+    //   component: () => <Phases></Phases>,
+    // },
     {
       id: "account-configuration",
       name: "Account Configuration",
