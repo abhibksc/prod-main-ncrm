@@ -59,7 +59,7 @@ const CredentialItem = ({
 const UserDashboardAccount = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [currentAccount, setCurrentAccount] = useState(
-    loggedUser.accounts[0] || { accountNumber: "000", leverage: "N/A" }
+    loggedUser?.accounts[0] || { accountNumber: "000", leverage: "00" }
   );
 
   const handleAccountChange = (e) => {

@@ -512,11 +512,9 @@ export default function UserDeposit() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={submitHandler}
-            disabled={
-              !agreeToTerms || creatingLoading || !selectedPayment || !file
-            }
+            disabled={!agreeToTerms || creatingLoading || !selectedPayment}
             className={`flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
-              selectedPayment && agreeToTerms && file
+              selectedPayment && agreeToTerms
                 ? "bg-secondary-500/90 hover:bg-secondary-500/80 "
                 : "bg-gray-600  pointer-events-none"
             }`}

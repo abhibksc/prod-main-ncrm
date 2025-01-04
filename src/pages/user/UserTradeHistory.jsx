@@ -51,6 +51,7 @@ export default function UserTradeHistory() {
         }
         // After all data is collected, update the state once
         if (data.length > 0) {
+          console.log("data--", data);
           setTradeData(data);
         } else {
           setError("No data found. Please try again.");
@@ -182,22 +183,21 @@ export default function UserTradeHistory() {
           animate="visible"
           className="overflow-x-auto"
         >
-          <table className="w-full  text-sm">
+          <table className="w-full text-sm">
             <thead>
               <tr className="text-gray-400 border-b whitespace-nowrap border-gray-700">
                 <th className="text-left py-3 px-4">Account No</th>
                 <th className="text-left py-3 px-4">Symbol</th>
-                {activeTab === "open" ? (
-                  <th className="text-left py-3 px-4">Open Time</th>
-                ) : (
+                <th className="text-left py-3 px-4">Open Time</th>
+                {activeTab === "closed" && (
                   <th className="text-left py-3 px-4">Close Time</th>
                 )}
                 <th className="text-left py-3 px-4">Open Price</th>
                 {activeTab === "closed" && (
                   <th className="text-left py-3 px-4">Close Price</th>
                 )}
-                <th className="text-left py-3 px-4">Buy/Sell</th>
-                <th className="text-left py-3 px-4">Volume</th>
+                <th className="text-center py-3 px-4">Buy/Sell</th>
+                <th className="text-center py-3 px-4">Volume</th>
                 <th className="text-left py-3 px-4">P/L</th>
               </tr>
             </thead>
@@ -214,37 +214,32 @@ export default function UserTradeHistory() {
                     }}
                   >
                     <td className="py-1 px-4 text-left">
-                      <div className=" flex justify-left ml-4">
+                      <div className="flex justify-left ml-4">
                         {trade?.MT5Account}
                       </div>
                     </td>
                     <td className="py-1 px-4">{trade?.Symbol}</td>
-                    <td className="py-1">
-                      {activeTab === "open"
-                        ? trade?.Open_Time
-                        : trade?.Close_Time}
-                    </td>
-                    <td className="text-left py-1 px-6">
-                      {trade?.Open_Price?.toFixed(2)}
-                    </td>
-
+                    <td className="py-1">{trade?.Open_Time}</td>
                     {activeTab === "closed" && (
-                      <td className="text-left py-2 px-6 ">
-                        {trade?.Close_Price?.toFixed(2)}
+                      <td className="text-left py-2">{trade?.Close_Time}</td>
+                    )}
+                    <td className="text-left py-2 px-6">{trade?.Open_Price}</td>
+                    {activeTab === "closed" && (
+                      <td className="text-left py-2 px-6">
+                        {trade?.Close_Price}
                       </td>
                     )}
                     {activeTab === "closed" && (
                       <td
-                        className={`text-left py-2 px-6 ${
+                        className={`text-center py-2 ${
                           trade?.OrderType === 0
                             ? "text-red-500"
                             : "text-green-500"
-                        } `}
+                        }`}
                       >
                         {trade?.OrderType === 0 ? "Sell" : "Buy"}
                       </td>
                     )}
-
                     {activeTab === "open" && (
                       <td
                         className={`text-center py-3 px-4 ${
@@ -253,24 +248,24 @@ export default function UserTradeHistory() {
                             : "text-red-500"
                         }`}
                       >
-                        {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
+                        <div className="flex text-center justify-center items-center">
+                          {trade?.BUY_SELL === 0 ? "Buy" : "Sell"}
+                        </div>
                       </td>
                     )}
-                    {activeTab === "open" ? (
-                      <td className="text-center py-3 px-4">
-                        {trade?.Volume / 10000}
-                      </td>
-                    ) : (
-                      <td className="text-centr py-3 px-4">{trade?.Lot}</td>
-                    )}
+                    <td className="text-center py-3 px-4">
+                      <div className="flex justify-center items-center w-full">
+                        {activeTab === "open"
+                          ? trade?.Volume / 10000
+                          : trade?.Lot}
+                      </div>
+                    </td>
                     <td
-                      className={`text-right py-3 px-4 ${
+                      className={`text-left py-3 ${
                         trade?.Profit >= 0 ? "text-green-500" : "text-red-500"
                       }`}
                     >
-                      <span className="flex items-center justify-end">
-                        {trade?.Profit?.toFixed(2)}
-                      </span>
+                      {trade?.Profit?.toFixed(2)}
                     </td>
                   </motion.tr>
                 ))}

@@ -276,21 +276,22 @@ const UserWithdraw = () => {
                   const selectedAccount = loggedUser?.accounts?.find(
                     (value) => value.accountNumber === e.target.value
                   );
-                  setAccountType(selectedAccount.accountType);
+                  setAccountType(selectedAccount?.accountType || ""); // Handle potential undefined value
                 }}
                 className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >
                 <option
-                  className=" bg-secondary-800 text-white"
+                  className="bg-secondary-800 text-white/30"
                   value=""
                   disabled
+                  selected
                 >
                   Select Account
                 </option>
                 {loggedUser?.accounts?.map((value, index) => (
                   <option
                     key={index}
-                    className=" bg-secondary-800 text-white"
+                    className="bg-secondary-800 text-white"
                     value={value.accountNumber}
                   >
                     {value.accountNumber}

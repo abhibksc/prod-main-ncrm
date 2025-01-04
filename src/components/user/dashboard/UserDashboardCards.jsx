@@ -85,7 +85,7 @@ const UserDashboardBalanceCards = () => {
     console.log("calling info api..");
     try {
       let Balance = 0;
-      for (const account of loggedUser.accounts) {
+      for (const account of loggedUser?.accounts) {
         const res = await metaApi.get(
           `/GetUserInfo?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
@@ -151,7 +151,7 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={Coins}
         title="Total MT5 Account"
-        value={`${loggedUser.accounts.length}`}
+        value={`${loggedUser?.accounts?.length}`}
         borderColor={import.meta.env.VITE_THEME_COLOR}
         delay={0.2}
       />
