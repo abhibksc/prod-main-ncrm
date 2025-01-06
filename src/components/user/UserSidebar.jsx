@@ -175,16 +175,19 @@ const UserSidebar = () => {
             </a>
           </div>
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
-            <motion.div
-              className=" hover:py-2 transition-all"
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link to={"/user/new-challenge"}>
-                <button className="mt-2 text-sm whitespace-nowrap mb-4 font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
-                  Open Account
-                </button>
-              </Link>
-            </motion.div>
+            {/* Sticky button section */}
+            <div className="sticky top-0 w-full bg-secondary-900 pt-0 pb-4 z-10">
+              <motion.div
+                className="hover:py-2 transition-all"
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link to={"/user/new-challenge"}>
+                  <button className="text-sm whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
+                    Open Account
+                  </button>
+                </Link>
+              </motion.div>
+            </div>
             <AnimatePresence>
               {menuItems.map((item) => (
                 <motion.div

@@ -82,7 +82,7 @@ const UserDashboardBalanceCards = () => {
   const isPositive = parseFloat(totalFinalPnL) >= 0;
 
   const fetchAccountsInfo = async () => {
-    console.log("calling info api..");
+    // console.log("calling info api..");
     try {
       let Balance = 0;
       for (const account of loggedUser?.accounts) {

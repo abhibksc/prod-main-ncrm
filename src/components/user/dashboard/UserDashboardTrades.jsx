@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { metaApi } from "@/utils/apiClients";
 import { setOpenTrades } from "@/redux/user/userSlice";
+import ModernHeading from "@/lib/ModernHeading";
+import ModernText from "@/lib/ModernText";
 
 export default function UserDashboardTrades() {
   const navigate = useNavigate();
@@ -22,7 +24,6 @@ export default function UserDashboardTrades() {
     return (positiveTradesCount / totalTradesCount) * 100;
   };
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [shouldFetch, setShouldFetch] = useState(true); // Flag to control execution
 
   const dispatch = useDispatch();
 
@@ -36,14 +37,13 @@ export default function UserDashboardTrades() {
   };
 
   const fetchOpenTrades = async () => {
-    if (!shouldFetch) return; // Exit if fetching is stopped
     try {
       if (loggedUser.accounts.length > 0) {
         let data = [];
         for (const account of loggedUser.accounts) {
-          console.log("open trade api called");
+          // console.log("open trade api called");
           const res = await metaApi.get(
-            `/getOpenTradeByAccount?Manager_Index=${
+            `/GetOpenTradeByAccount?Manager_Index=${
               import.meta.env.VITE_MANAGER_INDEX
             }&MT5Accont=${account.accountNumber}`
           );
@@ -52,11 +52,10 @@ export default function UserDashboardTrades() {
           }
         }
         // console.log("final data--", data);
-        console.log("exucation completed++++");
         dispatch(setOpenTrades(data));
-        if (shouldFetch) {
-          setTimeout(fetchOpenTrades, 1000); // Call again after 1 second
-        }
+        // if (shouldFetch) {
+        //   setTimeout(fetchOpenTrades, 1000); // Call again after 1 second
+        // }
       } else {
         console.log("No account found");
       }
@@ -72,28 +71,25 @@ export default function UserDashboardTrades() {
     winRate: calculateWinningRatio(),
     netProfit: calculateTotalNetProfit(),
   };
+
   useEffect(() => {
-    // fetchOpenTrades();
-    return () => {
-      setShouldFetch(false); // Stop fetching when the component unmounts
-    };
-    // setInterval(() => {
-    //   fetchOpenTrades();
-    // }, 8000);
+    const fetchBalance = setInterval(() => {
+      fetchOpenTrades();
+    }, 4000);
+    return () => clearInterval(fetchBalance);
   }, []);
 
   return (
     <div className="bg-secondary-800/80 p-6 rounded-lg shadow-lg my-5 text-white">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold flex items-center">
-          <BarChart2 className="mr-2 text-secondary-500" />
-          Trades Summary
-        </h2>
+        <div className="">
+          <ModernText text={"Trades Summary"}></ModernText>
+        </div>
         <button
           onClick={() => navigate("/user/trade-history")}
-          className="flex items-center text-blue-400 hover:text-blue-300 transition-colors"
+          className="flex items-center text-blue-400 hover:text-blue-500 transition-colors"
         >
-          View Full History
+          View History
           <ArrowRight className="ml-1" size={18} />
         </button>
       </div>
@@ -122,7 +118,7 @@ export default function UserDashboardTrades() {
               tradesSummary.netProfit >= 0 ? "text-green-500" : "text-red-400"
             }`}
           >
-            ${tradesSummary.netProfit.toFixed(2)}
+            {tradesSummary.netProfit.toFixed(2)}
           </p>
         </div>
       </div>
