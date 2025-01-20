@@ -10,6 +10,7 @@ import {
   Gift,
   HandCoins,
   Share2Icon,
+  Infinity,
 } from "lucide-react";
 import { FaFacebookF, FaShareAlt, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -321,7 +322,7 @@ const UserReferal = () => {
             }`}
           >
             <div className="bg-secondary-600/10 px-4 py-1 rounded-full text-sm font-medium text-secondary-500 mb-4 hover:bg-secondary-600/20 transition-colors">
-              Earn 15% Per referral commission{" "}
+              Earn unlimited IB commission
             </div>
             <h2 className="text-3xl font-bold mb-4">
               Transform Your Network Into <br />
@@ -330,9 +331,8 @@ const UserReferal = () => {
               </span>
             </h2>
             <p className="text-gray-300 max-w-xl mb-6">
-              Join our Affiliate program and earn a fixed 15% commission for
-              every account purchase. No complicated tiers, just straightforward
-              earnings.
+              Join our Affiliate program and earn unlimited commission for every
+              trade. No complicated tiers, just straightforward earnings.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <button
@@ -348,7 +348,7 @@ const UserReferal = () => {
           {/* Stats Section with Stagger Animation */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[
-              { value: "15%", label: "Referral Commission" },
+              { value: "Unlimited", label: "IB Commission" },
               { value: "24/7", label: "Instant Payouts" },
               { value: "100%", label: "Transparent Terms" },
               { value: "∞", label: "Unlimited Referrals" },
@@ -437,7 +437,7 @@ const UserReferal = () => {
                 {
                   step: "3",
                   title: "Earn Commission",
-                  description: "Get 15% for every referral",
+                  description: "Get commission every trade",
                 },
               ].map((step, index) => (
                 <div

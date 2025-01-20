@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { BarChart2, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { useEffect } from "react";
+import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { metaApi } from "@/utils/apiClients";
 import { setOpenTrades } from "@/redux/user/userSlice";
-import ModernHeading from "@/lib/ModernHeading";
 import ModernText from "@/lib/ModernText";
 
 export default function UserDashboardTrades() {

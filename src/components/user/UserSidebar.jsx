@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BarChart2,
-  Trophy,
-  Users,
-  CreditCard,
   ArrowUpDown,
   ShieldEllipsis,
   ReceiptPoundSterlingIcon,
@@ -15,8 +12,8 @@ import {
   ArrowLeftRight,
   ArrowDownCircleIcon,
   SquareStackIcon,
+  ChartCandlestick,
 } from "lucide-react";
-import { handleToggleSidebar } from "@/redux/user/userSlice";
 
 const MenuItem = ({ icon: Icon, label, link, onClick }) => (
   <motion.div whileHover={{ scale: 1.05, x: 5 }} whileTap={{ scale: 0.95 }}>
@@ -73,7 +70,6 @@ const contentVariants = {
 };
 
 const UserSidebar = () => {
-  const loggedUser = useSelector((store) => store.user.loggedUser);
   const reduxSidebarState = useSelector((store) => store.user.isSidebarOpen);
   const [isOpen, setIsOpen] = useState(reduxSidebarState);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 640);
@@ -134,6 +130,11 @@ const UserSidebar = () => {
     { icon: CircleFadingPlus, label: "Deposit", link: "/user/deposit" },
     { icon: ArrowLeftRight, label: "Transfer", link: "/user/transfer" },
     { icon: ArrowDownCircleIcon, label: "Withdraw", link: "/user/withdraw" },
+    {
+      icon: ChartCandlestick,
+      label: "Copy Trading",
+      link: "/user/copy-trading",
+    },
     { icon: SquareStackIcon, label: "IB Zone", link: "/user/referrals" },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {

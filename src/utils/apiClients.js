@@ -12,3 +12,6 @@ export const backendApi = axios.create({
 export const metaApi = axios.create({
   baseURL: API_CONFIG.metaApi.baseURL,
 });
+export const copyApi = axios.create({
+  baseURL: import.meta.env.VITE_COPY_BASE_URL,
+});

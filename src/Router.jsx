@@ -2,8 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Dashboard from "./pages/admin/Dashboard";
 import Login from "./pages/admin/Login";
-import Deposit from "./pages/admin/commision-level/Deposit";
-import Withdraw from "./pages/admin/commision-level/Withdraw";
 import SetupChallenges from "./pages/admin/SetupChallenges";
 import ManageUsers from "./pages/admin/ManageUsers";
 import UserDetailDashboard from "./pages/admin/UserDetailsDashboard";
@@ -17,8 +15,6 @@ import UserSignUp from "./pages/user/UserSignUp";
 import UserReferal from "./pages/user/UserReferals";
 import UserWithdraw from "./pages/user/UserWithdraw";
 import UserPlatform from "./pages/user/UserPlatform";
-import UserSupportTicket from "./pages/user/UserSupportTicket";
-import UserRules from "./pages/user/UserRules";
 import UserEconomicCalendar from "./pages/user/UserEconomicCalendar";
 import UserProfile from "./pages/user/UserProfile";
 import UserChnagePassword from "./pages/user/UserChnagePassword";
@@ -49,6 +45,8 @@ import LoginLogs from "./pages/admin/LoginLogs";
 import AdminIbZone from "./pages/admin/AdminIbZone";
 import UserReferralCloseTrades from "./pages/user/referral/UserReferralCloseTrades";
 import SadminHome from "./pages/sadmin/SadminHome";
+import UserCopyTrading from "./pages/user/UserCopyTrading";
+import UserMasterUserCT from "./pages/user/copy-trading/UserMasterUserCT";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -57,14 +55,6 @@ const Router = createBrowserRouter([
       {
         path: "/admin/dashboard",
         element: <Dashboard></Dashboard>,
-      },
-      {
-        path: "/admin/deposit",
-        element: <Deposit></Deposit>,
-      },
-      {
-        path: "/admin/withdraw",
-        element: <Withdraw></Withdraw>,
       },
       {
         path: "/admin/setup-challenges",
@@ -174,14 +164,10 @@ const Router = createBrowserRouter([
         path: "/user/platform",
         element: <UserPlatform></UserPlatform>,
       },
-      {
-        path: "/user/support-ticket",
-        element: <UserSupportTicket></UserSupportTicket>,
-      },
-      {
-        path: "/user/rules",
-        element: <UserRules></UserRules>,
-      },
+      // {
+      //   path: "/user/rules",
+      //   element: <UserRules></UserRules>,
+      // },
       {
         path: "/user/economic-calendar",
         element: <UserEconomicCalendar></UserEconomicCalendar>,
@@ -241,6 +227,14 @@ const Router = createBrowserRouter([
       {
         path: "/user/referral-close-trades/:id",
         element: <UserReferralCloseTrades></UserReferralCloseTrades>,
+      },
+      {
+        path: "/user/copy-trading",
+        element: <UserCopyTrading></UserCopyTrading>,
+      },
+      {
+        path: "/user/copy-trading/master-user/:id",
+        element: <UserMasterUserCT></UserMasterUserCT>,
       },
     ],
   },

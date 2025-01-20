@@ -58,10 +58,12 @@ const CredentialItem = ({
 
 const UserDashboardAccount = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [currentAccount, setCurrentAccount] = useState(
-    loggedUser?.accounts[0] || { accountNumber: "000", leverage: "00" }
-  );
-
+  const [currentAccount, setCurrentAccount] = useState(() => {
+    if (loggedUser?.accounts?.length > 0) {
+      return loggedUser.accounts[0];
+    }
+    return { accountNumber: "000", leverage: "00" };
+  });
   const handleAccountChange = (e) => {
     const selectedAccount = loggedUser.accounts.find(
       (account) => account.accountNumber === e.target.value
@@ -91,31 +93,32 @@ const UserDashboardAccount = () => {
           </span>
         </div>
         <div className="text-sm">
-          {loggedUser?.accounts.length > 0 && (
-            <select
-              onChange={handleAccountChange}
-              id="accountNumber"
-              name="accountNumber"
-              className="w-full border-none py-1 rounded-full bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-            >
-              <option
-                disabled
-                className="bg-secondary-800 text-gray-500"
-                value=""
+          {Array.isArray(loggedUser?.accounts) &&
+            loggedUser.accounts.length > 0 && (
+              <select
+                onChange={handleAccountChange}
+                id="accountNumber"
+                name="accountNumber"
+                className="w-full border-none py-1 rounded-full bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >
-                Select Account
-              </option>
-              {loggedUser.accounts?.map((account, index) => (
                 <option
-                  key={index}
-                  className="bg-secondary-800 font-semibold text-white"
-                  value={account.accountNumber}
+                  disabled
+                  className="bg-secondary-800 text-gray-500"
+                  value=""
                 >
-                  {account.accountNumber}
+                  Select Account
                 </option>
-              ))}
-            </select>
-          )}
+                {loggedUser.accounts?.map((account, index) => (
+                  <option
+                    key={index}
+                    className="bg-secondary-800 font-semibold text-white"
+                    value={account.accountNumber}
+                  >
+                    {account.accountNumber}
+                  </option>
+                ))}
+              </select>
+            )}
         </div>
       </motion.div>
 
