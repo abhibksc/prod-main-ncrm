@@ -26,7 +26,7 @@ const UserDashboardBanner = () => {
       </div>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to={"/user/new-challenge"}>
-          <button className="w-full text-xs lg:text-sm sm:w-auto border-t-2 bg-secondary-500 border-secondary-500 text-white py-3 px-6 rounded-full font-semibold hover:bg-secondary-500/70 transition-all duration-300">
+          <button className="w-full text-xs lg:text-sm sm:w-auto border-t-2 bg-secondary-500 border-secondary-500 text-white py-3 px-6 rounded-full font-semibold hover:bg-secondary-500-70 transition-all duration-300">
             Create An Account
           </button>
         </Link>

@@ -25,6 +25,8 @@ const UserWithdraw = () => {
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [accountBalance, setAccountBalance] = useState("");
   const [accountType, setAccountType] = useState("");
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -248,7 +250,7 @@ const UserWithdraw = () => {
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          <div className=" flex justify-between items-center gap-5">
+          <div className=" flex flex-col md:flex-row justify-between items-center gap-5">
             {/* select account */}
             <div className=" w-full">
               <label
@@ -262,7 +264,7 @@ const UserWithdraw = () => {
                   accountBalance && (
                     <p className="px-4">
                       Balance :{" "}
-                      <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                      <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
                         ${accountBalance}
                       </span>{" "}
                     </p>
@@ -374,15 +376,17 @@ const UserWithdraw = () => {
             </div>
           </div>
 
-          <div className=" flex justify-between items-center gap-10">
+          <div className=" flex flex-col md:flex-row justify-between items-center gap-10">
             {/* enter amount */}
             <div className="w-full">
-              <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-gray-200 mb-2"
-              >
-                Enter Amount
-              </label>
+              <div className=" flex justify-between items-center">
+                <label
+                  htmlFor="amount"
+                  className="block text-sm font-medium text-gray-200 mb-2"
+                >
+                  Enter Amount
+                </label>
+              </div>
               <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
                 {/* Icon */}
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -410,7 +414,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      Bank Name -{" "}
+                      Bank Name :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.bankName}{" "}
                       </span>
@@ -418,7 +422,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      Holder Name -{" "}
+                      Holder Name :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.holderName}
                       </span>{" "}
@@ -426,7 +430,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      Account Number -{" "}
+                      Account Number :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.accountNumber}
                       </span>
@@ -434,7 +438,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      IFSC Code -{" "}
+                      IFSC Code :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.ifscCode}
                       </span>
@@ -442,7 +446,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      Swift Code -{" "}
+                      Swift Code :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.swiftCode}
                       </span>
@@ -450,7 +454,7 @@ const UserWithdraw = () => {
                   </div>
                   <div>
                     <p>
-                      UPI ID -{" "}
+                      UPI ID :{" "}
                       <span className=" font-bold">
                         {loggedUser?.bankDetails?.upiId}
                       </span>
@@ -466,7 +470,7 @@ const UserWithdraw = () => {
                   {selectWallet === "USDT(Trc20)" && (
                     <div>
                       <p>
-                        USDT-Trc20 -{" "}
+                        USDT-Trc20 :{" "}
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.tetherAddress}{" "}
                         </span>
@@ -476,7 +480,7 @@ const UserWithdraw = () => {
                   {selectWallet === "USDT(Erc20)" && (
                     <div>
                       <p>
-                        USDT-Erc20 -{" "}
+                        USDT-Erc20 :{" "}
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.ethAddress}
                         </span>{" "}
@@ -486,7 +490,7 @@ const UserWithdraw = () => {
                   {selectWallet === "BinanceID" && (
                     <div>
                       <p>
-                        Binance ID -
+                        Binance ID :
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.accountNumber}
                         </span>
@@ -496,7 +500,7 @@ const UserWithdraw = () => {
                   {selectWallet === "BTCAddress" && (
                     <div>
                       <p>
-                        BTC Address -
+                        BTC Address :{" "}
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.trxAddress}
                         </span>
@@ -513,12 +517,18 @@ const UserWithdraw = () => {
             <button
               onClick={withdrawalHandler}
               type="submit"
-              className=" bg-secondary-500/80 flex px-12 py-3 shadow-md hover:bg-secondary-500/70 transition-all hover:px-16 rounded-full"
+              className=" text-sm md:text-lg bg-secondary-500-80 flex px-12 py-3 shadow-md hover:bg-secondary-500-70 transition-all md:hover:px-16 rounded-full"
             >
               Request Withdrawal
               {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
             </button>
           </div>
+          <p className="text-xs mb-2 text-gray-500">
+            USD to INR Rate:{" "}
+            <span className="font-medium text-gray-400/80">
+              ₹ {siteConfig?.dollarWithdrawalRate}
+            </span>
+          </p>
 
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>

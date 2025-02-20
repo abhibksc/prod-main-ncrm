@@ -9,6 +9,7 @@ import { setAdminToggle } from "@/redux/adminSlice";
 
 const Header = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   // const isSidebarOpen = false;
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
@@ -84,8 +85,8 @@ const Header = () => {
               className=" border-none outline-none items-center mr-4"
             >
               <img
-                src={import.meta.env.VITE_LOGO_LINK}
-                alt="Forex-ZX Logo"
+                src={siteConfig.logo}
+                alt="Forex Logo"
                 className=" object-contain w-auto h-10 md:h-12 sm:h-10"
               />
             </a>

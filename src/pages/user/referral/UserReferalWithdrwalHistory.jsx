@@ -99,7 +99,7 @@ const UserReferalWithdrwalHistory = () => {
       </div>
       <table className="w-full whitespace-nowrap border-collapse min-w-[640px]">
         <thead>
-          <tr className="bg-secondary-500/60 rounded text-white">
+          <tr className="bg-secondary-500-60 rounded text-white">
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               Total Amount
             </th>
@@ -118,7 +118,7 @@ const UserReferalWithdrwalHistory = () => {
             <tr>
               <td colSpan="9" className="p-4">
                 <div className="flex justify-center items-center w-full">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-400"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-500"></div>
                 </div>
               </td>
             </tr>

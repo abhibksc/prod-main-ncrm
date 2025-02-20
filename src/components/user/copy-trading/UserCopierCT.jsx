@@ -32,7 +32,7 @@ const UserCopierCT = () => {
 
   const renderTableHeader = () => (
     <thead>
-      <tr className="bg-secondary-500/80">
+      <tr className="bg-secondary-500-80">
         <th className="text-left p-4 text-sm font-medium text-gray-100 w-[30%] first:rounded-tl-xl">
           TRADER
         </th>
@@ -57,7 +57,7 @@ const UserCopierCT = () => {
     <tr
       key={trader.id}
       onClick={() => navigate(`/user/copy-trading/master-user/${trader.login}`)}
-      className="transition-colors hover:bg-secondary-500/20 cursor-pointer"
+      className="transition-colors hover:bg-secondary-500-20 cursor-pointer"
       onMouseEnter={() => setHoveredId(trader.id)}
       onMouseLeave={() => setHoveredId(null)}
     >

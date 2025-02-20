@@ -53,8 +53,7 @@ export default function UserTradeHistory() {
         if (data.length > 0) {
           console.log("data--", data);
           setTradeData(data);
-        } else {
-          setError("No data found. Please try again.");
+          setError("");
         }
       }
       // setActiveTab(tradeType);
@@ -63,11 +62,13 @@ export default function UserTradeHistory() {
       setError("Failed to fetch trade data. Please try again.");
       setTradeData([]);
     } finally {
+      if (tradeData.length == 0) {
+        setError("No data found. Please try again.");
+      }
       setLoading(false);
     }
   };
-  // console.log("state trade history--", tradeData);
-
+  console.log("state trade history--", tradeData);
   const handleTabClick = (tradeType) => {
     setActiveTab(tradeType);
     fetchTradeData(tradeType);
@@ -136,7 +137,7 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "closed"
-              ? "bg-secondary-500/50 text-white"
+              ? "bg-secondary-500-50 text-white"
               : "bg-secondary-800/40 text-gray-300 hover:bg-secondary-700/30"
           }`}
           onClick={() => handleTabClick("closed")}
@@ -148,7 +149,7 @@ export default function UserTradeHistory() {
           whileTap={{ scale: 0.95 }}
           className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
             activeTab === "open"
-              ? "bg-secondary-500/50 text-white"
+              ? "bg-secondary-500-50 text-white"
               : "bg-secondary-800/40 text-gray-300 hover:bg-secondary-700/30"
           }`}
           onClick={() => handleTabClick("open")}

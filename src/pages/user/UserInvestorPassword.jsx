@@ -240,7 +240,7 @@ const UserInvesterPassword = () => {
               }}
               id="accountNumber"
               name="accountNumber"
-              className="w-full border-none  py-2 text-sm md:py1 rounded-full border bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
+              className="w-full border-none  py-2 text-sm md:py1 rounded-full border bg-secondary-500-10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
             >
               <option
                 disabled
@@ -315,7 +315,7 @@ const UserInvesterPassword = () => {
           </Link>
           <motion.button
             type="submit"
-            className="w-full sm:w-auto bg-secondary-500/60 hover:bg-secondary-500/50 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary-500 flex items-center justify-center"
+            className="w-full sm:w-auto bg-secondary-500-60 hover:bg-secondary-500-50 text-white py-3 px-6 rounded-lg secondary-700 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-secondary-500 flex items-center justify-center"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.95 }}
           >

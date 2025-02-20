@@ -230,7 +230,7 @@ const WithdrawalStatus = () => {
     <p>Happy trading!</p>
 
           <p>Best regards,<br>The ${
-            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            import.meta.env.VITE_WEBSITE_NAME || "Forex"
           } Team</p>
           <hr>
      <div class="risk-warning">
@@ -251,10 +251,10 @@ const WithdrawalStatus = () => {
     import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
   }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
             <p>We sent out this message to all existing ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
             <p>&copy; 2024 ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
         </div>

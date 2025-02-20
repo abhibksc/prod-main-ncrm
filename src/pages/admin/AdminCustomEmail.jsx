@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { backendApi } from "@/utils/apiClients";
 
 export default function AdminCustomEmail() {
   const [recipient, setRecipient] = useState("single");
@@ -116,7 +117,7 @@ export default function AdminCustomEmail() {
       
       <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
       <hr>
- <div class="risk-warning">
+       <div class="risk-warning">
   <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
   <br><br>
   ${
@@ -146,6 +147,7 @@ export default function AdminCustomEmail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     // Basic validation
     if (
       !subject.trim() ||
@@ -157,17 +159,14 @@ export default function AdminCustomEmail() {
     }
 
     // Simulated email send logic
+    const toastId = toast.loading("Sending..");
     try {
       if (recipient === "single") {
-        const toastId = toast.loading("Sending..");
-        await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/custom-mail`,
-          {
-            email: email,
-            content: customContent,
-            subject: subject,
-          }
-        );
+        await backendApi.post(`/custom-mail`, {
+          email: email,
+          content: customContent,
+          subject: subject,
+        });
         toast.success("Email sent", { id: toastId });
       } else if (recipient === "all") {
         toast.success(
@@ -179,13 +178,10 @@ export default function AdminCustomEmail() {
         setEmail("");
         setSubject("");
         setMessage("");
-        await axios.post(
-          `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/send-emails`,
-          {
-            text: message,
-            subject: subject,
-          }
-        );
+        await backendApi.post(`/send-emails`, {
+          text: message,
+          subject: subject,
+        });
       }
 
       setStatus("success");
@@ -196,6 +192,8 @@ export default function AdminCustomEmail() {
       // Clear status after 3 seconds
       setTimeout(() => setStatus(null), 3000);
     } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong!!, Try Again", { id: toastId });
       setStatus("error");
     }
   };
@@ -283,7 +281,7 @@ export default function AdminCustomEmail() {
           {status === "error" && (
             <div className="flex items-center text-red-500 bg-red-500/10 p-3 rounded-lg">
               <AlertTriangle className="mr-2" />
-              Please fill in all required fields.
+              Something Went wrong.
             </div>
           )}
           {status === "success" && (

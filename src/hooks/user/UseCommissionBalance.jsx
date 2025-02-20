@@ -16,7 +16,6 @@ export default function UseCommissionBalance() {
           }&MT5Account=${loggedUser.referralAccount}`
         );
         setBalance(res.data.Balance);
-        console.log("fetchData ib--", res.data);
         setUserInfoData(res.data);
       } catch (error) {
         console.error("Error fetching user info:", error);

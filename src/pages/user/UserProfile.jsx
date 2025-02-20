@@ -141,7 +141,7 @@ const UserProfile = () => {
         <div className=" flex justify-center items-center">
           <motion.button
             type="submit"
-            className=" px-12 hover:px-16 transition-all bg-secondary-500/90  hover:bg-secondary-500/80 text-white py-3 rounded-full font-semibold"
+            className=" px-12 hover:px-16 transition-all bg-secondary-500-90  hover:bg-secondary-500-80 text-white py-3 rounded-full font-semibold"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}

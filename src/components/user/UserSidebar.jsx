@@ -75,6 +75,7 @@ const UserSidebar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 640);
   const dispatch = useDispatch();
   const sidebarRef = useRef(null);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   useEffect(() => {
     const handleResize = () => {
@@ -169,7 +170,7 @@ const UserSidebar = () => {
               className=" items-center mr-4 outline-none border-none"
             >
               <img
-                src={import.meta.env.VITE_LOGO_LINK}
+                src={siteConfig.logo}
                 alt="Forex Logo"
                 className=" object-contain w-auto h-10 md:h-12 sm:h-8"
               />
@@ -183,7 +184,7 @@ const UserSidebar = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="text-sm whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500/70 w-full transition-all duration-300 hover:bg-secondary-500/60">
+                  <button className="text-sm whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500-70 w-full transition-all duration-300 hover:bg-secondary-500-60">
                     Open Account
                   </button>
                 </Link>

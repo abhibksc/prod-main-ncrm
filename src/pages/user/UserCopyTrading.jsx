@@ -12,7 +12,7 @@ const TabButton = ({ active, onClick, children, icon: Icon }) => (
   <motion.button
     className={`flex items-center justify-center px-3 p-2 sm:p-3 rounded-full text-sm sm:text-base font-medium transition-all duration-300 ${
       active
-        ? "bg-secondary-500/80 text-white shadow-lg"
+        ? "bg-secondary-500-80 text-white shadow-lg"
         : "text-gray-400 hover:text-white hover:bg-secondary-700/20 hover:px-4"
     }`}
     onClick={onClick}

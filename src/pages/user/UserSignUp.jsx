@@ -11,6 +11,7 @@ import "react-phone-number-input/style.css";
 import "../../css/phone-input.css";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
+import { useSelector } from "react-redux";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
@@ -47,7 +48,8 @@ const UserSignUp = () => {
     confirmPassword: "",
   });
   const { id } = useParams();
-  // console.log("params id ----", id);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+
   const countriesArray = getData();
 
   const [error, setError] = useState("");
@@ -143,8 +145,8 @@ const UserSignUp = () => {
           <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
             <a className=" flex flex-col justify-center mt-8 items-center mr-4">
               <img
-                src={import.meta.env.VITE_LOGO_LINK}
-                alt="Forex Funding Logo"
+                src={siteConfig.logo}
+                alt="Forex Logo"
                 className=" object-contain w-auto h-10 md:h-16 sm:h-10"
               />
             </a>
@@ -437,7 +439,7 @@ const UserSignUp = () => {
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.7 }}
                   type="submit"
-                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 transition transform hover:scale-105"
+                  className="md:col-span-2 w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500-80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500 transition transform hover:scale-105"
                 >
                   <Check className="mr-2" size={20} />
                   Create Account

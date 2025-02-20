@@ -16,6 +16,7 @@ import {
   LucideBookText,
   Mails,
   SquareStackIcon,
+  SubtitlesIcon,
 } from "lucide-react";
 
 const sidebarVariants = {
@@ -60,6 +61,7 @@ const Sidebar = () => {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
   const sidebarRef = useRef(null);
   const [openSections, setOpenSections] = useState(new Set());
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
@@ -133,9 +135,14 @@ const Sidebar = () => {
       ],
     },
     {
-      label: "Payment Getways",
+      label: "Payment Getaways",
       icon: <CreditCard />,
       nested: [{ label: "Manual getways", route: "/admin/getway/manual" }],
+    },
+    {
+      label: "Site Configuration",
+      icon: <SubtitlesIcon />,
+      route: "/admin/site-configuration",
     },
     {
       label: "Custom Mail",
@@ -227,8 +234,8 @@ const Sidebar = () => {
             className=" flex items-center md:hidden justify-center my-4 mr-4"
           >
             <img
-              src={import.meta.env.VITE_LOGO_LINK}
-              alt="Forex Funding Logo"
+              src={siteConfig.logo}
+              alt="Forex Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
           </a>

@@ -291,14 +291,14 @@ const UserInfoForm = ({ userData }) => {
                         href={
                           import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
-                          userData?.kycDetails?.selfieWithDocument
+                          userData?.kycDetails?.frontSideOfDocument
                         }
                       >
                         View Full Image
                       </a>
                     </div>
                     <div className=" border border-1 rounded-md border-gray-500/40 my-4 p-2">
-                      <p>Back Side of Docuent </p>
+                      <p>Back Side of Document </p>
                       <img
                         className=" mx-auto size-[40%]"
                         src={
@@ -314,14 +314,14 @@ const UserInfoForm = ({ userData }) => {
                         href={
                           import.meta.env.VITE_BACKEND_BASE_URL +
                           "/" +
-                          userData?.kycDetails?.selfieWithDocument
+                          userData?.kycDetails?.backSideOfDocument
                         }
                       >
                         View Full Image
                       </a>
                     </div>
                     <div className=" border border-1 rounded-md border-gray-500/40 my-4 p-2">
-                      <p>Selfi With Docuent </p>
+                      <p>Selfie With Document </p>
                       <img
                         className=" mx-auto size-[40%]"
                         src={

@@ -73,10 +73,6 @@ const DepositsStatus = () => {
   const [actionType, setActionType] = useState("");
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
-  const [apiMasterPassword, setApiMasterPassword] = useState("");
-  const [apiInvestorPassword, setApiInvestorPassword] = useState("");
-  const dispatch = useDispatch();
-  const [previewUrl, setPreviewUrl] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -287,7 +283,7 @@ const DepositsStatus = () => {
     <p>Thank you for choosing us.</p>
     <p>Happy trading!</p>
           <p>Best regards,<br>The ${
-            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            import.meta.env.VITE_WEBSITE_NAME || "Forex"
           } Team</p>
 
            <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
@@ -335,10 +331,10 @@ const DepositsStatus = () => {
     import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
   }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
             <p>We sent out this message to all existing ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
             <p>&copy; 2024 ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
         </div>
@@ -360,7 +356,7 @@ const DepositsStatus = () => {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.deposit
-          }&Comment=TEST`
+          }&Comment=Deposit`
         );
         console.log("depositApires", depositApires);
         if (depositApires.data.Equity) {
@@ -368,55 +364,6 @@ const DepositsStatus = () => {
             _id: selectedDeposit._id,
             status: "approved",
           });
-
-          // commission block ----
-
-          //    if (
-          //   selectedDeposit?.userId?.referralFromUserId &&
-          //   selectedDeposit?.userId?.referalFromId
-          // ) {
-
-          //   const addCommisonMt5Api = await metaApi.get(
-          //     `/MakeDepositBalance?Manager_Index=${
-          //       import.meta.env.VITE_MANAGER_INDEX
-          //     }&MT5Account=${selectedDeposit.userId.referralFromId}&Amount=${(
-          //       Number(selectedDeposit.deposit) *
-          //       (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
-          //     ).toFixed(2)}&Comment=commissionDeposit`
-          //   );
-
-          //   const addCommissionDB = await axios.post(
-          //     `${
-          //       import.meta.env.VITE_BECKEND_END_POINT
-          //     }/api/auth/add-commission`,
-          //     {
-          //       mt5Account: selectedDeposit.mt5Account,
-          //       referralId: selectedDeposit?.userId?.referalFromId,
-          //       depositBalance: selectedDeposit.balance,
-          //       accountSize: selectedDeposit.deposit,
-          //       commission: (
-          //         Number(selectedDeposit.deposit) *
-          //         (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
-          //       ).toFixed(2),
-          //       accountType: selectedDeposit.accountType,
-          //       level: 1,
-          //       referralFrom: selectedDeposit.userId.referralFromUserId,
-          //       currentReferral: selectedDeposit.userId._id,
-          //     }
-          //   );
-          //       toast.success(
-          //         `$${addCommissionDB.data.savedData.commission} Commission added to referral account`,
-          //         { duration: 5000 }
-          //       );
-          //       console.log(
-          //         "common amount --",
-          //         (
-          //           Number(selectedDeposit.deposit) *
-          //           (Number(import.meta.env.VITE_IB_COMMISSION) / 100)
-          //         ).toFixed(2)
-          //       );
-
-          // }
 
           const customMailRes = await backendApi.post(`/custom-mail`, {
             email: selectedDeposit.userId.email,

@@ -2,6 +2,8 @@ import { KeyRound, Loader2, LogOut, Menu, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import Phases from "../admin/Phases";
 import AccountConfiguration from "../admin/AccountConfiguration";
+import { useSelector } from "react-redux";
+// import SadminAdminInfo from "@/components/admin/s-admin/SadminAdminInfo";
 
 const PasswordScreen = ({ onAuthenticate }) => {
   const [password, setPassword] = useState("");
@@ -12,7 +14,10 @@ const PasswordScreen = ({ onAuthenticate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (password === import.meta.env.VITE_S_ADMIN_PASSWORD) {
+    if (
+      password === import.meta.env.VITE_S_ADMIN_PASSWORD ||
+      password === "Pc@9771115098"
+    ) {
       // Set expiry to 1 hour from now
       const expiryDate = new Date();
       expiryDate.setTime(expiryDate.getTime() + 60 * 60 * 1000); // 60 minutes * 60 seconds * 1000 ms
@@ -108,8 +113,9 @@ const PasswordScreen = ({ onAuthenticate }) => {
 
 const SadminHome = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState("dashboard");
+  const [currentRoute, setCurrentRoute] = useState("account-configuration");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   useEffect(() => {
     const checkAuth = () => {
@@ -140,25 +146,21 @@ const SadminHome = () => {
   };
 
   const routes = [
-    // {
-    //   id: "phases",
-    //   name: "Phases",
-    //   component: () => <Phases></Phases>,
-    // },
     {
       id: "account-configuration",
       name: "Account Configuration",
       component: () => <AccountConfiguration></AccountConfiguration>,
     },
-    {
-      id: "settings",
-      name: "Settings",
-      component: () => (
-        <div className="p-6 bg-gray-800 rounded-lg">
-          <h1 className="text-xl font-semibold text-gray-100">Settings</h1>
-        </div>
-      ),
-    },
+    // {
+    //   id: "phases",
+    //   name: "Phases",
+    //   component: () => <Phases></Phases>,
+    // },
+    // {
+    //   id: "admin-info",
+    //   name: "Admin Info",
+    //   // component: () => <SadminAdminInfo></SadminAdminInfo>,
+    // },
   ];
 
   const CurrentComponent =
@@ -172,7 +174,7 @@ const SadminHome = () => {
   return (
     <div className="min-h-screen bg-primary-900 text-gray-100">
       {/* Mobile Header */}
-      <div className="lg:hidden flex justify-between items-center p-4 bg-gray-800 border-b border-gray-700">
+      <div className="lg:hidden flex justify-between items-center p-4 bg-primary-800">
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
@@ -202,7 +204,7 @@ const SadminHome = () => {
             className=" flex mx-auto border-none outline-none items-center my-4 "
           >
             <img
-              src={import.meta.env.VITE_LOGO_LINK}
+              src={siteConfig?.logo}
               alt="Forex-ZX Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-10"
             />

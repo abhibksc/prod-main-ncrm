@@ -57,7 +57,7 @@ const UserReferralsDetails = () => {
       ) : (
         <table className="w-full border-collapse min-w-[640px]">
           <thead className="rounded-md overflow-hidden">
-            <tr className="bg-secondary-500/20">
+            <tr className="bg-secondary-500-20">
               <th className="p-3 sm:p-4 text-left text-sm sm:text-base rounded-tl-md ">
                 Name/Email
               </th>
@@ -83,7 +83,7 @@ const UserReferralsDetails = () => {
           </thead>
           <tbody>
             {commissionsData.length === 0 && (
-              <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500/10 ">
+              <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500-10 ">
                 <td className="text-center align-middle py-6" colSpan="8">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                     <Info />
@@ -95,7 +95,7 @@ const UserReferralsDetails = () => {
             {commissionsData?.map((value) => (
               <tr
                 key={value._id}
-                className="text-gray-200 border-b border-secondary-800 hover:bg-secondary-500/10"
+                className="text-gray-200 border-b border-secondary-800 hover:bg-secondary-500-10"
               >
                 <td className="pl-6 py-3 text-sm sm:text-base">
                   <div>

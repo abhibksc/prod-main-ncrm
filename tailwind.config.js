@@ -7,7 +7,7 @@ export default {
       colors: {
         primary: {
           100: "#e0aaff",
-          200: "#c",
+          200: "#b185db", // Fixed invalid color
           300: "#9d4edd",
           400: "#7b2cbf",
           500: "#5a189a",
@@ -16,16 +16,26 @@ export default {
           800: "#10002b",
         },
         secondary: {
-          400: "#6A42C2",
-          500: "#8B5DFF",
+          500: "var(--theme-color)", // Main dynamic color
+          "500-10": "rgb(var(--theme-color-rgb) / 0.1)", // Use Tailwind’s opacity syntax
+          "500-20": "rgb(var(--theme-color-rgb) / 0.2)",
+          "500-30": "rgb(var(--theme-color-rgb) / 0.3)",
+          "500-40": "rgb(var(--theme-color-rgb) / 0.4)",
+          "500-50": "rgb(var(--theme-color-rgb) / 0.5)",
+          "500-60": "rgb(var(--theme-color-rgb) / 0.6)",
+          "500-70": "rgb(var(--theme-color-rgb) / 0.7)",
+          "500-80": "rgb(var(--theme-color-rgb) / 0.8)",
+          "500-90": "rgb(var(--theme-color-rgb) / 0.9)",
           600: "#6C757D",
           700: "#495057",
           800: "#343A40",
           900: "#212529",
         },
-        animation: {
-          spin: "spin 1s linear infinite",
-        },
+        "500-10": "rgb(var(--theme-color-rgb) / 0.1)", // Uses Tailwind's opacity syntax
+        "500-50": "rgb(var(--theme-color-rgb) / 0.5)", // Hover state
+      },
+      animation: {
+        spin: "spin 1s linear infinite",
       },
       backgroundImage: {
         dotted: "url('/dot-bg2.jpg')",

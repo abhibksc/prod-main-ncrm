@@ -18,8 +18,7 @@ const UserLogin = () => {
   const dispatch = useDispatch();
   const [loginData, setLoginData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [sentmail, setSentmail] = useState(false);
-  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -37,6 +36,7 @@ const UserLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
     try {
       const res = await backendApi.post(`/login`, { email, password });
       // setLoginData(res.data);
@@ -164,7 +164,7 @@ const UserLogin = () => {
               <p>Thank you for choosing us.</p>
               <p>Happy trading!</p>
               <p>Best regards,<br>${
-                import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+                import.meta.env.VITE_WEBSITE_NAME || "Forex"
               } Team</p>
               <hr>
               <div class="risk-warning">
@@ -186,10 +186,10 @@ const UserLogin = () => {
           import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
         }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
                 <p>We sent out this message to all existing ${
-                  import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+                  import.meta.env.VITE_WEBSITE_NAME || "Forex"
                 } traders. Please visit this page to know more about our Privacy Policy.</p>
                 <p>&copy; 2024 ${
-                  import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+                  import.meta.env.VITE_WEBSITE_NAME || "Forex"
                 }. All Rights Reserved</p>
               </div>
             </div>
@@ -230,51 +230,6 @@ const UserLogin = () => {
       setIsResetLoading(false);
     }
   };
-
-  // send login alert and forgot password email --------
-
-  // useEffect(() => {
-  //   if (!showForgotPassword) {
-  //     const sendCustomMail = async () => {
-  //       setIsLoading(true);
-  //       try {
-  //         const customMailRes = await backendApi.post(`/custom-mail`, {
-  //           email: loginData?.user?.email,
-  //           content: customContent,
-  //           subject: "Login Alert",
-  //         });
-  //         setIsLoading(false);
-  //         setSentmail(true);
-  //         navigate("/user/dashboard");
-  //       } catch (error) {
-  //         console.log(error);
-  //         setIsLoading(true);
-  //       }
-  //     };
-  //     if (loginData) {
-  //       sendCustomMail();
-  //     }
-  //   } else if (showForgotPassword) {
-  //     const sendCustomMailRes = async () => {
-  //       setIsResetLoading(true);
-
-  //       try {
-  //         const customMailRes = await backendApi.post(`/custom-mail`, {
-  //           email: resetEmail,
-  //           content: customContent,
-  //           subject: "Reset Password",
-  //         });
-  //         setIsResetLoading(false);
-  //         toast.success(`Password sent to ${resetEmail}`);
-  //         setResetEmail("");
-  //       } catch (error) {
-  //         setIsResetLoading(false);
-  //         console.log(error);
-  //       }
-  //     };
-  //     sendCustomMailRes();
-  //   }
-  // }, [loginData]);
 
   useEffect(() => {}, [loginData, isLoading]);
 
@@ -335,8 +290,8 @@ const UserLogin = () => {
                       className=" flex flex-col justify-center mb-5 items-center mr-4"
                     >
                       <img
-                        src={import.meta.env.VITE_LOGO_LINK}
-                        alt="Forex Funding Logo"
+                        src={siteConfig.logo}
+                        alt="Forex Logo"
                         className=" object-contain w-auto h-10 md:h-16 sm:h-10"
                       />
                     </a>
@@ -400,7 +355,7 @@ const UserLogin = () => {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5 }}
                       type="submit"
-                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500/80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white transition transform hover:scale-105"
+                      className="w-full flex gap-2 items-center group justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500-80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white transition transform hover:scale-105"
                     >
                       <LogIn className="mr-1" size={20} />
                       <p className="group-hover:animate-pulse transition-all">
@@ -482,7 +437,7 @@ const UserLogin = () => {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.4 }}
                     type="submit"
-                    className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500/80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white   transition transform hover:scale-105"
+                    className="w-full flex items-center justify-center py-3 px-4 border border-transparent rounded-lg text-white bg-secondary-500 hover:bg-secondary-500-80 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-white   transition transform hover:scale-105"
                   >
                     Send Password
                     {isResetLoading && (

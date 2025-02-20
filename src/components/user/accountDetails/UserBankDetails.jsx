@@ -120,7 +120,7 @@ const UserBankDetails = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={submitHandler}
-          className="px-6 py-3 bg-secondary-500/90 text-white font-semibold rounded-full hover:bg-secondary-500/80 hover:px-8 transition-all shadow-lg"
+          className="px-6 py-3 bg-secondary-500-90 text-white font-semibold rounded-full hover:bg-secondary-500-80 hover:px-8 transition-all shadow-lg"
         >
           Update Details
         </motion.button>

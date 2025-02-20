@@ -31,6 +31,7 @@ const UserReferal = () => {
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
   const [commissionsData, setCommissionsData] = useState([]);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
@@ -38,7 +39,7 @@ const UserReferal = () => {
       whileTap={{ scale: 0.95 }}
       className={`px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 text-sm sm:text-base ${
         isActive
-          ? "bg-secondary-500/50 text-white shadow-lg"
+          ? "bg-secondary-500-50 text-white shadow-lg"
           : "text-white hover:bg-secondary-700/20"
       }`}
       onClick={onClick}
@@ -57,19 +58,22 @@ const UserReferal = () => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const randomNumber = generateRandomNumber(import.meta.env.VITE_MT5_DIGIT);
+    const randomNumber = generateRandomNumber(siteConfig.mt5Digit || 6);
 
     const toastId = toast.loading("Generating..");
-    // const envGroup = "SK GROUP\\M10\\STANDARD";
-    const envGroup = String(import.meta.env.VITE_IB_GROUP_NAME);
-    const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
 
     try {
+      const groupRes = await metaApi.get(
+        `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
+      );
+
+      const envGroup = String(groupRes.data.lstGroups[0]);
+      const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
       const generateMtId = await metaApi.post(`/Adduser`, {
         Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
         MT5Account: randomNumber,
         Name: loggedUser.firstName + " " + loggedUser.lastName,
-        Leverage: import.meta.env.VITE_IB_LEVERAGE,
+        Leverage: 100,
         Group_Name: doubleQuotedEnvGroup,
       });
       if (generateMtId.data.MT5Account > 0) {
@@ -198,7 +202,7 @@ const UserReferal = () => {
               onClick={() => setIsShareMenuOpen(!isShareMenuOpen)}
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full flex items-center justify-center bg-secondary-500/40 text-white px-4 py-2 rounded-lg hover:bg-secondary-500/50 transition-colors"
+              className="w-full flex items-center justify-center bg-secondary-500-40 text-white px-4 py-2 rounded-lg hover:bg-secondary-500-50 transition-colors"
             >
               <Share2Icon size={18} className="mr-2" />
               Share Referral
@@ -212,25 +216,25 @@ const UserReferal = () => {
               >
                 <button
                   onClick={() => shareOnPlatform("whatsapp")}
-                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                  className="hover:bg-secondary-500-50 p-2 rounded-full"
                 >
                   <FaWhatsapp size={24} />
                 </button>
                 <button
                   onClick={() => shareOnPlatform("facebook")}
-                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                  className="hover:bg-secondary-500-50 p-2 rounded-full"
                 >
                   <FaFacebookF size={24} />
                 </button>
                 <button
                   onClick={() => shareOnPlatform("twitter")}
-                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                  className="hover:bg-secondary-500-50 p-2 rounded-full"
                 >
                   <FaXTwitter size={24} />
                 </button>
                 <button
                   onClick={globalShare}
-                  className="hover:bg-secondary-500/50 p-2 rounded-full"
+                  className="hover:bg-secondary-500-50 p-2 rounded-full"
                 >
                   <FaShareAlt size={24} />
                 </button>
@@ -291,12 +295,12 @@ const UserReferal = () => {
         )}
         {loggedUser?.referralAccount && (
           <div>
-            <div className=" flex font-semibold gap-2">
-              <HandCoins className=" text-yellow-500"></HandCoins>
-              <p>Affliate ID</p>
+            <div className=" text-sm flex font-semibold gap-2">
+              <HandCoins size={20} className="  text-yellow-500"></HandCoins>
+              <p>Affiliate ID</p>
             </div>
-            <div className=" bg-yellow-500/10 ml-4 shadow-2xl px-2 my-1 py-1 rounded-full text-center">
-              <p className=" text-gray-200  font-semibold  text-lg">
+            <div className=" bg-yellow-500/10 ml-4 shadow-2xl px-4 my-1 py-1 rounded-full text-center">
+              <p className=" text-gray-200  font-semibold text-sm  md:text-md">
                 {loggedUser?.referralAccount}
               </p>
             </div>
@@ -336,7 +340,7 @@ const UserReferal = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">
               <button
-                className="px-6 py-3 bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="px-6 py-3 bg-secondary-500-90 hover:bg-secondary-500-80 rounded-full flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 onClick={generateHandler}
               >
                 <Users className="animate-pulse" size={20} />
@@ -475,7 +479,7 @@ const UserReferal = () => {
             </p>
             <div>
               <button
-                className="px-8 py-4 text-xs md:text-sm  bg-secondary-500/90 hover:bg-secondary-500/80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                className="px-8 py-4 text-xs md:text-sm  bg-secondary-500-90 hover:bg-secondary-500-80 rounded-full flex items-center gap-2 mx-auto group transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 onClick={generateHandler}
               >
                 <Users className="animate-pulse" size={20} />

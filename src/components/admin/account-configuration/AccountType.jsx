@@ -113,7 +113,7 @@ const AccountTypes = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className=" mx-auto p-4">
       <h1 className="text-3xl font-bold mb-6 text-center text-white">
         Configure Account Type
       </h1>
@@ -133,7 +133,7 @@ const AccountTypes = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option className=" text-black" disabled value="">
+                <option className=" text-gray-800/50" value="">
                   Select an account type
                 </option>
                 {accountTypes?.map((type) => (
@@ -194,51 +194,6 @@ const AccountTypes = () => {
             </button>
           </div>
 
-          <div>
-            <label className="block mb-2 font-medium">Account Size</label>
-            {newAccountType.accountSize.map((size, index) => (
-              <div
-                key={index}
-                className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-2"
-              >
-                <input
-                  type="text"
-                  placeholder="Deposit (payable)"
-                  value={size.deposit}
-                  onChange={(e) =>
-                    handleInputChange(e, index, "accountSize", "deposit")
-                  }
-                  required
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Balance"
-                  value={size.balance}
-                  onChange={(e) =>
-                    handleInputChange(e, index, "accountSize", "balance")
-                  }
-                  required
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeField("accountSize", index)}
-                  className="px-2 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addField("accountSize")}
-              className="mt-2 flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <PlusCircle className="h-5 w-5 mr-2" /> Add Account Size
-            </button>
-          </div>
-
           <button
             type="submit"
             className="w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -257,7 +212,6 @@ const AccountTypes = () => {
               <tr className="bg-primary-400">
                 <th className="px-4 py-2 text-left">Account Type</th>
                 <th className="px-4 py-2 text-left">Leverage</th>
-                <th className="px-4 py-2 text-left">Account Size</th>
                 <th className="px-4 py-2 text-center">Action</th>
               </tr>
             </thead>
@@ -270,14 +224,6 @@ const AccountTypes = () => {
                       <div key={i} className="border-b-2 border-primary-600">
                         <p>Label: {lev.label}</p>
                         <p>Value: {lev.value}</p>
-                      </div>
-                    ))}
-                  </td>
-                  <td className="px-4 py-2">
-                    {type.accountSize?.map((size, i) => (
-                      <div key={i} className="border-b-2 border-primary-600">
-                        <p>Deposit: {size.deposit}</p>
-                        <p>Balance: {size.balance}</p>
                       </div>
                     ))}
                   </td>

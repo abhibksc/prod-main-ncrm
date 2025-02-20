@@ -139,7 +139,7 @@ export const UserReferralWithdrawal = () => {
     <p>Happy trading!</p>
           
           <p>Best regards,<br>The ${
-            import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+            import.meta.env.VITE_WEBSITE_NAME || "Forex"
           } Team</p>
           <hr>
      <div class="risk-warning">
@@ -161,10 +161,10 @@ export const UserReferralWithdrawal = () => {
     import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
   }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
             <p>We sent out this message to all existing ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
             <p>&copy; 2024 ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
         </div>
@@ -240,7 +240,7 @@ export const UserReferralWithdrawal = () => {
             </h1>
             <p
               className={` text-center 
-                text-secondary-500 bg-secondary-500/10 "
+                text-secondary-500 bg-secondary-500-10 "
               }   mt-1 rounded-full py-1  font-bold`}
             >
               ${Number(balance)}
@@ -412,7 +412,7 @@ export const UserReferralWithdrawal = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-secondary-500/90 hover:bg-secondary-500/80 text-white py-3 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300"
+            className="w-full flex justify-center hover:shadow-xl bg-secondary-500-90 hover:bg-secondary-500-80 text-white py-3 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300"
           >
             Submit Withdrawal
             {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}

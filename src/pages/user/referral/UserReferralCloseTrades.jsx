@@ -203,7 +203,7 @@ const UserReferralCloseTrades = () => {
         ) : (
           <table className="w-full whitespace-nowrap border-collapse min-w-[640px]">
             <thead className="rounded-md overflow-hidden">
-              <tr className="bg-secondary-500/20">
+              <tr className="bg-secondary-500-20">
                 <th className="p-3 sm:p-4 whitespace-nowrap text-center text-sm sm:text-base">
                   AC NO
                 </th>
@@ -238,7 +238,7 @@ const UserReferralCloseTrades = () => {
             </thead>
             <tbody>
               {commissionsData.length === 0 && (
-                <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500/10">
+                <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500-10">
                   <td className="text-center align-middle py-6" colSpan="10">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
                       <Info />
@@ -250,7 +250,7 @@ const UserReferralCloseTrades = () => {
               {commissionsData?.map((value) => (
                 <tr
                   key={value._id}
-                  className="text-gray-200 border-b border-secondary-800 hover:bg-secondary-500/10"
+                  className="text-gray-200 border-b border-secondary-800 hover:bg-secondary-500-10"
                 >
                   <td className="text-sm text-center py-2 sm:text-base">
                     {value?.mt5Account}
@@ -297,7 +297,7 @@ const UserReferralCloseTrades = () => {
             </tbody>
             {commissionsData.length > 0 && (
               <tfoot>
-                <tr className="font-semibold bg-secondary-500/10">
+                <tr className="font-semibold bg-secondary-500-10">
                   <td
                     colSpan="6"
                     className="p-3 text-right text-sm sm:text-base"

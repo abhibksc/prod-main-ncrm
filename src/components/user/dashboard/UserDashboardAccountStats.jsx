@@ -94,7 +94,7 @@ const UserDashboardAccountStats = () => {
                 {stat.label}
               </span>
               <div
-                className="flex items-center justify-between bg-secondary-500/10 text-gray-200 hover:text-secondary-500 
+                className="flex items-center justify-between bg-secondary-500-10 text-gray-200 hover:text-secondary-500 
              p-2 rounded-full px-3 shadow-sm transition-all duration-100"
               >
                 <span

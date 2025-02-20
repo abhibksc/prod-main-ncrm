@@ -7,6 +7,7 @@ const initialState = {
   platforms: [],
   paymentMethods: [],
   totalFinalPnL: 0,
+  siteConfig: "",
 };
 
 export const userSlice = createSlice({
@@ -31,6 +32,9 @@ export const userSlice = createSlice({
     setTotalFinalPnL: (state, action) => {
       state.totalFinalPnL = action.payload;
     },
+    setSiteConfig: (state, action) => {
+      state.siteConfig = action.payload;
+    },
   },
 });
 
@@ -41,6 +45,7 @@ export const {
   setPlatforms,
   setPaymentMethods,
   setTotalFinalPnL,
+  setSiteConfig,
 } = userSlice.actions;
 
 export default userSlice.reducer;

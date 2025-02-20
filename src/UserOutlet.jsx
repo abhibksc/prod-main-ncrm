@@ -4,11 +4,12 @@ import UserHeader from "./components/user/UserHeader";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UserSidebar from "./components/user/UserSidebar";
+import useSiteConfig from "./hooks/user/UseSiteConfig";
 
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const navigate = useNavigate();
-
+  useSiteConfig();
   const verifyUser = () => {
     if (!loggedUser || !loggedUser.emailVerified) {
       navigate("/user/login");
@@ -24,7 +25,6 @@ export default function UserOutlet() {
   if (!loggedUser) {
     return null;
   }
-
   return (
     <div className="text-white h-screen overflow-hidden">
       <Toaster />

@@ -25,10 +25,7 @@ export default function ModernHeading({ text }) {
           <defs>
             <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
               <stop offset="0%" stopColor="#d1d5db" /> {/* gray-200 */}
-              <stop
-                offset="100%"
-                stopColor={import.meta.env.VITE_THEME_COLOR}
-              />{" "}
+              <stop offset="100%" stopColor="var(--theme-color)" />{" "}
               {/* secondary-500 */}
             </linearGradient>
           </defs>

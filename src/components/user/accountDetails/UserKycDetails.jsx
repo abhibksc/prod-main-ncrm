@@ -356,7 +356,7 @@ const UserKycDetails = () => {
   <p>Happy trading!</p>
         
         <p>Best regards,<br>The ${
-          import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+          import.meta.env.VITE_WEBSITE_NAME || "Forex"
         } Team</p>
         <hr>
    <div class="risk-warning">
@@ -378,10 +378,10 @@ const UserKycDetails = () => {
     import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
   }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
             <p>We sent out this message to all existing ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
             <p>&copy; 2024 ${
-              import.meta.env.VITE_WEBSITE_NAME || "Forex Funding"
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
         </div>
@@ -552,7 +552,7 @@ const UserKycDetails = () => {
             type="submit"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-secondary-500/90 text-white font-semibold rounded-full hover:bg-secondary-500/80 hover:px-8 transition-all shadow-lg"
+            className="px-6 py-3 bg-secondary-500-90 text-white font-semibold rounded-full hover:bg-secondary-500-80 hover:px-8 transition-all shadow-lg"
           >
             Update Details
           </motion.button>

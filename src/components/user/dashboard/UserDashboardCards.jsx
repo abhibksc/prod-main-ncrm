@@ -152,14 +152,14 @@ const UserDashboardBalanceCards = () => {
         icon={Coins}
         title="Total MT5 Account"
         value={`${loggedUser?.accounts?.length}`}
-        borderColor={import.meta.env.VITE_THEME_COLOR}
+        borderColor="var(--theme-color)"
         delay={0.2}
       />
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Available Balance"
         value={`${totalFinalPnL} USD`}
-        borderColor={import.meta.env.VITE_THEME_COLOR}
+        borderColor="var(--theme-color)"
         delay={0.4}
         isProfit={isPositive}
       />
@@ -167,14 +167,14 @@ const UserDashboardBalanceCards = () => {
         icon={ArrowUpCircle}
         title="Total Deposits"
         value={`${totalDeposits} USD`}
-        borderColor={import.meta.env.VITE_THEME_COLOR}
+        borderColor="var(--theme-color)"
         delay={0.6}
       />
       <BalanceCard
         icon={ArrowDownCircle}
         title="Total Withdrawals"
         value={`${totalWithdrawals} USD`}
-        borderColor={import.meta.env.VITE_THEME_COLOR}
+        borderColor="var(--theme-color)"
         delay={0.8}
       />
     </motion.div>

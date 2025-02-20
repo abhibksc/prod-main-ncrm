@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { handleToggleSidebar } from "@/redux/user/userSlice";
 import { AnimatePresence, motion } from "framer-motion";
-import axios from "axios";
 
 const UserDropdown = ({ isOpen, onClose }) => {
   const dropdownRef = useRef(null);
@@ -130,6 +129,7 @@ const UserHeader = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
   const dispatch = useDispatch();
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
 
   // console.log("isOpenSidebar", isSidebarOpen);
 
@@ -151,7 +151,7 @@ const UserHeader = () => {
             className=" items-center mr-4 outline-none border-none"
           >
             <img
-              src={import.meta.env.VITE_LOGO_LINK}
+              src={siteConfig.logo}
               alt="Forex Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
@@ -184,10 +184,11 @@ const UserHeader = () => {
           </div>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-center md:w-10 md:h-10 w-8 h-8 rounded-full bg-secondary-500/10  hover:bg-secondary-500/30 focus:outline-none transition-colors duration-300"
+            className="flex items-center justify-center md:w-10 md:h-10 w-8 h-8 rounded-full bg-secondary-500-10 hover:bg-secondary-500-30 focus:outline-none transition-colors duration-300"
           >
-            <User className="md:w-6 md:h-6 w-4 h-4  text-secondary-500" />
+            <User className="md:w-6 md:h-6 w-4 h-4 text-secondary-500" />
           </button>
+
           <UserDropdown
             isOpen={isDropdownOpen}
             onClose={() => setIsDropdownOpen(false)}

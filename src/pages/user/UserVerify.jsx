@@ -291,7 +291,7 @@ const UserVerify = () => {
                   : "Resend Verification Email"}
               </button>
               <Link className="" to={"/user/login"}>
-                <button className="bg-secondary-500/90 block w-full mt-5 hover:bg-secondary-500/70 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
+                <button className="bg-secondary-500-90 block w-full mt-5 hover:bg-secondary-500-70 text-gray-100 font-semibold py-2 px-4 rounded transition duration-300 ease-in-out">
                   Go to Login
                 </button>
               </Link>

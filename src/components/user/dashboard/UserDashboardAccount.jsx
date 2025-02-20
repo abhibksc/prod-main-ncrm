@@ -58,6 +58,8 @@ const CredentialItem = ({
 
 const UserDashboardAccount = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const siteConfig = useSelector((store) => store.user.siteConfig);
+
   const [currentAccount, setCurrentAccount] = useState(() => {
     if (loggedUser?.accounts?.length > 0) {
       return loggedUser.accounts[0];
@@ -88,8 +90,8 @@ const UserDashboardAccount = () => {
       >
         <div className="font-semibold justify-center items-center flex sm:flex-row flex-col text-lg">
           <p>Server :</p>
-          <span className="bg-secondary-500/10 text-sm md:text-lg mt-1 rounded-full py-1 px-3">
-            {import.meta.env.VITE_SERVER_NAME}
+          <span className="bg-secondary-500-10 text-sm md:text-lg mt-1 rounded-full py-1 px-3">
+            {siteConfig.serverName}
           </span>
         </div>
         <div className="text-sm">
@@ -99,7 +101,7 @@ const UserDashboardAccount = () => {
                 onChange={handleAccountChange}
                 id="accountNumber"
                 name="accountNumber"
-                className="w-full border-none py-1 rounded-full bg-secondary-500/10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+                className="w-full border-none py-1 rounded-full bg-secondary-500-10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >
                 <option
                   disabled

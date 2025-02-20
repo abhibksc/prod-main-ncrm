@@ -103,14 +103,7 @@ const UserTransfer = () => {
       <p className="text-gray-400 mb-6">
         You can instantly transfer funds between accounts with the same currency
         using the form below. <br /> For transfers between different currencies,
-        email us at{" "}
-        <a
-          href="mailto:support@capitalprimefx.com"
-          className="text-blue-400 underline"
-        >
-          support@capitalprimefx.com
-        </a>
-        .
+        Contact Admin.
       </p>
 
       <motion.form
@@ -139,7 +132,7 @@ const UserTransfer = () => {
                 fromAccountBalance && (
                   <p className="px-4">
                     Balance :{" "}
-                    <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                    <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
                       ${fromAccountBalance}
                     </span>{" "}
                   </p>
@@ -186,7 +179,7 @@ const UserTransfer = () => {
                 toAccountBalance && (
                   <p className="px-4">
                     Balance :{" "}
-                    <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                    <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
                       ${toAccountBalance}
                     </span>{" "}
                   </p>
@@ -245,7 +238,7 @@ const UserTransfer = () => {
           <motion.button
             type="submit"
             whileTap={{ scale: 0.95 }}
-            className="px-12 hover:px-16 py-3 mt-4 bg-secondary-500/90 text-white font-semibold rounded-full transition-all hover:bg-secondary-500/80 focus:outline-none focus:ring-2 focus:ring-secondary-500/30"
+            className="px-12 hover:px-16 py-3 mt-4 bg-secondary-500-90 text-white font-semibold rounded-full transition-all hover:bg-secondary-500-80 focus:outline-none focus:ring-2 focus:ring-secondary-500/30"
           >
             Transfer Now
           </motion.button>

@@ -57,7 +57,7 @@ const KYCVerificationSection = () => (
   <div className="w-full mx-auto p-4">
     <div className="text-center mb-12">
       <div className="flex justify-center mb-6">
-        <div className="p-4 bg-secondary-500/10 rounded-full">
+        <div className="p-4 bg-secondary-500-10 rounded-full">
           <Shield className="w-16 h-16 text-secondary-500" />
         </div>
       </div>
@@ -117,15 +117,15 @@ const KYCVerificationSection = () => (
       <Link to="/user/account-details">
         <motion.button
           className="
-            bg-gradient-to-r from-secondary-500/10  to-secondary-500/50 
+            bg-secondary-500
             text-white px-12 py-4 rounded-full 
-            font-semibold shadow-2xl hover:shadow-secondary-500/80 
+            font-semibold shadow-2xl hover:shadow-secondary-500-50 
             transition-all group
           "
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <span className="flex items-center justify-center gap-2">
+          <span className="flex whitespace-nowrap text-xs md:text-md items-center justify-center gap-2">
             Start Verification
             <ArrowRight className="group-hover:translate-x-1 transition-transform" />
           </span>
@@ -260,7 +260,7 @@ const PlatformFeatureSection = () => (
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: index * 0.1 }}
       >
-        <div className="p-3 bg-secondary-500/10 rounded-full text-secondary-500">
+        <div className="p-3 bg-secondary-500-10 rounded-full text-secondary-500">
           {feature.icon}
         </div>
         <div>

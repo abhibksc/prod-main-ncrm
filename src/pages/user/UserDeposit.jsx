@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+
 import {
   ClipboardIcon,
   Eye,
-  Image,
   Loader2,
   LoaderPinwheelIcon,
   Upload,
@@ -43,6 +43,8 @@ export default function UserDeposit() {
   const [accountType, setAccountType] = useState("");
   const [accountBalance, setAccountBalance] = useState("");
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const siteConfig = useSelector((store) => store.user.siteConfig);
+
   const filteredMethodsData = paymentMethods?.filter(
     (value) => value.status === "active"
   );
@@ -247,7 +249,7 @@ export default function UserDeposit() {
                   accountBalance && (
                     <p className="px-4">
                       Balance:{" "}
-                      <span className="bg-secondary-500/10 px-3 py-1 rounded-full text-secondary-500">
+                      <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
                         ${accountBalance}
                       </span>
                     </p>
@@ -299,13 +301,24 @@ export default function UserDeposit() {
               className="w-full px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
             />
           </div>
-          <div className="flex gap-3 md:mt-5 items-center w-full">
-            <h1 className="sm:text-sm font-semibold text-gray-300">
-              INR Figure
-            </h1>
-            <p className="bg-secondary-500/10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
-              &#8377; {formData.depositAmount * 85}
-            </p>
+          <div>
+            <div className="flex whitespace-nowrap gap-3 md:mt-5 items-center w-full">
+              <h1 className="sm:text-sm font-semibold text-gray-300">
+                INR Figure
+              </h1>
+
+              <p className="bg-secondary-500-10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
+                &#8377; {formData.depositAmount * siteConfig.dollarDepositRate}
+              </p>
+            </div>
+            <div className=" mt-1 flex items-center justify-center">
+              <p className="text-[12px] mb-2 text-gray-500">
+                USD to INR Rate:{" "}
+                <span className="font-medium text-gray-400/80">
+                  ₹ {siteConfig?.dollarDepositRate}
+                </span>
+              </p>
+            </div>
           </div>
         </motion.div>
 
@@ -332,7 +345,7 @@ export default function UserDeposit() {
                 onClick={() => setSelectedPayment(method.name)}
                 className={`p-4 flex flex-col items-center font-semibold justify-center rounded-xl transition-colors ${
                   selectedPayment === method.name
-                    ? "bg-secondary-500/80 shadow-lg text-white"
+                    ? "bg-secondary-500-80 shadow-lg text-white"
                     : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                 }`}
               >
@@ -433,7 +446,7 @@ export default function UserDeposit() {
             <motion.label
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer bg-secondary-500/70 hover:bg-secondary-500/50 transition-colors py-2 px-4 rounded-lg flex items-center"
+              className="cursor-pointer bg-secondary-500-70 hover:bg-secondary-500-50 transition-colors py-2 px-4 rounded-lg flex items-center"
             >
               <Upload className="mr-2" />
               Choose file
@@ -515,7 +528,7 @@ export default function UserDeposit() {
             disabled={!agreeToTerms || creatingLoading || !selectedPayment}
             className={`flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
               selectedPayment && agreeToTerms
-                ? "bg-secondary-500/90 hover:bg-secondary-500/80 "
+                ? "bg-secondary-500-90 hover:bg-secondary-500-80 "
                 : "bg-gray-600  pointer-events-none"
             }`}
           >

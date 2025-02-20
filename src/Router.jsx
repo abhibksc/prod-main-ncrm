@@ -47,6 +47,7 @@ import UserReferralCloseTrades from "./pages/user/referral/UserReferralCloseTrad
 import SadminHome from "./pages/sadmin/SadminHome";
 import UserCopyTrading from "./pages/user/UserCopyTrading";
 import UserMasterUserCT from "./pages/user/copy-trading/UserMasterUserCT";
+import SiteConfiguration from "./pages/admin/SiteConfiguration";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -109,6 +110,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/ib-zone",
         element: <AdminIbZone></AdminIbZone>,
+      },
+      {
+        path: "/admin/site-configuration",
+        element: <SiteConfiguration></SiteConfiguration>,
       },
     ],
   },

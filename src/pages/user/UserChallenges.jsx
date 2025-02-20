@@ -99,7 +99,7 @@ const UserChallenges = () => {
         className="w-full border-collapse min-w-[640px]"
       >
         <thead>
-          <tr className="bg-secondary-500/50 whitespace-nowrap rounded text-white">
+          <tr className="bg-secondary-500-50 whitespace-nowrap rounded text-white">
             {/* Table headers remain the same */}
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
@@ -121,58 +121,61 @@ const UserChallenges = () => {
         </thead>
         <tbody>
           <AnimatePresence>
-            {logggedUser.accounts?.map((value, index) => (
-              <motion.tr
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{
-                  delay: index * 0.1,
-                  duration: 0.3,
-                }}
-                className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
-              >
-                {/* Table row content remains the same */}
-                <td className="p-2 sm:p-3 text-sm sm:text-base">
-                  {value?.accountNumber}
-                </td>
-                <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
-                  {value?.accountType}
-                </td>
-                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                  {value?.leverage}
-                </td>
-                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                  {value?.masterPassword}
-                </td>
-                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                  {value?.investorPassword}
-                </td>
-                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                  {value?.platform || "NULL"}
-                </td>
-                <td className="py-3 text-center px-4">
-                  <div>{formatDate(value?.createdAt)}</div>
-                  <div className="text-sm text-gray-400">
-                    {calculateTimeSinceJoined(value?.createdAt)}
-                  </div>
-                </td>
-                <td className="p-2 sm:p-3 text-center">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <button
-                      onClick={() => handleMoreInfo(value)}
-                      className="text-blue-500 hover:text-blue-600 transition-colors"
+            {logggedUser.accounts
+              ?.slice()
+              .reverse()
+              .map((value, index) => (
+                <motion.tr
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{
+                    delay: index * 0.1,
+                    duration: 0.3,
+                  }}
+                  className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
+                >
+                  {/* Table row content remains the same */}
+                  <td className="p-2 sm:p-3 text-sm sm:text-base">
+                    {value?.accountNumber}
+                  </td>
+                  <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
+                    {value?.accountType}
+                  </td>
+                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                    {value?.leverage}
+                  </td>
+                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                    {value?.masterPassword}
+                  </td>
+                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                    {value?.investorPassword}
+                  </td>
+                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                    {value?.platform || "NULL"}
+                  </td>
+                  <td className="py-3 text-center px-4">
+                    <div>{formatDate(value?.createdAt)}</div>
+                    <div className="text-sm text-gray-400">
+                      {calculateTimeSinceJoined(value?.createdAt)}
+                    </div>
+                  </td>
+                  <td className="p-2 sm:p-3 text-center">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <Info />
-                    </button>
-                  </motion.div>
-                </td>
-              </motion.tr>
-            ))}
+                      <button
+                        onClick={() => handleMoreInfo(value)}
+                        className="text-blue-500 hover:text-blue-600 transition-colors"
+                      >
+                        <Info />
+                      </button>
+                    </motion.div>
+                  </td>
+                </motion.tr>
+              ))}
           </AnimatePresence>
         </tbody>
       </motion.table>

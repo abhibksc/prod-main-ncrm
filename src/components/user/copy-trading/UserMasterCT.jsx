@@ -94,7 +94,7 @@ export default function UserMasterCT() {
 
       <button
         onClick={() => setIsDialogOpen(true)}
-        className="inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-secondary-500 rounded-full hover:px-10 transition-all hover:bg-secondary-500/80 focus:outline-none"
+        className="inline-flex items-center px-6 py-3 text-lg font-medium text-white bg-secondary-500 rounded-full hover:px-10 transition-all hover:bg-secondary-500-80 focus:outline-none"
       >
         Become a Master
         <ArrowRight className="w-5 h-5 ml-2" />
@@ -144,7 +144,7 @@ export default function UserMasterCT() {
                             becomeMasterHandler(account?.accountNumber);
                           }
                         }}
-                        className="bg-secondary-500 flex items-center gap-1 text-white px-5 py-2 rounded-full shadow-md hover:bg-secondary-500/80 transition"
+                        className="bg-secondary-500 flex items-center gap-1 text-white px-5 py-2 rounded-full shadow-md hover:bg-secondary-500-80 transition"
                       >
                         {linkedAccounts?.includes(
                           Number(account?.accountNumber)
