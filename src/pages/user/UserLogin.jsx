@@ -290,7 +290,7 @@ const UserLogin = () => {
                       className=" flex flex-col justify-center mb-5 items-center mr-4"
                     >
                       <img
-                        src={siteConfig.logo}
+                        src={siteConfig?.logo}
                         alt="Forex Logo"
                         className=" object-contain w-auto h-10 md:h-16 sm:h-10"
                       />

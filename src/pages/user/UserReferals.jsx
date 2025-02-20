@@ -58,7 +58,7 @@ const UserReferal = () => {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const randomNumber = generateRandomNumber(siteConfig.mt5Digit || 6);
+    const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
 
     const toastId = toast.loading("Generating..");
 

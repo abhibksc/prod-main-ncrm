@@ -145,7 +145,7 @@ const UserSignUp = () => {
           <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
             <a className=" flex flex-col justify-center mt-8 items-center mr-4">
               <img
-                src={siteConfig.logo}
+                src={siteConfig?.logo}
                 alt="Forex Logo"
                 className=" object-contain w-auto h-10 md:h-16 sm:h-10"
               />

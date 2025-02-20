@@ -5,15 +5,15 @@ import { useSelector } from "react-redux";
 const UserPanelConfig = () => {
   useSiteConfig();
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
-  const websiteName = siteConfig.websiteName || "FOREX";
-  const faviconLink = siteConfig.favicon || "/login-illu.jpg";
+  const websiteName = siteConfig?.websiteName || "FOREX";
+  const faviconLink = siteConfig?.favicon || "/login-illu.jpg";
 
   console.log("panel user", siteConfig);
 
   useEffect(() => {
     if (siteConfig) {
       // Convert HEX to RGB
-      const rgb = siteConfig.themeColor
+      const rgb = siteConfig?.themeColor
         .match(/\w\w/g)
         .map((x) => parseInt(x, 16))
         .join(",");
@@ -21,7 +21,7 @@ const UserPanelConfig = () => {
       // Set CSS variables
       document.documentElement.style.setProperty(
         "--theme-color",
-        siteConfig.themeColor
+        siteConfig?.themeColor
       );
       document.documentElement.style.setProperty("--theme-color-rgb", rgb);
 

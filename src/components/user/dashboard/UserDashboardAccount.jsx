@@ -91,7 +91,7 @@ const UserDashboardAccount = () => {
         <div className="font-semibold justify-center items-center flex sm:flex-row flex-col text-lg">
           <p>Server :</p>
           <span className="bg-secondary-500-10 text-sm md:text-lg mt-1 rounded-full py-1 px-3">
-            {siteConfig.serverName}
+            {siteConfig?.serverName}
           </span>
         </div>
         <div className="text-sm">

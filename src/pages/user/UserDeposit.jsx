@@ -308,7 +308,7 @@ export default function UserDeposit() {
               </h1>
 
               <p className="bg-secondary-500-10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
-                &#8377; {formData.depositAmount * siteConfig.dollarDepositRate}
+                &#8377; {formData.depositAmount * siteConfig?.dollarDepositRate}
               </p>
             </div>
             <div className=" mt-1 flex items-center justify-center">

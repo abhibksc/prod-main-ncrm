@@ -69,7 +69,7 @@ const UserNewChallenge = () => {
   }
 
   const createAccountHandler = async () => {
-    const randomNumber = generateRandomNumber(siteConfig.mt5Digit || 6);
+    const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
     if (!creatingLoading) {
       const toastID = toast.loading("Please wait..");
       try {
