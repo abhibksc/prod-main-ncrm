@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Phases from "../admin/Phases";
 import AccountConfiguration from "../admin/AccountConfiguration";
 import { useSelector } from "react-redux";
+import SadminAdminInfo from "./SadminInfo";
 // import SadminAdminInfo from "@/components/admin/s-admin/SadminAdminInfo";
 
 const PasswordScreen = ({ onAuthenticate }) => {
@@ -151,16 +152,11 @@ const SadminHome = () => {
       name: "Account Configuration",
       component: () => <AccountConfiguration></AccountConfiguration>,
     },
-    // {
-    //   id: "phases",
-    //   name: "Phases",
-    //   component: () => <Phases></Phases>,
-    // },
-    // {
-    //   id: "admin-info",
-    //   name: "Admin Info",
-    //   // component: () => <SadminAdminInfo></SadminAdminInfo>,
-    // },
+    {
+      id: "admin-info",
+      name: "Admin Info",
+      component: () => <SadminAdminInfo></SadminAdminInfo>,
+    },
   ];
 
   const CurrentComponent =
@@ -181,7 +177,6 @@ const SadminHome = () => {
         >
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-        <span className="text-lg text-red-500 font-semibold">Logout</span>
       </div>
 
       {/* Sidebar Backdrop */}
@@ -200,12 +195,12 @@ const SadminHome = () => {
       >
         <div className="flex flex-col h-full">
           <a
-            href="/admin/dashboard"
+            href="#"
             className=" flex mx-auto border-none outline-none items-center my-4 "
           >
             <img
               src={siteConfig?.logo}
-              alt="Forex-ZX Logo"
+              alt="Forex Logo"
               className=" object-contain w-auto h-10 md:h-12 sm:h-10"
             />
           </a>
@@ -255,7 +250,7 @@ const SadminHome = () => {
           isSidebarOpen ? "blur-sm lg:blur-none" : ""
         }`}
       >
-        <div className=" p-4">
+        <div className=" bg-primary-800/60 p-4">
           <CurrentComponent />
         </div>
       </main>

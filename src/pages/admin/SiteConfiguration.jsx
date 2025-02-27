@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Pencil, Check, X, Loader2 } from "lucide-react";
+import { Pencil, Check, X, Loader2, ExternalLink } from "lucide-react";
 import { backendApi } from "@/utils/apiClients";
 
 const SiteConfiguration = () => {
@@ -7,7 +7,7 @@ const SiteConfiguration = () => {
     dollarDepositRate: "",
     dollarWithdrawalRate: "",
     serverName: "",
-    themeColor: "#F23645", // Default Theme Color
+    themeColor: "#F23645",
     mt5Digit: "",
     websiteName: "",
     logo: "",
@@ -42,12 +42,10 @@ const SiteConfiguration = () => {
     }
   };
 
-  // Handle Input Change
   const handleChange = (e) => {
     setDetails({ ...details, [e.target.name]: e.target.value });
   };
 
-  // Save Updated Data
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -65,79 +63,113 @@ const SiteConfiguration = () => {
   }, []);
 
   return (
-    <div className="text-white p-5 flex min-h-screen">
-      <div className="w-full h-fit bg-gray-800/30 shadow-lg backdrop-blur-lg border border-gray-700/40 p-6 rounded-xl">
-        <div className="flex justify-between items-center border-b border-gray-500/50 pb-4 mb-4">
-          <h2 className="text-xl md:text-3xl text-primary-300 font-bold">
+    <div className="text-white p-6 flex min-h-screen bg-primary-900">
+      <div className="w-full max-w-4xl mx-auto bg-gray-800/20 shadow-xl backdrop-blur-xl border border-gray-700/50 p-8 rounded-2xl">
+        <div className="flex justify-between items-center border-b border-gray-600/50 pb-5 mb-6">
+          <h2 className="text-2xl md:text-3xl text-primary-300 font-bold tracking-tight">
             Site Configuration
           </h2>
-          {isEditing ? (
-            <div className="flex gap-2">
+          <div className="flex gap-3">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  disabled={saving}
+                  className={`p-2.5 bg-green-600 hover:bg-green-700 rounded-lg transition-all duration-200 flex items-center gap-2 ${
+                    saving && "opacity-60 cursor-not-allowed"
+                  }`}
+                >
+                  {saving ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Check className="w-5 h-5" />
+                  )}
+                  <span className="hidden md:block text-sm">Save</span>
+                </button>
+                <button
+                  onClick={() => setIsEditing(false)}
+                  className="p-2.5 bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+                >
+                  <X className="w-5 h-5" />
+                  <span className="hidden md:block text-sm">Cancel</span>
+                </button>
+              </>
+            ) : (
               <button
-                onClick={handleSave}
-                disabled={saving}
-                className={`p-2 bg-green-600 hover:bg-green-700 hover:px-4 rounded-full transition-all ${
-                  saving && "opacity-50 cursor-not-allowed"
-                }`}
+                onClick={() => setIsEditing(true)}
+                className="p-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 flex items-center gap-2"
               >
-                {saving ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Check className="w-5 h-5" />
-                )}
+                <Pencil className="w-5 h-5" />
+                <span className="hidden md:block text-sm">Edit</span>
               </button>
-              <button
-                onClick={() => setIsEditing(false)}
-                className="p-2 bg-red-600 hover:bg-red-700 hover:px-4 rounded-full transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="p-2 bg-blue-600 hover:bg-blue-700 hover:px-4 rounded-full transition-all"
-            >
-              <Pencil className="w-5 h-5" />
-            </button>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Loading State */}
         {loading ? (
-          <div className="flex justify-center py-10">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-10 h-10 animate-spin text-primary-400" />
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(details).map(([key, value]) => (
-              <div key={key} className="flex flex-col">
-                <label className="text-sm text-gray-400 capitalize">
+              <div
+                key={key}
+                className="bg-gray-800/20 p-4 rounded-lg border border-gray-700/30 hover:border-gray-600/50 transition-colors"
+              >
+                <label className="text-sm text-gray-400 capitalize font-medium mb-2 block">
                   {key.replace(/([A-Z])/g, " $1")}
                 </label>
-                {isEditing ? (
-                  key === "themeColor" ? (
-                    // Theme Color Picker
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="color"
-                        name={key}
-                        value={value}
-                        onChange={handleChange}
-                        className="w-10 h-10 border-none bg-transparent cursor-pointer"
-                        disabled={saving}
-                      />
-                      <span className="text-gray-200">{value}</span>
-                    </div>
-                  ) : key === "logo" || key === "favicon" ? (
-                    // Image Upload Fields
-                    <div className="flex items-center gap-3">
-                      {value && (
-                        <img
-                          src={value}
-                          alt={key}
-                          className="w-12 h-12 rounded border border-gray-600"
+                {key === "themeColor" ? (
+                  isEditing ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="color"
+                          name="themeColor"
+                          value={value}
+                          onChange={handleChange}
+                          className="w-12 h-12 rounded-md border border-gray-600 cursor-pointer"
+                          disabled={saving}
                         />
+                        <input
+                          name="themeColor"
+                          value={value}
+                          onChange={handleChange}
+                          placeholder="Enter custom hashcode (e.g., #FF5733)"
+                          className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
+                          disabled={saving}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <span
+                      className="px-3 py-1 rounded text-black font-bold inline-block"
+                      style={{ backgroundColor: value }}
+                    >
+                      {value}
+                    </span>
+                  )
+                ) : isEditing ? (
+                  key === "logo" || key === "favicon" ? (
+                    <div className="space-y-2">
+                      {value && (
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={value}
+                            alt={key}
+                            className="w-12 h-12 rounded-md border border-gray-600 object-contain bg-gray-700"
+                          />
+                          <a
+                            href={value}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary-400 hover:text-primary-300 text-sm flex items-center gap-1"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            View Full
+                          </a>
+                        </div>
                       )}
                       <input
                         type="text"
@@ -145,46 +177,51 @@ const SiteConfiguration = () => {
                         value={value}
                         onChange={handleChange}
                         placeholder="Enter image URL"
-                        className="bg-gray-700/10 text-white p-2 rounded border border-gray-600/40 focus:border-primary-400 outline-none"
+                        className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
                         disabled={saving}
                       />
                     </div>
                   ) : (
-                    // Default Input Fields
                     <input
                       name={key}
                       value={value}
                       onChange={handleChange}
-                      className="bg-gray-700/10 text-white p-2 rounded border border-gray-600/40 focus:border-primary-400 outline-none"
+                      className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
                       disabled={saving}
                     />
                   )
                 ) : (
-                  <p className="text-lg font-semibold text-gray-200">
+                  <div className="text-gray-200">
                     {key === "dollarDepositRate" ||
                     key === "dollarWithdrawalRate" ? (
-                      `₹ ${value}`
-                    ) : key === "themeColor" ? (
-                      <span
-                        className="px-3 py-1 rounded text-black font-bold"
-                        style={{ backgroundColor: value }}
-                      >
-                        {value}
-                      </span>
+                      <span className="text-lg font-semibold">₹ {value}</span>
                     ) : key === "logo" || key === "favicon" ? (
                       value ? (
-                        <img
-                          src={value}
-                          alt={key}
-                          className="w-12 h-12 rounded border border-gray-600"
-                        />
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={value}
+                            alt={key}
+                            className="w-12 h-12 rounded-md border border-gray-600 object-contain bg-gray-700"
+                          />
+                          <a
+                            href={value}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary-400 hover:text-primary-300 text-sm flex items-center gap-1"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            View Full
+                          </a>
+                        </div>
                       ) : (
-                        "No Image"
+                        <span className="text-gray-400 italic">No Image</span>
                       )
                     ) : (
-                      value
+                      <span className="text-lg font-semibold break-words">
+                        {value || "Not set"}
+                      </span>
                     )}
-                  </p>
+                  </div>
                 )}
               </div>
             ))}

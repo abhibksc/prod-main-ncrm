@@ -11,17 +11,18 @@ const UserPanelConfig = () => {
   console.log("panel user", siteConfig);
 
   useEffect(() => {
-    if (siteConfig) {
-      // Convert HEX to RGB
-      const rgb = siteConfig?.themeColor
-        .match(/\w\w/g)
-        .map((x) => parseInt(x, 16))
-        .join(",");
+    if (siteConfig && siteConfig.themeColor) {
+      // Convert HEX to RGB safely
+      const rgb =
+        siteConfig.themeColor
+          ?.match(/\w\w/g)
+          ?.map((x) => parseInt(x, 16))
+          ?.join(",") || "0,0,0"; // Default to black if undefined
 
       // Set CSS variables
       document.documentElement.style.setProperty(
         "--theme-color",
-        siteConfig?.themeColor
+        siteConfig.themeColor
       );
       document.documentElement.style.setProperty("--theme-color-rgb", rgb);
 
