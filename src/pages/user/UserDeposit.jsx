@@ -363,32 +363,62 @@ export default function UserDeposit() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
-              className="bg-secondary-800/40 rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4"
+              className="bg-secondary-900/60 rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4"
             >
-              {/* Section Header */}
-              <div className="w-full flex justify-between items-center">
-                <h3 className="text-lg font-bold text-gray-100">
-                  Account Details
-                </h3>
-                <span className="text-xs text-gray-400 bg-secondary-700 py-1 px-3 rounded-md">
-                  {selectedPayment || "Payment Info"}
-                </span>
-              </div>
-
               {/* Payment Details Section */}
               {paymentDetails && selectedPayment !== "Online Payment" ? (
-                <div className="w-full flex flex-col space-y-2 bg-secondary-700/50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-300 leading-tight">
-                    {formatTextWithLinks(paymentDetails) ||
-                      "No details available"}
-                  </p>
-                  <button
-                    onClick={() => copyText(paymentDetails)}
-                    className="flex items-center self-end text-blue-400 hover:text-blue-500 focus:outline-none space-x-1 text-xs"
-                  >
-                    <ClipboardIcon className="h-4 w-4" />
-                    <span>{copied ? "Copied!" : "Copy Details"}</span>
-                  </button>
+                <div className=" flex flex-col gap-10 md:flex-row w-full justify-between items-center">
+                  {/* Section Header */}
+                  <div className=" w-[50%]">
+                    <div className="w-full whitespace-nowrap my-2 flex justify-between items-center">
+                      <h3 className=" text-sm md:text-lg font-bold text-gray-100">
+                        Account Details
+                      </h3>
+                      <span className="text-lg text-secondary-500 bg-secondary-500-10 uppercase font-semibold px-4 py-1 px-3 rounded-full">
+                        {selectedPayment || "Payment Info"}
+                      </span>
+                    </div>
+                    <div className=" flex  items-center gap-4 space-y-2 bg-secondary-800/30 p-4 rounded-lg">
+                      <p className="text-sm text-gray-300 leading-tight">
+                        {formatTextWithLinks(paymentDetails) ||
+                          "No details available"}
+                      </p>
+                      <button
+                        onClick={() => copyText(paymentDetails)}
+                        className="flex mb-2 items-center self-end text-blue-400 hover:text-blue-500 focus:outline-none space-x-1 text-xs"
+                      >
+                        <ClipboardIcon className="h-4 w-4" />
+                        <span>{copied ? "Copied!" : "Copy"}</span>
+                      </button>
+                    </div>
+                  </div>
+                  {/* Payment Image Section */}
+                  {paymentImage && (
+                    <div className=" w-[50%]">
+                      {" "}
+                      {paymentImage && (
+                        <div className="w-full flex flex-col items-center space-y-2">
+                          <img
+                            src={`${
+                              import.meta.env.VITE_BACKEND_BASE_URL
+                            }/${paymentImage}`}
+                            alt="Payment Receipt"
+                            className="w-36 h-36 object-cover rounded-lg shadow-md"
+                          />
+                          <a
+                            href={`${
+                              import.meta.env.VITE_BACKEND_BASE_URL
+                            }/${paymentImage}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-400 hover:text-blue-500"
+                          >
+                            View QR
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="text-sm text-gray-400">
@@ -406,29 +436,6 @@ export default function UserDeposit() {
                 >
                   Pay Now
                 </a>
-              )}
-
-              {/* Payment Image Section */}
-              {paymentImage && (
-                <div className="w-full flex flex-col items-center space-y-2">
-                  <img
-                    src={`${
-                      import.meta.env.VITE_BACKEND_BASE_URL
-                    }/${paymentImage}`}
-                    alt="Payment Receipt"
-                    className="w-24 h-24 object-cover rounded-lg shadow-md"
-                  />
-                  <a
-                    href={`${
-                      import.meta.env.VITE_BACKEND_BASE_URL
-                    }/${paymentImage}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-blue-400 hover:text-blue-500"
-                  >
-                    View Receipt
-                  </a>
-                </div>
               )}
             </motion.div>
           )}
