@@ -172,7 +172,7 @@ const UserSidebar = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-10 md:h-12 sm:h-8"
+                className=" object-contain w-auto h-10 md:h-80 sm:h-10"
               />
             </a>
           </div>

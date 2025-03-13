@@ -153,7 +153,7 @@ const UserHeader = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className=" object-contain w-auto h-10 md:h-20 sm:h-8"
+              className=" object-contain w-auto h-10 md:h-12 sm:h-8"
             />
           </a>
         </div>
