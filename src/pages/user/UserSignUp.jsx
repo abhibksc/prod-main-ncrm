@@ -147,7 +147,7 @@ const UserSignUp = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-10 md:h-16 sm:h-10"
+                className=" object-contain w-auto h-10 md:h-20 sm:h-12"
               />
             </a>
             <div className="p-8 md:p-12">
