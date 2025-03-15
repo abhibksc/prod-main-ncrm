@@ -775,6 +775,7 @@ const DepositsStatus = () => {
                   <p>Email: {selectedDeposit.userId?.email}</p>
                   <p>Deposit Amount: ${selectedDeposit.deposit}</p>
                   <p>Account: {selectedDeposit.mt5Account}</p>
+                  <p>Transaction ID: {""}</p>
                   <p>Date: {formatDate(selectedDeposit.updatedAt)}</p>
                 </div>
               )}

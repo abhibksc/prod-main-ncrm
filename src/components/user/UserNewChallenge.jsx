@@ -211,7 +211,7 @@ const UserNewChallenge = () => {
                     generateMt5.data.Investor_Pwd
                   }</span></p>
                   <p>Server Name: <span class="highlight">${
-                    import.meta.env.VITE_SERVER_NAME
+                    siteConfig?.serverName
                   }</span></p>
                   <p>Platform: <span class="highlight">${
                     formData.platform

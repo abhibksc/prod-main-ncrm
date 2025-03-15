@@ -18,6 +18,8 @@ const UserChallenges = () => {
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const logggedUser = useSelector((store) => store.user.loggedUser);
+  const siteConfig = useSelector((store) => store.user.siteConfig);
+
   // format date ---------------------
 
   function formatDate(isoDateString) {
@@ -196,11 +198,11 @@ const UserChallenges = () => {
                 <AlertDialogDescription>
                   {true && (
                     <div className=" flex gap-[2px] font-semibold flex-col">
-                      <p>Mt5 Amount - {selectedchallenge?.accountNumber}</p>
-                      <p>Leverage - {selectedchallenge?.leverage}</p>
+                      <p>Mt5 Amount : {selectedchallenge?.accountNumber}</p>
+                      <p>Leverage : {selectedchallenge?.leverage}</p>
                       <div className=" flex gap-4">
                         <p>
-                          Master password - {selectedchallenge?.masterPassword}
+                          Master password : {selectedchallenge?.masterPassword}
                         </p>
                         <Link
                           to={"/user/master-password"}
@@ -211,7 +213,7 @@ const UserChallenges = () => {
                       </div>
                       <div className=" flex gap-4">
                         <p>
-                          Investar password -{" "}
+                          Investar password :{" "}
                           {selectedchallenge?.investorPassword}
                         </p>
                         <Link
@@ -220,6 +222,9 @@ const UserChallenges = () => {
                         >
                           change
                         </Link>
+                      </div>
+                      <div className=" flex gap-4">
+                        <p>Server Name : {siteConfig?.serverName}</p>
                       </div>
                     </div>
                   )}

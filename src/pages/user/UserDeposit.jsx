@@ -449,17 +449,17 @@ export default function UserDeposit() {
           <label className="block mb-2 text-sm font-medium">
             Upload proof of payment
           </label>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <div className="flex whitespace-nowrap flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <motion.label
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer bg-secondary-500-70 hover:bg-secondary-500-50 transition-colors py-2 px-4 rounded-lg flex items-center"
+              className="cursor-pointer whitespace-nowrap bg-secondary-500-70 hover:bg-secondary-500-50 transition-colors py-2 px-4 rounded-lg flex items-center"
             >
               <Upload className="mr-2" />
               Choose file
               <input
                 type="file"
-                className="hidden"
+                className="hidden w-20"
                 onChange={handleFileChange}
                 ref={fileInputRef}
                 accept="image/*"
@@ -494,6 +494,22 @@ export default function UserDeposit() {
             ) : (
               <span className="text-sm">No file chosen</span>
             )}
+            <div className=" flex flex-col gap-2 w-full">
+              <label
+                htmlFor="deposit-amount"
+                className="text-sm font-medium text-gray-200"
+              >
+                Transaction ID
+              </label>
+              <input
+                onChange={handleInputChange}
+                type="text"
+                id="transactionId"
+                name="transactionId"
+                placeholder="Enter Transaction ID"
+                className="w-80 px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+              />
+            </div>
           </div>
         </motion.div>
 

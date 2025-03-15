@@ -16,7 +16,7 @@ import { backendApi, metaApi } from "@/utils/apiClients";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectedGateway, setSelectedGateway] = useState("");
   const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
   const [account, selectAccount] = useState("");
   const [amount, setAmount] = useState("");
@@ -317,10 +317,11 @@ const UserWithdraw = () => {
                   className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                 >
                   <option
+                    selected
                     className=" bg-secondary-800 text-white"
                     value="Bank Transfer"
                   >
-                    Bank Transfer
+                    Select Withdraw Type
                   </option>
                   <option
                     className=" bg-secondary-800 text-white"
