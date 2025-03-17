@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeftRight,
   CircleCheckBig,
   CircleX,
-  Import,
   Loader,
   Search,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +18,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useDispatch, useStore } from "react-redux";
 import toast from "react-hot-toast";
 import { backendApi, metaApi } from "@/utils/apiClients";
 const cardVariants = {
@@ -775,7 +772,7 @@ const DepositsStatus = () => {
                   <p>Email: {selectedDeposit.userId?.email}</p>
                   <p>Deposit Amount: ${selectedDeposit.deposit}</p>
                   <p>Account: {selectedDeposit.mt5Account}</p>
-                  <p>Transaction ID: {""}</p>
+                  <p>Transaction ID: {selectedDeposit?.transactionId}</p>
                   <p>Date: {formatDate(selectedDeposit.updatedAt)}</p>
                 </div>
               )}

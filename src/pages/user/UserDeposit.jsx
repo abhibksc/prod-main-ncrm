@@ -24,9 +24,8 @@ export default function UserDeposit() {
     apiGroup: "",
     depositAmount: "",
     accountNumber: "",
-    // accountNumber: loggedUser?.accounts[0]?.accountNumber,
+    transactionId: "",
   });
-  // console.log("formdata--", formData);
 
   const [accountConfigurations, setAccountConfigurations] = useState([]);
 
@@ -107,6 +106,7 @@ export default function UserDeposit() {
           status: "pending",
           accountType: accountType,
           method: selectedPayment,
+          transactionId: formData.transactionId,
         };
         //
         // Create FormData object
@@ -363,23 +363,23 @@ export default function UserDeposit() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
-              className="bg-secondary-900/60 rounded-xl shadow-lg p-6 flex flex-col items-start space-y-4"
+              className="bg-secondary-900/60 rounded-xl shadow-lg px-4 py-8 flex flex-col items-start space-y-4"
             >
               {/* Payment Details Section */}
               {paymentDetails && selectedPayment !== "Online Payment" ? (
-                <div className=" flex flex-col gap-10 md:flex-row w-full justify-between items-center">
+                <div className="flex flex-col gap-10 md:flex-row w-full justify-between items-center">
                   {/* Section Header */}
-                  <div className=" w-[50%]">
-                    <div className="w-full whitespace-nowrap my-2 flex justify-between items-center">
-                      <h3 className=" text-sm md:text-lg font-bold text-gray-100">
-                        Account Details
+                  <div className="items-start w-full md:w-[50%]">
+                    <div className="w-full whitespace-nowrap my-2 flex flex-col md:flex-row justify-between items-center">
+                      <h3 className="text-sm md:text-lg font-bold text-gray-100">
+                        Account Details :
                       </h3>
-                      <span className="text-lg text-secondary-500 bg-secondary-500-10 uppercase font-semibold px-4 py-1 px-3 rounded-full">
+                      <span className="text-sm md:text-lg text-secondary-500 bg-secondary-500-10 uppercase font-semibold px-4 py-1 px-3 rounded-full">
                         {selectedPayment || "Payment Info"}
                       </span>
                     </div>
-                    <div className=" flex  items-center gap-4 space-y-2 bg-secondary-800/30 p-4 rounded-lg">
-                      <p className="text-sm text-gray-300 leading-tight">
+                    <div className="flex flex-col md:flex-row justify-start items-start gap-2 space-y-2 md:space-y-0 bg-secondary-800/30 p-4 rounded-lg">
+                      <p className="text-sm text-gray-300 leading-tight w-full break-words">
                         {formatTextWithLinks(paymentDetails) ||
                           "No details available"}
                       </p>
@@ -394,29 +394,26 @@ export default function UserDeposit() {
                   </div>
                   {/* Payment Image Section */}
                   {paymentImage && (
-                    <div className=" w-[50%]">
-                      {" "}
-                      {paymentImage && (
-                        <div className="w-full flex flex-col items-center space-y-2">
-                          <img
-                            src={`${
-                              import.meta.env.VITE_BACKEND_BASE_URL
-                            }/${paymentImage}`}
-                            alt="Payment Receipt"
-                            className="w-36 h-36 object-cover rounded-lg shadow-md"
-                          />
-                          <a
-                            href={`${
-                              import.meta.env.VITE_BACKEND_BASE_URL
-                            }/${paymentImage}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-sm text-blue-400 hover:text-blue-500"
-                          >
-                            View QR
-                          </a>
-                        </div>
-                      )}
+                    <div className="w-full md:w-[50%] flex justify-center md:justify-end">
+                      <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-36 md:h-36 flex flex-col items-center space-y-2">
+                        <img
+                          src={`${
+                            import.meta.env.VITE_BACKEND_BASE_URL
+                          }/${paymentImage}`}
+                          alt="Payment Receipt"
+                          className="w-full h-full object-contain rounded-lg shadow-md"
+                        />
+                        <a
+                          href={`${
+                            import.meta.env.VITE_BACKEND_BASE_URL
+                          }/${paymentImage}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm text-blue-400 hover:text-blue-500"
+                        >
+                          View QR
+                        </a>
+                      </div>
                     </div>
                   )}
                 </div>
