@@ -8,8 +8,6 @@ const UserPanelConfig = () => {
   const websiteName = siteConfig?.websiteName || "FOREX";
   const faviconLink = siteConfig?.favicon || "/login-illu.jpg";
 
-  console.log("panel user", siteConfig);
-
   useEffect(() => {
     if (siteConfig && siteConfig.themeColor) {
       // Convert HEX to RGB safely

@@ -48,6 +48,7 @@ import SadminHome from "./pages/sadmin/SadminHome";
 import UserCopyTrading from "./pages/user/UserCopyTrading";
 import UserMasterUserCT from "./pages/user/copy-trading/UserMasterUserCT";
 import SiteConfiguration from "./pages/admin/SiteConfiguration";
+import KycUsers from "./pages/admin/KycUsers";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -114,6 +115,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/site-configuration",
         element: <SiteConfiguration></SiteConfiguration>,
+      },
+      {
+        path: "/admin/kyc-users",
+        element: <KycUsers></KycUsers>,
       },
     ],
   },

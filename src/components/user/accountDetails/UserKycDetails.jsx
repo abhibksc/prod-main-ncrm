@@ -411,6 +411,7 @@ const UserKycDetails = () => {
       const res = await backendApi.put(
         `/${loggedUser._id}/kyc-details`,
         {
+          status: "submitted",
           documentType: formData.documentType,
           countryOfIssue: formData.countryOfIssue,
           purpose: formData.purpose,
@@ -431,7 +432,6 @@ const UserKycDetails = () => {
         subject: "Kyc Submitted",
       });
 
-      console.log("res--", res.data);
       getUpdateLoggedUser();
       toast.success("Details updated", { id: toastId });
     } catch (error) {

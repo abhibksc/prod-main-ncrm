@@ -17,7 +17,9 @@ import {
   Mails,
   SquareStackIcon,
   SubtitlesIcon,
+  HardDrive,
 } from "lucide-react";
+import { RiFileUserFill, RiProfileFill } from "react-icons/ri";
 
 const sidebarVariants = {
   open: {
@@ -69,6 +71,11 @@ const Sidebar = () => {
       label: "Login Logs",
       icon: <ChevronsRight />,
       route: "/admin/login-logs",
+    },
+    {
+      label: "KYC Updates",
+      icon: <HardDrive />,
+      route: "/admin/kyc-users",
     },
     // {
     //   label: "Rules",
