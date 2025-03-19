@@ -247,6 +247,12 @@ const KycUsers = () => {
           id: selectedUser._id,
           kycVerified: true,
         });
+        const updateKycStatus = await backendApi.put(
+          `/user/${selectedUser?._id}/kyc-status`,
+          {
+            status: "approved",
+          }
+        );
         toast.success("KYC Approved", { id: toastId });
         try {
           const customMailRes = await backendApi.post(`/custom-mail`, {
@@ -262,6 +268,12 @@ const KycUsers = () => {
           id: selectedUser._id,
           kycVerified: false,
         });
+        const updateKycStatus = await backendApi.put(
+          `/user/${selectedUser?._id}/kyc-status`,
+          {
+            status: "rejected",
+          }
+        );
 
         toast.success("KYC Rejected", { id: toastId });
         try {

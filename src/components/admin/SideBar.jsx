@@ -72,11 +72,6 @@ const Sidebar = () => {
       icon: <ChevronsRight />,
       route: "/admin/login-logs",
     },
-    {
-      label: "KYC Updates",
-      icon: <HardDrive />,
-      route: "/admin/kyc-users",
-    },
     // {
     //   label: "Rules",
     //   icon: <LucideBookText />,
@@ -86,6 +81,10 @@ const Sidebar = () => {
       label: "Manage Users",
       icon: <Users />,
       nested: [
+        {
+          label: "KYC Updates",
+          route: "/admin/kyc-users",
+        },
         {
           label: "Email Verified",
           route: "/admin/manage-users/email-verified",

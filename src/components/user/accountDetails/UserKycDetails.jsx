@@ -7,6 +7,7 @@ import {
   Minimize,
   Loader,
   CheckCircle2,
+  Ban,
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -400,32 +401,44 @@ const UserKycDetails = () => {
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
+      // Append only new files
+      if (imageFiles.frontSideOfDocument) {
+        formDataToSend.append(
+          "frontSideOfDocument",
+          imageFiles.frontSideOfDocument
+        );
+      }
+      if (imageFiles.backSideOfDocument) {
+        formDataToSend.append(
+          "backSideOfDocument",
+          imageFiles.backSideOfDocument
+        );
+      }
+      if (imageFiles.selfieWithDocument) {
+        formDataToSend.append(
+          "selfieWithDocument",
+          imageFiles.selfieWithDocument
+        );
+      }
+      formDataToSend.append("status", "submitted");
 
-      // Append files
-      Object.entries(imageFiles).forEach(([key, file]) => {
-        if (file) {
-          formDataToSend.append(key, file);
-        }
-      });
+      // // Append files
+      // Object.entries(imageFiles).forEach(([key, file]) => {
+      //   if (file) {
+      //     formDataToSend.append(key, file);
+      //   }
+      // });
 
       const res = await backendApi.put(
         `/${loggedUser._id}/kyc-details`,
-        {
-          status: "submitted",
-          documentType: formData.documentType,
-          countryOfIssue: formData.countryOfIssue,
-          purpose: formData.purpose,
-          occupation: formData.occupation,
-          frontSideOfDocument: imageFiles.frontSideOfDocument,
-          backSideOfDocument: imageFiles.backSideOfDocument,
-          selfieWithDocument: imageFiles.selfieWithDocument,
-        },
+        formDataToSend,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
       );
+
       const customMailRes = await backendApi.post(`/custom-mail`, {
         email: loggedUser.email,
         content: customContent,
@@ -471,25 +484,41 @@ const UserKycDetails = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className=" mx-auto p-2 bg-secondary-800/40 rounded-2xl"
+      className="mx-auto p-2 bg-secondary-800/40 rounded-2xl"
     >
       {loggedUser?.kycDetails?.documentType && (
-        <div className=" flex gap-2  font-semibold pt-5 items-center justify-center">
-          <h1 className=" text-lg">Status :</h1>
-          {loggedUser?.kycVerified === false ? (
-            <div className=" flex gap-1 bg-yellow-600/10 text-yellow-500 px-5 py-2 rounded-full ">
-              <Loader></Loader>
-              <p>Pending</p>
+        <div className="flex gap-2 font-semibold pt-5 items-center justify-center">
+          <h1 className="text-lg">Status :</h1>
+          {loggedUser?.kycDetails.status === "submitted" ? (
+            <div className="flex gap-1 bg-yellow-600/10 text-yellow-500 px-5 py-2 rounded-full">
+              <Loader />
+              <p>Under Review</p>
             </div>
-          ) : (
-            <div className=" flex gap-1 bg-green-600/10 text-green-500 px-5 py-2 rounded-full ">
-              <CheckCircle2></CheckCircle2>
+          ) : loggedUser?.kycDetails.status === "approved" ? (
+            <div className="flex gap-1 bg-green-600/10 text-green-500 px-5 py-2 rounded-full">
+              <CheckCircle2 />
               <p>Approved</p>
             </div>
+          ) : loggedUser?.kycDetails.status === "rejected" ? (
+            <div className="flex gap-1 bg-red-600/10 text-red-500 px-5 py-2 rounded-full">
+              <Ban />
+              <p>Rejected</p>
+            </div>
+          ) : (
+            ""
           )}
         </div>
       )}
+
       <div className="text-white p-6 rounded-xl">
+        {/* Warning Message */}
+        <p className="text-yellow-400/80  p-4 rounded-lg text-center text-sm mb-6">
+          <strong>Note:</strong> Updating any information or re-uploading
+          documents will set your KYC status back to{" "}
+          <span className="font-semibold">"Under Review"</span>. Your
+          application will be re-verified by our team.
+        </p>
+
         {/* Dropdown Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <DropdownField
