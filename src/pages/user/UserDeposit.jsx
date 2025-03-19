@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import {
+  Banknote,
   ClipboardIcon,
+  Copy,
   Eye,
   Loader2,
   LoaderPinwheelIcon,
@@ -44,9 +46,28 @@ export default function UserDeposit() {
   const [balanceLoading, setBalanceLoading] = useState(false);
   const siteConfig = useSelector((store) => store.user.siteConfig);
 
-  const filteredMethodsData = paymentMethods?.filter(
-    (value) => value.status === "active"
+  const bankTransfers = paymentMethods?.filter(
+    (value) => value.status === "active" && value.name === "Bank Transfer"
   );
+  console.log("bankTransfers", bankTransfers);
+  console.log("sselectedPayment", selectedPayment);
+  const bankDetails = {
+    bankName: "State Bank of India",
+    accountHolderName: "John Doe",
+    accountNumber: "123456789012",
+    ifscCode: "SBIN0001234",
+  };
+
+  const uniqueActiveMethods = [];
+  const namesSet = new Set();
+
+  paymentMethods?.forEach((method) => {
+    if (method.status === "active" && !namesSet.has(method.name)) {
+      namesSet.add(method.name);
+      uniqueActiveMethods.push(method);
+    }
+  });
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -331,7 +352,7 @@ export default function UserDeposit() {
             Select Payment Method
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredMethodsData.map((method, index) => (
+            {uniqueActiveMethods.map((method, index) => (
               <motion.button
                 key={method.name}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -366,6 +387,7 @@ export default function UserDeposit() {
               className="bg-secondary-900/60 rounded-xl shadow-lg px-4 py-8 flex flex-col items-start space-y-4"
             >
               {/* Payment Details Section */}
+
               {paymentDetails && selectedPayment !== "Online Payment" ? (
                 <div className="flex flex-col gap-10 md:flex-row w-full justify-between items-center">
                   {/* Section Header */}
@@ -379,6 +401,7 @@ export default function UserDeposit() {
                       </span>
                     </div>
                     <div className="flex flex-col md:flex-row justify-start items-start gap-2 space-y-2 md:space-y-0 bg-secondary-800/30 p-4 rounded-lg">
+                      {selectedPayment === "Bank Transfer" && <p>hello</p>}
                       <p className="text-sm text-gray-300 leading-tight w-full break-words">
                         {formatTextWithLinks(paymentDetails) ||
                           "No details available"}
@@ -416,6 +439,56 @@ export default function UserDeposit() {
                       </div>
                     </div>
                   )}
+                </div>
+              ) : selectedPayment === "Bank Transfer" ? (
+                <div className="  grid grid-cols-1 md:grid-cols-2 justify-between w-full gap-6 flex-row">
+                  {bankTransfers?.map((value, index) => (
+                    <div
+                      key={index}
+                      className="bg-secondary-800/30 text-white p-6 rounded-2xl shadow-lg min-w-lg max-w-xl w-full mx-auto"
+                    >
+                      <div className="flex items-center gap-3 mb-6">
+                        <Banknote className="text-green-500" size={30} />
+                        <h2 className="text-md sm:text-lg font-semibold">
+                          Bank Account #{index + 1}
+                        </h2>
+                      </div>
+
+                      <div className="space-y-2 whitespace-nowrap text-base sm:text-lg">
+                        <div className="flex flex-col sm:flex-row sm:justify-between">
+                          <span className=" text-gray-300/80">Bank Name:</span>
+                          <span className=" text-md">
+                            {value?.bankTransfer?.bankName}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-between">
+                          <span className=" text-gray-300/80">
+                            Account Holder:
+                          </span>
+                          <span className="text-md">
+                            {value?.bankTransfer?.accountHolderName}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-between">
+                          <span className=" text-gray-300/80">
+                            Account Number:
+                          </span>
+                          <span className="text-md">
+                            {value?.bankTransfer?.accountNumber}
+                          </span>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-between">
+                          <span className=" text-gray-300/80">IFSC Code:</span>
+                          <span className="text-md">
+                            {value?.bankTransfer?.ifscCode}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <p className="text-sm text-gray-400">
