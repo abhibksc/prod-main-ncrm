@@ -193,16 +193,6 @@ const UserInfoForm = ({ userData }) => {
             className="w-full p-2 rounded bg-primary-600 border border-primary-500"
           />
         </div>
-        <div>
-          <label className="block mb-2">KYC Submitted Comment</label>
-          <input
-            type="text"
-            name="kyc"
-            value={"Update Comment here"}
-            onChange={handleInputChange}
-            className="w-full p-2 rounded bg-primary-600 border border-primary-500"
-          />
-        </div>
       </form>
       <div className=" flex justify-end">
         <button
