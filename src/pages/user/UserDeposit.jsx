@@ -49,14 +49,6 @@ export default function UserDeposit() {
   const bankTransfers = paymentMethods?.filter(
     (value) => value.status === "active" && value.name === "Bank Transfer"
   );
-  console.log("bankTransfers", bankTransfers);
-  console.log("sselectedPayment", selectedPayment);
-  const bankDetails = {
-    bankName: "State Bank of India",
-    accountHolderName: "John Doe",
-    accountNumber: "123456789012",
-    ifscCode: "SBIN0001234",
-  };
 
   const uniqueActiveMethods = [];
   const namesSet = new Set();
