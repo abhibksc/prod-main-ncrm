@@ -48,7 +48,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.total
+        ibWithdrawalStats?.total
       ),
       color: "#8B5CF6",
       description: "All-time total IB withdrawals by users",
@@ -60,7 +60,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.pending
+        ibWithdrawalStats?.pending
       ),
       color: "#06B6D4",
       description: "IB withdrawals awaiting verification",
@@ -72,7 +72,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.rejected
+        ibWithdrawalStats?.rejected
       ),
       color: "#F97316",
       description: "Total rejected IB withdrawal requests",
@@ -84,7 +84,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.approved
+        ibWithdrawalStats?.approved
       ),
       color: "#10B981",
       description: "Total approved IB withdrawals",
@@ -95,7 +95,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.todayApproved
+        ibWithdrawalStats?.todayApproved
       ),
       color: "#F59E0B",
       description: "IB withdrawals approved in the last 24 hours",
@@ -106,7 +106,7 @@ const IBWithdrawalReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        ibWithdrawalStats.lastWeekApproved
+        ibWithdrawalStats?.lastWeekApproved
       ),
       color: "#3B82F6",
       description: "IB withdrawals approved in the last 7 days",

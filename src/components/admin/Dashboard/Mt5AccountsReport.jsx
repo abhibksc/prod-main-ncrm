@@ -51,14 +51,18 @@ const Mt5AccountsReport = () => {
     {
       icon: Users,
       label: "Total MT5 Accounts",
-      value: isLoading ? <Loader2 className="animate-spin" /> : mt5Stats.total,
+      value: isLoading ? <Loader2 className="animate-spin" /> : mt5Stats?.total,
       color: "#8B5CF6",
       description: "Total number of MT5 trading accounts",
     },
     {
       icon: Power,
       label: "Active Accounts",
-      value: isLoading ? <Loader2 className="animate-spin" /> : mt5Stats.active,
+      value: isLoading ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        mt5Stats?.active
+      ),
       color: "#10B981",
       description: "Currently active trading accounts",
     },
@@ -68,7 +72,7 @@ const Mt5AccountsReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        mt5Stats.disabled
+        mt5Stats?.disabled
       ),
       color: "#6B7280",
       description: "Currently disabled trading accounts",
@@ -79,7 +83,7 @@ const Mt5AccountsReport = () => {
       value: isLoading ? (
         <Loader2 className="animate-spin" />
       ) : (
-        mt5Stats.profitable
+        mt5Stats?.profitable
       ),
       color: "#06B6D4",
       description: "Accounts with positive floating profit",
@@ -87,7 +91,7 @@ const Mt5AccountsReport = () => {
     {
       icon: TrendingDown,
       label: "Loss Accounts",
-      value: isLoading ? <Loader2 className="animate-spin" /> : mt5Stats.loss,
+      value: isLoading ? <Loader2 className="animate-spin" /> : mt5Stats?.loss,
       color: "#EF4444",
       description: "Accounts with negative floating profit",
     },
