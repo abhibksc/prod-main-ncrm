@@ -89,17 +89,17 @@ const IBWithdrawalReport = () => {
       color: "#10B981",
       description: "Total approved IB withdrawals",
     },
-    {
-      icon: BadgeDollarSign,
-      label: "Today's Approved IB Withdrawals",
-      value: isLoading ? (
-        <Loader2 className="animate-spin" />
-      ) : (
-        ibWithdrawalStats?.todayApproved
-      ),
-      color: "#F59E0B",
-      description: "IB withdrawals approved in the last 24 hours",
-    },
+    // {
+    //   icon: BadgeDollarSign,
+    //   label: "Today's Approved IB Withdrawals",
+    //   value: isLoading ? (
+    //     <Loader2 className="animate-spin" />
+    //   ) : (
+    //     ibWithdrawalStats?.todayApproved
+    //   ),
+    //   color: "#F59E0B",
+    //   description: "IB withdrawals approved in the last 24 hours",
+    // },
     {
       icon: BadgeDollarSign,
       label: "Last Week Approved IB Withdrawals",

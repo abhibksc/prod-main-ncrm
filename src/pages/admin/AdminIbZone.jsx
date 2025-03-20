@@ -162,7 +162,7 @@ const AdminIbZone = () => {
                 }}
                 id="accountNumber"
                 name="accountNumber"
-                className="w-full border-none items-center   py-2  rounded-full border bg-secondary-500-10 px-6 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
+                className="w-full border-none items-center   py-1  rounded-full border bg-secondary-500-10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 border-b"
               >
                 <option
                   disabled
