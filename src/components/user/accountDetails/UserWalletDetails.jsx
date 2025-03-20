@@ -77,7 +77,7 @@ const UserWalletDetails = () => {
             onChange={handleInputChange}
             name="ethAddress"
           />
-          {/* <InputField
+          <InputField
             label="Binance ID"
             placeholder="Enter Binance ID"
             value={formData.accountNumber}
@@ -90,7 +90,7 @@ const UserWalletDetails = () => {
             value={formData.trxAddress}
             onChange={handleInputChange}
             name="trxAddress"
-          /> */}
+          />
         </div>
         <div className="flex items-center justify-center mt-8">
           <motion.button

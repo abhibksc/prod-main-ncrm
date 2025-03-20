@@ -27,7 +27,7 @@ const UserAccountDetails = () => {
 
   const tabs = [
     { id: "personal", label: "Kyc Details", icon: User },
-    // { id: "account", label: "Bank Details", icon: CreditCard },
+    { id: "account", label: "Bank Details", icon: CreditCard },
     { id: "wallet", label: "Wallet Details", icon: Wallet },
   ];
 
@@ -55,7 +55,7 @@ const UserAccountDetails = () => {
         className="rounded-xl mb-10 shadow-lg"
       >
         {activeTab === "personal" && <UserKycDetails />}
-        {/* {activeTab === "account" && <UserBankDetails />} */}
+        {activeTab === "account" && <UserBankDetails />}
         {activeTab === "wallet" && <UserWalletDetails />}
       </motion.div>
     </div>

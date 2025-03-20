@@ -242,7 +242,7 @@ const Sidebar = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className=" object-contain w-auto h-10 md:h-12 sm:h-8"
+              className=" object-contain w-auto h-10 md:h-8 sm:h-6"
             />
           </a>
           <ul className="space-y-2 text-sm px-4 py-3">

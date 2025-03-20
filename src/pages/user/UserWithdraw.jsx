@@ -318,10 +318,17 @@ const UserWithdraw = () => {
                 >
                   <option
                     selected
+                    className=" bg-secondary-800 text-white/20"
+                    value=""
+                  >
+                    select Method
+                  </option>
+                  <option
+                    selected
                     className=" bg-secondary-800 text-white"
                     value="Bank Transfer"
                   >
-                    Select Withdraw Type
+                    Bank Transfer
                   </option>
                   <option
                     className=" bg-secondary-800 text-white"
@@ -359,7 +366,7 @@ const UserWithdraw = () => {
                     >
                       USDT (Erc20)
                     </option>
-                    {/* <option
+                    <option
                       className=" bg-secondary-800 text-white"
                       value="BinanceID"
                     >
@@ -370,7 +377,7 @@ const UserWithdraw = () => {
                       value="BTCAddress"
                     >
                       BTC Address
-                    </option> */}
+                    </option>
                   </select>
                 </div>
               )}
@@ -524,12 +531,12 @@ const UserWithdraw = () => {
               {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
             </button>
           </div>
-          {/* <p className="text-xs mb-2 text-gray-500">
+          <p className="text-xs mb-2 text-gray-500">
             USD to INR Rate:{" "}
             <span className="font-medium text-gray-400/80">
               ₹ {siteConfig?.dollarWithdrawalRate}
             </span>
-          </p> */}
+          </p>
 
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>
