@@ -1,16 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowDownCircle,
   BadgeDollarSign,
   Loader2,
   LoaderPinwheelIcon,
   WalletCardsIcon,
 } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import UseUserHook from "../../hooks/user/UseUserHook";
+import { useSelector } from "react-redux";
+
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
 

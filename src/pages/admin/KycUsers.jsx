@@ -620,7 +620,7 @@ const KycUsers = () => {
                   </div>
                 </div>
                 {/* Bank details -- */}
-                {/* <div className="my-4">
+                <div className="my-4">
                   <h1 className=" text-lg font-bold border-b my-4">
                     Bank Details
                   </h1>
@@ -629,7 +629,7 @@ const KycUsers = () => {
                       Bank Name -{" "}
                       <span className=" font-semibold">
                         {" "}
-                        {userData?.bankDetails?.bankName}{" "}
+                        {selectedUser?.bankDetails?.bankName}{" "}
                       </span>{" "}
                     </p>
                     <p className="">
@@ -668,7 +668,7 @@ const KycUsers = () => {
                       </span>{" "}
                     </p>
                   </div>
-                </div> */}
+                </div>
                 {/* Wallet details -- */}
                 <div className="my-4">
                   <h1 className=" text-lg font-bold border-b my-4">
@@ -689,7 +689,7 @@ const KycUsers = () => {
                         {selectedUser?.walletDetails?.ethAddress}{" "}
                       </span>{" "}
                     </p>
-                    {/* <p className="">
+                    <p className="">
                       Binance ID -{" "}
                       <span className=" font-semibold">
                         {" "}
@@ -702,7 +702,7 @@ const KycUsers = () => {
                         {" "}
                         {selectedUser?.walletDetails?.trxAddress}{" "}
                       </span>{" "}
-                    </p> */}
+                    </p>
                   </div>
                 </div>
               </div>
