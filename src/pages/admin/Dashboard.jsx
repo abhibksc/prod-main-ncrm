@@ -1,32 +1,24 @@
-import UseAdminHook from "@/hooks/admin/UseAdminHook";
+import UserReport from "@/components/admin/Dashboard/UserReport";
 import BrowserGraph from "../../components/admin/Dashboard/BrowserGraph";
 import CountryGraph from "../../components/admin/Dashboard/CountryGraph";
-import DepositWithdrawReport from "../../components/admin/Dashboard/DepositWithdrawReport";
-import InvestmentReport from "../../components/admin/Dashboard/InvestmentReport";
 import OsGraph from "../../components/admin/Dashboard/OsGraph";
-import TradeReport from "../../components/admin/Dashboard/TradeReport";
-
-import CompactHexagonalMetricRow from "@/components/admin/Dashboard/UserMatric2";
-import { useEffect } from "react";
+import DepositWithdrawReport from "@/components/admin/Dashboard/DepositWithdrawReport";
+import WithdrawalReport from "@/components/admin/Dashboard/WithdrawalReport";
+import IBWithdrawalReport from "@/components/admin/Dashboard/IbWithdrawalRepport";
+import Mt5AccountsReport from "@/components/admin/Dashboard/Mt5AccountsReport";
 
 export default function Dashboard() {
-  const { getUsers, getDeposits, getWithdrawals } = UseAdminHook();
-
-  useEffect(() => {
-    getUsers();
-    getDeposits();
-    getWithdrawals();
-  }, []);
   return (
-    <div className=" container mx-auto">
-      <h2 className=" text-neutral-300  text-3xl px-10 py-5 font-bold">
+    <div className="">
+      <h2 className=" text-neutral-300  text-3xl px-10 py-3 font-bold">
         Dashboard
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-2 px-16">
-        <CompactHexagonalMetricRow></CompactHexagonalMetricRow>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-5 px-5 ">
+        <UserReport></UserReport>
         <DepositWithdrawReport></DepositWithdrawReport>
-        <InvestmentReport></InvestmentReport>
-        <TradeReport></TradeReport>
+        {/* <WithdrawalReport></WithdrawalReport> */}
+        <IBWithdrawalReport></IBWithdrawalReport>
+        <Mt5AccountsReport></Mt5AccountsReport>
       </div>
       <div className=" px-5 grid grid-cols-1 md:grid-cols-3 my-10 gap-2">
         <BrowserGraph></BrowserGraph>

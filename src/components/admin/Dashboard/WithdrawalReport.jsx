@@ -1,6 +1,20 @@
-import useDashboardStats from "@/hooks/admin/UseDashboardStats";
-import { BadgeDollarSign, Loader, ShieldX, Loader2 } from "lucide-react";
+import { BadgeDollarSign, Loader, Loader2, ShieldX } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+// Dummy hook to prevent errors (replace with real hook later)
+const useWithdrawalStats = () => {
+  return {
+    withdrawalStats: {
+      total: 10000,
+      pending: 500,
+      rejected: 120,
+      approved: 9380,
+      todayApproved: 250,
+      lastWeekApproved: 1800,
+    },
+    isLoading: false, // Set true to test loader
+  };
+};
 
 const MetricRow = ({ icon: Icon, label, value, color, description, link }) => {
   const navigate = useNavigate();
@@ -12,7 +26,7 @@ const MetricRow = ({ icon: Icon, label, value, color, description, link }) => {
     >
       <div
         className="p-2 sm:p-3 rounded-full shrink-0"
-        style={{ backgroundColor: `${color}10` }}
+        style={{ backgroundColor: `${color}15` }}
       >
         <Icon className="w-4 h-4 sm:w-6 sm:h-6" style={{ color }} />
       </div>
@@ -37,68 +51,10 @@ const MetricRow = ({ icon: Icon, label, value, color, description, link }) => {
   );
 };
 
-const DepositWithdrawReport = () => {
-  const { error, isLoading, depositStats, withdrawalStats } =
-    useDashboardStats();
-
-  if (error || error) {
-    return (
-      <div className="text-center text-red-500 text-lg">
-        Error fetching deposit or challenge stats
-      </div>
-    );
-  }
-
-  const renderValue = (loading, value) =>
-    loading ? <Loader2 className="animate-spin" /> : value ?? "N/A";
+const WithdrawalReport = () => {
+  const { withdrawalStats, isLoading } = useWithdrawalStats();
 
   const metrics = [
-    {
-      icon: BadgeDollarSign,
-      label: "Total Deposited",
-      link: "/admin/deposit/all",
-      value: renderValue(isLoading, depositStats?.total),
-      color: "#8B5CF6",
-      description: "All-time total deposits made by users",
-    },
-    {
-      icon: Loader,
-      label: "Pending Deposits",
-      link: "/admin/deposit/pending",
-      value: renderValue(isLoading, depositStats?.pending),
-      color: "#06B6D4",
-      description: "Deposits awaiting verification",
-    },
-    {
-      icon: ShieldX,
-      label: "Rejected Deposits",
-      link: "/admin/deposit/rejected",
-      value: renderValue(isLoading, depositStats?.rejected),
-      color: "#F97316",
-      description: "Total rejected deposit requests",
-    },
-    {
-      icon: BadgeDollarSign,
-      label: "Approved Deposits",
-      link: "/admin/deposit/approved",
-      value: renderValue(isLoading, depositStats?.approved),
-      color: "#10B981",
-      description: "Total approved deposits",
-    },
-    // {
-    //   icon: BadgeDollarSign,
-    //   label: "Today's Approved Deposits",
-    //   value: renderValue(isLoading, depositStats.todayApproved),
-    //   color: "#F59E0B",
-    //   description: "Deposits approved in the last 24 hours",
-    // },
-    {
-      icon: BadgeDollarSign,
-      label: "Last Week Approved Deposits",
-      value: renderValue(isLoading, depositStats?.lastWeekApproved),
-      color: "#3B82F6",
-      description: "Deposits approved in the last 7 days",
-    },
     {
       icon: BadgeDollarSign,
       label: "Total Withdrawn",
@@ -147,17 +103,17 @@ const DepositWithdrawReport = () => {
       color: "#10B981",
       description: "Total approved withdrawals",
     },
-    // {
-    //   icon: BadgeDollarSign,
-    //   label: "Today's Approved Withdrawals",
-    //   value: isLoading ? (
-    //     <Loader2 className="animate-spin" />
-    //   ) : (
-    //     depositStats?.todayApproved
-    //   ),
-    //   color: "#F59E0B",
-    //   description: "Withdrawals approved in the last 24 hours",
-    // },
+    {
+      icon: BadgeDollarSign,
+      label: "Today's Approved Withdrawals",
+      value: isLoading ? (
+        <Loader2 className="animate-spin" />
+      ) : (
+        withdrawalStats?.todayApproved
+      ),
+      color: "#F59E0B",
+      description: "Withdrawals approved in the last 24 hours",
+    },
     {
       icon: BadgeDollarSign,
       label: "Last Week Approved Withdrawals",
@@ -175,7 +131,7 @@ const DepositWithdrawReport = () => {
     <div className="w-full max-w-4xl mx-auto rounded-lg shadow-sm px-2 sm:px-0">
       <div className="flex flex-col justify-center items-center my-2 sm:my-4">
         <h1 className="text-lg sm:text-3xl font-bold bg-gradient-to-r from-white/80 to-primary-400 text-transparent bg-clip-text">
-          Deposit & Withdraw Report
+          Withdrawal Report
         </h1>
       </div>
 
@@ -188,4 +144,4 @@ const DepositWithdrawReport = () => {
   );
 };
 
-export default DepositWithdrawReport;
+export default WithdrawalReport;

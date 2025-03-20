@@ -10,7 +10,6 @@ const useSiteConfig = () => {
     const fetchSiteConfigData = async () => {
       try {
         const res = await backendApi.get(`/site-config`);
-        console.log("Site config:", res.data);
         dispatch(setSiteConfig(res.data.data));
       } catch (err) {
         console.error("Error fetching site config:", err);

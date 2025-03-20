@@ -143,7 +143,7 @@ const Sidebar = () => {
     {
       label: "Payment Getaways",
       icon: <CreditCard />,
-      nested: [{ label: "Manual getways", route: "/admin/getway/manual" }],
+      route: "/admin/getway/manual",
     },
     {
       label: "Site Configuration",

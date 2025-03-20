@@ -87,7 +87,7 @@ const Header = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-10 md:h-16 sm:h-10"
+                className=" object-contain w-auto h-10 md:h-14 sm:h-10"
               />
             </a>
             <div></div>
