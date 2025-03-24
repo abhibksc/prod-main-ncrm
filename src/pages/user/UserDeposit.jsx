@@ -393,7 +393,6 @@ export default function UserDeposit() {
                       </span>
                     </div>
                     <div className="flex flex-col md:flex-row justify-start items-start gap-2 space-y-2 md:space-y-0 bg-secondary-800/30 p-4 rounded-lg">
-                      {selectedPayment === "Bank Transfer" && <p>hello</p>}
                       <p className="text-sm text-gray-300 leading-tight w-full break-words">
                         {formatTextWithLinks(paymentDetails) ||
                           "No details available"}
