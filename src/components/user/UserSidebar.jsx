@@ -131,11 +131,11 @@ const UserSidebar = () => {
     { icon: CircleFadingPlus, label: "Deposit", link: "/user/deposit" },
     { icon: ArrowLeftRight, label: "Transfer", link: "/user/transfer" },
     { icon: ArrowDownCircleIcon, label: "Withdraw", link: "/user/withdraw" },
-    // {
-    //   icon: ChartCandlestick,
-    //   label: "Copy Trading",
-    //   link: "/user/copy-trading",
-    // },
+    {
+      icon: ChartCandlestick,
+      label: "Copy Trading",
+      link: "/user/copy-trading",
+    },
     { icon: SquareStackIcon, label: "IB Zone", link: "/user/referrals" },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {
