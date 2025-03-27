@@ -399,7 +399,7 @@ const KycUsers = () => {
                 </tr>
               ) : (
                 kycUsers?.map((item) => (
-                  <tr key={item._id} className="border-b">
+                  <tr key={item._id} className="border-b border-gray-400/30">
                     <td className="py-2 px-4">
                       <div className="font-semibold">
                         {item?.firstName ? item?.firstName : "Not found!!"}

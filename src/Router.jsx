@@ -49,6 +49,7 @@ import UserCopyTrading from "./pages/user/UserCopyTrading";
 import UserMasterUserCT from "./pages/user/copy-trading/UserMasterUserCT";
 import SiteConfiguration from "./pages/admin/SiteConfiguration";
 import KycUsers from "./pages/admin/KycUsers";
+import IbUsers from "./pages/admin/IbUsers";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -119,6 +120,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/kyc-users",
         element: <KycUsers></KycUsers>,
+      },
+      {
+        path: "/admin/ib-users",
+        element: <IbUsers></IbUsers>,
       },
     ],
   },

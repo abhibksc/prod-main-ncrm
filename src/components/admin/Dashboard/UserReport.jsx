@@ -130,6 +130,7 @@ const UserReport = () => {
       icon: Globe2,
       label: "Total IB Users",
       value: renderValue(userStats?.totalIbUsers),
+      link: "/admin/ib-users",
       color: "#34D399",
       description: "Users registered as IB",
     },

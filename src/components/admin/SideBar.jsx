@@ -86,6 +86,10 @@ const Sidebar = () => {
           route: "/admin/kyc-users",
         },
         {
+          label: "IB Users",
+          route: "/admin/ib-users",
+        },
+        {
           label: "Email Verified",
           route: "/admin/manage-users/email-verified",
         },

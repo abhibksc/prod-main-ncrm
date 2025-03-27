@@ -30,6 +30,11 @@ const UserLogin = () => {
       second: "2-digit",
       hour12: false, // 12-hour format with AM/PM
     });
+  // dev watermark ---
+  const metaTag = document.createElement("meta");
+  metaTag.name = "Developer";
+  metaTag.content = "Developed by mypixelcode@gmail.com 🎩✨";
+  document.head.appendChild(metaTag);
 
   // login handler ----------------
 
