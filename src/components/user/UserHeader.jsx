@@ -129,8 +129,7 @@ const UserHeader = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
   const dispatch = useDispatch();
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
-
+  const siteConfig = useSelector((state) => state.user.siteConfig);
   // console.log("isOpenSidebar", isSidebarOpen);
 
   const sidebarHandler = () => {

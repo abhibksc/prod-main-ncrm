@@ -424,7 +424,7 @@ const UserSignUp = () => {
                     <span className="text-sm text-gray-400">
                       I agree with the
                       <a
-                        href={import.meta.env.VITE_TAC_LINK}
+                        href={siteConfig?.tNcLink}
                         className="text-blue-400 hover:text-blue-400/80 mx-1 cursor-pointer"
                         target="_blank"
                       >

@@ -12,6 +12,10 @@ const SiteConfiguration = () => {
     websiteName: "",
     logo: "",
     favicon: "",
+    tNcLink: "",
+    androidDL: "",
+    iosDL: "",
+    windowsDL: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -33,6 +37,10 @@ const SiteConfiguration = () => {
           websiteName: data.websiteName || "",
           logo: data.logo || "",
           favicon: data.favicon || "",
+          tNcLink: data.tNcLink || "",
+          androidDL: data.androidDL || "",
+          iosDL: data.iosDL || "",
+          windowsDL: data.windowsDL || "",
         });
       }
     } catch (error) {
@@ -63,10 +71,10 @@ const SiteConfiguration = () => {
   }, []);
 
   return (
-    <div className="text-white p-6 flex min-h-screen bg-primary-900">
-      <div className="w-full max-w-4xl mx-auto bg-gray-800/20 shadow-xl backdrop-blur-xl border border-gray-700/50 p-8 rounded-2xl">
-        <div className="flex justify-between items-center border-b border-gray-600/50 pb-5 mb-6">
-          <h2 className="text-2xl md:text-3xl text-primary-300 font-bold tracking-tight">
+    <div className="min-h-screen bg-gradient-to-br from-primary-900 to-gray-900 p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-5xl mx-auto bg-primary-700/30 shadow-2xl backdrop-blur-xl border border-gray-700/20 rounded-3xl p-6 sm:p-8 overflow-hidden transition-all duration-300">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-600/40 pb-5 mb-8 gap-4">
+          <h2 className="text-2xl sm:text-3xl text-primary-300 font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-gray-300">
             Site Configuration
           </h2>
           <div className="flex gap-3">
@@ -75,8 +83,8 @@ const SiteConfiguration = () => {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className={`p-2.5 bg-green-600 hover:bg-green-700 rounded-lg transition-all duration-200 flex items-center gap-2 ${
-                    saving && "opacity-60 cursor-not-allowed"
+                  className={`px-4 py-2 bg-green-600 hover:bg-green-700 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-green-500/20 ${
+                    saving && "opacity-70 cursor-not-allowed"
                   }`}
                 >
                   {saving ? (
@@ -84,41 +92,49 @@ const SiteConfiguration = () => {
                   ) : (
                     <Check className="w-5 h-5" />
                   )}
-                  <span className="hidden md:block text-sm">Save</span>
+                  <span className="text-sm font-medium">Save</span>
                 </button>
                 <button
                   onClick={() => setIsEditing(false)}
-                  className="p-2.5 bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-red-500/20"
                 >
                   <X className="w-5 h-5" />
-                  <span className="hidden md:block text-sm">Cancel</span>
+                  <span className="text-sm font-medium">Cancel</span>
                 </button>
               </>
             ) : (
               <button
                 onClick={() => setIsEditing(true)}
-                className="p-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200 flex items-center gap-2"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-blue-500/20"
               >
                 <Pencil className="w-5 h-5" />
-                <span className="hidden md:block text-sm">Edit</span>
+                <span className="text-sm font-medium">Edit</span>
               </button>
             )}
           </div>
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="w-10 h-10 animate-spin text-primary-400" />
+          <div className="flex justify-center py-16">
+            <Loader2 className="w-12 h-12 animate-spin text-primary-400" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Object.entries(details).map(([key, value]) => (
               <div
                 key={key}
-                className="bg-gray-800/20 p-4 rounded-lg border border-gray-700/30 hover:border-gray-600/50 transition-colors"
+                className="bg-primary-700/40 p-5 rounded-xl border border-primary-600/50 hover:border-primary-600 transition-all duration-300 hover:shadow-lg hover:shadow-gray-700/20 group"
               >
-                <label className="text-sm text-gray-400 capitalize font-medium mb-2 block">
-                  {key.replace(/([A-Z])/g, " $1")}
+                <label className="text-xs text-gray-400 font-semibold mb-2 block tracking-wide">
+                  {key === "tNcLink"
+                    ? "T&C Link"
+                    : key === "androidDL"
+                    ? "Android Download Link"
+                    : key === "iosDL"
+                    ? "IOS Download Link"
+                    : key === "windowsDL"
+                    ? "Windows Download Link"
+                    : key.replace(/([A-Z])/g, " $1").trim()}
                 </label>
                 {key === "themeColor" ? (
                   isEditing ? (
@@ -129,45 +145,52 @@ const SiteConfiguration = () => {
                           name="themeColor"
                           value={value}
                           onChange={handleChange}
-                          className="w-12 h-12 rounded-md border border-gray-600 cursor-pointer"
+                          className="w-12 h-12 rounded-lg border-2 border-gray-600/20 cursor-pointer shadow-md hover:scale-105 transition-transform"
                           disabled={saving}
                         />
                         <input
                           name="themeColor"
                           value={value}
                           onChange={handleChange}
-                          placeholder="Enter custom hashcode (e.g., #FF5733)"
-                          className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
+                          placeholder="#FF5733"
+                          className="w-full bg-primary-800/40 text-white p-2.5 rounded-lg border border-gray-600/20 focus:border-primary-400 outline-none transition-all duration-200"
                           disabled={saving}
                         />
                       </div>
                     </div>
                   ) : (
                     <span
-                      className="px-3 py-1 rounded text-black font-bold inline-block"
+                      className="px-4 py-1.5 rounded-full text-black font-bold inline-block shadow-md"
                       style={{ backgroundColor: value }}
                     >
                       {value}
                     </span>
                   )
                 ) : isEditing ? (
-                  key === "logo" || key === "favicon" ? (
-                    <div className="space-y-2">
+                  key === "logo" ||
+                  key === "favicon" ||
+                  key === "tNcLink" ||
+                  key === "androidDL" ||
+                  key === "iosDL" ||
+                  key === "windowsDL" ? (
+                    <div className="space-y-3">
                       {value && (
                         <div className="flex items-center gap-3">
-                          <img
-                            src={value}
-                            alt={key}
-                            className="w-12 h-12 rounded-md border border-gray-600 object-contain bg-gray-700"
-                          />
+                          {key === "logo" || key === "favicon" ? (
+                            <img
+                              src={value}
+                              alt={key}
+                              className="w-14 h-14 rounded-lg border-2 border-gray-600/20  shadow-md group-hover:scale-105 transition-transform"
+                            />
+                          ) : null}
                           <a
                             href={value}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary-400 hover:text-primary-300 text-sm flex items-center gap-1"
+                            className="text-blue-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
                           >
                             <ExternalLink className="w-4 h-4" />
-                            View Full
+                            View
                           </a>
                         </div>
                       )}
@@ -176,8 +199,12 @@ const SiteConfiguration = () => {
                         name={key}
                         value={value}
                         onChange={handleChange}
-                        placeholder="Enter image URL"
-                        className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
+                        placeholder={
+                          key.includes("Link") || key.includes("DL")
+                            ? "Enter URL"
+                            : "Enter image URL"
+                        }
+                        className="w-full bg-primary-800/40 text-white p-2.5 rounded-lg border border-gray-600/20 focus:border-primary-400 outline-none transition-all duration-200 "
                         disabled={saving}
                       />
                     </div>
@@ -186,7 +213,7 @@ const SiteConfiguration = () => {
                       name={key}
                       value={value}
                       onChange={handleChange}
-                      className="w-full bg-gray-700/20 text-white p-2.5 rounded-md border border-gray-600/40 focus:border-primary-400 outline-none transition-colors"
+                      className="w-full bg-primary-800/40 text-white p-2.5 rounded-lg border border-gray-600/20 focus:border-primary-400 outline-none transition-all duration-200"
                       disabled={saving}
                     />
                   )
@@ -194,31 +221,54 @@ const SiteConfiguration = () => {
                   <div className="text-gray-200">
                     {key === "dollarDepositRate" ||
                     key === "dollarWithdrawalRate" ? (
-                      <span className="text-lg font-semibold">₹ {value}</span>
+                      <span className="text-xl font-semibold text-gray-200">
+                        ₹ {value}
+                      </span>
                     ) : key === "logo" || key === "favicon" ? (
                       value ? (
                         <div className="flex items-center gap-3">
                           <img
                             src={value}
                             alt={key}
-                            className="w-12 h-12 rounded-md border border-gray-600 object-contain bg-gray-700"
+                            className="w-14 h-14 rounded-lg border-2 border-gray-600/20 object-contain shadow-md group-hover:scale-105 transition-transform"
                           />
                           <a
                             href={value}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary-400 hover:text-primary-300 text-sm flex items-center gap-1"
+                            className="text-blue-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
                           >
                             <ExternalLink className="w-4 h-4" />
-                            View Full
+                            View
                           </a>
                         </div>
                       ) : (
-                        <span className="text-gray-400 italic">No Image</span>
+                        <span className="text-gray-400 italic text-sm">
+                          No Image
+                        </span>
+                      )
+                    ) : key === "tNcLink" ||
+                      key === "androidDL" ||
+                      key === "iosDL" ||
+                      key === "windowsDL" ? (
+                      value ? (
+                        <a
+                          href={value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors truncate max-w-full"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                          {value}
+                        </a>
+                      ) : (
+                        <span className="text-gray-400 italic text-sm">
+                          No Link
+                        </span>
                       )
                     ) : (
                       <span className="text-lg font-semibold break-words">
-                        {value || "Not set"}
+                        {value || "Not Set"}
                       </span>
                     )}
                   </div>

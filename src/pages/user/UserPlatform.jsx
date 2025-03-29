@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   Download,
   Monitor,
@@ -7,7 +7,6 @@ import {
   Shield,
   UserCheck,
   FileText,
-  AlertCircle,
   Server,
   Globe,
   BarChart2,
@@ -24,6 +23,8 @@ import UseUserHook from "@/hooks/user/UseUserHook";
 
 const UserPlatform = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
+  const siteConfig = useSelector((state) => state.user.siteConfig);
+
   const { getUpdateLoggedUser } = UseUserHook();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const UserPlatform = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="grid md:grid-cols-2 gap-8 ">
-              <PlatformDownloadSection />
+              <PlatformDownloadSection siteConfig={siteConfig} />
               <PlatformFeatureSection />
             </div>
           </motion.div>
@@ -135,7 +136,7 @@ const KYCVerificationSection = () => (
   </div>
 );
 
-const PlatformDownloadSection = () => (
+const PlatformDownloadSection = ({ siteConfig }) => (
   <div className="space-y-6">
     <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary-500 to-white">
       MetaTrader 5
@@ -169,19 +170,19 @@ const PlatformDownloadSection = () => (
         {
           icon: <Smartphone className="w-6 h-6 text-secondary-500" />,
           text: "Android",
-          link: "https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5",
+          link: siteConfig?.androidDL,
           description: "Trade on the go with full platform capabilities",
         },
         {
           icon: <AppleIcon className="w-6 h-6 text-secondary-500" />,
           text: "iOS",
-          link: "https://apps.apple.com/us/app/metatrader-5/id413251709",
+          link: siteConfig?.iosDL,
           description: "Seamless trading experience for Apple devices",
         },
         {
           icon: <Monitor className="w-6 h-6 text-secondary-500" />,
           text: "Windows",
-          link: "https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe",
+          link: siteConfig?.windowsDL,
           description: "Full-featured desktop trading environment",
         },
       ].map((platform, index) => (
