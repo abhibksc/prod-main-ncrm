@@ -158,10 +158,9 @@ export default function AdminCustomEmail() {
       return;
     }
 
-    // Simulated email send logic
-    const toastId = toast.loading("Sending..");
     try {
       if (recipient === "single") {
+        const toastId = toast.loading("Sending..");
         await backendApi.post(`/custom-mail`, {
           email: email,
           content: customContent,
@@ -193,7 +192,7 @@ export default function AdminCustomEmail() {
       setTimeout(() => setStatus(null), 3000);
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong!!, Try Again", { id: toastId });
+      toast.error("Something went wrong!!, Try Again");
       setStatus("error");
     }
   };
