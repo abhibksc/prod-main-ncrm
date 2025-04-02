@@ -8,7 +8,6 @@ import toast from "react-hot-toast";
 import {
   Banknote,
   ClipboardIcon,
-  Copy,
   Eye,
   Loader2,
   LoaderPinwheelIcon,
@@ -590,7 +589,7 @@ export default function UserDeposit() {
           <label htmlFor="agreeToTerms" className="text-sm">
             I agree to
             <a
-              href={import.meta.env.VITE_TAC_LINK}
+              href={siteConfig?.tNcLink}
               className="text-blue-400 mx-1 cursor-pointer"
               target="_blank"
             >

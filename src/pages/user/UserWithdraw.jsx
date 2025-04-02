@@ -385,13 +385,20 @@ const UserWithdraw = () => {
           <div className=" flex flex-col md:flex-row justify-between items-center gap-10">
             {/* enter amount */}
             <div className="w-full">
-              <div className=" flex justify-between items-center">
+              <div className=" w-full flex justify-between items-center">
                 <label
                   htmlFor="amount"
-                  className="block text-sm font-medium text-gray-200 mb-2"
+                  className=" text-sm font-medium text-gray-200"
                 >
                   Enter Amount
                 </label>
+                <div className="flex mb-2 whitespace-nowrap gap-2 items-center">
+                  <h1 className="text-sm font-bold text-gray-300">In INR:</h1>
+
+                  <p className="bg-secondary-500-10 text-secondary-500 px-2 text-sm py-1 font-semibold rounded-full">
+                    &#8377; {amount * siteConfig?.dollarWithdrawalRate}
+                  </p>
+                </div>
               </div>
               <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
                 {/* Icon */}
@@ -400,7 +407,7 @@ const UserWithdraw = () => {
                 </div>
                 {/* Input */}
                 <input
-                  type="text"
+                  type="number"
                   id="amount"
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full pl-10 py-3 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"

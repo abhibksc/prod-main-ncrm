@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeftRight,
   CircleCheckBig,
@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +21,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
 import { backendApi, metaApi } from "@/utils/apiClients";
+import {
+  CFcalculateTimeSinceJoined,
+  CFformatDate,
+} from "@/utils/CustomFunctions";
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -36,7 +39,7 @@ const containerVariants = {
   },
 };
 
-const StatCard = ({ icon, amount, label, bgColor, link }) => (
+const StatCard = ({ icon, amount, label, bgColor, link, allLoading }) => (
   <Link to={`${link}`} className="">
     <motion.div
       variants={cardVariants}
@@ -53,7 +56,11 @@ const StatCard = ({ icon, amount, label, bgColor, link }) => (
         <div className="flex items-center">
           {icon}
           <div className="ml-3">
-            <p className="text-2xl font-bold">{amount}</p>
+            {allLoading ? (
+              <p className="">Loading..</p>
+            ) : (
+              <p className="text-2xl font-bold">{amount}</p>
+            )}
             <p className="text-sm opacity-80">{label}</p>
           </div>
         </div>
@@ -63,8 +70,6 @@ const StatCard = ({ icon, amount, label, bgColor, link }) => (
 );
 
 const WithdrawalStatus = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const { status } = useParams();
   const [depositData, setDepositData] = useState([]);
   const [selectedDeposit, setSelectedDeposit] = useState(null);
@@ -73,32 +78,68 @@ const WithdrawalStatus = () => {
   const [loading, setLoading] = useState(false);
   const isAll = status === "all" ? true : false;
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [allDepositData, setAllDepositData] = useState([]);
+  const [allLoading, setAllLoading] = useState(true);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
+  const [pagination, setPagination] = useState({});
 
+  // fetch data------------------
   const fetchApiData = async () => {
     setLoading(true);
     try {
-      const res = await backendApi.get(`/withdrawals`);
-      setDepositData(res.data.data.reverse());
+      let finalRes;
+
+      if (status === "all") {
+        const res = await backendApi.get(
+          `/withdrawals?page=${currentPage}&limit=10&search=${debouncedSearch}&status=`
+        );
+        finalRes = res.data;
+      } else if (status === "pending") {
+        const res = await backendApi.get(
+          `/withdrawals?page=${currentPage}&limit=10&search=${debouncedSearch}&status=pending`
+        );
+        finalRes = res.data;
+      } else if (status === "approved") {
+        const res = await backendApi.get(
+          `/withdrawals?page=${currentPage}&limit=10&search=${searchQuery}&status=approved`
+        );
+        finalRes = res.data;
+      } else if (status === "rejected") {
+        const res = await backendApi.get(
+          `/withdrawals?page=${currentPage}&limit=10&search=${searchQuery}&status=rejected`
+        );
+        finalRes = res.data;
+      }
+      setDepositData(finalRes.data);
+      setPagination(finalRes.pagination);
       setLoading(false);
     } catch (error) {
+      toast.error("Something went wrong");
+      console.log("Error fetching deposits:", error);
       setLoading(false);
-
-      console.log("Error while fetching all deposits--", error);
     }
   };
 
-  let filterParamsData = depositData.filter((item) => item.status === status);
-  if (status === "all") {
-    filterParamsData = depositData.filter(
-      (item) =>
-        item.status === "pending" ||
-        item.status === "rejected" ||
-        item.status === "approved"
-    );
-  }
+  // fetch all data ----------------
 
-  const handleActionClick = (item, action) => {
-    setSelectedDeposit(item);
+  const fetchAllData = async () => {
+    try {
+      // for all data -----
+      const allRes = await backendApi.get(`/withdrawals`);
+      setAllDepositData(allRes.data.data);
+    } catch (error) {
+      console.log("failed to fetch all data");
+    } finally {
+      setAllLoading(false);
+    }
+  };
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleActionClick = (deposit, action) => {
+    setSelectedDeposit(deposit);
     setActionType(action);
     setIsDialogOpen(true);
   };
@@ -208,9 +249,9 @@ const WithdrawalStatus = () => {
         </div>
         <div class="content">
           <p>Dear ${
-            selectedDeposit?.userId?.firstName +
+            selectedDeposit?.userData?.firstName +
             " " +
-            selectedDeposit?.userId?.lastName
+            selectedDeposit?.userData?.lastName
           },</p>
   <p> Your withdrawal request has been processed and the requested amount has been successfully added to your chosen account</p>
         <div class="withdrawal-details">
@@ -233,11 +274,6 @@ const WithdrawalStatus = () => {
             import.meta.env.VITE_WEBSITE_NAME || "Forex"
           } Team</p>
           <hr>
-     <div class="risk-warning">
-      <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
-      <br><br>
-      our services are not for U.S. citizens or in jurisdictions where they violate local laws.
-    </div>
 
         </div>
           <div class="footer">
@@ -272,14 +308,14 @@ const WithdrawalStatus = () => {
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
             selectedDeposit.amount
-          }&Comment=withdrawal`
+          }&Comment=Withdrawal`
         );
         const updateWithdrawal = await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
         });
         const customMailRes = await backendApi.post(`/custom-mail`, {
-          email: selectedDeposit.userId.email,
+          email: selectedDeposit.userData.email,
           content: customContent,
           subject: "Withdrawal Success",
         });
@@ -317,34 +353,29 @@ const WithdrawalStatus = () => {
       console.error("Error updating deposit status:", error);
     }
   };
-  // total withdrawal ----------
+  // total deposits ----------
 
-  const TotalDeposits = depositData.reduce(
-    (total, item) => total + parseFloat(item.amount),
-    0
-  );
-  // console.log("total deposits", TotalDeposits);
-  // total pending deposits ----------
+  const TotalDeposits = allDepositData
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
 
-  const TotalPendingDeposits = depositData
+  // Total pending deposits
+  const TotalPendingDeposits = allDepositData
     .filter((item) => item.status === "pending")
     .reduce((total, item) => total + parseFloat(item.amount), 0)
     .toFixed(2);
-  // console.log("total pending", TotalPendingDeposits);
 
-  // total Successfull deposits ----------
-
-  const TotalSuccessfullDeposits = depositData
+  // Total successful deposits
+  const TotalSuccessfullDeposits = allDepositData
     .filter((item) => item.status === "approved")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
-  // console.log("total successfull", TotalSuccessfullDeposits);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
 
-  // total rejected deposits ----------
-
-  const TotalRejectedDeposits = depositData
+  // Total rejected deposits
+  const TotalRejectedDeposits = allDepositData
     .filter((item) => item.status === "rejected")
-    .reduce((total, item) => total + parseFloat(item.amount), 0);
-  // console.log("Total rejected", TotalRejectedDeposits);
+    .reduce((total, item) => total + parseFloat(item.amount), 0)
+    .toFixed(2);
 
   // stats data------------
 
@@ -379,121 +410,11 @@ const WithdrawalStatus = () => {
     },
   ];
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-  };
-
-  // search filtered data -----------------
-
-  const getFilteredData = () => {
-    let filtered = filterParamsData;
-
-    if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase();
-      filtered = filtered.filter((item) => {
-        const userName = item.userId?.name?.toLowerCase() || "";
-        const userEmail = item.userId?.email?.toLowerCase() || "";
-        const account = item.mt5Account?.toLowerCase() || "";
-
-        return (
-          userName.includes(searchLower) ||
-          userEmail.includes(searchLower) ||
-          account.includes(searchLower)
-        );
-      });
-    }
-
-    if (dateRange.start && dateRange.end) {
-      const startDate = new Date(dateRange.start);
-      const endDate = new Date(dateRange.end);
-      endDate.setHours(23, 59, 59, 999); // Set to end of day
-
-      filtered = filtered.filter((item) => {
-        const itemDate = new Date(item.createdAt);
-        return itemDate >= startDate && itemDate <= endDate;
-      });
-    }
-
-    return filtered;
-  };
-
-  const handleDateRangeSearch = (e) => {
-    e.preventDefault();
-    // The filtering is now handled in getFilteredData()
-    // This function can be used to trigger a re-render if needed
-    setDepositData([...depositData]);
-  };
-
-  // format date ---------------------
-
-  function formatDate(isoDateString) {
-    const date = new Date(isoDateString);
-
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    });
-
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
-    });
-
-    return `${formattedDate}, ${formattedTime}`;
-  }
-  // since joined ---------------
-
-  function calculateTimeSinceJoined(isoDateString) {
-    const joinDate = new Date(isoDateString);
-    const today = new Date();
-
-    // Calculate the difference in time (in milliseconds)
-    const timeDifference = today - joinDate;
-
-    // Calculate different time units
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    // Build the time string
-    let timeString = [];
-
-    if (days > 0) {
-      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
-    }
-    if (hours > 0) {
-      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
-    }
-    if (minutes > 0) {
-      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
-    }
-
-    // Handle case when less than a minute
-    if (timeString.length === 0) {
-      return "less than a minute ago";
-    }
-
-    return timeString.join(", ") + " ago";
-  }
-
   // pagination -------------------
-  const filteredData = getFilteredData();
-  const usersPerPage = 10; // Adjust as needed
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredData.slice(indexOfFirstUser, indexOfLastUser);
 
-  const totalPages = Math.ceil(filteredData.length / usersPerPage);
-
+  const totalPages = pagination.totalPages;
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
+    if (currentPage < pagination.totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
   };
@@ -504,195 +425,218 @@ const WithdrawalStatus = () => {
     }
   };
 
-  // use effect -----------------
+  // page reset ------
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, status]);
+
+  // debouncing searching ------------
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500); // 500ms debounce time
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
+  // use effect for data fetching -----------------
 
   useEffect(() => {
     fetchApiData();
+  }, [status, currentPage, debouncedSearch]);
+
+  // use effect for all data -----------------
+
+  useEffect(() => {
+    if (status == "all") {
+      fetchAllData();
+    }
   }, [status]);
 
   return (
     <div className="  w-full p-4">
-      <h1 className="text-2xl font-bold mb-4 text-white first-letter:uppercase">
-        {status} Withdrawals
-      </h1>
-
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-        <div className=" flex justify-between ">
-          <form onSubmit={handleSearch} className="flex items-center">
-            <input
-              type="text"
-              placeholder="User/Email/Account"
-              className="border p-2 rounded-l text-gray-600"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+      <div className=" w-full flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
+          {status} Withdrawals
+        </h1>
+        <div className="relative w-full md:w-96">
+          <input
+            type="text"
+            placeholder="Name / Email "
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
+          />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
+            size={18}
+          />
+          {searchQuery && (
             <button
-              type="submit"
-              className="bg-primary-300 text-white p-2 rounded-r"
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
             >
-              <Search size={25} />
+              ×
             </button>
-          </form>
+          )}
         </div>
-        <form
-          onSubmit={handleDateRangeSearch}
-          className="flex flex-col md:flex-row gap-1"
-        >
-          <input
-            type="date"
-            className="border p-2 text-gray-400 rounded-l"
-            value={dateRange.start}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, start: e.target.value })
-            }
-          />
-          <input
-            type="date"
-            className="border text-gray-400 p-2"
-            value={dateRange.end}
-            onChange={(e) =>
-              setDateRange({ ...dateRange, end: e.target.value })
-            }
-          />
-          <button
-            type="submit"
-            className="bg-primary-300 flex text-white p-2 rounded-md md:rounded-r"
-          >
-            <Search size={20} className=" mx-auto" />
-          </button>
-        </form>
       </div>
-      <div className="overflow-x-auto">
+      <div className=" overflow-x-auto">
         {isAll && (
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            className=" hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
             {stats.map((stat, index) => (
-              <StatCard key={index} {...stat} />
+              <StatCard allLoading={allLoading} key={index} {...stat} />
             ))}
           </motion.div>
         )}
-        <table className="min-w-full whitespace-nowrap bg-primary-700">
-          <thead className="bg-primary-400 text-white">
-            <tr>
-              <th className="py-2 px-4 text-left">User | Email</th>
-              <th className="py-2 px-4 text-center">Account</th>
-              <th className="py-2 px-4 text-center">Type</th>
-              <th className="py-2 px-4 text-center">Last Balance</th>
-              <th className="py-2 px-4 text-center">Amount</th>
-              <th className="py-2 px-4 text-center">Method</th>
-              <th className="py-2 px-4 text-center">Requested Date</th>
-              <th className="py-2 px-4 text-center">Status</th>
-              <th className="py-2 px-4 text-left">Action</th>
-            </tr>
-          </thead>
-
-          <tbody className="text-white">
-            {loading ? (
+        {/* Added max-height container for scrolling */}
+        <div className="max-h-[60vh] overflow-y-auto relative custom-scrollbar">
+          <table className="min-w-full bg-primary-700">
+            {/* Made header sticky */}
+            <thead className="bg-primary-400 text-white sticky top-0 z-10">
               <tr>
-                <td colSpan="8" className="py-4">
-                  <div className="text-white flex justify-center items-center gap-4">
-                    <p>Loading...</p>
-                    <Loader className="animate-spin" />
-                  </div>
-                </td>
+                <th className="py-2 px-4 text-left">User | Email</th>
+                <th className="py-2 px-4 text-left">Account</th>
+                <th className="py-2 px-4 text-left">AC Type</th>
+                <th className="py-2 px-4 text-left">Withdraw</th>
+                <th className="py-2 px-4 text-left">Method</th>
+                {status === "rejected" || status === "approved" ? (
+                  <th className="py-2 px-4 text-left">Updated At</th>
+                ) : (
+                  <th className="py-2 px-4 text-left">Requested At</th>
+                )}
+                <th className="py-2 px-4 text-left">Action</th>
               </tr>
-            ) : (
-              currentUsers?.map((item) => (
-                <tr key={item._id} className="border-b">
-                  <td className="py-2 px-4">
-                    <div className="font-semibold">
-                      {item?.userId?.firstName
-                        ? item?.userId?.firstName
-                        : "Not found!!"}
+            </thead>
+
+            <tbody className="text-white">
+              {loading ? (
+                <tr>
+                  <td colSpan="8" className="py-4">
+                    <div className="text-white flex justify-center items-center gap-4">
+                      <p>Loading...</p>
+                      <Loader className="animate-spin" />
                     </div>
-                    <div className="text-white/70 text-sm">
-                      {item?.userId ? item?.userId?.email : "Not found!!"}
-                    </div>
-                  </td>
-                  <td className="py-2 px-4">{item?.mt5Account}</td>
-                  <td className="py-2  font-semibold px-4">
-                    <div className=" flex items-center justify-center">
-                      <span className="bg-primary-100/10 text-white px-2 py-1 rounded-full text-sm">
-                        {item?.accountType}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-2 px-4 text-center">{item?.lastBalance}</td>
-                  <td className="py-2 px-4 text-center">
-                    {item?.amount.toFixed(2)}
-                  </td>
-                  <td className="py-2 px-4">{item?.method}</td>
-                  <td className="py-3 whitespace-nowrap px-4">
-                    <div>{formatDate(item?.createdAt)}</div>
-                    <div className="text-sm text-gray-400">
-                      {calculateTimeSinceJoined(item?.createdAt)}
-                    </div>
-                  </td>{" "}
-                  <td className="py-2 px-4">
-                    <span className="bg-gray-200 first-letter:capitalize text-gray-800 px-2 py-1 rounded-full text-sm">
-                      {item.status.charAt(0).toUpperCase() +
-                        item.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="py-2 font- px-4">
-                    {item.status === "pending" && (
-                      <div className="flex items-center gap-5">
-                        <button
-                          className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
-                          onClick={() => handleActionClick(item, "approve")}
-                        >
-                          <CircleCheckBig />
-                        </button>
-                        <button
-                          className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                          onClick={() => handleActionClick(item, "reject")}
-                        >
-                          <CircleX />
-                        </button>
-                      </div>
-                    )}
-                    {item.status === "approved" && (
-                      <p className="text-green-400">Approved</p>
-                    )}
-                    {item.status === "rejected" && (
-                      <p className="text-red-500">Rejected</p>
-                    )}
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-        <div className="mt-4 flex justify-between items-center">
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className={`px-4 py-2 rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
-                : "bg-primary-500 text-white"
-            }`}
-          >
-            Previous
-          </button>
-          <span className="text-white">
-            Page {currentPage} of {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className={`px-4 py-2 rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-500 text-gray-900 cursor-not-allowed"
-                : "bg-primary-500 text-white"
-            }`}
-          >
-            Next
-          </button>
+              ) : (
+                depositData?.map((item) => (
+                  <tr key={item._id} className="border-b border-gray-600/40">
+                    <td className="py-2 px-4">
+                      <div className="font-semibold">
+                        {item?.userData?.firstName
+                          ? item?.userData?.firstName
+                          : "Not found!!"}
+                      </div>
+                      <div className="text-white/70 text-sm">
+                        {item?.userData ? item?.userData?.email : "Not found!!"}
+                      </div>
+                    </td>
+                    <td className="py-2 px-4">{item?.mt5Account}</td>
+                    <td className="py-2 px-4">
+                      <span className="whitespace-nowrap font-semibold text-gray-100 py-1 text-sm">
+                        {item?.accountType}
+                      </span>
+                    </td>
+                    <td className="py-2 px-4">${item?.amount.toFixed(2)}</td>
+                    <td className="py-2 px-4">{item?.method}</td>
+                    {status === "rejected" || status === "approved" ? (
+                      <td className="py-3 whitespace-nowrap px-4">
+                        <div>{CFformatDate(item?.updatedAt)}</div>
+                        <div className="text-sm text-gray-400">
+                          {CFcalculateTimeSinceJoined(item?.updatedAt)}
+                        </div>
+                      </td>
+                    ) : (
+                      <td className="py-3 whitespace-nowrap px-4">
+                        <div>{CFformatDate(item?.createdAt)}</div>
+                        <div className="text-sm text-gray-400">
+                          {CFcalculateTimeSinceJoined(item?.createdAt)}
+                        </div>
+                      </td>
+                    )}
+
+                    <td className="py-2 px-4">
+                      {item.status === "pending" && (
+                        <div className="flex items-center gap-5">
+                          <button
+                            className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                            onClick={() => handleActionClick(item, "approve")}
+                          >
+                            <CircleCheckBig />
+                          </button>
+                          <button
+                            className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                            onClick={() => handleActionClick(item, "reject")}
+                          >
+                            <CircleX />
+                          </button>
+                        </div>
+                      )}
+                      {item.status === "approved" && (
+                        <p className="text-green-400">Approved</p>
+                      )}
+                      {item.status === "rejected" && (
+                        <p className="text-red-500">Rejected</p>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="mt-6 flex flex-col items-center space-y-3">
+          {/* Pagination Info */}
+          <p className="text-gray-300 text-sm">
+            <span className="font-semibold text-white">
+              {" "}
+              {pagination?.totalWithdrawals}
+            </span>{" "}
+            total records
+          </p>
+
+          {/* Pagination Controls */}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className={`px-5 py-2 rounded-xl transition-all ${
+                currentPage === 1
+                  ? "bg-gray-700/40 text-gray-400 cursor-not-allowed"
+                  : "bg-primary-500 hover:bg-primary-600 text-white shadow-md"
+              }`}
+            >
+              ← Previous
+            </button>
+
+            <span className="text-gray-300 text-sm">
+              Page{" "}
+              <span className="font-semibold text-white">{currentPage}</span> of
+              <span className="font-semibold text-white"> {totalPages}</span>
+            </span>
+
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`px-5 py-2 rounded-xl transition-all ${
+                currentPage === totalPages
+                  ? "bg-gray-700/40 text-gray-400 cursor-not-allowed"
+                  : "bg-primary-500 hover:bg-primary-600 text-white shadow-md"
+              }`}
+            >
+              Next →
+            </button>
+          </div>
         </div>
       </div>
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -710,14 +654,14 @@ const WithdrawalStatus = () => {
                     {/* <li className=" text-lg font-semibold mb-1">User Info</li> */}
                     <p>
                       User:{" "}
-                      {selectedDeposit.userId?.firstName +
+                      {selectedDeposit.userData?.firstName +
                         " " +
-                        selectedDeposit.userId?.lastName}
+                        selectedDeposit.userData?.lastName}
                     </p>
-                    <p>Email: {selectedDeposit.userId?.email}</p>
-                    <p>Withdrwal Amount: ${selectedDeposit?.amount}</p>
+                    <p>Email: {selectedDeposit.userData?.email}</p>
+                    <p>Withdrawal Amount: ${selectedDeposit?.amount}</p>
                     <p>Account: {selectedDeposit?.mt5Account}</p>
-                    <p>Date: {formatDate(selectedDeposit?.updatedAt)}</p>
+                    <p>Date: {CFformatDate(selectedDeposit?.updatedAt)}</p>
                   </div>
                   <div>
                     <li className=" text-lg my-4 font-semibold mb-1">
@@ -735,7 +679,7 @@ const WithdrawalStatus = () => {
                           <p>
                             Bank Name -{" "}
                             <span className=" font-bold">
-                              {selectedDeposit?.userId?.bankDetails?.bankName}
+                              {selectedDeposit?.userData?.bankDetails?.bankName}
                             </span>
                           </p>
                         </div>
@@ -743,7 +687,10 @@ const WithdrawalStatus = () => {
                           <p>
                             Holder Name -{" "}
                             <span className=" font-bold">
-                              {selectedDeposit?.userId?.bankDetails?.holderName}
+                              {
+                                selectedDeposit?.userData?.bankDetails
+                                  ?.holderName
+                              }
                             </span>{" "}
                           </p>
                         </div>
@@ -752,7 +699,7 @@ const WithdrawalStatus = () => {
                             Account Number -{" "}
                             <span className=" font-bold">
                               {
-                                selectedDeposit?.userId?.bankDetails
+                                selectedDeposit?.userData?.bankDetails
                                   ?.accountNumber
                               }
                             </span>
@@ -762,7 +709,7 @@ const WithdrawalStatus = () => {
                           <p>
                             IFSC Code -{" "}
                             <span className=" font-bold">
-                              {selectedDeposit?.userId?.bankDetails?.ifscCode}
+                              {selectedDeposit?.userData?.bankDetails?.ifscCode}
                             </span>
                           </p>
                         </div>
@@ -770,7 +717,10 @@ const WithdrawalStatus = () => {
                           <p>
                             Swift Code -{" "}
                             <span className=" font-bold">
-                              {selectedDeposit?.userId?.bankDetails?.swiftCode}
+                              {
+                                selectedDeposit?.userData?.bankDetails
+                                  ?.swiftCode
+                              }
                             </span>
                           </p>
                         </div>
@@ -778,7 +728,7 @@ const WithdrawalStatus = () => {
                           <p>
                             UPI ID -{" "}
                             <span className=" font-bold">
-                              {selectedDeposit?.userId?.bankDetails?.upiId}
+                              {selectedDeposit?.userData?.bankDetails?.upiId}
                             </span>
                           </p>
                         </div>
@@ -791,7 +741,7 @@ const WithdrawalStatus = () => {
                             USDT-Trc20 -
                             <span className=" font-bold">
                               {
-                                selectedDeposit?.userId?.walletDetails
+                                selectedDeposit?.userData?.walletDetails
                                   ?.tetherAddress
                               }
                             </span>
@@ -805,7 +755,10 @@ const WithdrawalStatus = () => {
                         <p>
                           USDT-Erc20 -{" "}
                           <span className=" font-bold">
-                            {selectedDeposit?.userId?.walletDetails?.ethAddress}
+                            {
+                              selectedDeposit?.userData?.walletDetails
+                                ?.ethAddress
+                            }
                           </span>{" "}
                         </p>
                       </div>
@@ -816,7 +769,7 @@ const WithdrawalStatus = () => {
                           Binance ID -{" "}
                           <span className=" font-bold">
                             {
-                              selectedDeposit?.userId?.walletDetails
+                              selectedDeposit?.userData?.walletDetails
                                 ?.accountNumber
                             }
                           </span>
@@ -828,7 +781,10 @@ const WithdrawalStatus = () => {
                         <p>
                           BTC Address -{" "}
                           <span className=" font-bold">
-                            {selectedDeposit?.userId?.walletDetails?.trxAddress}
+                            {
+                              selectedDeposit?.userData?.walletDetails
+                                ?.trxAddress
+                            }
                           </span>
                         </p>
                       </div>

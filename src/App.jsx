@@ -6,6 +6,8 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UseAdminHook from "./hooks/admin/UseAdminHook";
+import { backendApi } from "./utils/apiClients";
+import md5 from "md5";
 
 export default function App() {
   const adminUser = useSelector((store) => store.admin.adminUser);
@@ -32,28 +34,31 @@ export default function App() {
       window.removeEventListener("beforeinstallprompt", promptEvent);
     };
   }, []);
-  // logout on update password ---
+  // logout on update password funcnality ---
 
   const fetchAdminUser = async () => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_BECKEND_END_POINT}/api/auth/admin/user`
-    );
-    if (res.data.status && adminUser.password !== res.data.data.password) {
-      console.log("Password changed");
+    const res = await backendApi.get(`/admin/user`);
+    const currentPasswordHash = md5(res.data.data.password);
+    const storedPasswordHash = localStorage.getItem("admin_password_ref");
+
+    if (storedPasswordHash && storedPasswordHash !== currentPasswordHash) {
       getResetAdmin();
+      navigate("/admin/login");
     }
   };
-  setInterval(() => {
-    fetchAdminUser();
-  }, 10000);
 
   // useEffect for logout ---
+
+  useEffect(() => {
+    const interval = setInterval(fetchAdminUser, 20000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!adminUser) {
       navigate("/admin/login");
     }
-  }, [adminUser, navigate]);
+  }, [navigate]);
 
   if (!adminUser) {
     return null;

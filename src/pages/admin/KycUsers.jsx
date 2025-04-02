@@ -399,7 +399,7 @@ const KycUsers = () => {
                 </tr>
               ) : (
                 kycUsers?.map((item) => (
-                  <tr key={item._id} className="border-b">
+                  <tr key={item._id} className="border-b border-gray-400/30">
                     <td className="py-2 px-4">
                       <div className="font-semibold">
                         {item?.firstName ? item?.firstName : "Not found!!"}
@@ -617,92 +617,6 @@ const KycUsers = () => {
                         View Full Image
                       </a>
                     </div>
-                  </div>
-                </div>
-                {/* Bank details -- */}
-                <div className="my-4">
-                  <h1 className=" text-lg font-bold border-b my-4">
-                    Bank Details
-                  </h1>
-                  <div>
-                    <p className="">
-                      Bank Name -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.bankName}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      Holder Name -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.holderName}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      Account Number -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.accountNumber}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      IFSC Code -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.ifscCode}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      Swift Code -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.swiftCode}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      UPI ID -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.bankDetails?.upiId}{" "}
-                      </span>{" "}
-                    </p>
-                  </div>
-                </div>
-                {/* Wallet details -- */}
-                <div className="my-4">
-                  <h1 className=" text-lg font-bold border-b my-4">
-                    Wallet Details
-                  </h1>
-                  <div>
-                    <p className="">
-                      USDT-Trc20 -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.walletDetails?.tetherAddress}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      USDT-Erc20 -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.walletDetails?.ethAddress}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      Binance ID -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.walletDetails?.accountNumber}{" "}
-                      </span>{" "}
-                    </p>
-                    <p className="">
-                      BTC Address -{" "}
-                      <span className=" font-semibold">
-                        {" "}
-                        {selectedUser?.walletDetails?.trxAddress}{" "}
-                      </span>{" "}
-                    </p>
                   </div>
                 </div>
               </div>

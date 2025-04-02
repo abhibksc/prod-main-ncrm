@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BadgeDollarSign, ScanEyeIcon } from "lucide-react";
 import { backendApi } from "@/utils/apiClients";
+import md5 from "md5";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -37,6 +38,8 @@ const Login = () => {
       if (res.data.status) {
         toast.success("Login successful", { id: toastId });
         dispatch(setAdminUser(res.data.userExist));
+        const currentPasswordHash = md5(res.data.userExist.password);
+        localStorage.setItem("admin_password_ref", currentPasswordHash);
         navigate("/admin/dashboard");
       } else {
         toast.error(res.data.msg, { id: toastId });
