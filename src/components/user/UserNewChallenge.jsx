@@ -71,6 +71,7 @@ const UserNewChallenge = () => {
   const createAccountHandler = async () => {
     const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
     if (!creatingLoading) {
+      setCreatingLoading(true); // Set loading to true at the start
       const toastID = toast.loading("Please wait..");
       try {
         const generateMt5 = await metaApi.post(`/Adduser`, {
@@ -95,11 +96,11 @@ const UserNewChallenge = () => {
               platform: formData.platform,
             }
           );
-          setCreatingLoading(false);
+          setCreatingLoading(false); // Reset loading on success
           toast.success("Account created Successfully", { id: toastID });
           navigate("/user/dashboard");
           await getUpdateLoggedUser();
-          // sending mail -------------
+          // Sending mail -------------
           const customContent = `<!DOCTYPE html>
           <html lang="en">
           <head>
@@ -239,7 +240,7 @@ const UserNewChallenge = () => {
                   <p>We sent out this message to all existing ${
                     import.meta.env.VITE_WEBSITE_NAME || "Forex"
                   } traders. Please visit this page to know more about our Privacy Policy.</p>
-                  <p>&copy; 2024 ${
+                  <p>© 2024 ${
                     import.meta.env.VITE_WEBSITE_NAME || "Forex"
                   }. All Rights Reserved</p>
                 </div>
@@ -258,10 +259,10 @@ const UserNewChallenge = () => {
           }
         } else {
           toast.error("Please Retry again!!", { id: toastID });
-          setCreatingLoading(false);
+          setCreatingLoading(false); // Reset loading on failure
         }
       } catch (error) {
-        setCreatingLoading(false);
+        setCreatingLoading(false); // Reset loading on error
         toast.error("Please try again", { id: toastID });
         console.log("add account error---", error);
       }
@@ -380,7 +381,7 @@ const UserNewChallenge = () => {
                 onClick={() => setFormData({ ...formData, platform: plt.name })}
                 className={`p-4 flex rounded-full items-center justify-center transition-colors ${
                   formData.platform === plt.name
-                    ? "bg-secondary-500-70 shadow-lg  font-semibold"
+                    ? "bg-secondary-500-70 shadow-lg font-semibold"
                     : "bg-secondary-800/50 shadow-sm hover:bg-secondary-700/40"
                 }`}
               >
@@ -392,12 +393,17 @@ const UserNewChallenge = () => {
         </motion.div>
         <div className="w-full flex items-center justify-center pt-10">
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: creatingLoading ? 1 : 1.1 }}
+            whileTap={{ scale: creatingLoading ? 1 : 0.95 }}
             onClick={createAccountHandler}
-            className="bg-secondary-500-80 px-12 py-3 shadow-md hover:bg-secondary-500-70 transition-all hover:px-16 rounded-full"
+            disabled={creatingLoading}
+            className={`bg-secondary-500-80 px-12 py-3 shadow-md transition-all rounded-full ${
+              creatingLoading
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-secondary-500-70 hover:px-16"
+            }`}
           >
-            Create Account
+            {creatingLoading ? "Creating..." : "Create Account"}
           </motion.button>
         </div>
       </div>
