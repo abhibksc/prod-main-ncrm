@@ -419,9 +419,9 @@ const DepositsStatus = () => {
 
   // pagination -------------------
 
-  const totalPages = pagination.totalPages;
+  const totalPages = pagination?.totalPages;
   const handleNextPage = () => {
-    if (currentPage < pagination.totalPages) {
+    if (currentPage < pagination?.totalPages) {
       setCurrentPage((prev) => prev + 1);
     }
   };
