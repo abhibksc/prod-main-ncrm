@@ -15,11 +15,15 @@ import {
   Zap,
   CreditCard,
   ArrowRight,
+  Link2Icon,
+  MoveUpRight,
+  ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 const UserPlatform = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -211,6 +215,19 @@ const PlatformDownloadSection = ({ siteConfig }) => (
     </div>
 
     {/* Security Section */}
+    <a target="_blank" href={siteConfig?.webLink || siteConfig?.androidDL}>
+      <div className="bg-secondary-900/30 cursor-pointer group rounded-xl p-4 mt-4">
+        <div className="flex items-center space-x-3">
+          <h3 className="text-white font-semibold">Web Link</h3>
+          <ExternalLink className="text-secondary-500 group-hover:animate-bounce group-hover:ml-4 transition-all w-6 h-6" />
+        </div>
+        <p className="text-gray-400 text-sm mt-2">
+          Trade seamlessly on our official website by clicking it and unlock a
+          world of opportunities!
+        </p>
+      </div>
+    </a>
+    {/* web link */}
     <div className="bg-secondary-900/30 rounded-xl p-4 mt-4">
       <div className="flex items-center space-x-3">
         <Shield className="text-secondary-500 w-6 h-6" />
