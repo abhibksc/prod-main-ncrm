@@ -392,13 +392,13 @@ const UserWithdraw = () => {
                 >
                   Enter Amount
                 </label>
-                <div className="flex mb-2 whitespace-nowrap gap-2 items-center">
+                {/* <div className="flex mb-2 whitespace-nowrap gap-2 items-center">
                   <h1 className="text-sm font-bold text-gray-300">In INR:</h1>
 
                   <p className="bg-secondary-500-10 text-secondary-500 px-2 text-sm py-1 font-semibold rounded-full">
                     &#8377; {amount * siteConfig?.dollarWithdrawalRate}
                   </p>
-                </div>
+                </div> */}
               </div>
               <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
                 {/* Icon */}
@@ -536,12 +536,12 @@ const UserWithdraw = () => {
               {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
             </button>
           </div>
-          <p className="text-xs mb-2 text-gray-500">
+          {/* <p className="text-xs mb-2 text-gray-500">
             USD to INR Rate:{" "}
             <span className="font-medium text-gray-400/80">
               ₹ {siteConfig?.dollarWithdrawalRate}
             </span>
-          </p>
+          </p> */}
 
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>

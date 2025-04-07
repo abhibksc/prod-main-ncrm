@@ -313,7 +313,7 @@ export default function UserDeposit() {
               className="w-full px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
             />
           </div>
-          <div>
+          {/* <div>
             <div className="flex whitespace-nowrap gap-3 md:mt-5 items-center w-full">
               <h1 className="sm:text-sm font-semibold text-gray-300">
                 INR Figure
@@ -331,7 +331,7 @@ export default function UserDeposit() {
                 </span>
               </p>
             </div>
-          </div>
+          </div> */}
         </motion.div>
 
         <motion.div
