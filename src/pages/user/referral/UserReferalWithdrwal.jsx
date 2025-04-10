@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  ArrowDownCircle,
-  BadgeDollarSign,
-  BadgeInfoIcon,
-  Loader2,
-  WalletCardsIcon,
-} from "lucide-react";
-import axios from "axios";
+import { BadgeDollarSign, Loader2, WalletCardsIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
@@ -22,6 +15,7 @@ export const UserReferralWithdrawal = () => {
   const [balance, userInfoData] = UseCommissionBalance();
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("Thether");
+  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -172,12 +166,16 @@ export const UserReferralWithdrawal = () => {
     </body>
     </html>`;
 
-  //    main withdrwal handler ---------------------
+  //    main withdrawal handler ---------------------
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+
     setApiLoader(true);
     setError("");
+    setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+
     try {
       if (balance <= 0) {
         setError(`You don't have sufficient balance for withdrawal.`);
@@ -210,13 +208,15 @@ export const UserReferralWithdrawal = () => {
         console.log("withdraw db res--", withdrawalDBres.data);
 
         setApiLoader(false);
-        toast.success("Withdawal Requested");
+        toast.success("Withdrawal Requested");
       }
       setApiLoader(false);
     } catch (error) {
       setApiLoader(false);
       toast.error("Something went wrong!!");
       console.log("error while withdraw", error);
+    } finally {
+      setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
 
@@ -412,10 +412,18 @@ export const UserReferralWithdrawal = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-secondary-500-90 hover:bg-secondary-500-80 text-white py-3 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300"
+            disabled={isWithdrawing}
+            className={`w-full flex justify-center py-3 rounded-md shadow-md text-white focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300 ${
+              // NEW: Disable button while withdrawing
+              isWithdrawing
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-secondary-500-90 hover:bg-secondary-500-80 hover:shadow-xl"
+            }`}
           >
-            Submit Withdrawal
-            {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
+            {isWithdrawing ? "Processing..." : "Submit Withdrawal"}
+            {(apiLoader || isWithdrawing) && (
+              <Loader2 className="animate-spin mx-3" />
+            )}
           </button>
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>

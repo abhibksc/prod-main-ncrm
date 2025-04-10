@@ -83,6 +83,7 @@ const WithdrawalStatus = () => {
   const [allLoading, setAllLoading] = useState(true);
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [pagination, setPagination] = useState({});
+  const [isActionLoading, setIsActionLoading] = useState(false); // NEW: Added action loading state
 
   // fetch data------------------
   const fetchApiData = async () => {
@@ -300,7 +301,11 @@ const WithdrawalStatus = () => {
 
   // handle confirm click ----------------
   const handleConfirmAction = async (selectedDeposit) => {
-    const toastId = toast.loading("Plese wait..");
+    if (isActionLoading) return; // NEW: Prevent multiple clicks if already loading
+
+    const toastId = toast.loading("Please wait..");
+    setIsActionLoading(true); // NEW: Set action loading to true
+
     try {
       if (actionType === "approve") {
         const apiWithdrawalRes = await metaApi.get(
@@ -349,8 +354,10 @@ const WithdrawalStatus = () => {
         toast.success("Withdrawal Rejected", { id: toastId });
       }
     } catch (error) {
-      toast.success("Something went wrong", { id: toastId });
+      toast.error("Something went wrong", { id: toastId }); // MODIFIED: Corrected toast type to error
       console.error("Error updating deposit status:", error);
+    } finally {
+      setIsActionLoading(false); // NEW: Reset action loading to false
     }
   };
   // total deposits ----------
@@ -806,8 +813,13 @@ const WithdrawalStatus = () => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmAction(selectedDeposit)}
+              disabled={isActionLoading}
             >
-              Confirm {actionType === "approve" ? "Approval" : "Rejection"}
+              {isActionLoading
+                ? "Processing..."
+                : `Confirm ${
+                    actionType === "approve" ? "Approval" : "Rejection"
+                  }`}{" "}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

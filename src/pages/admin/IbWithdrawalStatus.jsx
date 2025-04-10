@@ -82,6 +82,7 @@ const IbWithdrawalStatus = () => {
   const [allLoading, setAllLoading] = useState(true);
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [pagination, setPagination] = useState({});
+  const [isActionLoading, setIsActionLoading] = useState(false);
 
   // fetch data------------------
   const fetchApiData = async () => {
@@ -296,7 +297,10 @@ const IbWithdrawalStatus = () => {
     </body>
     </html>`;
   const handleConfirmAction = async (selectedDeposit) => {
-    const toastId = toast.loading("Plese wait..");
+    if (isActionLoading) return;
+
+    const toastId = toast.loading("Please wait..");
+    setIsActionLoading(true);
     try {
       if (actionType === "approve") {
         const apiWithdrwalRes = await metaApi.get(
@@ -352,6 +356,8 @@ const IbWithdrawalStatus = () => {
     } catch (error) {
       toast.error("Something went wrong", { id: toastId });
       console.error("Error updating IB withdrwal:", error);
+    } finally {
+      setIsActionLoading(false);
     }
   };
   // total deposits ----------
@@ -787,8 +793,13 @@ const IbWithdrawalStatus = () => {
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmAction(selectedDeposit)}
+              disabled={isActionLoading}
             >
-              Confirm {actionType === "approve" ? "Approval" : "Rejection"}
+              {isActionLoading
+                ? "Processing..."
+                : `Confirm ${
+                    actionType === "approve" ? "Approval" : "Rejection"
+                  }`}{" "}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

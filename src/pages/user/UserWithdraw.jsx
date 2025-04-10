@@ -24,6 +24,7 @@ const UserWithdraw = () => {
   const [accountBalance, setAccountBalance] = useState("");
   const [accountType, setAccountType] = useState("");
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -191,8 +192,12 @@ const UserWithdraw = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+
     setError("");
     setApiLoader(true);
+    setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+
     try {
       if (accountBalance < amount) {
         setError("You don't have balance for withdrawal !!");
@@ -228,8 +233,11 @@ const UserWithdraw = () => {
       setApiLoader(false);
       toast.error("Withdrawal Failed");
       console.log("error while withdraw", error);
+    } finally {
+      setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
+
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
@@ -534,10 +542,17 @@ const UserWithdraw = () => {
             <button
               onClick={withdrawalHandler}
               type="submit"
-              className=" text-sm md:text-lg bg-secondary-500-80 flex px-12 py-3 shadow-md hover:bg-secondary-500-70 transition-all md:hover:px-16 rounded-full"
+              disabled={isWithdrawing} // NEW: Disable button while withdrawing
+              className={`text-sm md:text-lg flex px-12 py-3 shadow-md transition-all md:hover:px-16 rounded-full ${
+                isWithdrawing
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-secondary-500-80 hover:bg-secondary-500-70"
+              }`}
             >
-              Request Withdrawal
-              {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
+              {isWithdrawing ? "Processing..." : "Request Withdrawal"}
+              {(apiLoader || isWithdrawing) && (
+                <Loader2 className="animate-spin mx-3" />
+              )}
             </button>
           </div>
           {siteConfig?.inrUi !== false ? (

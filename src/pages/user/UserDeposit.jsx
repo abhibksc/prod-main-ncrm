@@ -44,6 +44,7 @@ export default function UserDeposit() {
   const [accountBalance, setAccountBalance] = useState("");
   const [balanceLoading, setBalanceLoading] = useState(false);
   const siteConfig = useSelector((store) => store.user.siteConfig);
+  const [isSubmitting, setIsSubmitting] = useState(false); // NEW: Added submission loading state
   const bankTransfers = paymentMethods?.filter(
     (value) => value.status === "active" && value.name === "Bank Transfer"
   );
@@ -105,10 +106,13 @@ export default function UserDeposit() {
   // submit api handler---------------
 
   const submitHandler = async () => {
-    if (!creatingLoading) {
+    if (!creatingLoading && !isSubmitting) {
+      // MODIFIED: Added check for isSubmitting
       const toastID = toast.loading("Please wait..");
       try {
         setCreatingLoading(true);
+        setIsSubmitting(true); // NEW: Set submission loading to true
+
         // Store all form values in a separate object --
         const formValues = {
           userId: loggedUser._id,
@@ -145,6 +149,8 @@ export default function UserDeposit() {
         setCreatingLoading(false);
         toast.error("Please try again", { id: toastID });
         console.log("user new challenge error---", error);
+      } finally {
+        setIsSubmitting(false); // NEW: Reset submission loading to false
       }
     }
   };
@@ -607,7 +613,6 @@ export default function UserDeposit() {
             </a>
           </label>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -618,15 +623,20 @@ export default function UserDeposit() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={submitHandler}
-            disabled={!agreeToTerms || creatingLoading || !selectedPayment}
+            disabled={
+              !agreeToTerms ||
+              creatingLoading ||
+              !selectedPayment ||
+              isSubmitting
+            } // MODIFIED: Added isSubmitting to disable button
             className={`flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
-              selectedPayment && agreeToTerms
+              selectedPayment && agreeToTerms && !isSubmitting // MODIFIED: Added !isSubmitting
                 ? "bg-secondary-500-90 hover:bg-secondary-500-80 "
-                : "bg-gray-600  pointer-events-none"
+                : "bg-gray-600 pointer-events-none"
             }`}
           >
             Submit Request
-            {creatingLoading && (
+            {(creatingLoading || isSubmitting) && ( // MODIFIED: Added isSubmitting to show loader
               <Loader2 className="animate-spin mx-2"></Loader2>
             )}
           </motion.button>
