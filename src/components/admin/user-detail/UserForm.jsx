@@ -409,7 +409,7 @@ const UserInfoForm = ({ userData }) => {
                       </span>{" "}
                     </p>
                     <p className="">
-                      USDT-Erc20 -{" "}
+                      USDT-Bep20 -{" "}
                       <span className=" font-semibold">
                         {" "}
                         {userData?.walletDetails?.ethAddress}{" "}

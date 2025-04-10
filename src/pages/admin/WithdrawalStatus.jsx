@@ -755,12 +755,12 @@ const WithdrawalStatus = () => {
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "USDT(Erc20)" ? (
+                    ) : selectedDeposit?.method === "USDT(Bep20)" ? (
                       <div className=" flex items-center gap-1">
                         <WalletCardsIcon size={20}></WalletCardsIcon>
 
                         <p>
-                          USDT-Erc20 -{" "}
+                          USDT-Bep20 -{" "}
                           <span className=" font-bold">
                             {
                               selectedDeposit?.userData?.walletDetails

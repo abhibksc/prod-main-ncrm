@@ -14,7 +14,7 @@ export const UserReferralWithdrawal = () => {
   const [error, setError] = useState("");
   const [balance, userInfoData] = UseCommissionBalance();
   const [amount, setAmount] = useState("");
-  const [selectWallet, setSelectWallet] = useState("Thether");
+  const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
 
   const currentDateTime = new Date();
@@ -283,9 +283,10 @@ export const UserReferralWithdrawal = () => {
                   onChange={(e) => setSelectWallet(e.target.value)}
                   className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
                 >
-                  <option value="Thether">Thether {"(USDT)"} </option>
-                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
-                  <option value="TRX">TRX {"(Tron)"} </option>
+                  <option value="usdtTrc20">USDT {"(Trc20)"} </option>
+                  <option value="usdtBep20">USDT {"(Bep20)"} </option>
+                  <option value="binanceId">Binance ID </option>
+                  <option value="btcAddress">BTC Address </option>
                 </select>
               </div>
             )}
@@ -353,30 +354,40 @@ export const UserReferralWithdrawal = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              {selectWallet === "Thether" && (
+              {selectWallet === "usdtTrc20" && (
                 <div>
                   <p>
-                    Thether Address -{" "}
+                    USDT Trc20 :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.tetherAddress}{" "}
                     </span>
                   </p>
                 </div>
               )}
-              {selectWallet === "Ethereum" && (
+              {selectWallet === "usdtBep20" && (
                 <div>
                   <p>
-                    Ethereum Address -{" "}
+                    USDT Bep20 :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.ethAddress}
                     </span>{" "}
                   </p>
                 </div>
               )}
-              {selectWallet === "TRX" && (
+              {selectWallet === "binanceId" && (
                 <div>
                   <p>
-                    TRX Address -
+                    Binance ID :{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.accountNumber}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "btcAddress" && (
+                <div>
+                  <p>
+                    BTC Address :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.trxAddress}
                     </span>

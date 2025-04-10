@@ -550,7 +550,9 @@ const IbWithdrawalStatus = () => {
                       {Number(item?.totalBalance).toFixed(2)}
                     </td>
                     <td className="py-2 px-4">{item?.amount}</td>
-                    <td className="py-2 px-4">{item?.method}</td>
+                    <td className="py-2 first-letter:uppercase px-4">
+                      {item?.method}
+                    </td>
                     <td className="py-3 whitespace-nowrap px-4">
                       <div>{CFformatDate(item?.createdAt)}</div>
                       <div className="text-sm text-gray-400">
@@ -733,27 +735,27 @@ const IbWithdrawalStatus = () => {
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "TRX" ? (
+                    ) : selectedDeposit?.method === "usdtTrc20" ? (
                       <div>
                         <div className=" flex gap-1">
                           <WalletCardsIcon size={20}></WalletCardsIcon>
                           <p>
-                            TRX Address -
+                            USDT Trc20 :{" "}
                             <span className=" font-bold">
                               {
                                 selectedDeposit?.userData?.walletDetails
-                                  ?.trxAddress
+                                  ?.tetherAddress
                               }
                             </span>
                           </p>
                         </div>
                       </div>
-                    ) : selectedDeposit?.method === "Ethereum" ? (
+                    ) : selectedDeposit?.method === "usdtBep20" ? (
                       <div className=" flex items-center gap-1">
                         <WalletCardsIcon size={20}></WalletCardsIcon>
 
                         <p>
-                          Ethereum Address -{" "}
+                          USDT Bep20 :{" "}
                           <span className=" font-bold">
                             {
                               selectedDeposit?.userData?.walletDetails
@@ -762,15 +764,28 @@ const IbWithdrawalStatus = () => {
                           </span>{" "}
                         </p>
                       </div>
-                    ) : selectedDeposit?.method === "Thether" ? (
+                    ) : selectedDeposit?.method === "binanceId" ? (
                       <div className=" flex items-center gap-1">
                         <WalletCardsIcon size={20}></WalletCardsIcon>{" "}
                         <p>
-                          Thether Address -{" "}
+                          Binance ID :{" "}
                           <span className=" font-bold">
                             {
                               selectedDeposit?.userData?.walletDetails
-                                ?.tetherAddress
+                                ?.accountNumber
+                            }{" "}
+                          </span>
+                        </p>
+                      </div>
+                    ) : selectedDeposit?.method === "btcAddress" ? (
+                      <div className=" flex items-center gap-1">
+                        <WalletCardsIcon size={20}></WalletCardsIcon>{" "}
+                        <p>
+                          BTC Address :{" "}
+                          <span className=" font-bold">
+                            {
+                              selectedDeposit?.userData?.walletDetails
+                                ?.trxAddress
                             }{" "}
                           </span>
                         </p>

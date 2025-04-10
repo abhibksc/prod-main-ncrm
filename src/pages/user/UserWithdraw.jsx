@@ -368,9 +368,9 @@ const UserWithdraw = () => {
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
-                      value="USDT(Erc20)"
+                      value="USDT(Bep20)"
                     >
-                      USDT (Erc20)
+                      USDT (Bep20)
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
@@ -502,7 +502,7 @@ const UserWithdraw = () => {
                       </p>
                     </div>
                   )}
-                  {selectWallet === "USDT(Erc20)" && (
+                  {selectWallet === "USDT(Bep20)" && (
                     <div>
                       <p>
                         USDT-Erc20 :{" "}
