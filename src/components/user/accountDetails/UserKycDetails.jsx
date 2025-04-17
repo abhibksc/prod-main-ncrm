@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Upload,
@@ -8,29 +8,28 @@ import {
   Loader,
   CheckCircle2,
   Ban,
+  Camera, // Add Camera icon from lucide-react
 } from "lucide-react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
-import { getCountryDataList } from "countries-list";
 import { getData } from "country-list";
 import { backendApi } from "@/utils/apiClients";
 
-// Dropdown Field Component
+// Dropdown Field Component (unchanged)
 const DropdownField = ({ label, options, value, onChange }) => (
   <div className="mb-6 w-full">
     <label className="block text-sm font-medium text-white mb-2">{label}</label>
     <select
       className="w-full px-4 py-3 border text-white bg-secondary-900/80 border-gray-700/60 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 "
       value={value}
-      onChange={(e) => onChange(e.target.value)} // Remove the label parameter
+      onChange={(e) => onChange(e.target.value)}
     >
       <option value="" disabled>
         Select {label}
       </option>
       {options?.map((option, index) => (
-        <option className=" bg-secondary-900" key={index} value={option}>
+        <option className="bg-secondary-900" key={index} value={option}>
           {option}
         </option>
       ))}
@@ -38,7 +37,7 @@ const DropdownField = ({ label, options, value, onChange }) => (
   </div>
 );
 
-// Image Upload Field Component
+// Updated Image Upload Field Component (with Camera Button)
 const ImageUploadField = ({ label, onFileChange }) => {
   const fieldNameMap = {
     "Front Side of Document": "frontSideOfDocument",
@@ -46,12 +45,28 @@ const ImageUploadField = ({ label, onFileChange }) => {
     "Selfie with Document": "selfieWithDocument",
   };
 
+  const handleCameraCapture = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onFileChange(fieldNameMap[label], {
+          file: file,
+          preview: reader.result,
+          label: label,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
-    <div className="mb-6  w-full">
+    <div className="mb-6 w-full">
       <label className="block text-sm font-medium text-white mb-2">
         {label}
       </label>
-      <div className="relative">
+      <div className="relative flex flex-col gap-2">
+        {/* File Input for Uploading from Device */}
         <input
           type="file"
           className="hidden"
@@ -72,6 +87,17 @@ const ImageUploadField = ({ label, onFileChange }) => {
           }}
           accept="image/*"
         />
+
+        {/* Camera Input for Capturing from Camera */}
+        <input
+          type="file"
+          className="hidden"
+          id={`camera-${label}`}
+          onChange={handleCameraCapture}
+          accept="image/*"
+          capture="environment" // "environment" for back camera, "user" for front camera
+        />
+
         <label
           htmlFor={`file-${label}`}
           className="flex items-center justify-center w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 bg-secondary-900/80 text-gray-100 cursor-pointer hover:bg-secondary-900/60"
@@ -79,12 +105,30 @@ const ImageUploadField = ({ label, onFileChange }) => {
           <Upload className="mr-2" size={18} />
           Choose file
         </label>
+
+        {/* Camera Button */}
+        <label
+          htmlFor={`camera-${label}`}
+          className=" md:hidden flex  items-center justify-center w-full px-4 py-3 border border-gray-700 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500 transition-all duration-300 bg-secondary-900/80 text-gray-100 cursor-pointer hover:bg-secondary-900/60"
+        >
+          <Camera className="mr-2" size={18} />
+          Open Camera
+        </label>
+
+        <input
+          id={`camera-${label}`}
+          type="file"
+          accept="image/*"
+          capture="user"
+          onChange={handleCameraCapture}
+          style={{ display: "none" }} // hidden input
+        />
       </div>
     </div>
   );
 };
 
-// Image Preview Component
+// Image Preview Component (unchanged)
 const ImagePreview = ({ label, preview, onRemove, onFullScreen }) => {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -132,7 +176,7 @@ const ImagePreview = ({ label, preview, onRemove, onFullScreen }) => {
   );
 };
 
-// Full Screen Modal Component
+// Full Screen Modal Component (unchanged)
 const FullScreenModal = ({ image, onClose }) => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -157,14 +201,12 @@ const FullScreenModal = ({ image, onClose }) => (
   </motion.div>
 );
 
-// Main Component
+// Main Component (unchanged, except for the import of Camera icon)
 const UserKycDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();
 
   const countriesArray = getData();
-
-  // console.log("countriesArray---", countriesArray);
 
   // Form Data State
   const [formData, setFormData] = useState({
@@ -192,8 +234,6 @@ const UserKycDetails = () => {
     "Back Side of Document": "",
     "Selfie with Document": "",
   });
-
-  // console.log("preview image ############", imagePreviews);
 
   const [fullScreenImage, setFullScreenImage] = useState(null);
 
@@ -225,7 +265,7 @@ const UserKycDetails = () => {
 
     setImagePreviews((prev) => ({
       ...prev,
-      [label]: preview, // This is already a full URL for file previews
+      [label]: preview,
     }));
   };
 
@@ -381,7 +421,7 @@ const UserKycDetails = () => {
             <p>We sent out this message to all existing ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 ${
+            <p>© 2024 ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
@@ -401,6 +441,7 @@ const UserKycDetails = () => {
       Object.entries(formData).forEach(([key, value]) => {
         formDataToSend.append(key, value);
       });
+
       // Append only new files
       if (imageFiles.frontSideOfDocument) {
         formDataToSend.append(
@@ -421,13 +462,6 @@ const UserKycDetails = () => {
         );
       }
       formDataToSend.append("status", "submitted");
-
-      // // Append files
-      // Object.entries(imageFiles).forEach(([key, file]) => {
-      //   if (file) {
-      //     formDataToSend.append(key, file);
-      //   }
-      // });
 
       const res = await backendApi.put(
         `/${loggedUser._id}/kyc-details`,
@@ -512,7 +546,7 @@ const UserKycDetails = () => {
 
       <div className="text-white p-6 rounded-xl">
         {/* Warning Message */}
-        <p className="text-yellow-400/80  p-4 rounded-lg text-center text-sm mb-6">
+        <p className="text-yellow-400/80 p-4 rounded-lg text-center text-sm mb-6">
           <strong>Note:</strong> Updating any information or re-uploading
           documents will set your KYC status back to{" "}
           <span className="font-semibold">"Under Review"</span>. Your

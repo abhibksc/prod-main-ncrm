@@ -24,6 +24,7 @@ const UserWithdraw = () => {
   const [accountBalance, setAccountBalance] = useState("");
   const [accountType, setAccountType] = useState("");
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -191,8 +192,12 @@ const UserWithdraw = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+
     setError("");
     setApiLoader(true);
+    setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+
     try {
       if (accountBalance < amount) {
         setError("You don't have balance for withdrawal !!");
@@ -228,8 +233,11 @@ const UserWithdraw = () => {
       setApiLoader(false);
       toast.error("Withdrawal Failed");
       console.log("error while withdraw", error);
+    } finally {
+      setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
+
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
@@ -360,9 +368,9 @@ const UserWithdraw = () => {
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
-                      value="USDT(Erc20)"
+                      value="USDT(Bep20)"
                     >
-                      USDT (Erc20)
+                      USDT (Bep20)
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
@@ -392,13 +400,17 @@ const UserWithdraw = () => {
                 >
                   Enter Amount
                 </label>
-                <div className="flex mb-2 whitespace-nowrap gap-2 items-center">
-                  <h1 className="text-sm font-bold text-gray-300">In INR:</h1>
+                {siteConfig?.inrUi !== false ? (
+                  <div className="flex mb-2 whitespace-nowrap gap-2 items-center">
+                    <h1 className="text-sm font-bold text-gray-300">In INR:</h1>
 
-                  <p className="bg-secondary-500-10 text-secondary-500 px-2 text-sm py-1 font-semibold rounded-full">
-                    &#8377; {amount * siteConfig?.dollarWithdrawalRate}
-                  </p>
-                </div>
+                    <p className="bg-secondary-500-10 text-secondary-500 px-2 text-sm py-1 font-semibold rounded-full">
+                      &#8377; {amount * siteConfig?.dollarWithdrawalRate}
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
                 {/* Icon */}
@@ -490,7 +502,7 @@ const UserWithdraw = () => {
                       </p>
                     </div>
                   )}
-                  {selectWallet === "USDT(Erc20)" && (
+                  {selectWallet === "USDT(Bep20)" && (
                     <div>
                       <p>
                         USDT-Erc20 :{" "}
@@ -530,18 +542,29 @@ const UserWithdraw = () => {
             <button
               onClick={withdrawalHandler}
               type="submit"
-              className=" text-sm md:text-lg bg-secondary-500-80 flex px-12 py-3 shadow-md hover:bg-secondary-500-70 transition-all md:hover:px-16 rounded-full"
+              disabled={isWithdrawing} // NEW: Disable button while withdrawing
+              className={`text-sm md:text-lg flex px-12 py-3 shadow-md transition-all md:hover:px-16 rounded-full ${
+                isWithdrawing
+                  ? "bg-gray-500 cursor-not-allowed"
+                  : "bg-secondary-500-80 hover:bg-secondary-500-70"
+              }`}
             >
-              Request Withdrawal
-              {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
+              {isWithdrawing ? "Processing..." : "Request Withdrawal"}
+              {(apiLoader || isWithdrawing) && (
+                <Loader2 className="animate-spin mx-3" />
+              )}
             </button>
           </div>
-          <p className="text-xs mb-2 text-gray-500">
-            USD to INR Rate:{" "}
-            <span className="font-medium text-gray-400/80">
-              ₹ {siteConfig?.dollarWithdrawalRate}
-            </span>
-          </p>
+          {siteConfig?.inrUi !== false ? (
+            <p className="text-xs mb-2 text-gray-500">
+              USD to INR Rate:{" "}
+              <span className="font-medium text-gray-400/80">
+                ₹ {siteConfig?.dollarWithdrawalRate}
+              </span>
+            </p>
+          ) : (
+            ""
+          )}
 
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>

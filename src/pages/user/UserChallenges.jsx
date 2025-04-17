@@ -13,71 +13,21 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ModernHeading from "@/lib/ModernHeading";
+import {
+  CFcalculateTimeSinceJoined,
+  CFformatDate,
+} from "@/utils/CustomFunctions";
+import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
 
 const UserChallenges = () => {
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const logggedUser = useSelector((store) => store.user.loggedUser);
   const siteConfig = useSelector((store) => store.user.siteConfig);
-
-  // format date ---------------------
-
-  function formatDate(isoDateString) {
-    const date = new Date(isoDateString);
-
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    });
-
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
-    });
-
-    return `${formattedDate}, ${formattedTime}`;
-  }
-  // since joined ---------------
-
-  function calculateTimeSinceJoined(isoDateString) {
-    const joinDate = new Date(isoDateString);
-    const today = new Date();
-
-    // Calculate the difference in time (in milliseconds)
-    const timeDifference = today - joinDate;
-
-    // Calculate different time units
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    // Build the time string
-    let timeString = [];
-
-    if (days > 0) {
-      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
-    }
-    if (hours > 0) {
-      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
-    }
-    if (minutes > 0) {
-      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
-    }
-
-    // Handle case when less than a minute
-    if (timeString.length === 0) {
-      return "less than a minute ago";
-    }
-
-    return timeString.join(", ") + " ago";
-  }
+  const accountIds =
+    logggedUser?.accounts?.map((acc) => acc.accountNumber) || [];
+  const liveData = useGetMultipleIdInfo(accountIds);
+  console.log("liveData", liveData);
 
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
@@ -102,19 +52,14 @@ const UserChallenges = () => {
       >
         <thead>
           <tr className="bg-secondary-500-50 whitespace-nowrap rounded text-white">
-            {/* Table headers remain the same */}
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
               AC NO:
             </th>
             <th className="p-2 sm:p-3 text-center font-semibold">Type</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Leverage</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">
-              MasterPassword
-            </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">
-              InvestorPassword
-            </th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Platform</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Balance</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">Equity</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">P/L</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Timestamp</th>
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tr-lg">
               Action
@@ -138,7 +83,6 @@ const UserChallenges = () => {
                   }}
                   className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
                 >
-                  {/* Table row content remains the same */}
                   <td className="p-2 sm:p-3 text-sm sm:text-base">
                     {value?.accountNumber}
                   </td>
@@ -149,24 +93,31 @@ const UserChallenges = () => {
                     {value?.leverage}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {value?.masterPassword}
+                    {liveData?.[value?.accountNumber]?.balance ?? "0"}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {value?.investorPassword}
+                    {liveData?.[value?.accountNumber]?.equity ?? "0"}
                   </td>
-                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {value?.platform || "NULL"}
+                  <td
+                    className={`"p-2 text-center ${
+                      liveData?.[value?.accountNumber]?.pl > 0
+                        ? " text-green-500"
+                        : " text-red-500"
+                    } sm:p-3 text-sm sm:text-base"`}
+                  >
+                    {liveData?.[value?.accountNumber]?.pl ?? "0"}
                   </td>
                   <td className="py-3 text-center px-4">
-                    <div>{formatDate(value?.createdAt)}</div>
+                    <div>{CFformatDate(value?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
-                      {calculateTimeSinceJoined(value?.createdAt)}
+                      {CFcalculateTimeSinceJoined(value?.createdAt)}
                     </div>
                   </td>
-                  <td className="p-2 sm:p-3 text-center">
+                  <td className="p-2 sm:p-3 ">
                     <motion.div
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
+                      className=" flex items-center justify-center"
                     >
                       <button
                         onClick={() => handleMoreInfo(value)}
@@ -198,7 +149,13 @@ const UserChallenges = () => {
                 <AlertDialogDescription>
                   {true && (
                     <div className=" flex gap-[2px] font-semibold flex-col">
-                      <p>Mt5 Amount : {selectedchallenge?.accountNumber}</p>
+                      <p>Trade Platform : {selectedchallenge?.platform}</p>
+                      <div className=" flex gap-4">
+                        <p>Server Name : {siteConfig?.serverName}</p>
+                      </div>
+                      <p>
+                        Trading Account : {selectedchallenge?.accountNumber}
+                      </p>
                       <p>Leverage : {selectedchallenge?.leverage}</p>
                       <div className=" flex gap-4">
                         <p>
@@ -222,9 +179,6 @@ const UserChallenges = () => {
                         >
                           change
                         </Link>
-                      </div>
-                      <div className=" flex gap-4">
-                        <p>Server Name : {siteConfig?.serverName}</p>
                       </div>
                     </div>
                   )}

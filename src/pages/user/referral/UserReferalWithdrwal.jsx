@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  ArrowDownCircle,
+  ArrowLeft,
   BadgeDollarSign,
-  BadgeInfoIcon,
   Loader2,
   WalletCardsIcon,
 } from "lucide-react";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
@@ -21,7 +19,8 @@ export const UserReferralWithdrawal = () => {
   const [error, setError] = useState("");
   const [balance, userInfoData] = UseCommissionBalance();
   const [amount, setAmount] = useState("");
-  const [selectWallet, setSelectWallet] = useState("Thether");
+  const [selectWallet, setSelectWallet] = useState("usdtTrc20");
+  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -172,12 +171,16 @@ export const UserReferralWithdrawal = () => {
     </body>
     </html>`;
 
-  //    main withdrwal handler ---------------------
+  //    main withdrawal handler ---------------------
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+
     setApiLoader(true);
     setError("");
+    setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+
     try {
       if (balance <= 0) {
         setError(`You don't have sufficient balance for withdrawal.`);
@@ -210,16 +213,17 @@ export const UserReferralWithdrawal = () => {
         console.log("withdraw db res--", withdrawalDBres.data);
 
         setApiLoader(false);
-        toast.success("Withdawal Requested");
+        toast.success("Withdrawal Requested");
       }
       setApiLoader(false);
     } catch (error) {
       setApiLoader(false);
       toast.error("Something went wrong!!");
       console.log("error while withdraw", error);
+    } finally {
+      setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
-
   useEffect(() => {}, [balance, userInfoData]);
 
   return (
@@ -231,7 +235,17 @@ export const UserReferralWithdrawal = () => {
         className="w-full bg-secondary-800/50  p-8 rounded-lg shadow-xl"
       >
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <div className=" mb-6">
+          <div className="flex items-center gap-2">
+            {/* Back Button */}
+            <button
+              onClick={() => {
+                window.history.back();
+              }}
+              className="flex items-center mt-2 gap-2 rounded-xl border-b px-5 py-1 hover:px-6 border-secondary-500 text-secondary-500  transition-all"
+            >
+              <ArrowLeft size={20} />
+              Back
+            </button>
             <ModernHeading text={"Withdraw IB Commission"}></ModernHeading>
           </div>
           <div>
@@ -283,9 +297,10 @@ export const UserReferralWithdrawal = () => {
                   onChange={(e) => setSelectWallet(e.target.value)}
                   className="block w-full p-3 text-base bg-secondary-700 text-white border outline-none border-none rounded-md "
                 >
-                  <option value="Thether">Thether {"(USDT)"} </option>
-                  <option value="Ethereum">ETH {"(Ethereum)"} </option>
-                  <option value="TRX">TRX {"(Tron)"} </option>
+                  <option value="usdtTrc20">USDT {"(Trc20)"} </option>
+                  <option value="usdtBep20">USDT {"(Bep20)"} </option>
+                  <option value="binanceId">Binance ID </option>
+                  <option value="btcAddress">BTC Address </option>
                 </select>
               </div>
             )}
@@ -353,30 +368,40 @@ export const UserReferralWithdrawal = () => {
                 <WalletCardsIcon></WalletCardsIcon>
                 <h1 className=" text-lg font-bold">Account details</h1>
               </div>{" "}
-              {selectWallet === "Thether" && (
+              {selectWallet === "usdtTrc20" && (
                 <div>
                   <p>
-                    Thether Address -{" "}
+                    USDT Trc20 :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.tetherAddress}{" "}
                     </span>
                   </p>
                 </div>
               )}
-              {selectWallet === "Ethereum" && (
+              {selectWallet === "usdtBep20" && (
                 <div>
                   <p>
-                    Ethereum Address -{" "}
+                    USDT Bep20 :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.ethAddress}
                     </span>{" "}
                   </p>
                 </div>
               )}
-              {selectWallet === "TRX" && (
+              {selectWallet === "binanceId" && (
                 <div>
                   <p>
-                    TRX Address -
+                    Binance ID :{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.walletDetails?.accountNumber}
+                    </span>
+                  </p>
+                </div>
+              )}
+              {selectWallet === "btcAddress" && (
+                <div>
+                  <p>
+                    BTC Address :{" "}
                     <span className=" font-bold">
                       {loggedUser?.walletDetails?.trxAddress}
                     </span>
@@ -412,10 +437,18 @@ export const UserReferralWithdrawal = () => {
           <button
             onClick={withdrawalHandler}
             type="submit"
-            className="w-full flex justify-center hover:shadow-xl bg-secondary-500-90 hover:bg-secondary-500-80 text-white py-3 rounded-md shadow-md  focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300"
+            disabled={isWithdrawing}
+            className={`w-full flex justify-center py-3 rounded-md shadow-md text-white focus:outline-none focus:ring-2 focus:ring-white/40 transition duration-300 ${
+              // NEW: Disable button while withdrawing
+              isWithdrawing
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-secondary-500-90 hover:bg-secondary-500-80 hover:shadow-xl"
+            }`}
           >
-            Submit Withdrawal
-            {apiLoader && <Loader2 className=" animate-spin mx-3"></Loader2>}
+            {isWithdrawing ? "Processing..." : "Submit Withdrawal"}
+            {(apiLoader || isWithdrawing) && (
+              <Loader2 className="animate-spin mx-3" />
+            )}
           </button>
           <div className=" my-2 text-red-500 text-center">
             <p>{error}</p>

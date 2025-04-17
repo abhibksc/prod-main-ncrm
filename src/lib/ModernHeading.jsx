@@ -2,7 +2,7 @@ export default function ModernHeading({ text }) {
   return (
     <div className="relative inline-block">
       <h1
-        className="font-bold text-2xl sm:text-3xl md:text-4xl lg:text-4xl text-transparent bg-clip-text 
+        className="font-bold text-lg sm:text-2xl md:text-3xl lg:text-4xl text-transparent bg-clip-text 
                      bg-gradient-to-r from-gray-200 to-secondary-500 relative"
       >
         {text}

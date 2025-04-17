@@ -85,6 +85,7 @@ const DepositsStatus = () => {
   const [allLoading, setAllLoading] = useState(true);
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [pagination, setPagination] = useState({});
+  const [isActionLoading, setIsActionLoading] = useState(false);
 
   const togglePreview = (item) => {
     setShowPreview(!showPreview);
@@ -294,8 +295,11 @@ const DepositsStatus = () => {
     </html>`;
 
   const handleConfirmAction = async (selectedDeposit) => {
+    if (isActionLoading) return;
+
     const toastId = toast.loading("Please wait..");
-    // console.log("selected deposits--", selectedDeposit);
+    setIsActionLoading(true); // NEW: Set action loading to true
+
     try {
       if (actionType === "approve") {
         const depositApires = await metaApi.get(
@@ -356,6 +360,8 @@ const DepositsStatus = () => {
     } catch (error) {
       console.error("Error updating deposit status:", error);
       toast.error("Something went wrong", { id: toastId });
+    } finally {
+      setIsActionLoading(false); // NEW: Reset action loading to false
     }
   };
   // total deposits ----------
@@ -740,9 +746,14 @@ const DepositsStatus = () => {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
+              disabled={isActionLoading} // NEW: Disable confirm button while loading
               onClick={() => handleConfirmAction(selectedDeposit)}
             >
-              Confirm {actionType === "approve" ? "Approval" : "Rejection"}
+              {isActionLoading
+                ? "Processing..."
+                : `Confirm ${
+                    actionType === "approve" ? "Approval" : "Rejection"
+                  }`}{" "}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -16,6 +16,8 @@ const SiteConfiguration = () => {
     androidDL: "",
     iosDL: "",
     windowsDL: "",
+    webLink: "", // New field for Web Link
+    inrUi: false, // New boolean field for INR UI
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -41,6 +43,8 @@ const SiteConfiguration = () => {
           androidDL: data.androidDL || "",
           iosDL: data.iosDL || "",
           windowsDL: data.windowsDL || "",
+          webLink: data.webLink || "", // New field
+          inrUi: data.inrUi || false, // New boolean field
         });
       }
     } catch (error) {
@@ -51,7 +55,11 @@ const SiteConfiguration = () => {
   };
 
   const handleChange = (e) => {
-    setDetails({ ...details, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setDetails({
+      ...details,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleSave = async () => {
@@ -71,8 +79,8 @@ const SiteConfiguration = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-900 to-gray-900 p-4 sm:p-6 md:p-8">
-      <div className="w-full max-w-5xl mx-auto bg-primary-700/30 shadow-2xl backdrop-blur-xl border border-gray-700/20 rounded-3xl p-6 sm:p-8 overflow-hidden transition-all duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-primary-900 to-gray-900 p-2 md:p-4">
+      <div className="w-full mx-auto bg-primary-700/30 shadow-2xl backdrop-blur-xl border border-gray-700/20 rounded-3xl p-6 sm:p-8 overflow-hidden transition-all duration-300">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-600/40 pb-5 mb-8 gap-4">
           <h2 className="text-2xl sm:text-3xl text-primary-300 font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary-300 to-gray-300">
             Site Configuration
@@ -134,6 +142,10 @@ const SiteConfiguration = () => {
                     ? "IOS Download Link"
                     : key === "windowsDL"
                     ? "Windows Download Link"
+                    : key === "webLink"
+                    ? "Web Link" // New label
+                    : key === "inrUi"
+                    ? "INR UI" // New label
                     : key.replace(/([A-Z])/g, " $1").trim()}
                 </label>
                 {key === "themeColor" ? (
@@ -172,26 +184,33 @@ const SiteConfiguration = () => {
                   key === "tNcLink" ||
                   key === "androidDL" ||
                   key === "iosDL" ||
-                  key === "windowsDL" ? (
+                  key === "windowsDL" ||
+                  key === "webLink" ? ( // Added webLink to the list
                     <div className="space-y-3">
                       {value && (
                         <div className="flex items-center gap-3">
-                          {key === "logo" || key === "favicon" ? (
+                          {(key === "logo" || key === "favicon") && (
                             <img
                               src={value}
                               alt={key}
-                              className="w-14 h-14 rounded-lg border-2 border-gray-600/20  shadow-md group-hover:scale-105 transition-transform"
+                              className="w-28 h-14 rounded-lg border-2 border-gray-600/40 shadow-md group-hover:scale-105 transition-transform"
                             />
-                          ) : null}
-                          <a
-                            href={value}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                            View
-                          </a>
+                          )}
+                          {(key === "tNcLink" ||
+                            key === "androidDL" ||
+                            key === "iosDL" ||
+                            key === "windowsDL" ||
+                            key === "webLink") && ( // Added webLink check
+                            <a
+                              href={value}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-500 hover:text-blue-600 text-sm flex items-center gap-1 transition-colors"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                              View
+                            </a>
+                          )}
                         </div>
                       )}
                       <input
@@ -204,9 +223,38 @@ const SiteConfiguration = () => {
                             ? "Enter URL"
                             : "Enter image URL"
                         }
-                        className="w-full bg-primary-800/40 text-white p-2.5 rounded-lg border border-gray-600/20 focus:border-primary-400 outline-none transition-all duration-200 "
+                        className="w-full bg-primary-800/40 text-white p-2.5 rounded-lg border border-gray-600/20 focus:border-primary-400 outline-none transition-all duration-200"
                         disabled={saving}
                       />
+                    </div>
+                  ) : key === "inrUi" ? ( // New boolean field input
+                    <div className="flex items-center space-x-3">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="inrUi"
+                          checked={value}
+                          onChange={handleChange}
+                          className="sr-only peer"
+                          disabled={saving}
+                        />
+                        <div
+                          className={`w-12 h-6 bg-red-500 rounded-full peer peer-checked:bg-green-500 transition-all duration-300 ${
+                            saving
+                              ? "opacity-50 cursor-not-allowed"
+                              : "cursor-pointer"
+                          }`}
+                        >
+                          <div
+                            className={`absolute w-5 h-5 mt-[2px] bg-white rounded-full shadow-md transition-all duration-300 transform ${
+                              value ? "translate-x-6" : "translate-x-1"
+                            }`}
+                          ></div>
+                        </div>
+                      </label>
+                      <span className="text-gray-300 font-medium">
+                        {value ? "Enabled" : "Disabled"}
+                      </span>
                     </div>
                   ) : (
                     <input
@@ -230,7 +278,7 @@ const SiteConfiguration = () => {
                           <img
                             src={value}
                             alt={key}
-                            className="w-14 h-14 rounded-lg border-2 border-gray-600/20 object-contain shadow-md group-hover:scale-105 transition-transform"
+                            className="w-28 h-14 rounded-lg border-2 border-gray-600/40 p-[2px] object-contain shadow-md group-hover:scale-105 transition-transform"
                           />
                           <a
                             href={value}
@@ -250,7 +298,8 @@ const SiteConfiguration = () => {
                     ) : key === "tNcLink" ||
                       key === "androidDL" ||
                       key === "iosDL" ||
-                      key === "windowsDL" ? (
+                      key === "windowsDL" ||
+                      key === "webLink" ? ( // Added webLink to the list
                       value ? (
                         <a
                           href={value}
@@ -266,6 +315,10 @@ const SiteConfiguration = () => {
                           No Link
                         </span>
                       )
+                    ) : key === "inrUi" ? ( // Display for boolean field
+                      <span className="text-lg font-semibold">
+                        {value ? "Enabled" : "Disabled"}
+                      </span>
                     ) : (
                       <span className="text-lg font-semibold break-words">
                         {value || "Not Set"}

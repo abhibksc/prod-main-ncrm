@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import {
+  ArrowLeft,
   ArrowUpDown,
   CheckCheck,
   Download,
@@ -15,6 +16,11 @@ import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
+import ModernHeading from "@/lib/ModernHeading";
+import { FaFileCsv } from "react-icons/fa";
+import { GrDocumentPdf } from "react-icons/gr";
+import { RiFileExcel2Line } from "react-icons/ri";
+import { PiFileCsvDuotone } from "react-icons/pi";
 
 const UserReferralCloseTrades = () => {
   const [commissionsData, setCommissionsData] = useState([]);
@@ -150,47 +156,67 @@ const UserReferralCloseTrades = () => {
   }, []);
 
   return (
-    <div className="mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+    <div className=" m-[-10px] p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-2 text-3xl font-bold">
-          <ArrowUpDown />
-          <h1>Commission Trades </h1>
+        <div className="flex items-center gap-2">
+          {/* Back Button */}
+          <button
+            onClick={() => {
+              window.history.back();
+            }}
+            className="flex items-center mt-2 gap-2 rounded-xl border-b px-5 py-1 hover:px-6 border-secondary-500 text-secondary-500  transition-all"
+          >
+            <ArrowLeft size={20} />
+            Back
+          </button>
+
+          {/* Heading */}
+          <div className="text-3xl font-bold">
+            <ModernHeading text={"Commission Trades"}></ModernHeading>
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
+
+        <div className="flex flex-wrap gap-1 md:gap-3">
           <button
             onClick={exportToExcel}
-            className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500 transition-all"
+            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-gray-200 rounded-lg hover:text-secondary-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             disabled={isLoading || commissionsData.length === 0}
           >
-            <FileSpreadsheet className="w-5 h-5" />
-            Excel
+            <RiFileExcel2Line className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">Excel</span>
           </button>
+
           <button
             onClick={exportToCSV}
-            className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500 transition-all"
+            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-gray-200 rounded-lg hover:text-secondary-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             disabled={isLoading || commissionsData.length === 0}
           >
-            <FileText className="w-5 h-5" />
-            CSV
+            <PiFileCsvDuotone className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">CSV</span>
           </button>
+
           <button
             onClick={exportToPDF}
-            className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500 transition-all"
+            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-gray-200 rounded-lg hover:text-secondary-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             disabled={isLoading || commissionsData.length === 0}
           >
-            <Download className="w-5 h-5" />
-            PDF
+            <GrDocumentPdf className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden sm:inline">PDF</span>
           </button>
 
           <button
             onClick={fetchCommissions}
-            className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500 transition-all"
+            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 text-gray-200 rounded-lg hover:text-secondary-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
             disabled={isLoading}
           >
             <RefreshCw
-              className={`w-5 h-5 ${isLoading ? "animate-spin" : ""}`}
+              className={`w-4 h-4 md:w-5 md:h-5 ${
+                isLoading ? "animate-spin" : ""
+              }`}
             />
-            {isLoading ? "Refreshing..." : "Refresh"}
+            <span className="hidden sm:inline">
+              {isLoading ? "Refreshing..." : "Refresh"}
+            </span>
           </button>
         </div>
       </div>
@@ -262,10 +288,10 @@ const UserReferralCloseTrades = () => {
                     {value?.closeTime}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.openPrice}
+                    {Number(value?.openPrice).toFixed(2)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.closePrice}
+                    {Number(value?.closePrice).toFixed(2)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     {value?.symbol}

@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpDown, Info, Loader, RefreshCw } from "lucide-react"; // Import refresh icon
-import axios from "axios";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpDown,
+  Info,
+  RefreshCw,
+} from "lucide-react"; // Import refresh icon
 import { useSelector } from "react-redux";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import { backendApi } from "@/utils/apiClients";
 import { Link } from "react-router-dom";
+import ModernHeading from "@/lib/ModernHeading";
 
 const UserReferralsDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [commissionsData, setCommissionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loader state
 
-  // fetch all commissions data------------
+  // fetch all commissions data-----
   const fetchCommissions = async () => {
     setIsLoading(true); // Start loading
     try {
@@ -35,11 +41,24 @@ const UserReferralsDetails = () => {
   return (
     <div className="mx-auto sm:p-6 md:bg-secondary-800/20 rounded-lg md:shadow-lg overflow-x-auto">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2 text-3xl font-bold">
-          <ArrowUpDown />
-          <h1>Referral Details</h1>
+        <div className="flex items-center gap-2">
+          {/* Back Button */}
+          <button
+            onClick={() => {
+              window.history.back();
+            }}
+            className="flex items-center mt-2 gap-2 rounded-xl border-b px-5 py-1 hover:px-6 border-secondary-500 text-secondary-500  transition-all"
+          >
+            <ArrowLeft size={20} />
+            Back
+          </button>
+
+          {/* Heading */}
+          <div className="text-3xl font-bold">
+            <ModernHeading text={"IB Users"}></ModernHeading>
+          </div>
         </div>
-        {/* Refresh Button */}
+
         <button
           onClick={fetchCommissions}
           className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500/80 transition-all"

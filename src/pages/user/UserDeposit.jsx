@@ -44,7 +44,7 @@ export default function UserDeposit() {
   const [accountBalance, setAccountBalance] = useState("");
   const [balanceLoading, setBalanceLoading] = useState(false);
   const siteConfig = useSelector((store) => store.user.siteConfig);
-
+  const [isSubmitting, setIsSubmitting] = useState(false); // NEW: Added submission loading state
   const bankTransfers = paymentMethods?.filter(
     (value) => value.status === "active" && value.name === "Bank Transfer"
   );
@@ -106,10 +106,13 @@ export default function UserDeposit() {
   // submit api handler---------------
 
   const submitHandler = async () => {
-    if (!creatingLoading) {
+    if (!creatingLoading && !isSubmitting) {
+      // MODIFIED: Added check for isSubmitting
       const toastID = toast.loading("Please wait..");
       try {
         setCreatingLoading(true);
+        setIsSubmitting(true); // NEW: Set submission loading to true
+
         // Store all form values in a separate object --
         const formValues = {
           userId: loggedUser._id,
@@ -146,6 +149,8 @@ export default function UserDeposit() {
         setCreatingLoading(false);
         toast.error("Please try again", { id: toastID });
         console.log("user new challenge error---", error);
+      } finally {
+        setIsSubmitting(false); // NEW: Reset submission loading to false
       }
     }
   };
@@ -313,25 +318,30 @@ export default function UserDeposit() {
               className="w-full px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
             />
           </div>
-          <div>
-            <div className="flex whitespace-nowrap gap-3 md:mt-5 items-center w-full">
-              <h1 className="sm:text-sm font-semibold text-gray-300">
-                INR Figure
-              </h1>
+          {siteConfig?.inrUi !== false ? (
+            <div>
+              <div className="flex whitespace-nowrap gap-3 md:mt-5 items-center w-full">
+                <h1 className="sm:text-sm font-semibold text-gray-300">
+                  INR Figure
+                </h1>
 
-              <p className="bg-secondary-500-10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
-                &#8377; {formData.depositAmount * siteConfig?.dollarDepositRate}
-              </p>
+                <p className="bg-secondary-500-10 text-secondary-500 txt px-4 sm:px-5 py-1 font-semibold rounded-full">
+                  &#8377;{" "}
+                  {formData.depositAmount * siteConfig?.dollarDepositRate}
+                </p>
+              </div>
+              <div className=" mt-1 flex items-center justify-center">
+                <p className="text-[12px] mb-2 text-gray-500">
+                  USD to INR Rate:{" "}
+                  <span className="font-medium text-gray-400/80">
+                    ₹ {siteConfig?.dollarDepositRate}
+                  </span>
+                </p>
+              </div>
             </div>
-            <div className=" mt-1 flex items-center justify-center">
-              <p className="text-[12px] mb-2 text-gray-500">
-                USD to INR Rate:{" "}
-                <span className="font-medium text-gray-400/80">
-                  ₹ {siteConfig?.dollarDepositRate}
-                </span>
-              </p>
-            </div>
-          </div>
+          ) : (
+            ""
+          )}
         </motion.div>
 
         <motion.div
@@ -407,8 +417,8 @@ export default function UserDeposit() {
                   </div>
                   {/* Payment Image Section */}
                   {paymentImage && (
-                    <div className="w-full md:w-[50%] flex justify-center md:justify-end">
-                      <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-36 md:h-36 flex flex-col items-center space-y-2">
+                    <div className="w-full md:w-[50%] flex justify-center  md:justify-end">
+                      <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-36 md:h-36 flex flex-col items-center mx-auto space-y-2">
                         <img
                           src={`${
                             import.meta.env.VITE_BACKEND_BASE_URL
@@ -505,71 +515,77 @@ export default function UserDeposit() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
+          className=" flex flex-col md:flex-row items-center gap-6"
         >
-          <label className="block mb-2 text-sm font-medium">
-            Upload proof of payment
-          </label>
-          <div className="flex whitespace-nowrap flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <motion.label
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="cursor-pointer whitespace-nowrap bg-secondary-500-70 hover:bg-secondary-500-50 transition-colors py-2 px-4 rounded-lg flex items-center"
-            >
-              <Upload className="mr-2" />
-              Choose file
-              <input
-                type="file"
-                className="hidden w-20"
-                onChange={handleFileChange}
-                ref={fileInputRef}
-                accept="image/*"
-              />
-            </motion.label>
-            {file ? (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center space-x-2"
+          {/*Upload section */}
+
+          <div className=" md:w-fit w-full">
+            <label className="block mb-2 text-sm font-medium">
+              Upload proof of payment
+            </label>
+            <div className="flex whitespace-nowrap flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <motion.label
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="cursor-pointer whitespace-nowrap bg-secondary-500-70 hover:bg-secondary-500-50 transition-colors py-2 px-4 rounded-lg flex items-center"
               >
-                <span className="text-sm">{file.name}</span>
-                <motion.button
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleRemoveFile}
-                  className="text-red-500 hover:text-red-600"
+                <Upload className="mr-2" />
+                Choose file
+                <input
+                  type="file"
+                  className="hidden w-20"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  accept="image/*"
+                />
+              </motion.label>
+              {file ? (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="flex items-center space-x-2"
                 >
-                  <X size={20} />
-                </motion.button>
-                {previewUrl && (
+                  <span className="text-sm">{file.name}</span>
                   <motion.button
                     whileHover={{ scale: 1.2 }}
                     whileTap={{ scale: 0.9 }}
-                    onClick={togglePreview}
-                    className="text-blue-500 hover:text-blue-600"
+                    onClick={handleRemoveFile}
+                    className="text-red-500 hover:text-red-600"
                   >
-                    <Eye size={20} />
+                    <X size={20} />
                   </motion.button>
-                )}
-              </motion.div>
-            ) : (
-              <span className="text-sm">No file chosen</span>
-            )}
-            <div className=" flex flex-col gap-2 w-full">
-              <label
-                htmlFor="deposit-amount"
-                className="text-sm font-medium text-gray-200"
-              >
-                Transaction ID
-              </label>
-              <input
-                onChange={handleInputChange}
-                type="text"
-                id="transactionId"
-                name="transactionId"
-                placeholder="Enter Transaction ID"
-                className="w-80 px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-              />
+                  {previewUrl && (
+                    <motion.button
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={togglePreview}
+                      className="text-blue-500 hover:text-blue-600"
+                    >
+                      <Eye size={20} />
+                    </motion.button>
+                  )}
+                </motion.div>
+              ) : (
+                <span className="text-sm">No file chosen</span>
+              )}
             </div>
+          </div>
+          {/* transaction ID */}
+          <div className=" flex flex-col gap-2 w-full">
+            <label
+              htmlFor="deposit-amount"
+              className="text-sm font-medium text-gray-200"
+            >
+              Transaction ID
+            </label>
+            <input
+              onChange={handleInputChange}
+              type="text"
+              id="transactionId"
+              name="transactionId"
+              placeholder="Enter Transaction ID"
+              className="w-80 px-4 py-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+            />
           </div>
         </motion.div>
 
@@ -597,7 +613,6 @@ export default function UserDeposit() {
             </a>
           </label>
         </motion.div>
-
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -608,15 +623,20 @@ export default function UserDeposit() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={submitHandler}
-            disabled={!agreeToTerms || creatingLoading || !selectedPayment}
+            disabled={
+              !agreeToTerms ||
+              creatingLoading ||
+              !selectedPayment ||
+              isSubmitting
+            } // MODIFIED: Added isSubmitting to disable button
             className={`flex mx-auto justify-center items-center py-3 px-12 hover:px-16 transition-all rounded-full text-white ${
-              selectedPayment && agreeToTerms
+              selectedPayment && agreeToTerms && !isSubmitting // MODIFIED: Added !isSubmitting
                 ? "bg-secondary-500-90 hover:bg-secondary-500-80 "
-                : "bg-gray-600  pointer-events-none"
+                : "bg-gray-600 pointer-events-none"
             }`}
           >
             Submit Request
-            {creatingLoading && (
+            {(creatingLoading || isSubmitting) && ( // MODIFIED: Added isSubmitting to show loader
               <Loader2 className="animate-spin mx-2"></Loader2>
             )}
           </motion.button>

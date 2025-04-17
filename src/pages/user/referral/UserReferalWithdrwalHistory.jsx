@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { ArrowUpDown } from "lucide-react";
-
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { backendApi } from "@/utils/apiClients";
 import ModernHeading from "@/lib/ModernHeading";
+import { Ban } from "lucide-react";
+import { PiWarning } from "react-icons/pi";
+import { RiErrorWarningFill } from "react-icons/ri";
+import { ArrowLeft } from "lucide-react"; // Import ArrowLeft for back button
 
 const UserReferalWithdrwalHistory = () => {
-  const [challengesData, setChallengesData] = useState();
+  const [challengesData, setChallengesData] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [error, setError] = useState(null);
   const loggedUser = useSelector((store) => store.user.loggedUser);
 
   // format date ---------------------
@@ -32,6 +34,7 @@ const UserReferalWithdrwalHistory = () => {
 
     return `${formattedDate}, ${formattedTime}`;
   }
+
   // since joined ---------------
 
   function calculateTimeSinceJoined(isoDateString) {
@@ -73,30 +76,45 @@ const UserReferalWithdrwalHistory = () => {
 
   const fetchChallengesData = async () => {
     setLoader(true);
+    setError(null);
     try {
       const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
-      // console.log("filderedData", filderedData);
-      setChallengesData(res.data.data);
-      setLoader(false);
+      setChallengesData(res.data.data || []);
     } catch (error) {
-      console.log("error in fetch user challenges", error);
+      console.error("Error in fetch user challenges", error);
+      setError("Failed to fetch withdrawal history. Please try again later.");
       toast.error("Data fetching failed!!");
+    } finally {
       setLoader(false);
     }
   };
-  console.log(challengesData);
 
   useEffect(() => {
     fetchChallengesData();
   }, []);
 
   return (
-    <div className=" p-5 mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
-      <div className=" flex items-center gap-2 mb-6 text-3xl font-bold">
-        <div className="mb-6">
-          <ModernHeading text={"IB Withdrawal History"}></ModernHeading>
+    <div className="p-5 mx-auto sm:p-6 bg-secondary-800/20 rounded-lg shadow-lg overflow-x-auto">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          {/* Back Button */}
+          <button
+            onClick={() => {
+              window.history.back();
+            }}
+            className="flex items-center mt-2 gap-2 rounded-xl border-b px-5 py-1 hover:px-6 border-secondary-500 text-secondary-500  transition-all"
+          >
+            <ArrowLeft size={20} />
+            Back
+          </button>
+
+          {/* Heading */}
+          <div className="text-3xl font-bold">
+            <ModernHeading text={"IB Withdrawal History"}></ModernHeading>
+          </div>
         </div>
       </div>
+
       <table className="w-full whitespace-nowrap border-collapse min-w-[640px]">
         <thead>
           <tr className="bg-secondary-500-60 rounded text-white">
@@ -114,53 +132,71 @@ const UserReferalWithdrwalHistory = () => {
           </tr>
         </thead>
         <tbody>
-          {loader && (
+          {loader ? (
             <tr>
-              <td colSpan="9" className="p-4">
+              <td colSpan="5" className="p-4">
                 <div className="flex justify-center items-center w-full">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-secondary-500"></div>
                 </div>
               </td>
             </tr>
-          )}
-
-          {challengesData?.map((value, index) => (
-            <tr
-              key={index}
-              className="border-b border-secondary-700/50 hover:bg-secondary-700/30 transition-colors"
-            >
-              <td className="p-2 pl-4 sm:p-3 text-sm sm:text-base">
-                ${value?.totalBalance}
+          ) : error ? (
+            <tr>
+              <td colSpan="5" className="p-4 text-center text-red-500">
+                {error}
               </td>
-              <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
-                ${value?.amount}
-              </td>
-              <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                {value?.method}
-              </td>
-              <td className="py-3 text-center px-4">
-                <div>{formatDate(value?.updatedAt)}</div>
-                <div className="text-sm text-gray-400">
-                  {calculateTimeSinceJoined(value?.updatedAt)}
-                </div>
-              </td>
-              <td className="text-center py-2 px-2">
-                <div
-                  className={`inline-block px-3 py-1 font-semibold rounded-full ${
-                    value?.status === "pending"
-                      ? "bg-yellow-500/20 text-yellow-500"
-                      : value?.status === "approved"
-                      ? "bg-green-500/10 text-green-500"
-                      : value?.status === "rejected"
-                      ? " bg-red-500/10  text-red-500"
-                      : ""
-                  } `}
-                >
-                  <p className="first-letter:capitalize">{value?.status}</p>
-                </div>
-              </td>{" "}
             </tr>
-          ))}
+          ) : challengesData.length === 0 ? (
+            <tr>
+              <td
+                colSpan="5"
+                className="p-4 text-center items-center text-gray-500"
+              >
+                <div className="flex gap-2 mx-auto justify-center">
+                  <RiErrorWarningFill size={24}></RiErrorWarningFill>
+                  <p>No withdrawal history available.</p>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            challengesData.map((value, index) => (
+              <tr
+                key={index}
+                className="border-b border-secondary-700/50 hover:bg-secondary-700/30 transition-colors"
+              >
+                <td className="p-2 pl-4 sm:p-3 text-sm sm:text-base">
+                  ${value?.totalBalance}
+                </td>
+                <td className="p-2 sm:p-3 text-sm sm:text-base text-center">
+                  ${value?.amount}
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  {value?.method}
+                </td>
+                <td className="py-3 text-center px-4">
+                  <div>{formatDate(value?.updatedAt)}</div>
+                  <div className="text-sm text-gray-400">
+                    {calculateTimeSinceJoined(value?.updatedAt)}
+                  </div>
+                </td>
+                <td className="text-center py-2 px-2">
+                  <div
+                    className={`inline-block px-3 py-1 font-semibold rounded-full ${
+                      value?.status === "pending"
+                        ? "bg-yellow-500/20 text-yellow-500"
+                        : value?.status === "approved"
+                        ? "bg-green-500/10 text-green-500"
+                        : value?.status === "rejected"
+                        ? "bg-red-500/10 text-red-500"
+                        : ""
+                    }`}
+                  >
+                    <p className="first-letter:capitalize">{value?.status}</p>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>

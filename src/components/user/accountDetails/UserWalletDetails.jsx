@@ -71,8 +71,8 @@ const UserWalletDetails = () => {
             name="tetherAddress"
           />
           <InputField
-            label="USDT (Erc20)"
-            placeholder="Enter USDT(Trc20) address"
+            label="USDT (Bep20)"
+            placeholder="Enter USDT(Bep20) address"
             value={formData.ethAddress}
             onChange={handleInputChange}
             name="ethAddress"
