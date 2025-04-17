@@ -417,8 +417,8 @@ export default function UserDeposit() {
                   </div>
                   {/* Payment Image Section */}
                   {paymentImage && (
-                    <div className="w-full md:w-[50%] flex justify-center md:justify-end">
-                      <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-36 md:h-36 flex flex-col items-center space-y-2">
+                    <div className="w-full md:w-[50%] flex justify-center  md:justify-end">
+                      <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-36 md:h-36 flex flex-col items-center mx-auto space-y-2">
                         <img
                           src={`${
                             import.meta.env.VITE_BACKEND_BASE_URL
