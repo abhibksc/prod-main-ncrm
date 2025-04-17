@@ -300,10 +300,10 @@ const UserReferralCloseTrades = () => {
                     {value?.profit}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.lotSize?.toFixed(2)}
+                    {value?.lotSize?.toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.commissionAmount}
+                    {Number(value?.commissionAmount).toFixed(2)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     <div className="flex flex-col justify-center items-center">
