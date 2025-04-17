@@ -68,7 +68,7 @@ const Header = () => {
 
   return (
     <header className="antialiased w-full">
-      <nav className="border-gray-200 px-4 lg:px-6 py-2 bg-primary-800">
+      <nav className="border-gray-200 px-4 lg:px-6 py-1  bg-primary-800">
         <div className="flex flex-wrap justify-between items-center">
           <div className="flex justify-start items-center">
             <button
@@ -82,12 +82,12 @@ const Header = () => {
             </button>
             <a
               href="/admin/dashboard"
-              className=" border-none outline-none items-center mr-4"
+              className=" border-none outline-none items-center"
             >
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-10 md:h-14 sm:h-10"
+                className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
               />
             </a>
             <div></div>
@@ -122,7 +122,7 @@ const Header = () => {
                 <>
                   <Link
                     to={"/admin/login"}
-                    className="text-red-500 hover:bg-red-500/10 p-2  rounded flex gap-2"
+                    className="text-red-500 bg-primary-700 hover:px-4 transition-all p-2   z-[9999]  rounded flex gap-2"
                     onClick={logoutHandler}
                   >
                     <LogOut></LogOut>
