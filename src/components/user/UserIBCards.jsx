@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { PiHandWithdrawBold } from "react-icons/pi";
 
 const UserIBcards = ({ commissionsData }) => {
   const totalCommissionLength = commissionsData?.length;
@@ -20,10 +21,9 @@ const UserIBcards = ({ commissionsData }) => {
   const fetchHistoryData = async () => {
     try {
       const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
-      const totalSum = res.data.data.reduce(
-        (total, value) => total + value.amount,
-        0
-      );
+      const totalSum = res.data.data
+        .filter((value) => value.status === "approved")
+        .reduce((total, value) => total + value.amount, 0);
       setWithdrawalSum(totalSum);
     } catch (error) {
       console.log("error in fetch user challenges", error);
@@ -35,49 +35,15 @@ const UserIBcards = ({ commissionsData }) => {
   }, [balance, userInfoData, WithdarwalSum]);
 
   const stats = {
-    totalIBs: totalCommissionLength,
-    totalCommission: totalCommissionValue,
-    availableCommission: balance,
-    pendingWithdrawals: `$${WithdarwalSum}`,
+    totalIBs: Number(totalCommissionLength), // Assuming it's already an integer
+    totalCommission: Number(totalCommissionValue).toFixed(2),
+    availableCommission: Number(balance).toFixed(2),
+    pendingWithdrawals: `$${Number(WithdarwalSum).toFixed(2)}`,
   };
 
   return (
     <div className="p-6 w-full max-w-7xl mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* IB ID Card */}
-        {/* <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col space-y-1">
-              <span className="text-sm font-medium text-gray-300">
-                Successful Deposits
-              </span>
-              <span className="text-2xl font-bold text-gray-100">
-                {stats.totalIBs}
-              </span>
-            </div>
-            <div className="p-3 bg-blue-200 rounded-full">
-              <svg
-                className="w-6 h-6 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="text-sm  text-blue-300/80 flex items-center">
-              <span>Total Deposit Entries</span>
-            </div>
-          </div>
-        </div> */}
-
         {/* Total Commission Card */}
         <div className="bg-secondary-600/10  rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
           <div className="flex items-center justify-between">
@@ -123,8 +89,13 @@ const UserIBcards = ({ commissionsData }) => {
                 {stats.pendingWithdrawals}
               </span>
             </div>
-            <div className="p-3 bg-orange-100 rounded-full">
-              <svg
+            <div className="p-3 bg-blue-100 rounded-full">
+              <PiHandWithdrawBold
+                size={26}
+                wi
+                className=" text-blue-500"
+              ></PiHandWithdrawBold>
+              {/* <svg
                 className="w-6 h-6 text-orange-600"
                 fill="none"
                 stroke="currentColor"
@@ -136,7 +107,7 @@ const UserIBcards = ({ commissionsData }) => {
                   strokeWidth={2}
                   d="M19 14l-7 7m0 0l-7-7m7 7V3"
                 />
-              </svg>
+              </svg> */}
             </div>
           </div>
           <div className="mt-4">
@@ -187,45 +158,6 @@ const UserIBcards = ({ commissionsData }) => {
             </Link>
           </div>
         </div>
-
-        {/* Pending Deposits Card */}
-        {/* <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex flex-col space-y-1">
-              <span className="text-sm font-medium text-gray-300">
-                Pending Deposits
-              </span>
-              <span className=" text-gray-300/60 text-sm py-2">
-                Users with pending deposits
-              </span>
-            </div>
-            <div className="p-3 bg-yellow-100 rounded-full">
-              <svg
-                className="w-6 h-6 text-yellow-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-4">
-            <Link to={"/user/referrals/pending-referrals"}>
-              <button
-                className="w-full bg-yellow-600/80 hover:bg-yellow-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
-                onClick={() => console.log("View Deposits clicked")}
-              >
-                View List
-              </button>
-            </Link>
-          </div>
-        </div> */}
 
         {/*  IB Details Card */}
         <div className="bg-secondary-600/10 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-200 p-6">

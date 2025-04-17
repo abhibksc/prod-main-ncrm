@@ -10,6 +10,9 @@ import {
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import { useGetIdInfo } from "@/hooks/user/UseGetIdInfo";
+import { CiMoneyBill } from "react-icons/ci";
 
 const itemVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -59,13 +62,14 @@ const CredentialItem = ({
 const UserDashboardAccount = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const siteConfig = useSelector((store) => store.user.siteConfig);
-
   const [currentAccount, setCurrentAccount] = useState(() => {
     if (loggedUser?.accounts?.length > 0) {
       return loggedUser.accounts[0];
     }
     return { accountNumber: "000", leverage: "00" };
   });
+  const { info, loading } = useGetIdInfo(currentAccount.accountNumber);
+
   const handleAccountChange = (e) => {
     const selectedAccount = loggedUser.accounts.find(
       (account) => account.accountNumber === e.target.value
@@ -139,9 +143,23 @@ const UserDashboardAccount = () => {
       >
         <CredentialItem
           icon={User}
-          label="MT5 Account Id"
+          label="Trading Account"
           value={currentAccount.accountNumber}
           badgeColor="bg-blue-100 text-blue-800"
+          delay={0.15}
+        />
+        <CredentialItem
+          icon={MdOutlineAccountBalanceWallet}
+          label="Balance"
+          value={`$${info?.Balance || 0}`}
+          badgeColor="bg-sky-100 text-sky-800"
+          delay={0.15}
+        />
+        <CredentialItem
+          icon={CiMoneyBill}
+          label="Equity"
+          value={`$${info?.Equity || 0}`}
+          badgeColor="bg-sky-100 text-sky-800"
           delay={0.15}
         />
         <CredentialItem

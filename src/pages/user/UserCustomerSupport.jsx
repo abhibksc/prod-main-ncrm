@@ -12,7 +12,7 @@ export default function UserCustomerSupport() {
   };
 
   return (
-    <div className="flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className=" m-[-20px] md:h-fit h-screen  flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full bg-secondary-900/10 backdrop-blur-sm">
         <div className="absolute top-0 right-0 w-48 md:w-96 h-48 md:h-96 bg-secondary-500-20 rounded-full blur-3xl -translate-y-1/2"></div>
         <div className="absolute bottom-0 left-0 w-48 md:w-96 h-48 md:h-96 bg-secondary-500-20 rounded-full blur-3xl translate-y-1/2"></div>
@@ -90,7 +90,7 @@ export default function UserCustomerSupport() {
                 w-full py-3 md:py-4 rounded-xl transition-all duration-500 flex items-center justify-center
                 ${
                   isHovered
-                    ? "bg-secondary-500-10 text-secondary-500/80"
+                    ? "bg-secondary-500-10 text-secondary-500"
                     : "bg-secondary-500-10 text-white/90"
                 }
               `}

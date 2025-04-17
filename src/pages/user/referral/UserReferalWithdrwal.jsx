@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { BadgeDollarSign, Loader2, WalletCardsIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  BadgeDollarSign,
+  Loader2,
+  WalletCardsIcon,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
@@ -219,7 +224,6 @@ export const UserReferralWithdrawal = () => {
       setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
-
   useEffect(() => {}, [balance, userInfoData]);
 
   return (
@@ -231,7 +235,17 @@ export const UserReferralWithdrawal = () => {
         className="w-full bg-secondary-800/50  p-8 rounded-lg shadow-xl"
       >
         <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <div className=" mb-6">
+          <div className="flex items-center gap-2">
+            {/* Back Button */}
+            <button
+              onClick={() => {
+                window.history.back();
+              }}
+              className="flex items-center mt-2 gap-2 rounded-xl border-b px-5 py-1 hover:px-6 border-secondary-500 text-secondary-500  transition-all"
+            >
+              <ArrowLeft size={20} />
+              Back
+            </button>
             <ModernHeading text={"Withdraw IB Commission"}></ModernHeading>
           </div>
           <div>
