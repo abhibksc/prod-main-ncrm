@@ -14,7 +14,7 @@ import { backendApi } from "@/utils/apiClients";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectedGateway, setSelectedGateway] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const [balance, userInfoData] = UseCommissionBalance();
@@ -277,8 +277,10 @@ export const UserReferralWithdrawal = () => {
                 onChange={(e) => setSelectedGateway(e.target.value)}
                 className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
               >
-                {/* <option value="">Select Gateway</option> */}
-                <option value="Bank Transfer">Bank Transfer</option>
+                <option disabled selected value="">
+                  Select Gateway
+                </option>
+                {/* <option value="Bank Transfer">Bank Transfer</option> */}
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>
             </div>
@@ -299,8 +301,8 @@ export const UserReferralWithdrawal = () => {
                 >
                   <option value="usdtTrc20">USDT {"(Trc20)"} </option>
                   <option value="usdtBep20">USDT {"(Bep20)"} </option>
-                  <option value="binanceId">Binance ID </option>
-                  <option value="btcAddress">BTC Address </option>
+                  {/* <option value="binanceId">Binance ID </option>
+                  <option value="btcAddress">BTC Address </option> */}
                 </select>
               </div>
             )}

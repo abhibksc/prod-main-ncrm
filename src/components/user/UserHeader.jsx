@@ -9,6 +9,7 @@ import {
   ShieldBan,
   BadgeCheck,
   UserRoundCog,
+  Bot,
 } from "lucide-react";
 import { RiCustomerService2Line } from "react-icons/ri";
 
@@ -156,7 +157,6 @@ const UserHeader = () => {
             />
           </a>
         </div>
-
         <div
           className={` gap-1 hidden md:flex font-bold rounded-full px-3 py-1 ${
             loggedUser?.accounts?.length !== 0
@@ -173,7 +173,18 @@ const UserHeader = () => {
           </p>
           <p>{loggedUser?.accounts?.length !== 0 ? "Active" : "Inactive"}</p>
         </div>
+
         <div className="relative flex items-center gap-2">
+          <div>
+            <a
+              target="_blank"
+              href="https://fxcentrumindias.com/"
+              className=" mx-4 flex text-secondary-500 hover:text-secondary-500-50 transition-all items-center justify-center flex-col text-xs"
+            >
+              <Bot></Bot>
+              Bot
+            </a>
+          </div>
           <div className=" flex gap-1 items-center text-gray-200">
             <CheckCircle className=" w-4 mt-1  " />
 

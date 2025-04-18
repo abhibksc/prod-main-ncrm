@@ -23,7 +23,6 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
-import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 const UserPlatform = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -58,7 +57,7 @@ const UserPlatform = () => {
   );
 };
 
-const KYCVerificationSection = () => (
+export const KYCVerificationSection = () => (
   <div className="w-full mx-auto p-4">
     <div className="text-center mb-12">
       <div className="flex justify-center mb-6">

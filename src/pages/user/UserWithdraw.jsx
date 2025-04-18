@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
+import { KYCVerificationSection } from "./UserPlatform";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -25,7 +27,7 @@ const UserWithdraw = () => {
   const [accountType, setAccountType] = useState("");
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
-
+  const { getUpdateLoggedUser } = UseUserHook();
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -241,8 +243,11 @@ const UserWithdraw = () => {
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
+  useEffect(() => {
+    getUpdateLoggedUser();
+  }, []);
 
-  return (
+  return loggedUser?.kycVerified ? (
     <div className="w-full flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
@@ -329,13 +334,13 @@ const UserWithdraw = () => {
                   >
                     select Method
                   </option>
-                  <option
+                  {/* <option
                     selected
                     className=" bg-secondary-800 text-white"
                     value="Bank Transfer"
                   >
                     Bank Transfer
-                  </option>
+                  </option> */}
                   <option
                     className=" bg-secondary-800 text-white"
                     value="Wallet Transfer"
@@ -372,7 +377,7 @@ const UserWithdraw = () => {
                     >
                       USDT (Bep20)
                     </option>
-                    <option
+                    {/* <option
                       className=" bg-secondary-800 text-white"
                       value="BinanceID"
                     >
@@ -383,7 +388,7 @@ const UserWithdraw = () => {
                       value="BTCAddress"
                     >
                       BTC Address
-                    </option>
+                    </option> */}
                   </select>
                 </div>
               )}
@@ -572,6 +577,8 @@ const UserWithdraw = () => {
         </form>
       </motion.div>
     </div>
+  ) : (
+    <KYCVerificationSection></KYCVerificationSection>
   );
 };
 
