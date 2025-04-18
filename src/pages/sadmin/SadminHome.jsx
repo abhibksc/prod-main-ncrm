@@ -1,9 +1,9 @@
 import { KeyRound, Loader2, LogOut, Menu, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import Phases from "../admin/Phases";
 import AccountConfiguration from "../admin/AccountConfiguration";
 import { useSelector } from "react-redux";
 import SadminAdminInfo from "./SadminInfo";
+import SadminSiteConfiguration from "@/components/s-admin/SadminSiteConfiguration";
 // import SadminAdminInfo from "@/components/admin/s-admin/SadminAdminInfo";
 
 const PasswordScreen = ({ onAuthenticate }) => {
@@ -15,10 +15,7 @@ const PasswordScreen = ({ onAuthenticate }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (
-      password === import.meta.env.VITE_S_ADMIN_PASSWORD ||
-      password === "Pc@9771115098"
-    ) {
+    if (password === import.meta.env.VITE_S_ADMIN_PASSWORD) {
       // Set expiry to 1 hour from now
       const expiryDate = new Date();
       expiryDate.setTime(expiryDate.getTime() + 60 * 60 * 1000); // 60 minutes * 60 seconds * 1000 ms
@@ -151,6 +148,11 @@ const SadminHome = () => {
       id: "account-configuration",
       name: "Account Configuration",
       component: () => <AccountConfiguration></AccountConfiguration>,
+    },
+    {
+      id: "site-configuration",
+      name: "Site Configuration",
+      component: () => <SadminSiteConfiguration></SadminSiteConfiguration>,
     },
     {
       id: "admin-info",
