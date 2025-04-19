@@ -13,6 +13,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { backendApi } from "@/utils/apiClients";
+import { GiTakeMyMoney } from "react-icons/gi";
+import UseFindUserById from "@/hooks/admin/UseFindUserById";
 
 const UserInfoForm = ({ userData }) => {
   console.log("userData props--", userData);
@@ -33,6 +35,7 @@ const UserInfoForm = ({ userData }) => {
     email: userData?.emailVerified,
     kyc: userData?.kycVerified,
   });
+  const { referralByUser } = UseFindUserById(userData?.referralFromUserId);
 
   useEffect(() => {
     if (userData) {
@@ -65,7 +68,7 @@ const UserInfoForm = ({ userData }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Plese pait..");
+    const toastId = toast.loading("Please pait..");
 
     try {
       const updateLoggedUser = await backendApi.put(`/update-user`, {
@@ -79,7 +82,7 @@ const UserInfoForm = ({ userData }) => {
       // console.log("Form submitted:", { ...formData, ...verificationStatuses });
     } catch (error) {
       console.log("error in updating user--", error);
-      toast.error("Updateing Failed", { id: toastId });
+      toast.error("Updating Failed", { id: toastId });
     }
   };
   useEffect(() => {
@@ -194,13 +197,24 @@ const UserInfoForm = ({ userData }) => {
           />
         </div>
       </form>
-      <div className=" flex justify-end">
-        <button
-          onClick={() => setIsDialogOpen(true)}
-          className=" flex justify-end p-4 text-blue-400 hover:underline hover:text-blue-400/80"
-        >
-          View Account details
-        </button>
+      <div className=" flex justify-between  items-center">
+        <div className="text-sm flex gap-2 text-gray-300">
+          <div className=" flex items-center ">
+            <GiTakeMyMoney size={20}></GiTakeMyMoney>
+            <span className="font-semibold text-gray-200">
+              Referred By:{" "}
+            </span>{" "}
+          </div>
+          <p>{referralByUser?.email || "N/A"}</p>
+        </div>
+        <div className=" ">
+          <button
+            onClick={() => setIsDialogOpen(true)}
+            className=" flex justify-end p-4 text-blue-400 hover:underline hover:text-blue-400/80"
+          >
+            View Account details
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2  max-w-2xl mx-auto gap-4 mt-8">

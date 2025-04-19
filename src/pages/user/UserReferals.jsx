@@ -17,11 +17,11 @@ import { FaXTwitter } from "react-icons/fa6";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
 import { backendApi, metaApi } from "@/utils/apiClients";
+import UseUserDeposit from "@/hooks/user/UseUserDeposit";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("commission");
@@ -32,6 +32,7 @@ const UserReferal = () => {
   const extractedUrl = new URL(currentUrl).origin;
   const [commissionsData, setCommissionsData] = useState([]);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const { data } = UseUserDeposit();
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
@@ -51,6 +52,12 @@ const UserReferal = () => {
   // generate IB account handler ------------
 
   const generateHandler = async () => {
+    if (data < 100) {
+      toast.error(
+        "A minimum deposit of $100 is required to become an IB user."
+      );
+      return;
+    }
     function generateRandomNumber(digits) {
       if (digits <= 0) throw new Error("Digits must be a positive number");
       const min = Math.pow(10, digits - 1);

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { CreditCard, User, Wallet } from "lucide-react";
-import UserBankDetails from "@/components/user/accountDetails/UserBankDetails";
+import { User, Wallet } from "lucide-react";
 import UserWalletDetails from "@/components/user/accountDetails/UserWalletDetails";
 import UserKycDetails from "@/components/user/accountDetails/UserKycDetails";
 import ModernHeading from "@/lib/ModernHeading";
