@@ -155,6 +155,7 @@ const ManageUsers = () => {
               <th className="py-3 px-4 text-left">EMAIL</th>
               <th className="py-3 px-4 text-left">KYC </th>
               <th className="py-3 px-4 text-left">Total AC</th>
+              <th className="py-3 px-4 text-left">Left/Right</th>
               <th className="py-3 px-4 pl-10 text-left">Joined At</th>
               <th className="py-3 px-4 text-left">Action</th>
             </tr>
@@ -228,12 +229,22 @@ const ManageUsers = () => {
                       </span>
                     </div>
                   </td>
+                  <td className="py-3 px-4 text-center">
+                    <div
+                      className={` flex flex-col ${
+                        user?.leftRight ? " text-gray-100" : " text-gray-300/30"
+                      } justify-center items-center`}
+                    >
+                      {user?.leftRight || "N/A"}
+                    </div>
+                  </td>
                   <td className="py-3 px-4 whitespace-nowrap">
                     <div>{CFformatDate(user?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
                       {CFcalculateTimeSinceJoined(user?.createdAt)}
                     </div>
                   </td>
+
                   <td className="py-3 px-4">
                     <Link
                       to={`/admin/user-detail/${user?._id}`}

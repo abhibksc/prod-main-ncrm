@@ -12,6 +12,7 @@ import "../../css/phone-input.css";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import { useSelector } from "react-redux";
+import { FaLeftRight } from "react-icons/fa6";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
@@ -46,12 +47,11 @@ const UserSignUp = () => {
     country: "",
     password: "",
     confirmPassword: "",
+    leftRight: "",
   });
   const { id } = useParams();
-  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
-
+  const siteConfig = useSelector((state) => state.user.siteConfig);
   const countriesArray = getData();
-
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -104,12 +104,10 @@ const UserSignUp = () => {
   };
 
   return (
-    <div className=" overflow-scroll user-custom-scrollbar h-screen w-full">
-      <div className="min-h-screen overflow-scroll user-custom-scrollbar bg-secondary-900 flex items-center justify-center p-4 relative ">
+    <div className="overflow-scroll user-custom-scrollbar h-screen w-full">
+      <div className="min-h-screen overflow-scroll user-custom-scrollbar bg-secondary-900 flex items-center justify-center p-4 relative">
         <style>{phoneInputCustomStyles}</style>
         <Toaster />
-
-        {/* Background pattern */}
         <div className="absolute inset-0 opacity-50">
           <div className="absolute inset-0 bg-gradient-to-br from-secondary-800 to-secondary-900" />
           <svg
@@ -143,11 +141,11 @@ const UserSignUp = () => {
           className="w-full max-w-4xl relative z-10"
         >
           <div className="bg-secondary-800 bg-opacity-80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden">
-            <a className=" flex flex-col justify-center mt-8 items-center mr-4">
+            <a className="flex flex-col justify-center mt-8 items-center mr-4">
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
+                className="object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
               />
             </a>
             <div className="p-8 md:p-12">
@@ -156,12 +154,7 @@ const UserSignUp = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className=" mb-4">
-                  {" "}
-                  <ModernHeading
-                    text={"Start Your Journey"}
-                  ></ModernHeading>{" "}
-                </div>
+                <ModernHeading text={"Start Your Journey"} />
                 <p className="text-gray-200 mb-8">
                   Join {import.meta.env.VITE_WEBSITE_NAME} and start your
                   trading journey today.
@@ -257,7 +250,6 @@ const UserSignUp = () => {
                     international
                     inputClass="w-full pl-10 py-6 pr-4 py-3 bg-secondary-700 bg-opacity-50 border border-secondary-600 rounded-lg text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
                     className="react-tel-input"
-                    // className="bg-secondary-800 text-white"
                     required={true}
                   />
                 </motion.div>
@@ -278,7 +270,7 @@ const UserSignUp = () => {
                     onChange={handleChange}
                     required
                   >
-                    <option value={"Country"}>Select Country</option>
+                    <option value="Country">Select Country</option>
                     {countriesArray.map((c) => (
                       <option
                         className="bg-secondary-800 text-white"
@@ -328,7 +320,6 @@ const UserSignUp = () => {
                     onChange={handleChange}
                   />
                 </motion.div>
-
                 <motion.div
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -367,6 +358,48 @@ const UserSignUp = () => {
                     onChange={handleChange}
                   />
                 </motion.div>
+                {/* Conditionally Render Left/Right Dropdown */}
+                {id && (
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                    className="relative"
+                  >
+                    <FaLeftRight
+                      className="absolute top-3 left-3 text-gray-200"
+                      size={20}
+                    />
+                    <select
+                      name="leftRight"
+                      className="w-full pl-10 pr-4 py-3 bg-secondary-700 text-white bg-opacity-50 border border-secondary-600 rounded-lg placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition"
+                      value={formData.leftRight}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option
+                        className=" bg-secondary-800 text-white"
+                        selected
+                        disabled
+                        value=""
+                      >
+                        Select Left/Right
+                      </option>
+                      <option
+                        className=" bg-secondary-800 text-white"
+                        value="Left"
+                      >
+                        Left
+                      </option>
+                      <option
+                        className=" bg-secondary-800 text-white"
+                        value="Right"
+                      >
+                        Right
+                      </option>
+                    </select>
+                  </motion.div>
+                )}
                 <motion.div
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -387,7 +420,6 @@ const UserSignUp = () => {
                     required
                   />
                 </motion.div>
-
                 <motion.div
                   initial={{ x: 20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -408,7 +440,6 @@ const UserSignUp = () => {
                     required
                   />
                 </motion.div>
-
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -433,7 +464,6 @@ const UserSignUp = () => {
                     </span>
                   </label>
                 </motion.div>
-
                 <motion.button
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -446,7 +476,6 @@ const UserSignUp = () => {
                 </motion.button>
               </form>
             </div>
-
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
