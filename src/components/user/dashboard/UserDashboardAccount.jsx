@@ -146,51 +146,35 @@ const UserDashboardAccount = () => {
           label="Trading Account"
           value={currentAccount.accountNumber}
           badgeColor="bg-blue-100 text-blue-800"
-          delay={0.15}
+          delay={0.2}
         />
         <CredentialItem
           icon={MdOutlineAccountBalanceWallet}
           label="Balance"
           value={`$${info?.Balance || 0}`}
           badgeColor="bg-sky-100 text-sky-800"
-          delay={0.15}
+          delay={0.3}
         />
         <CredentialItem
           icon={CiMoneyBill}
           label="Equity"
           value={`$${info?.Equity || 0}`}
           badgeColor="bg-sky-100 text-sky-800"
-          delay={0.15}
+          delay={0.4}
         />
         <CredentialItem
           icon={CheckCircle}
           label="Leverage"
           value={currentAccount.leverage}
           badgeColor="bg-indigo-100 text-indigo-800"
-          delay={0.25}
-        />
-        <CredentialItem
-          icon={Key}
-          label="Master Password"
-          value={currentAccount.masterPassword || "N/A"}
-          badgeColor="bg-yellow-100 text-yellow-800"
-          delay={0.35}
-          link="/user/master-password"
-        />
-        <CredentialItem
-          icon={Shield}
-          label="Investor Password"
-          value={currentAccount.investorPassword || "N/A"}
-          badgeColor="bg-yellow-100 text-yellow-800"
-          delay={0.45}
-          link="/user/investor-password"
+          delay={0.5}
         />
         <CredentialItem
           icon={PanelTopInactiveIcon}
           label="Account Type"
           value={currentAccount.accountType || "N/A"}
           badgeColor="bg-orange-100 text-orange-800"
-          delay={0.55}
+          delay={0.6}
         />
         <CredentialItem
           icon={Info}
@@ -201,7 +185,7 @@ const UserDashboardAccount = () => {
               ? "bg-green-100 text-green-800"
               : "bg-red-100 text-red-700"
           }
-          delay={0.65}
+          delay={0.7}
         />
       </motion.div>
     </motion.div>

@@ -779,7 +779,7 @@ const DepositsStatus = () => {
             <AlertDialogDescription>
               <img
                 src={
-                  import.meta.env.VITE_BECKEND_END_POINT +
+                  import.meta.env.VITE_BACKEND_BASE_URL +
                   "/" +
                   selectedDeposit?.depositSS
                 }
@@ -796,7 +796,7 @@ const DepositsStatus = () => {
               <a
                 target="_blank"
                 href={
-                  import.meta.env.VITE_BECKEND_END_POINT +
+                  import.meta.env.VITE_BACKEND_BASE_URL +
                   "/" +
                   selectedDeposit?.depositSS
                 }

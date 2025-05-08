@@ -288,22 +288,22 @@ const UserReferralCloseTrades = () => {
                     {value?.closeTime}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {Number(value?.openPrice).toFixed(2)}
+                    {Number(value?.openPrice).toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {Number(value?.closePrice).toFixed(2)}
+                    {Number(value?.closePrice).toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     {value?.symbol}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.profit}
+                    {Number(value?.profit).toFixed(2)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.lotSize?.toFixed(2)}
+                    {value?.lotSize?.toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {value?.commissionAmount}
+                    {Number(value?.commissionAmount).toFixed(2)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     <div className="flex flex-col justify-center items-center">
@@ -334,7 +334,7 @@ const UserReferralCloseTrades = () => {
                     {totals?.profit?.toFixed(2)}
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base">
-                    {totals?.lotSize?.toFixed(2)}
+                    {totals?.lotSize?.toFixed(4)}
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base">
                     {totals?.rebate?.toFixed(2)}
