@@ -169,7 +169,7 @@ const UserWithdraw = () => {
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          <div>
+          <div className=" flex flex-col gap-4">
             {/* select account */}
             <div className=" w-full">
               <label
