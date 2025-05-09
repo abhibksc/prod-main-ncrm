@@ -54,3 +54,15 @@ export function CFcalculateTimeSinceJoined(isoDateString) {
 
   return timeString.join(", ") + " ago";
 }
+
+const currentDateTime = new Date();
+
+export const CFformattedDateTime =
+  currentDateTime.toLocaleDateString("en-GB") +
+  ", " +
+  currentDateTime.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false, // 12-hour format with AM/PM
+  });
