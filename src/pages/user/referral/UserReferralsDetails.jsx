@@ -134,10 +134,10 @@ const UserReferralsDetails = () => {
                   {value?.level}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalLot?.toFixed(2) || "0"}
+                  {value?.totalLot?.toFixed(4) || "0"}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalCommission?.toFixed(2) || "0"}
+                  {value?.totalCommission?.toFixed(4) || "0"}
                 </td>
                 <td className=" text-sm sm:text-base">
                   <Link
