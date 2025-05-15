@@ -28,6 +28,7 @@ const useMT5Stats = () => {
         const filteredUsers = response?.data?.lstUsers?.filter?.((value) =>
           assignedApiGroups.includes(value.Group_Name)
         );
+        console.log("filteredUsers", filteredUsers);
         setAccounts(filteredUsers);
       } catch (err) {
         setError(err.message);
