@@ -1,20 +1,34 @@
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import { useState, useEffect, useMemo } from "react";
 
 const useMT5Stats = () => {
   const [accounts, setAccounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const [assignedApiGroups, setAssignedApiGroups] = useState([]);
+  console.log("assignedApiGroups", assignedApiGroups);
   useEffect(() => {
     const fetchMT5Accounts = async () => {
       setIsLoading(true);
       setError(null);
       try {
+        const assignedGroupsRes = await backendApi.get(`/get-custom-groups`);
+
+        if (Array.isArray(assignedGroupsRes.data.data)) {
+          const mappedGroups = assignedGroupsRes.data.data?.map(
+            (value) => value.apiGroup
+          );
+          setAssignedApiGroups(mappedGroups);
+        } else {
+          setAssignedApiGroups([]);
+        }
         const response = await metaApi.get(
           `/GetUserList?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
         );
-        setAccounts(response.data.lstUsers);
+        const filteredUsers = response?.data?.lstUsers?.filter?.((value) =>
+          assignedApiGroups.includes(value.Group_Name)
+        );
+        setAccounts(filteredUsers);
       } catch (err) {
         setError(err.message);
       } finally {
