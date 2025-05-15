@@ -6,7 +6,6 @@ const useMT5Stats = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [assignedApiGroups, setAssignedApiGroups] = useState([]);
-  console.log("assignedApiGroups", assignedApiGroups);
   useEffect(() => {
     const fetchMT5Accounts = async () => {
       setIsLoading(true);
@@ -25,9 +24,11 @@ const useMT5Stats = () => {
         const response = await metaApi.get(
           `/GetUserList?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
         );
-        const filteredUsers = response?.data?.lstUsers?.filter?.((value) =>
+        const filteredUsers = response.data.lstUsers.filter?.((value) =>
           assignedApiGroups.includes(value.Group_Name)
         );
+        console.log("response", response.data.lstUsers);
+        console.log("assignedApiGroups", assignedApiGroups);
         console.log("filteredUsers", filteredUsers);
         setAccounts(filteredUsers);
       } catch (err) {
