@@ -13,22 +13,22 @@ const useMT5Stats = () => {
       try {
         const assignedGroupsRes = await backendApi.get(`/get-custom-groups`);
 
+        let mappedGroups = [];
+
         if (Array.isArray(assignedGroupsRes.data.data)) {
-          const mappedGroups = assignedGroupsRes.data.data?.map(
+          mappedGroups = assignedGroupsRes.data.data?.map(
             (value) => value.apiGroup
           );
-          setAssignedApiGroups(mappedGroups);
-        } else {
-          setAssignedApiGroups([]);
         }
+
         const response = await metaApi.get(
           `/GetUserList?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
         );
         const filteredUsers = response.data.lstUsers.filter?.((value) =>
-          assignedApiGroups.includes(value.Group_Name)
+          mappedGroups.includes(value.Group_Name)
         );
         console.log("response", response.data.lstUsers);
-        console.log("assignedApiGroups", assignedApiGroups);
+        console.log("mappedGroups", mappedGroups);
         console.log("filteredUsers", filteredUsers);
         setAccounts(filteredUsers);
       } catch (err) {
