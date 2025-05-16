@@ -13,6 +13,9 @@ import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { KYCVerificationSection } from "./UserPlatform";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import useUserWithdrawals from "@/hooks/user/UseUserWithdrawal";
+import OtpUi from "@/components/user/OtpUi";
+import { withdrawRequestMail } from "@/mails/WithdrwalsMails";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -28,6 +31,11 @@ const UserWithdraw = () => {
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   const { getUpdateLoggedUser } = UseUserHook();
+  const { data, isLoading, isError, isWithdrawalPending, refresh } =
+    useUserWithdrawals();
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState("");
+
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -191,21 +199,65 @@ const UserWithdraw = () => {
       </div>
     </body>
     </html>`;
-
   const withdrawalHandler = async (e) => {
     e.preventDefault();
-    if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+    if (isWithdrawalPending) {
+      toast.error(
+        "You have a pending withdrawal. Please wait before making another."
+      );
+      return;
+    }
 
-    setError("");
+    if (isWithdrawing) return;
+
+    // Validate inputs first
+    if (!account || !selectedGateway || !amount) {
+      setError("All fields are required.");
+      return;
+    }
+    const toastId = toast.loading("please wait..");
+
+    // Send OTP first
+    try {
+      const sendOtpRes = await backendApi.post("/send-otp", {
+        email: loggedUser.email,
+      });
+
+      if (sendOtpRes.data.otp) {
+        toast.success("OTP sent to your email", { id: toastId });
+        setShowOtpInput(true); // open OTP input modal
+      } else {
+        toast.error("Failed to send OTP", { id: toastId });
+      }
+    } catch (err) {
+      console.log("OTP error", err);
+      toast.error("Error sending OTP", { id: toastId });
+    }
+  };
+  const verifyOtpHandler = async () => {
+    const toastID = toast.loading("Verifying your request..");
+    if (!otp) {
+      toast.error("OTP required", { id: toastID });
+      return;
+    }
+
     setApiLoader(true);
-    setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+    setIsWithdrawing(true);
 
     try {
+      const res = await backendApi.post("/verify-otp", {
+        email: loggedUser.email,
+        otp,
+      });
+
+      // Proceed to withdrawal logic
       if (accountBalance < amount) {
-        setError("You don't have balance for withdrawal !!");
-        setApiLoader(false);
-      } else if (amount <= accountBalance && amount > 0) {
-        const withdrawalDBres = await backendApi.post(`/withdrawal`, {
+        toast.error("You don't have balance for withdrawal !!", {
+          id: toastID,
+        });
+        return;
+      } else {
+        await backendApi.post(`/withdrawal`, {
           method:
             selectedGateway === "Bank Transfer"
               ? selectedGateway
@@ -217,34 +269,96 @@ const UserWithdraw = () => {
           userId: loggedUser._id,
           lastBalance: accountBalance,
         });
-        console.log(withdrawalDBres);
-        const customMailRes = await backendApi.post(`/custom-mail`, {
+
+        const customContent = withdrawRequestMail({
+          loggedUser,
+          amount,
+          accountBalance,
+        });
+        toast.success("Withdrawal Requested.", { id: toastID });
+        fetchAccountInfo();
+        setAmount("");
+
+        await backendApi.post(`/custom-mail`, {
           email: loggedUser.email,
           content: customContent,
           subject: "Withdrawal requested",
         });
-        setApiLoader(false);
-        toast.success("Withdrawal Requested.");
-        fetchAccountInfo();
-        setAmount("");
-      } else {
-        setError("Something went wrong!!");
-        setApiLoader(false);
       }
+
+      // Reset OTP state
+      setShowOtpInput(false);
+      setOtp("");
     } catch (error) {
-      setApiLoader(false);
-      toast.error("Withdrawal Failed");
-      console.log("error while withdraw", error);
+      toast.error(error.response.data.message || "Withdrawal failed", {
+        id: toastID,
+      });
+      console.log("error during withdrawal", error);
     } finally {
-      setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
+      setApiLoader(false);
+      setIsWithdrawing(false);
     }
   };
+
+  // const withdrawalHandler = async (e) => {
+  //   e.preventDefault();
+  //   if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
+  //   if (isWithdrawalPending) {
+  //     toast.error(
+  //       "You have a pending withdrawal. Please wait before making another."
+  //     );
+  //     return;
+  //   }
+  //   setError("");
+  //   setApiLoader(true);
+  //   setIsWithdrawing(true); // NEW: Set withdrawal loading to true
+
+  //   try {
+  //     if (accountBalance < amount) {
+  //       setError("You don't have balance for withdrawal !!");
+  //       setApiLoader(false);
+  //     } else if (amount <= accountBalance && amount > 0) {
+  //       const withdrawalDBres = await backendApi.post(`/withdrawal`, {
+  //         method:
+  //           selectedGateway === "Bank Transfer"
+  //             ? selectedGateway
+  //             : selectWallet,
+  //         accountType: accountType,
+  //         amount: amount,
+  //         mt5Account: account,
+  //         status: "pending",
+  //         userId: loggedUser._id,
+  //         lastBalance: accountBalance,
+  //       });
+  //       const customMailRes = await backendApi.post(`/custom-mail`, {
+  //         email: loggedUser.email,
+  //         content: customContent,
+  //         subject: "Withdrawal requested",
+  //       });
+  //       setApiLoader(false);
+  //       toast.success("Withdrawal Requested.");
+  //       fetchAccountInfo();
+  //       setAmount("");
+  //     } else {
+  //       setError("Something went wrong!!");
+  //       setApiLoader(false);
+  //     }
+  //   } catch (error) {
+  //     setApiLoader(false);
+  //     toast.error("Withdrawal Failed");
+  //     console.log("error while withdraw", error);
+  //   } finally {
+  //     setIsWithdrawing(false);
+  //     refresh();
+  //   }
+  // };
 
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
   useEffect(() => {
     getUpdateLoggedUser();
+    refresh();
   }, []);
 
   return loggedUser?.kycVerified ? (
@@ -255,6 +369,15 @@ const UserWithdraw = () => {
         transition={{ duration: 0.5 }}
         className=" w-full bg-secondary-800/20 p-8 rounded-lg shadow-xl"
       >
+        {showOtpInput && (
+          <OtpUi
+            otp={otp}
+            setOtp={setOtp}
+            setShowOtpInput={setShowOtpInput}
+            verifyOtpHandler={verifyOtpHandler}
+            apiLoader={apiLoader}
+          ></OtpUi>
+        )}
         <div className="flex items-center justify-between mb-6">
           <div className=" mb-4">
             <ModernHeading text={"Withdraw Funds"}></ModernHeading>

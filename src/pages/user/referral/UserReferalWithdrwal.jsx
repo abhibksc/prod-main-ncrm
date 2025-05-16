@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
+import useUserIbWithdrawals from "@/hooks/user/UseUserIbWithdrawal";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -21,7 +22,7 @@ export const UserReferralWithdrawal = () => {
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
-
+  const { isWithdrawalPending, refresh } = useUserIbWithdrawals();
   const currentDateTime = new Date();
   const formattedDateTime =
     currentDateTime.toLocaleDateString("en-GB") +
@@ -176,7 +177,12 @@ export const UserReferralWithdrawal = () => {
   const withdrawalHandler = async (e) => {
     e.preventDefault();
     if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
-
+    if (isWithdrawalPending) {
+      toast.error(
+        "You have a pending withdrawal. Please wait before making another."
+      );
+      return;
+    }
     setApiLoader(true);
     setError("");
     setIsWithdrawing(true); // NEW: Set withdrawal loading to true
@@ -222,6 +228,7 @@ export const UserReferralWithdrawal = () => {
       console.log("error while withdraw", error);
     } finally {
       setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
+      refresh();
     }
   };
   useEffect(() => {}, [balance, userInfoData]);
