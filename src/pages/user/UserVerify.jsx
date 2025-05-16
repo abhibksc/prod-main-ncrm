@@ -157,34 +157,6 @@ const UserVerify = () => {
 
           <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
            <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
-        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
-          <tr>
-            <td align="center" style="padding: 20px;">
-              <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                <tr>
-                  <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5&pcampaignid=web_share" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                      <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                      <span style="vertical-align: middle;">Android</span>
-                    </a>
-                  </td>
-                  <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="https://apps.apple.com/us/app/metatrader-5/id413251709?platform=ipad" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                      <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                      <span style="vertical-align: middle;">iOS</span>
-                    </a>
-                  </td>
-                  <td align="center" width="33%" style="padding: 0 10px;">
-                    <a href="https://download.mql5.com/cdn/web/metaquotes.ltd/mt5/mt5setup.exe?utm_source=www.metatrader5.com&utm_campaign=download" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                      <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                      <span style="vertical-align: middle;">Windows</span>
-                    </a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
 
  <div class="risk-warning">
   <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
