@@ -55,8 +55,6 @@ export function CFcalculateTimeSinceJoined(isoDateString) {
   return timeString.join(", ") + " ago";
 }
 
-// live time and date ----
-
 const currentDateTime = new Date();
 
 export const CFformattedDateTime =
