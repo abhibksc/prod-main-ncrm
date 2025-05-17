@@ -8,7 +8,8 @@ import ModernText from "@/lib/ModernText";
 
 export default function UserDashboardTrades() {
   const navigate = useNavigate();
-  const openTrades = useSelector((store) => store.user.openTrades);
+  const rawOpenTrades = useSelector((store) => store.user.openTrades);
+  const openTrades = Array.isArray(rawOpenTrades) ? rawOpenTrades : [];
   const ProfitTradesData = openTrades.filter((value) => value.Profit > 0);
   const calculateWinningRatio = () => {
     const positiveTradesCount = openTrades.filter(
@@ -48,13 +49,10 @@ export default function UserDashboardTrades() {
           );
           if (Array.isArray(res.data)) {
             data = data.concat(res.data);
+            dispatch(setOpenTrades(data));
           }
+          dispatch(setOpenTrades([]));
         }
-        // console.log("final data--", data);
-        dispatch(setOpenTrades(data));
-        // if (shouldFetch) {
-        //   setTimeout(fetchOpenTrades, 1000); // Call again after 1 second
-        // }
       } else {
         console.log("No account found");
       }

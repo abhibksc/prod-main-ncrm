@@ -136,7 +136,7 @@ export default function AdminCustomEmail() {
     import.meta.env.VITE_EMAIL_EMAIL
   }</a></p>
         <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
-        <p>&copy; 2024 ${
+        <p>&copy; 2025 ${
           import.meta.env.VITE_WEBSITE_NAME
         }. All Rights Reserved</p>
       </div>
@@ -226,7 +226,7 @@ export default function AdminCustomEmail() {
               <User className="w-5 h-5" />
               <span className="text-sm">Single User</span>
             </button>
-            {/* <button
+            <button
               onClick={() => setRecipient("all")}
               className={`flex-1 py-3 px-4 rounded-full flex items-center justify-center space-x-2 transition-all duration-300 ${
                 recipient === "all"
@@ -236,7 +236,7 @@ export default function AdminCustomEmail() {
             >
               <UsersRound className="w-5 h-5" />
               <span className="text-sm">All Users</span>
-            </button> */}
+            </button>
           </div>
 
           {/* Email Input */}
