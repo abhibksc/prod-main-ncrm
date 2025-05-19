@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpDown,
-  Info,
-  RefreshCw,
-} from "lucide-react"; // Import refresh icon
+import { ArrowLeft, ArrowRight, Info, RefreshCw } from "lucide-react"; // Import refresh icon
 import { useSelector } from "react-redux";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import { backendApi } from "@/utils/apiClients";
@@ -134,14 +128,14 @@ const UserReferralsDetails = () => {
                   {value?.level}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalLot?.toFixed(2) || "0"}
+                  {value?.totalLot?.toFixed(4) || "0"}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalCommission?.toFixed(2) || "0"}
+                  {value?.totalCommission?.toFixed(4) || "0"}
                 </td>
                 <td className=" text-sm sm:text-base">
                   <Link
-                    to={`/user/referral-close-trades/${value?.accountNumber}`}
+                    to={`/user/referral-close-trades/${value?.accountNumber}?level=${value?.level}`}
                   >
                     <div className="flex justify-center text-blue-500 hover:text-blue-600 hover:scale-105 items-center transition-all">
                       <ArrowRight></ArrowRight>
