@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import { backendApi } from "@/utils/apiClients";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -27,13 +27,14 @@ const UserReferralCloseTrades = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const tableRef = useRef(null);
-
-  // Calculate totals
+  const [searchParams] = useSearchParams();
+  const level = searchParams.get("level");
+  // Calculate totals ---
   const totals = commissionsData.reduce(
     (acc, curr) => ({
       profit: acc.profit + Number(curr.profit || 0),
       lotSize: acc.lotSize + Number(curr.lotSize || 0),
-      rebate: acc.rebate + Number(curr.commissionAmount || 0),
+      rebate: acc.rebate + Number(curr.commission.commissionAmount || 0),
     }),
     { profit: 0, lotSize: 0, rebate: 0 }
   );
@@ -142,14 +143,24 @@ const UserReferralCloseTrades = () => {
     try {
       const res = await backendApi.get(`/user-ib-close-trade/${id}`);
       const commissions = res.data.data.reverse();
-      setCommissionsData(commissions);
+
+      const filteredCommissions = commissions
+        .map((trade) => ({
+          ...trade,
+          commission:
+            trade.commissions.find(
+              (commission) => commission.level === Number(level)
+            ) || null,
+        }))
+        .filter((trade) => trade.commission !== null);
+
+      setCommissionsData(filteredCommissions);
     } catch (error) {
       console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
-  console.log(`object`);
 
   useEffect(() => {
     fetchCommissions();
@@ -303,11 +314,11 @@ const UserReferralCloseTrades = () => {
                     {value?.lotSize?.toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {Number(value?.commissionAmount).toFixed(4)}
+                    {Number(value?.commission.commissionAmount).toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     <div className="flex flex-col justify-center items-center">
-                      {value?.isCalculated === true ? (
+                      {value?.commission?.isCalculated === true ? (
                         <div className="text-green-500">
                           <CheckCheck />
                         </div>
