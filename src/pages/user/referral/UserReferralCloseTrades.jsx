@@ -46,9 +46,9 @@ const UserReferralCloseTrades = () => {
       "Open Price": row.openPrice,
       "Close Price": row.closePrice,
       Symbol: row.symbol,
-      Profit: Number(row.profit).toFixed(2),
-      Volume: Number(row.lotSize).toFixed(2),
-      Rebate: Number(row.commissionAmount).toFixed(2),
+      Profit: Number(row.profit).toFixed(4),
+      Volume: Number(row.lotSize).toFixed(4),
+      Rebate: Number(row.commissionAmount).toFixed(4),
       Status: row.isCalculated ? "Completed" : "Pending",
     }));
 
@@ -60,9 +60,9 @@ const UserReferralCloseTrades = () => {
       "Open Price": "",
       "Close Price": "",
       Symbol: "",
-      Profit: totals.profit.toFixed(2),
-      Volume: totals.lotSize.toFixed(2),
-      Rebate: totals.rebate.toFixed(2),
+      Profit: totals.profit.toFixed(4),
+      Volume: totals.lotSize.toFixed(4),
+      Rebate: totals.rebate.toFixed(4),
       Status: "",
     });
 
@@ -297,13 +297,13 @@ const UserReferralCloseTrades = () => {
                     {value?.symbol}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {Number(value?.profit).toFixed(2)}
+                    {Number(value?.profit).toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     {value?.lotSize?.toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
-                    {Number(value?.commissionAmount).toFixed(2)}
+                    {Number(value?.commissionAmount).toFixed(4)}
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     <div className="flex flex-col justify-center items-center">
@@ -331,13 +331,13 @@ const UserReferralCloseTrades = () => {
                     Total:
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base">
-                    {totals?.profit?.toFixed(2)}
+                    {totals?.profit?.toFixed(4)}
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base">
                     {totals?.lotSize?.toFixed(4)}
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base">
-                    {totals?.rebate?.toFixed(2)}
+                    {totals?.rebate?.toFixed(4)}
                   </td>
                   <td className="p-3 text-center text-sm sm:text-base"></td>
                 </tr>
