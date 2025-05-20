@@ -10,7 +10,10 @@ export default function UserDashboardTrades() {
   const navigate = useNavigate();
   const rawOpenTrades = useSelector((store) => store.user.openTrades);
   const openTrades = Array.isArray(rawOpenTrades) ? rawOpenTrades : [];
+  const totalTradesCount = openTrades.length;
+
   const ProfitTradesData = openTrades.filter((value) => value.Profit > 0);
+
   const calculateWinningRatio = () => {
     const positiveTradesCount = openTrades.filter(
       (entry) => entry.Profit > 0
