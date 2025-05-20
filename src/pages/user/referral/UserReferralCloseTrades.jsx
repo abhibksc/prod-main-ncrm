@@ -50,7 +50,7 @@ const UserReferralCloseTrades = () => {
       Symbol: row.symbol,
       Profit: Number(row.profit).toFixed(4),
       Volume: Number(row.lotSize).toFixed(4),
-      Rebate: Number(row.commissionAmount.commissionAmount).toFixed(4),
+      Rebate: Number(row.commission.commissionAmount).toFixed(4),
       Status: row.isCalculated ? "Completed" : "Pending",
     }));
 
