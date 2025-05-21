@@ -20,6 +20,7 @@ export function useGetMultipleIdInfo(accountIds = []) {
                 import.meta.env.VITE_MANAGER_INDEX
               }&MT5Account=${id}`
             );
+            console.log("res data ", res.data);
 
             if (res.data?.Equity) {
               newMap[id] = {

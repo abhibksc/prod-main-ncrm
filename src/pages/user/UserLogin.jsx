@@ -227,6 +227,8 @@ const UserLogin = () => {
       toast.success(res.data.message);
       setResetEmail("");
       setIsResetLoading(false);
+      setShowForgotPassword(false);
+      navigate("/user/login");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to send reset email!"
@@ -425,7 +427,7 @@ const UserLogin = () => {
                     className="relative"
                   >
                     <Mail
-                      className="absolute top-3 left-3 text-secondary-500/80"
+                      className="absolute top-4 left-3 text-gray-300/80"
                       size={20}
                     />
                     <input
