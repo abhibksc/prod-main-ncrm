@@ -288,7 +288,7 @@ const IbWithdrawalStatus = () => {
             <p>We sent out this message to all existing ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 ${
+            <p>&copy; 2025 ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
