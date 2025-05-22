@@ -13,7 +13,7 @@ export default function OtpUi({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed in....set-0 flex items-center justify-center bg-black bg-opacity-60 z-50 backdrop-blur-sm"
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 backdrop-blur-sm"
     >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}

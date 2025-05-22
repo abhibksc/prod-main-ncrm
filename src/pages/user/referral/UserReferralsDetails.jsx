@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Info, RefreshCw } from "lucide-react"; // Import refresh icon
+import { ArrowLeft, ArrowRight, Info, Loader2, RefreshCw } from "lucide-react"; // Import refresh icon
 import { useSelector } from "react-redux";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import { backendApi } from "@/utils/apiClients";
 import { Link } from "react-router-dom";
 import ModernHeading from "@/lib/ModernHeading";
+import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
+import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
+import Loader from "@/components/Loader/Loader";
 
 const UserReferralsDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [commissionsData, setCommissionsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Loader state
+  const allAccounts = commissionsData.map((value) =>
+    Number(value.accountNumber)
+  );
 
+  const liveData = useGetInfoByAccounts(allAccounts);
+  // const liveData = [];
+  // const liveData = useGetMultipleIdInfo(allAccounts);
+  // console.log("liveData", liveData);
   // fetch all commissions data-----
   const fetchCommissions = async () => {
     setIsLoading(true); // Start loading
@@ -74,11 +84,14 @@ const UserReferralsDetails = () => {
               <th className="p-3 sm:p-4 text-left text-sm sm:text-base rounded-tl-md ">
                 Name/Email
               </th>
-              <th className="p-3 sm:p-4 text-left text-sm sm:text-base rounded-tl-md ">
+              <th className="p-3 sm:p-4 text-center text-sm sm:text-base rounded-tl-md ">
                 Country
               </th>
               <th className="p-3 sm:p-4 whitespace-nowrap text-center text-sm sm:text-base">
                 AC NO
+              </th>
+              <th className="p-3 sm:p-4 whitespace-nowrap text-center text-sm sm:text-base">
+                Live Equity
               </th>
               <th className="p-3 whitespace-nowrap sm:p-4 text-center text-sm sm:text-base">
                 Level
@@ -116,13 +129,18 @@ const UserReferralsDetails = () => {
                     <p className="text-gray-400">{value?.email}</p>
                   </div>
                 </td>
-                <td className="text-sm text-center sm:text-base">
-                  <div className=" flex  justify-center items-center">
-                    {value?.country || "-"}
-                  </div>
+                <td className="text-sm text-center  mx-auto sm:text-base">
+                  {value?.country || "-"}
                 </td>
                 <td className="text-sm text-center sm:text-base">
                   {value?.accountNumber}
+                </td>
+                <td className="text-sm text-green-400 text-center sm:text-base">
+                  {liveData?.find(
+                    (item) => item.MT5Account === +value?.accountNumber
+                  )?.Equity ?? (
+                    <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                  )}
                 </td>
                 <td className="text-center text-sm sm:text-base">
                   {value?.level}

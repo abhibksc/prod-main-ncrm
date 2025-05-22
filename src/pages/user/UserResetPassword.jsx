@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Lock, AlertTriangle, CheckCircle } from "lucide-react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import toast, { Toaster } from "react-hot-toast";
@@ -12,6 +12,7 @@ export default function UserResetPassword() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const { token } = useParams();
+  const navigate = useNavigate();
 
   const validatePassword = (pwd) => {
     const minLength = 8;
@@ -74,10 +75,16 @@ export default function UserResetPassword() {
       setPassword("");
       setConfirmPassword("");
       toast.success("Password Changed successfully", { id: toastId });
+      navigate("/user/login");
     } catch (err) {
-      setError(err.response.data.message);
-      toast.error(`${err.response.data.message}`, { id: toastId });
       console.log(err);
+      toast.error(`${err?.response?.data?.message || "something went wrong"}`, {
+        id: toastId,
+      });
+      setError(
+        err?.response?.data?.message ||
+          "something went wrong, Please try again later !!"
+      );
     }
   };
 
