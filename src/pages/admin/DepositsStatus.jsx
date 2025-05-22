@@ -151,7 +151,7 @@ const DepositsStatus = () => {
     setIsDialogOpen(true);
   };
 
-  console.log("selected deposit!!!!", selectedDeposit);
+  // console.log("selected deposit!!!!", selectedDeposit);
 
   // on confirm api handler  ------------------------------
   const customContent = `<!DOCTYPE html>
@@ -285,7 +285,7 @@ const DepositsStatus = () => {
             <p>We sent out this message to all existing ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             } traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2024 ${
+            <p>&copy; 2025 ${
               import.meta.env.VITE_WEBSITE_NAME || "Forex"
             }. All Rights Reserved</p>
           </div>
@@ -309,6 +309,8 @@ const DepositsStatus = () => {
             selectedDeposit.deposit
           }&Comment=deposit`
         );
+        setIsDialogOpen(false);
+
         if (depositApires.data.Equity) {
           const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
@@ -343,6 +345,7 @@ const DepositsStatus = () => {
           _id: selectedDeposit._id,
           status: "rejected",
         });
+        setIsDialogOpen(false);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -592,19 +595,29 @@ const DepositsStatus = () => {
                     </td>
                     <td className="py-2 px-4">
                       {item.status === "pending" && (
-                        <div className="flex items-center gap-5">
-                          <button
-                            className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "approve")}
-                          >
-                            <CircleCheckBig />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "reject")}
-                          >
-                            <CircleX />
-                          </button>
+                        <div>
+                          {isActionLoading ? (
+                            "Please wait.."
+                          ) : (
+                            <div className="flex items-center gap-5">
+                              <button
+                                className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "approve")
+                                }
+                              >
+                                <CircleCheckBig />
+                              </button>
+                              <button
+                                className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "reject")
+                                }
+                              >
+                                <CircleX />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                       {item.status === "approved" && (

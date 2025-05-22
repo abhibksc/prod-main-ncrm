@@ -193,7 +193,7 @@ const UserLogin = () => {
                 <p>We sent out this message to all existing ${
                   import.meta.env.VITE_WEBSITE_NAME || "Forex"
                 } traders. Please visit this page to know more about our Privacy Policy.</p>
-                <p>&copy; 2024 ${
+                <p>&copy; 2025 ${
                   import.meta.env.VITE_WEBSITE_NAME || "Forex"
                 }. All Rights Reserved</p>
               </div>
@@ -227,6 +227,8 @@ const UserLogin = () => {
       toast.success(res.data.message);
       setResetEmail("");
       setIsResetLoading(false);
+      setShowForgotPassword(false);
+      navigate("/user/login");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to send reset email!"
@@ -425,7 +427,7 @@ const UserLogin = () => {
                     className="relative"
                   >
                     <Mail
-                      className="absolute top-3 left-3 text-secondary-500/80"
+                      className="absolute top-4 left-3 text-gray-300/80"
                       size={20}
                     />
                     <input

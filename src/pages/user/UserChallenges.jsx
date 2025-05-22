@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Info } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -18,6 +18,7 @@ import {
   CFformatDate,
 } from "@/utils/CustomFunctions";
 import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
+import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
 
 const UserChallenges = () => {
   const [selectedchallenge, setSelectedChallenge] = useState("");
@@ -25,10 +26,10 @@ const UserChallenges = () => {
   const logggedUser = useSelector((store) => store.user.loggedUser);
   const siteConfig = useSelector((store) => store.user.siteConfig);
   const accountIds =
-    logggedUser?.accounts?.map((acc) => acc.accountNumber) || [];
-  const liveData = useGetMultipleIdInfo(accountIds);
-  console.log("liveData", liveData);
+    logggedUser?.accounts?.map((acc) => +acc.accountNumber) || [];
+  const liveData = useGetInfoByAccounts(accountIds);
 
+  console.log("liveData", liveData);
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
@@ -58,7 +59,9 @@ const UserChallenges = () => {
             <th className="p-2 sm:p-3 text-center font-semibold">Type</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Leverage</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Balance</th>
-            <th className="p-2 sm:p-3 text-center font-semibold">Equity</th>
+            <th className="p-2 sm:p-3 text-center font-semibold">
+              Live Equity
+            </th>
             <th className="p-2 sm:p-3 text-center font-semibold">P/L</th>
             <th className="p-2 sm:p-3 text-center font-semibold">Timestamp</th>
             <th className="p-2 sm:p-3 text-left font-semibold rounded-tr-lg">
@@ -93,20 +96,39 @@ const UserChallenges = () => {
                     {value?.leverage}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {liveData?.[value?.accountNumber]?.balance ?? "0"}
+                    {liveData?.find(
+                      (item) => item.MT5Account === +value?.accountNumber
+                    )?.Balance ?? (
+                      <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                    )}
                   </td>
-                  <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {liveData?.[value?.accountNumber]?.equity ?? "0"}
+                  <td className="p-2 text-center text-green-500 sm:p-3 text-sm sm:text-base">
+                    {liveData?.find(
+                      (item) => item.MT5Account === +value?.accountNumber
+                    )?.Equity ?? (
+                      <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                    )}
                   </td>
-                  <td
-                    className={`"p-2 text-center ${
-                      liveData?.[value?.accountNumber]?.pl > 0
-                        ? " text-green-500"
-                        : " text-red-500"
-                    } sm:p-3 text-sm sm:text-base"`}
-                  >
-                    {liveData?.[value?.accountNumber]?.pl ?? "0"}
-                  </td>
+                  {(() => {
+                    const info = liveData?.find(
+                      (i) => i.MT5Account === +value?.accountNumber
+                    );
+                    return (
+                      <td
+                        className={`p-2 text-center sm:p-3 text-sm sm:text-base ${
+                          info
+                            ? info.Profit > 0
+                              ? "text-green-500"
+                              : "text-red-500"
+                            : ""
+                        }`}
+                      >
+                        {info?.Profit ?? (
+                          <Loader2 className="animate-spin text-center mx-auto" />
+                        )}
+                      </td>
+                    );
+                  })()}
                   <td className="py-3 text-center px-4">
                     <div>{CFformatDate(value?.createdAt)}</div>
                     <div className="text-sm text-gray-400">
