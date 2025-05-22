@@ -310,6 +310,8 @@ const IbWithdrawalStatus = () => {
             selectedDeposit.amount
           }&Comment=ib-withdrawal`
         );
+        setIsDialogOpen(false);
+
         const DBresWithdarwal = await backendApi.put(
           `/update-referral-withdrawal`,
           {
@@ -340,6 +342,7 @@ const IbWithdrawalStatus = () => {
           id: selectedDeposit._id,
           status: "rejected",
         });
+        setIsDialogOpen(false);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -561,19 +564,29 @@ const IbWithdrawalStatus = () => {
                     </td>
                     <td className="py-2 px-4">
                       {item.status === "pending" ? (
-                        <div className="flex items-center gap-5">
-                          <button
-                            className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "approve")}
-                          >
-                            <CircleCheckBig />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "reject")}
-                          >
-                            <CircleX />
-                          </button>
+                        <div>
+                          {isActionLoading ? (
+                            "Please wait.."
+                          ) : (
+                            <div className="flex items-center gap-5">
+                              <button
+                                className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "approve")
+                                }
+                              >
+                                <CircleCheckBig />
+                              </button>
+                              <button
+                                className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "reject")
+                                }
+                              >
+                                <CircleX />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <p

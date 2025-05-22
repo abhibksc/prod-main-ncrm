@@ -50,6 +50,8 @@ import UserMasterUserCT from "./pages/user/copy-trading/UserMasterUserCT";
 import SiteConfiguration from "./pages/admin/SiteConfiguration";
 import KycUsers from "./pages/admin/KycUsers";
 import IbUsers from "./pages/admin/IbUsers";
+import UserCopyRequest from "./pages/user/UserCopyRequest";
+import AdminCopyRequests from "./pages/admin/AdminCopyRequests";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -124,6 +126,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/ib-users",
         element: <IbUsers></IbUsers>,
+      },
+      {
+        path: "/admin/copy-requests",
+        element: <AdminCopyRequests></AdminCopyRequests>,
       },
     ],
   },
@@ -250,6 +256,10 @@ const Router = createBrowserRouter([
       {
         path: "/user/copy-trading/master-user/:id",
         element: <UserMasterUserCT></UserMasterUserCT>,
+      },
+      {
+        path: "/user/copy-request",
+        element: <UserCopyRequest></UserCopyRequest>,
       },
     ],
   },

@@ -98,7 +98,7 @@ const UserNewChallenge = () => {
           );
           setCreatingLoading(false); // Reset loading on success
           toast.success("Account created Successfully", { id: toastID });
-          navigate("/user/dashboard");
+          navigate("/user/challenges");
           await getUpdateLoggedUser();
           // Sending mail -------------
           const customContent = `<!DOCTYPE html>

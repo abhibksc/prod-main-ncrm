@@ -12,10 +12,8 @@ const UserVerify = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [verificationStatus, setVerificationStatus] = useState(null);
-  const [userData, setUserData] = useState("");
-  const siteConfig = useSelector((state) => state.user.siteConfig);
 
-  //   enitial UI --------------
+  //   initial UI --------------
 
   const [cooldownTime, setCooldownTime] = useState(5);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -46,189 +44,11 @@ const UserVerify = () => {
       });
     } catch (error) {
       console.log("error in fetching user--", error);
-      toast.error("Something went wrong", { id: toastId });
+      toast.error("Something went wrong,Please try again later", {
+        id: toastId,
+      });
     }
   };
-
-  const customContent = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Withdrawal Request Confirmation - Arena Trade</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background-color: #f4f4f4;
-    }
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 5px;
-      background-color: #ffffff;
-    }
-    .header {
-      background-color: #19422df2;
-      color: #ffffff;
-      padding: 20px 15px;
-      text-align: center;
-      border-radius: 10px 10px 0 0;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: 1px;
-    }
-    .content {
-      padding: 10px 20px;
-    }
-    .cta-button {
-      display: inline-block;
-      padding: 12px 24px;
-      background-color: #2d6a4f;
-      color: #FFFFFF;
-      text-decoration: none;
-      border-radius: 5px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    .footer {
-      background-color: #19422df2;
-      color: #ffffff;
-      text-align: center;
-      padding: 5px 10px;
-      font-size: 12px;
-      border-radius: 0 0 10px 10px;
-    }
-    .footer-info {
-      margin-top: 6px;
-    }
-    .footer-info a {
-      color: #B6D0E2;
-      text-decoration: none;
-    }
-    .withdrawal-details {
-      background-color: #f8f8f8;
-      border-left: 4px solid #2d6a4f;
-      padding: 15px;
-      margin: 20px 0;
-    }
-    .withdrawal-details p {
-      margin: 5px 0;
-    }
-    .highlight {
-      font-weight: bold;
-      color: #0a2342;
-    }
-    .risk-warning {
-      color: #C70039;
-      padding: 5px;
-      font-size: 12px;
-      line-height: 1.4;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Account Verified</h1>
-    </div>
-    <div class="content">
-      <p>Dear ${userData?.firstName + " " + userData?.lastName},</p>
-      <p style="font-size: 12px;">
-        Your email has been successfully verified. You can now securely log in to your account and access all available features.
-        If you experience any issues during login, please don't hesitate to reach out for assistance. Thank you for completing the verification process.
-      </p>
-
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f8f8f8; border-left: 4px solid #2d6a4f; padding: 20px; margin: 30px 0;">
-        <tr>
-          <td>
-            <p style="margin: 10px 0; font-size: 13px;">
-              Name: <span style="font-weight: bold; color: #0a2342;">${
-                userData?.firstName + " " + userData?.lastName
-              }</span>
-            </p>
-            <p style="margin: 10px 0; font-size: 13px;">
-              Username: <span style="font-weight: bold; color: #0a2342;">${
-                userData?.email
-              }</span>
-            </p>
-          </td>
-        </tr>
-      </table>
-
-      <p>Thank you for choosing us.</p>
-      <p>Happy trading!</p>
-      <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
-
-      <h2 style="text-align: center; color: #19422df2; margin: 10px 0 10px; font-size: 24px;">Download Our Trading App</h2>
-
-      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f0f8ff; margin: 20px 0; border-radius: 15px;">
-        <tr>
-          <td align="center" style="padding: 20px;">
-            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-              <tr>
-                <td align="center" width="33%" style="padding: 0 10px;">
-                  <a href="${
-                    siteConfig?.androidDL
-                  }" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                    <img src="https://cdn-icons-png.flaticon.com/512/14/14415.png" alt="Android" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                    <span style="vertical-align: middle;">Android</span>
-                  </a>
-                </td>
-                <td align="center" width="33%" style="padding: 0 10px;">
-                  <a href="${
-                    siteConfig?.iosDL
-                  }" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                    <img src="https://cdn3.iconfinder.com/data/icons/social-media-logos-glyph/2048/5315_-_Apple-512.png" alt="iOS" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                    <span style="vertical-align: middle;">iOS</span>
-                  </a>
-                </td>
-                <td align="center" width="33%" style="padding: 0 10px;">
-                  <a href="${
-                    siteConfig?.windowsDL
-                  }" style="display: inline-block; text-decoration: none; color: #ffffff; background-color: #2d6a4f; padding: 15px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s;">
-                    <img src="https://cdn-icons-png.flaticon.com/512/71/71753.png" alt="Windows" width="24" height="24" style="vertical-align: middle; margin-right: 10px;">
-                    <span style="vertical-align: middle;">Windows</span>
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-
-      <div class="risk-warning">
-        <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.
-        <br><br>
-        Our services are not for U.S. citizens or in jurisdictions where they violate local laws.
-      </div>
-    </div>
-
-    <div class="footer">
-      <div class="footer-info">    
-        <p>${import.meta.env.VITE_EMAIL_ADDRESS}</p>
-        <p>
-          Website: <a href="${import.meta.env.VITE_EMAIL_WEBSITE}">${
-    import.meta.env.VITE_WEBSITE_NAME
-  }</a> |
-          E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL}">${
-    import.meta.env.VITE_EMAIL_EMAIL
-  }</a>
-        </p>
-        <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
-        <p>&copy; 2025 ${
-          import.meta.env.VITE_WEBSITE_NAME
-        }. All Rights Reserved</p>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`;
 
   useEffect(() => {
     const verifyEmail = async () => {
@@ -237,9 +57,6 @@ const UserVerify = () => {
           userId: id,
           token: token,
         });
-        const userRes = await backendApi.get(`/get-user?id=${id}`);
-        setUserData(userRes.data.data);
-
         setVerificationStatus("success");
         setTimeout(() => navigate("/user/login"), 5000); // Redirect to login after 5 seconds
       } catch (error) {
@@ -254,24 +71,6 @@ const UserVerify = () => {
       verifyEmail();
     }
   }, []);
-
-  useEffect(() => {
-    if (userData) {
-      const sendCustomMail = async () => {
-        try {
-          const customMailRes = await backendApi.post(`/custom-mail`, {
-            email: userData.email,
-            content: customContent,
-            subject: "Account Verified",
-          });
-        } catch (error) {
-          console.log("Error sending custom mail:", error);
-        }
-      };
-
-      sendCustomMail();
-    }
-  }, [userData]); // Runs when userData changes
 
   if (token === "000") {
     return (

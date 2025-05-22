@@ -301,10 +301,10 @@ const WithdrawalStatus = () => {
 
   // handle confirm click ----------------
   const handleConfirmAction = async (selectedDeposit) => {
-    if (isActionLoading) return; // NEW: Prevent multiple clicks if already loading
+    if (isActionLoading) return;
 
     const toastId = toast.loading("Please wait..");
-    setIsActionLoading(true); // NEW: Set action loading to true
+    setIsActionLoading(true);
 
     try {
       if (actionType === "approve") {
@@ -315,6 +315,8 @@ const WithdrawalStatus = () => {
             selectedDeposit.amount
           }&Comment=Withdrawal`
         );
+        setIsDialogOpen(false);
+
         const updateWithdrawal = await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
@@ -341,6 +343,8 @@ const WithdrawalStatus = () => {
           _id: selectedDeposit._id,
           status: "rejected",
         });
+        setIsDialogOpen(false);
+
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
@@ -442,7 +446,7 @@ const WithdrawalStatus = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-    }, 500); // 500ms debounce time
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -573,19 +577,29 @@ const WithdrawalStatus = () => {
 
                     <td className="py-2 px-4">
                       {item.status === "pending" && (
-                        <div className="flex items-center gap-5">
-                          <button
-                            className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "approve")}
-                          >
-                            <CircleCheckBig />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "reject")}
-                          >
-                            <CircleX />
-                          </button>
+                        <div>
+                          {isActionLoading ? (
+                            "Please wait.."
+                          ) : (
+                            <div className="flex items-center gap-5">
+                              <button
+                                className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "approve")
+                                }
+                              >
+                                <CircleCheckBig />
+                              </button>
+                              <button
+                                className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "reject")
+                                }
+                              >
+                                <CircleX />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                       {item.status === "approved" && (
