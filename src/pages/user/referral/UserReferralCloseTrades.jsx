@@ -144,7 +144,6 @@ const UserReferralCloseTrades = () => {
     try {
       const res = await backendApi.get(`/user-ib-close-trade/${id}`);
       const commissionsRes = res.data.data.reverse();
-      console.log("commissionsRes", commissionsRes);
       const filteredCommissions = commissionsRes
         .map((trade) => ({
           ...trade,
@@ -154,7 +153,6 @@ const UserReferralCloseTrades = () => {
             ) || null,
         }))
         .filter((trade) => trade.commission !== null); // Remove trades without matching commission
-      console.log("filteredCommissions", filteredCommissions);
       setCommissionsData(filteredCommissions);
     } catch (error) {
       console.log(error);
