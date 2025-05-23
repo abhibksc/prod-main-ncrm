@@ -29,7 +29,8 @@ const UserReferralCloseTrades = () => {
   const tableRef = useRef(null);
   const [searchParams] = useSearchParams();
   const level = searchParams.get("level");
-  // Calculate totals ---
+
+  // Calculate totals
   const totals = commissionsData.reduce(
     (acc, curr) => ({
       profit: acc.profit + Number(curr.profit || 0),
@@ -49,7 +50,7 @@ const UserReferralCloseTrades = () => {
       Symbol: row.symbol,
       Profit: Number(row.profit).toFixed(4),
       Volume: Number(row.lotSize).toFixed(4),
-      Rebate: Number(row.commissionAmount).toFixed(4),
+      Rebate: Number(row.commission.commissionAmount).toFixed(4),
       Status: row.isCalculated ? "Completed" : "Pending",
     }));
 
@@ -142,9 +143,8 @@ const UserReferralCloseTrades = () => {
     setIsLoading(true);
     try {
       const res = await backendApi.get(`/user-ib-close-trade/${id}`);
-      const commissions = res.data.data.reverse();
-
-      const filteredCommissions = commissions
+      const commissionsRes = res.data.data.reverse();
+      const filteredCommissions = commissionsRes
         .map((trade) => ({
           ...trade,
           commission:
@@ -152,8 +152,7 @@ const UserReferralCloseTrades = () => {
               (commission) => commission.level === Number(level)
             ) || null,
         }))
-        .filter((trade) => trade.commission !== null);
-
+        .filter((trade) => trade.commission !== null); // Remove trades without matching commission
       setCommissionsData(filteredCommissions);
     } catch (error) {
       console.log(error);
@@ -318,7 +317,7 @@ const UserReferralCloseTrades = () => {
                   </td>
                   <td className="text-center text-sm sm:text-base">
                     <div className="flex flex-col justify-center items-center">
-                      {value?.commission?.isCalculated === true ? (
+                      {value?.commission.isCalculated === true ? (
                         <div className="text-green-500">
                           <CheckCheck />
                         </div>
