@@ -136,24 +136,26 @@ const UserReferralsDetails = () => {
                   {value?.accountNumber}
                 </td>
                 <td className="text-sm text-green-400 text-center sm:text-base">
-                  {liveData?.find(
-                    (item) => item.MT5Account === +value?.accountNumber
-                  )?.Equity ?? (
-                    <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
-                  )}
+                  {+value?.accountNumber <= 0
+                    ? "--"
+                    : liveData?.find(
+                        (item) => item.MT5Account === +value?.accountNumber
+                      )?.Equity ?? (
+                        <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                      )}
                 </td>
                 <td className="text-center text-sm sm:text-base">
                   {value?.level}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalLot?.toFixed(2) || "0"}
+                  {value?.totalLot?.toFixed(4) || "0"}
                 </td>
                 <td className="text-center text-sm sm:text-base">
-                  {value?.totalCommission?.toFixed(2) || "0"}
+                  {value?.totalCommission?.toFixed(4) || "0"}
                 </td>
                 <td className=" text-sm sm:text-base">
                   <Link
-                    to={`/user/referral-close-trades/${value?.accountNumber}`}
+                    to={`/user/referral-close-trades/${value?.accountNumber}?level=${value?.level}`}
                   >
                     <div className="flex justify-center text-blue-500 hover:text-blue-600 hover:scale-105 items-center transition-all">
                       <ArrowRight></ArrowRight>
