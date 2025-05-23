@@ -136,11 +136,13 @@ const UserReferralsDetails = () => {
                   {value?.accountNumber}
                 </td>
                 <td className="text-sm text-green-400 text-center sm:text-base">
-                  {liveData?.find(
-                    (item) => item.MT5Account === +value?.accountNumber
-                  )?.Equity ?? (
-                    <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
-                  )}
+                  {+value?.accountNumber <= 0
+                    ? "--"
+                    : liveData?.find(
+                        (item) => item.MT5Account === +value?.accountNumber
+                      )?.Equity ?? (
+                        <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                      )}
                 </td>
                 <td className="text-center text-sm sm:text-base">
                   {value?.level}
