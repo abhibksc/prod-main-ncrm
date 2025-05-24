@@ -10,6 +10,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { setTotalFinalPnL } from "@/redux/user/userSlice";
+import useUserCopyRequest from "@/hooks/user/UseUserCopyRequest";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -78,7 +80,8 @@ const UserDashboardBalanceCards = () => {
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalWithdrawals, setTotalWithdrawals] = useState(0);
   const dispatch = useDispatch();
-
+  const { connectWebSocket } = UseUserHook();
+  connectWebSocket();
   const isPositive = parseFloat(totalFinalPnL) >= 0;
 
   const fetchAccountsInfo = async () => {

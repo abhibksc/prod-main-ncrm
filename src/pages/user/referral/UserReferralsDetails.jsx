@@ -8,6 +8,7 @@ import ModernHeading from "@/lib/ModernHeading";
 import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
 import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
 import Loader from "@/components/Loader/Loader";
+import { useSocketInfoByAccounts } from "@/hooks/user/UseSocketInfoByAcccounts";
 
 const UserReferralsDetails = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -17,10 +18,8 @@ const UserReferralsDetails = () => {
     Number(value.accountNumber)
   );
 
-  const liveData = useGetInfoByAccounts(allAccounts);
-  // const liveData = [];
-  // const liveData = useGetMultipleIdInfo(allAccounts);
-  // console.log("liveData", liveData);
+  const liveData = useSocketInfoByAccounts(allAccounts);
+
   // fetch all commissions data-----
   const fetchCommissions = async () => {
     setIsLoading(true); // Start loading
