@@ -19,6 +19,7 @@ import {
 } from "@/utils/CustomFunctions";
 import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
 import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
+import { useSocketInfoByAccounts } from "@/hooks/user/UseSocketInfoByAcccounts";
 
 const UserChallenges = () => {
   const [selectedchallenge, setSelectedChallenge] = useState("");
@@ -29,7 +30,9 @@ const UserChallenges = () => {
     logggedUser?.accounts?.map((acc) => +acc.accountNumber) || [];
   const liveData = useGetInfoByAccounts(accountIds);
 
-  console.log("liveData", liveData);
+  const socketData = useSocketInfoByAccounts(accountIds);
+  console.log("socketData 2", socketData);
+  // console.log("liveData", liveData);
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
     setSelectedChallenge(value);
@@ -96,21 +99,21 @@ const UserChallenges = () => {
                     {value?.leverage}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {liveData?.find(
+                    {socketData?.find(
                       (item) => item.MT5Account === +value?.accountNumber
                     )?.Balance ?? (
                       <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
                     )}
                   </td>
                   <td className="p-2 text-center text-green-500 sm:p-3 text-sm sm:text-base">
-                    {liveData?.find(
+                    {socketData?.find(
                       (item) => item.MT5Account === +value?.accountNumber
                     )?.Equity ?? (
                       <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
                     )}
                   </td>
                   {(() => {
-                    const info = liveData?.find(
+                    const info = socketData?.find(
                       (i) => i.MT5Account === +value?.accountNumber
                     );
                     return (
