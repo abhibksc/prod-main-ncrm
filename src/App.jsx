@@ -4,7 +4,6 @@ import Header from "./components/admin/Header";
 import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import UseAdminHook from "./hooks/admin/UseAdminHook";
 import { backendApi } from "./utils/apiClients";
 import md5 from "md5";

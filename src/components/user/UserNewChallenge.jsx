@@ -69,6 +69,13 @@ const UserNewChallenge = () => {
   }
 
   const createAccountHandler = async () => {
+    if (!loggedUser?.kycVerified) {
+      toast.error("KYC verification is required before opening an account.");
+      setTimeout(() => {
+        navigate("/user/account-details");
+      }, 200);
+      return;
+    }
     const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
     if (!creatingLoading) {
       setCreatingLoading(true); // Set loading to true at the start
