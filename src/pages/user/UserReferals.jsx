@@ -22,6 +22,7 @@ import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
 import { backendApi, metaApi } from "@/utils/apiClients";
+import { CFgenerateRandomNumber } from "@/utils/CustomFunctions";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("commission");
@@ -51,16 +52,24 @@ const UserReferal = () => {
   // generate IB account handler ------------
 
   const generateHandler = async () => {
-    function generateRandomNumber(digits) {
-      if (digits <= 0) throw new Error("Digits must be a positive number");
-      const min = Math.pow(10, digits - 1);
-      const max = Math.pow(10, digits) - 1;
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
+    // const randomNumber = 250410236;
+    const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
 
     const toastId = toast.loading("Generating..");
+    try {
+      const check = await metaApi.get(
+        `/GetUserInfo?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${randomNumber}`
+      );
+      if (check.data.MT5Account) {
+        console.log("Account already exists");
+        toast.error("Please try again..", { id: toastId });
+        return;
+      }
+    } catch (error) {
+      console.log("beauty error");
+    }
 
     try {
       const groupRes = await metaApi.get(
@@ -76,6 +85,13 @@ const UserReferal = () => {
         Leverage: 100,
         Group_Name: doubleQuotedEnvGroup,
       });
+      const disableTradingAccount = await metaApi.get(
+        `EnableTrading?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${generateMtId.data.MT5Account}&Status=0`
+      );
+      console.log("disableTradingAccount", disableTradingAccount.data);
+
       if (generateMtId.data.MT5Account > 0) {
         const updateLoggedUser = await backendApi.put(`/update-user`, {
           id: loggedUser._id,
@@ -89,7 +105,7 @@ const UserReferal = () => {
       }
     } catch (error) {
       console.log("error", error);
-      toast.error(" Something went wrong", { id: toastId });
+      toast.error(" Something went wrong, Please try again", { id: toastId });
     }
   };
   // fetch all commissions data------------
