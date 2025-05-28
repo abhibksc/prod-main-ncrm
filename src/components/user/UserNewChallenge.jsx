@@ -9,6 +9,7 @@ import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import OpenAccountMail from "../emails/OpenAccountMail";
+import { CFgenerateRandomNumber } from "@/utils/CustomFunctions";
 
 const UserNewChallenge = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -62,70 +63,107 @@ const UserNewChallenge = () => {
     }
   };
 
-  function generateRandomNumber(digits) {
-    if (digits <= 0) throw new Error("Digits must be a positive number");
-    const min = Math.pow(10, digits - 1);
-    const max = Math.pow(10, digits) - 1;
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-
   const createAccountHandler = async () => {
-    const randomNumber = generateRandomNumber(siteConfig?.mt5Digit || 6);
-    if (!creatingLoading) {
-      setCreatingLoading(true);
-      const toastID = toast.loading("Please wait..");
+    if (creatingLoading) return;
+
+    setCreatingLoading(true);
+    const toastID = toast.loading("Please wait...");
+
+    let retries = 0;
+    let accountCreated = false;
+
+    while (retries < 5 && !accountCreated) {
+      // const randomNumber = 250410236;
+      const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
+
+      let accountExists = false;
+
       try {
-        const generateMt5 = await metaApi.post(`/Adduser`, {
+        const check = await metaApi.get(
+          `/GetUserInfo?Manager_Index=${
+            import.meta.env.VITE_MANAGER_INDEX
+          }&MT5Account=${randomNumber}`
+        );
+        if (check.data.MT5Account) {
+          accountExists = true;
+          console.log("Account already exists, retrying...");
+          retries++;
+          continue;
+        }
+      } catch (error) {
+        console.log("error?.response?.data?.message", error.response.status);
+        if (error.response && error.response.status === 404) {
+          // Account doesn't exist - proceed
+          accountExists = false;
+        } else {
+          // Some other error
+          console.error("Check account failed:", error);
+          retries++;
+          continue;
+        }
+      }
+
+      try {
+        const res = await metaApi.post(`/Adduser`, {
           Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
           MT5Account: randomNumber,
-          Name: loggedUser.firstName + " " + loggedUser.lastName,
+          Name: `${loggedUser.firstName} ${loggedUser.lastName}`,
           Country: loggedUser.Country,
           Leverage: formData.leverage,
           Group_Name: formData.apiGroup,
         });
 
-        if (generateMt5.data.MT5Account > 0) {
-          const addAccountToDB = await backendApi.post(
-            `/add-mt5-account/${loggedUser._id}`,
-            {
-              accountNumber: generateMt5.data.MT5Account,
-              leverage: formData.leverage,
-              accountType: formData.accountType,
-              groupName: formData.apiGroup,
-              masterPassword: generateMt5.data.Master_Pwd,
-              investorPassword: generateMt5.data.Investor_Pwd,
-              platform: formData.platform,
-            }
-          );
-          toast.success("Account created Successfully", { id: toastID });
-          navigate("/user/challenges");
-          await getUpdateLoggedUser();
-          // Sending mail -------------
+        const mt5Account = res.data.MT5Account;
+
+        if (mt5Account > 0) {
+          await backendApi.post(`/add-mt5-account/${loggedUser._id}`, {
+            accountNumber: mt5Account,
+            leverage: formData.leverage,
+            accountType: formData.accountType,
+            groupName: formData.apiGroup,
+            masterPassword: res.data.Master_Pwd,
+            investorPassword: res.data.Investor_Pwd,
+            platform: formData.platform,
+          });
+
           try {
-            const customContent = OpenAccountMail({
+            const emailContent = OpenAccountMail({
               loggedUser,
-              generateMt5,
+              generateMt5: res,
               formData,
               siteConfig,
             });
-            const customMailRes = await backendApi.post(`/custom-mail`, {
+
+            await backendApi.post(`/custom-mail`, {
               email: loggedUser.email,
-              content: customContent,
+              content: emailContent,
               subject: "Account Created",
             });
-          } catch (error) {
-            console.log("error sending mail", error);
+          } catch (mailErr) {
+            console.error("Email failed:", mailErr);
           }
+
+          toast.success("Account created successfully!", { id: toastID });
+          await getUpdateLoggedUser();
+          navigate("/user/challenges");
+          accountCreated = true;
         } else {
-          toast.error("Please Retry again!!", { id: toastID });
+          console.warn("MT5Account generation failed, retrying...");
+          retries++;
         }
-      } catch (error) {
-        toast.error("Something went Wrong!! Please try again", { id: toastID });
-        console.log("add account error---", error);
-      } finally {
-        setCreatingLoading(false);
+      } catch (err) {
+        console.error("Error in account creation attempt:", err);
+        retries++;
       }
     }
+
+    if (!accountCreated) {
+      toast.error("Failed to create account. Please try again later.", {
+        id: toastID,
+      });
+    }
+
+    setCreatingLoading(false);
   };
 
   const fetchAccountConfigurations = async () => {
