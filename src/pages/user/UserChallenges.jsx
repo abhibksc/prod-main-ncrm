@@ -17,21 +17,22 @@ import {
   CFcalculateTimeSinceJoined,
   CFformatDate,
 } from "@/utils/CustomFunctions";
-import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
+// import { useGetMultipleIdInfo } from "@/hooks/user/UseGetMultipleIdInfo";
 import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
-import { useSocketInfoByAccounts } from "@/hooks/user/UseSocketInfoByAcccounts";
+// import { useSocketInfoByAccounts } from "@/hooks/user/UseSocketInfoByAcccounts";
 
 const UserChallenges = () => {
   const [selectedchallenge, setSelectedChallenge] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const logggedUser = useSelector((store) => store.user.loggedUser);
   const siteConfig = useSelector((store) => store.user.siteConfig);
+  const logggedUser = useSelector((store) => store.user.loggedUser);
   const accountIds =
     logggedUser?.accounts?.map((acc) => +acc.accountNumber) || [];
-  const liveData = useGetInfoByAccounts(accountIds);
-
-  const socketData = useSocketInfoByAccounts(accountIds);
-  console.log("socketData 2", socketData);
+  useGetInfoByAccounts(accountIds, "accounts");
+  const { accountsData } = useSelector((store) => store.user);
+  // console.log("liveData---", liveData);
+  // const socketData = useSocketInfoByAccounts(accountIds);
+  // console.log("socketData 2", socketData);
   // console.log("liveData", liveData);
   const handleMoreInfo = (value) => {
     setIsDialogOpen(true);
@@ -99,21 +100,21 @@ const UserChallenges = () => {
                     {value?.leverage}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {socketData?.find(
+                    {accountsData?.find(
                       (item) => item.MT5Account === +value?.accountNumber
                     )?.Balance ?? (
                       <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
                     )}
                   </td>
                   <td className="p-2 text-center text-green-500 sm:p-3 text-sm sm:text-base">
-                    {socketData?.find(
+                    {accountsData?.find(
                       (item) => item.MT5Account === +value?.accountNumber
                     )?.Equity ?? (
                       <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
                     )}
                   </td>
                   {(() => {
-                    const info = socketData?.find(
+                    const info = accountsData?.find(
                       (i) => i.MT5Account === +value?.accountNumber
                     );
                     return (
