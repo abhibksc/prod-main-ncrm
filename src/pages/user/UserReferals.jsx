@@ -70,10 +70,24 @@ const UserReferal = () => {
     const toastId = toast.loading("Generating..");
 
     try {
+      const check = await metaApi.get(
+        `/GetUserInfo?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${randomNumber}`
+      );
+      if (check.data.MT5Account) {
+        console.log("Account already exists");
+        toast.error("Please try again..", { id: toastId });
+        return;
+      }
+    } catch (error) {
+      console.log("beauty error");
+    }
+
+    try {
       const groupRes = await metaApi.get(
         `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
       );
-
       const envGroup = String(groupRes.data.lstGroups[0]);
       const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
       const generateMtId = await metaApi.post(`/Adduser`, {
@@ -83,6 +97,13 @@ const UserReferal = () => {
         Leverage: 100,
         Group_Name: doubleQuotedEnvGroup,
       });
+      const disableTradingAccount = await metaApi.get(
+        `EnableTrading?Manager_Index=${
+          import.meta.env.VITE_MANAGER_INDEX
+        }&MT5Account=${generateMtId.data.MT5Account}&Status=0`
+      );
+      console.log("disableTradingAccount", disableTradingAccount.data);
+
       if (generateMtId.data.MT5Account > 0) {
         const updateLoggedUser = await backendApi.put(`/update-user`, {
           id: loggedUser._id,
@@ -96,7 +117,7 @@ const UserReferal = () => {
       }
     } catch (error) {
       console.log("error", error);
-      toast.error(" Something went wrong", { id: toastId });
+      toast.error(" Something went wrong, Please try again", { id: toastId });
     }
   };
   // fetch all commissions data------------

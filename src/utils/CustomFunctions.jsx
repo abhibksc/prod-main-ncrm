@@ -68,3 +68,12 @@ export const CFformattedDateTime =
     second: "2-digit",
     hour12: false, // 12-hour format with AM/PM
   });
+
+// random number ----------------------
+
+export function CFgenerateRandomNumber(digits) {
+  if (digits <= 0) throw new Error("Digits must be a positive number");
+  const min = Math.pow(10, digits - 1);
+  const max = Math.pow(10, digits) - 1;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
