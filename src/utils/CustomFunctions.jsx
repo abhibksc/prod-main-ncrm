@@ -1,4 +1,4 @@
-// format date ---------------------
+// format date MONGODB ---------------------
 
 export function CFformatDate(isoDateString) {
   const date = new Date(isoDateString);
@@ -18,7 +18,7 @@ export function CFformatDate(isoDateString) {
 
   return `${formattedDate}, ${formattedTime}`;
 }
-// since joined ---------------
+// since joined MONGODB ---------------
 
 export function CFcalculateTimeSinceJoined(isoDateString) {
   const joinDate = new Date(isoDateString);
@@ -55,14 +55,23 @@ export function CFcalculateTimeSinceJoined(isoDateString) {
   return timeString.join(", ") + " ago";
 }
 
-const currentDateTime = new Date();
+// current date and time ----------------------
 
 export const CFformattedDateTime =
-  currentDateTime.toLocaleDateString("en-GB") +
+  new Date().toLocaleDateString("en-GB") +
   ", " +
-  currentDateTime.toLocaleTimeString("en-US", {
+  new Date().toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
     hour12: false, // 12-hour format with AM/PM
   });
+
+// random number ----------------------
+
+export function CFgenerateRandomNumber(digits) {
+  if (digits <= 0) throw new Error("Digits must be a positive number");
+  const min = Math.pow(10, digits - 1);
+  const max = Math.pow(10, digits) - 1;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}

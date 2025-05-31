@@ -10,6 +10,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { setTotalFinalPnL } from "@/redux/user/userSlice";
+import useUserCopyRequest from "@/hooks/user/UseUserCopyRequest";
+import UseUserHook from "@/hooks/user/UseUserHook";
+import { useGetInfoByAccounts } from "@/hooks/user/UseGetInfoByAccounts";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -73,12 +76,19 @@ const BalanceCard = ({
 };
 
 const UserDashboardBalanceCards = () => {
-  const loggedUser = useSelector((store) => store.user.loggedUser);
   const totalFinalPnL = useSelector((store) => store.user.totalFinalPnL);
   const [totalDeposits, setTotalDeposits] = useState(0);
   const [totalWithdrawals, setTotalWithdrawals] = useState(0);
-  const dispatch = useDispatch();
+  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const accountIds =
+    loggedUser?.accounts?.map((acc) => +acc.accountNumber) || [];
+  useGetInfoByAccounts(accountIds, "accounts");
+  const { accountsStats } = useSelector((store) => store.user);
+  // console.log("accountStats", accountsStats);
 
+  const dispatch = useDispatch();
+  // const { connectWebSocket } = UseUserHook();
+  // connectWebSocket();
   const isPositive = parseFloat(totalFinalPnL) >= 0;
 
   const fetchAccountsInfo = async () => {
@@ -158,7 +168,7 @@ const UserDashboardBalanceCards = () => {
       <BalanceCard
         icon={isPositive ? TrendingUp : TrendingDown}
         title="Available Balance"
-        value={`${totalFinalPnL} USD`}
+        value={`${accountsStats?.totalEquity} USD`}
         borderColor="var(--theme-color)"
         delay={0.4}
         isProfit={isPositive}
