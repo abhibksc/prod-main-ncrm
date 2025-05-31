@@ -65,6 +65,13 @@ const UserNewChallenge = () => {
 
   const createAccountHandler = async () => {
     if (creatingLoading) return;
+    if (!loggedUser?.kycVerified) {
+      toast.error("KYC verification is required before opening an account.");
+      setTimeout(() => {
+        navigate("/user/account-details");
+      }, 200);
+      return;
+    }
 
     setCreatingLoading(true);
     const toastID = toast.loading("Please wait...");
