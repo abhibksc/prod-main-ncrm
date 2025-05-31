@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { BarChart2 } from "lucide-react";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
@@ -20,13 +18,13 @@ export default function UserTradeHistory() {
   const currentDate = new Date().toISOString().slice(0, 10);
 
   const fetchTradeData = async (tradeType) => {
+    setActiveTab(tradeType);
     setLoading(true);
     setError(null);
     try {
       setTradeData([]);
       const data = [];
       for (const account of loggedUser.accounts) {
-        console.log("account,", account.accountNumber);
         let res;
         if (tradeType === "closed") {
           res = await metaApi.get(
@@ -46,29 +44,24 @@ export default function UserTradeHistory() {
         // console.log("res trade history--", res.data);
         if (Array.isArray(res.data)) {
           data.push(...res.data);
-        } else {
-          console.error("No data found for account:", account.accountNumber);
         }
         // After all data is collected, update the state once
         if (data.length > 0) {
-          console.log("data--", data);
           setTradeData(data);
           setError("");
+        } else if (data.length == 0) {
+          setTradeData([]);
+          setError("No data found. Please try again.");
         }
+        setLoading(false);
       }
-      // setActiveTab(tradeType);
     } catch (error) {
       console.error("Error fetching trade data:", error);
       setError("Failed to fetch trade data. Please try again.");
       setTradeData([]);
-    } finally {
-      if (tradeData.length == 0) {
-        setError("No data found. Please try again.");
-      }
       setLoading(false);
     }
   };
-  console.log("state trade history--", tradeData);
   const handleTabClick = (tradeType) => {
     setActiveTab(tradeType);
     fetchTradeData(tradeType);

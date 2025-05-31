@@ -93,7 +93,6 @@ const DepositsStatus = () => {
   };
   // fetch data------------------
   const fetchApiData = async () => {
-    setLoading(true);
     try {
       let finalRes;
 
@@ -521,9 +520,8 @@ const DepositsStatus = () => {
             <thead className="bg-primary-400 text-white sticky top-0 z-10">
               <tr>
                 <th className="py-2 px-4 text-left">User | Email</th>
-                {(status === "all" || status === "approved") && (
-                  <th className="py-2 px-4 text-left">MT5 AC</th>
-                )}
+
+                <th className="py-2 px-4 text-left">MT5 AC</th>
                 <th className="py-2 px-4 text-left">AC Type</th>
                 <th className="py-2 px-4 text-left">Deposit</th>
                 {status === "rejected" || status === "approved" ? (
@@ -561,9 +559,8 @@ const DepositsStatus = () => {
                           : "Not found!!"}
                       </div>
                     </td>
-                    {(status === "all" || status === "approved") && (
-                      <td className="py-2 px-4">{item?.mt5Account || "N/A"}</td>
-                    )}
+                    <td className="py-2 px-4">{item?.mt5Account || "N/A"}</td>
+
                     <td className="py-2 px-4">
                       <span className="bg-primary-400/20 whitespace-nowrap text-white px-2 py-1 rounded-full text-sm">
                         {item?.accountType}
@@ -718,7 +715,12 @@ const DepositsStatus = () => {
                         ${selectedDeposit.deposit}
                       </span>
                     </p>
-
+                    <p>
+                      <span className="font-medium">AC Number:</span>{" "}
+                      <span className="text-gray-200 font-semibold">
+                        {selectedDeposit?.mt5Account}
+                      </span>
+                    </p>
                     <p>
                       <span className="font-medium">AC Type:</span>{" "}
                       <span className="text-gray-200 font-semibold">
