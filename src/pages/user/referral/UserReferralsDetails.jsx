@@ -163,15 +163,20 @@ const UserReferralsDetails = () => {
                     <td className="text-center">{users[0]?.country || "-"}</td>
                     <td className="text-center">{users[0]?.accountNumber}</td>
                     <td className="text-green-400 text-center">
-                      {+users[0]?.accountNumber <= 0
-                        ? "--"
-                        : ibAccountsData?.find(
+                      {ibAccountsData ? (
+                        +users[0].accountNumber <= 0 ? (
+                          "--"
+                        ) : (
+                          ibAccountsData?.find(
                             (item) =>
-                              item.MT5Account === +users[0]?.accountNumber
-                          )?.Equity ?? (
-                            <Loader2 className="animate-spin mx-auto" />
-                          )}
+                              item.MT5Account === +users[0].accountNumber
+                          )?.Equity ?? "--"
+                        )
+                      ) : (
+                        <Loader2 className="animate-spin mx-auto" />
+                      )}
                     </td>
+
                     <td className="text-center">{users[0]?.level}</td>
                     <td className="text-center">
                       {users[0]?.totalLot?.toFixed(4) || "0"}
@@ -197,17 +202,27 @@ const UserReferralsDetails = () => {
                           <p>{user.name}</p>
                           <p className="text-gray-400">{user.email}</p>
                         </td>
-                        <td className="text-center">{user.country || "-"}</td>
+                        <td className="text-center">{user.country || "-"}</td>{" "}
                         <td className="text-center">{user.accountNumber}</td>
                         <td className="text-green-400 text-center">
+                          {/* {ibAccountsData ? (
+                            +user.accountNumber <= 0 ? (
+                              "--"
+                            ) : (
+                              ibAccountsData?.find(
+                                (item) =>
+                                  item.MT5Account === +user.accountNumber
+                              )?.Equity ?? "--"
+                            )
+                          ) : (
+                            <Loader2 className="animate-spin mx-auto" />
+                          )} */}
                           {+user.accountNumber <= 0
                             ? "--"
                             : ibAccountsData?.find(
                                 (item) =>
                                   item.MT5Account === +user.accountNumber
-                              )?.Equity ?? (
-                                <Loader2 className="animate-spin mx-auto" />
-                              )}
+                              )?.Equity ?? "--"}
                         </td>
                         <td className="text-center">{user.level}</td>
                         <td className="text-center">

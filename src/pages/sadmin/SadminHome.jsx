@@ -4,6 +4,7 @@ import AccountConfiguration from "../admin/AccountConfiguration";
 import { useSelector } from "react-redux";
 import SadminAdminInfo from "./SadminInfo";
 import SadminSiteConfiguration from "@/components/s-admin/SadminSiteConfiguration";
+import { backendApi } from "@/utils/apiClients";
 // import SadminAdminInfo from "@/components/admin/s-admin/SadminAdminInfo";
 
 const PasswordScreen = ({ onAuthenticate }) => {
@@ -12,10 +13,13 @@ const PasswordScreen = ({ onAuthenticate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (password === import.meta.env.VITE_S_ADMIN_PASSWORD) {
+    setIsLoading(true);
+    try {
+      const res = await backendApi.post(`/s-admin-login`, {
+        password: password,
+      });
       // Set expiry to 1 hour from now
       const expiryDate = new Date();
       expiryDate.setTime(expiryDate.getTime() + 60 * 60 * 1000); // 60 minutes * 60 seconds * 1000 ms
@@ -28,12 +32,14 @@ const PasswordScreen = ({ onAuthenticate }) => {
 
       sessionStorage.setItem("adminAuth", JSON.stringify(authData));
       onAuthenticate(true);
-    } else {
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setIsLoading(false);
       setError("Invalid password");
       setTimeout(() => setError(""), 3000);
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
       <div className="relative w-full max-w-md">
