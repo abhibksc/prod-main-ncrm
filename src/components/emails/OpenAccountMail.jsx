@@ -131,20 +131,19 @@ export default function OpenAccountMail({
 
               </div>
                <div class="footer">
-                <div class="footer-info">
-           <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+                 <div class="footer-info">
                   <p>Website: <a href="https://${
                     import.meta.env.VITE_EMAIL_WEBSITE
                   }"> ${
     import.meta.env.VITE_EMAIL_WEBSITE
-  } </a> | E-mail: <a href="mailto:${
-    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
-  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+  } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
+    import.meta.env.VITE_EMAIL_EMAIL || ""
+  }</a></p>
                   <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || "Forex"
+                    import.meta.env.VITE_WEBSITE_NAME || ""
                   } traders. Please visit this page to know more about our Privacy Policy.</p>
                   <p>© 2025 ${
-                    import.meta.env.VITE_WEBSITE_NAME || "Forex"
+                    import.meta.env.VITE_WEBSITE_NAME || ""
                   }. All Rights Reserved</p>
                 </div>
               </div>
