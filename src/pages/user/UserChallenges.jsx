@@ -100,17 +100,21 @@ const UserChallenges = () => {
                     {value?.leverage}
                   </td>
                   <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                    {accountsData?.find(
-                      (item) => item.MT5Account === +value?.accountNumber
-                    )?.Balance ?? (
-                      <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                    {accountsData ? (
+                      accountsData.find(
+                        (item) => item.MT5Account === +value?.accountNumber
+                      )?.Balance ?? "--"
+                    ) : (
+                      <Loader2 className="animate-spin text-center mx-auto" />
                     )}
                   </td>
                   <td className="p-2 text-center text-green-500 sm:p-3 text-sm sm:text-base">
-                    {accountsData?.find(
-                      (item) => item.MT5Account === +value?.accountNumber
-                    )?.Equity ?? (
-                      <Loader2 className=" animate-spin text-center mx-auto"></Loader2>
+                    {accountsData ? (
+                      accountsData.find(
+                        (item) => item.MT5Account === +value?.accountNumber
+                      )?.Equity ?? "--"
+                    ) : (
+                      <Loader2 className="animate-spin text-center mx-auto" />
                     )}
                   </td>
                   {(() => {
@@ -127,7 +131,9 @@ const UserChallenges = () => {
                             : ""
                         }`}
                       >
-                        {info?.Profit ?? (
+                        {accountsData ? (
+                          info?.Profit ?? "--"
+                        ) : (
                           <Loader2 className="animate-spin text-center mx-auto" />
                         )}
                       </td>

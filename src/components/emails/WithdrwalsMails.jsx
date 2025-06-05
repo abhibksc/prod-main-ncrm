@@ -117,18 +117,18 @@ const withdrawRequestMail = ({ loggedUser, amount, accountBalance }) => {
     
         </div>
       <div class="footer">
-          <div class="footer-info">    
-            <p>${import.meta.env.VITE_EMAIL_ADDRESS}</p>
-            <p>Website: <a href=${import.meta.env.VITE_EMAIL_WEBSITE}>${
-    import.meta.env.VITE_WEBSITE_NAME
-  }</a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL}">${
-    import.meta.env.VITE_EMAIL_EMAIL
+           <div class="footer-info">
+                  <p>Website: <a href="https://${
+                    import.meta.env.VITE_EMAIL_WEBSITE
+                  }"> ${
+    import.meta.env.VITE_EMAIL_WEBSITE
+  } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
+    import.meta.env.VITE_EMAIL_EMAIL || ""
   }</a></p>
-            <p>We sent out this message to all existing traders. Please visit this page to know more about our Privacy Policy.</p>
-            <p>&copy; 2025 ${
-              import.meta.env.VITE_WEBSITE_NAME
-            }. All Rights Reserved</p>
-          </div>
+                  <p>© 2025 ${
+                    import.meta.env.VITE_WEBSITE_NAME || ""
+                  }. All Rights Reserved</p>
+                </div>
         </div>
       </div>
     </body>

@@ -10,14 +10,12 @@ import {
   Gift,
   HandCoins,
   Share2Icon,
-  Infinity,
 } from "lucide-react";
 import { FaFacebookF, FaShareAlt, FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
@@ -52,7 +50,7 @@ const UserReferal = () => {
   // generate IB account handler ------------
 
   const generateHandler = async () => {
-    // const randomNumber = 250410236;
+    // const randomNumber = 345853;
     const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
 
     const toastId = toast.loading("Generating..");
@@ -90,7 +88,6 @@ const UserReferal = () => {
           import.meta.env.VITE_MANAGER_INDEX
         }&MT5Account=${generateMtId.data.MT5Account}&Status=0`
       );
-      console.log("disableTradingAccount", disableTradingAccount.data);
 
       if (generateMtId.data.MT5Account > 0) {
         const updateLoggedUser = await backendApi.put(`/update-user`, {
@@ -105,7 +102,9 @@ const UserReferal = () => {
       }
     } catch (error) {
       console.log("error", error);
-      toast.error(" Something went wrong, Please try again", { id: toastId });
+      toast.error(`Please Try again later. ${error?.response?.data?.code}`, {
+        id: toastId,
+      });
     }
   };
   // fetch all commissions data------------
