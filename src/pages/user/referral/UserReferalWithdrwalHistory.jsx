@@ -79,7 +79,7 @@ const UserReferalWithdrwalHistory = () => {
     setError(null);
     try {
       const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
-      setChallengesData(res.data.data || []);
+      setChallengesData(res.data.data.reverse() || []);
     } catch (error) {
       console.error("Error in fetch user challenges", error);
       setError("Failed to fetch withdrawal history. Please try again later.");
