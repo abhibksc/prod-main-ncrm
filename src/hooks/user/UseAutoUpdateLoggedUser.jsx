@@ -11,7 +11,7 @@ const useAutoUpdateLoggedUser = () => {
     if (!loggedUser?._id) return;
 
     const fetchUser = async () => {
-      console.log("called user");
+      //   console.log("called user");
       try {
         const res = await backendApi.get(`/get-user?id=${loggedUser._id}`);
         dispatch(setLoggedUser(res.data.data));

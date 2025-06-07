@@ -1,10 +1,8 @@
-import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
-import { backendApi } from "@/utils/apiClients";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { PiHandWithdrawBold } from "react-icons/pi";
+import UseIbWithdrawalHistory from "@/hooks/user/ib/UseIbWithdrawalHistory";
 
 const UserIBcards = ({ commissionsData }) => {
   const totalCommissionLength = commissionsData?.length;
@@ -12,32 +10,14 @@ const UserIBcards = ({ commissionsData }) => {
     (increment, value) => increment + Number(value.totalCommission),
     0
   );
-  const [balance, userInfoData] = UseCommissionBalance();
-  const [WithdarwalSum, setWithdrawalSum] = useState(0);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-
-  // fetch withdrawal history ---
-  const fetchHistoryData = async () => {
-    try {
-      const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
-      const totalSum = res.data.data
-        .filter((value) => value.status === "approved")
-        .reduce((total, value) => total + value.amount, 0);
-      setWithdrawalSum(totalSum);
-    } catch (error) {
-      console.log("error in fetch user challenges", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHistoryData();
-  }, [balance, userInfoData, WithdarwalSum]);
+  const { totalApprovedWithdrawal } = UseIbWithdrawalHistory();
 
   const stats = {
     totalIBs: Number(totalCommissionLength), // Assuming it's already an integer
     totalCommission: Number(totalCommissionValue).toFixed(4),
-    availableCommission: Number(balance).toFixed(4),
-    pendingWithdrawals: `$${Number(WithdarwalSum).toFixed(4)}`,
+    availableCommission: Number(loggedUser?.ibBalance).toFixed(4),
+    pendingWithdrawals: `$${Number(totalApprovedWithdrawal || 0).toFixed(4)}`,
   };
 
   return (

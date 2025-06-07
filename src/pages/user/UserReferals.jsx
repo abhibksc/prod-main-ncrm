@@ -33,7 +33,7 @@ const UserReferal = () => {
   const extractedUrl = new URL(currentUrl).origin;
   const [commissionsData, setCommissionsData] = useState([]);
   const siteConfig = useSelector((state) => state.user.siteConfig);
-  useAutoUpdateLoggedUser();
+  // useAutoUpdateLoggedUser();
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
