@@ -151,7 +151,7 @@ const UserInvesterPassword = () => {
     
         </div>
       <div class="footer">
-          <div class="footer-info">
+         <div class="footer-info">
                   <p>Website: <a href="https://${
                     import.meta.env.VITE_EMAIL_WEBSITE
                   }"> ${
@@ -159,9 +159,6 @@ const UserInvesterPassword = () => {
   } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
     import.meta.env.VITE_EMAIL_EMAIL || ""
   }</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
                   <p>© 2025 ${
                     import.meta.env.VITE_WEBSITE_NAME || ""
                   }. All Rights Reserved</p>

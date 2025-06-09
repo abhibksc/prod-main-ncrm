@@ -93,7 +93,6 @@ const DepositsStatus = () => {
   };
   // fetch data------------------
   const fetchApiData = async () => {
-    setLoading(true);
     try {
       let finalRes;
 
@@ -151,7 +150,7 @@ const DepositsStatus = () => {
     setIsDialogOpen(true);
   };
 
-  console.log("selected deposit!!!!", selectedDeposit);
+  // console.log("selected deposit!!!!", selectedDeposit);
 
   // on confirm api handler  ------------------------------
   const customContent = `<!DOCTYPE html>
@@ -273,7 +272,7 @@ const DepositsStatus = () => {
     
         </div>
          <div class="footer">
-         <div class="footer-info">
+       <div class="footer-info">
                   <p>Website: <a href="https://${
                     import.meta.env.VITE_EMAIL_WEBSITE
                   }"> ${
@@ -281,9 +280,6 @@ const DepositsStatus = () => {
   } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
     import.meta.env.VITE_EMAIL_EMAIL || ""
   }</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
                   <p>© 2025 ${
                     import.meta.env.VITE_WEBSITE_NAME || ""
                   }. All Rights Reserved</p>
@@ -308,6 +304,8 @@ const DepositsStatus = () => {
             selectedDeposit.deposit
           }&Comment=deposit`
         );
+        setIsDialogOpen(false);
+
         if (depositApires.data.Equity) {
           const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
@@ -342,6 +340,7 @@ const DepositsStatus = () => {
           _id: selectedDeposit._id,
           status: "rejected",
         });
+        setIsDialogOpen(false);
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -517,9 +516,8 @@ const DepositsStatus = () => {
             <thead className="bg-primary-400 text-white sticky top-0 z-10">
               <tr>
                 <th className="py-2 px-4 text-left">User | Email</th>
-                {(status === "all" || status === "approved") && (
-                  <th className="py-2 px-4 text-left">MT5 AC</th>
-                )}
+
+                <th className="py-2 px-4 text-left">MT5 AC</th>
                 <th className="py-2 px-4 text-left">AC Type</th>
                 <th className="py-2 px-4 text-left">Deposit</th>
                 {status === "rejected" || status === "approved" ? (
@@ -557,9 +555,8 @@ const DepositsStatus = () => {
                           : "Not found!!"}
                       </div>
                     </td>
-                    {(status === "all" || status === "approved") && (
-                      <td className="py-2 px-4">{item?.mt5Account || "N/A"}</td>
-                    )}
+                    <td className="py-2 px-4">{item?.mt5Account || "N/A"}</td>
+
                     <td className="py-2 px-4">
                       <span className="bg-primary-400/20 whitespace-nowrap text-white px-2 py-1 rounded-full text-sm">
                         {item?.accountType}
@@ -591,19 +588,29 @@ const DepositsStatus = () => {
                     </td>
                     <td className="py-2 px-4">
                       {item.status === "pending" && (
-                        <div className="flex items-center gap-5">
-                          <button
-                            className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "approve")}
-                          >
-                            <CircleCheckBig />
-                          </button>
-                          <button
-                            className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
-                            onClick={() => handleActionClick(item, "reject")}
-                          >
-                            <CircleX />
-                          </button>
+                        <div>
+                          {isActionLoading ? (
+                            "Please wait.."
+                          ) : (
+                            <div className="flex items-center gap-5">
+                              <button
+                                className="text-green-400 hover:text-green-600 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "approve")
+                                }
+                              >
+                                <CircleCheckBig />
+                              </button>
+                              <button
+                                className="text-red-500 hover:text-red-700 hover:scale-110 transition-all"
+                                onClick={() =>
+                                  handleActionClick(item, "reject")
+                                }
+                              >
+                                <CircleX />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       )}
                       {item.status === "approved" && (
@@ -704,7 +711,12 @@ const DepositsStatus = () => {
                         ${selectedDeposit.deposit}
                       </span>
                     </p>
-
+                    <p>
+                      <span className="font-medium">AC Number:</span>{" "}
+                      <span className="text-gray-200 font-semibold">
+                        {selectedDeposit?.mt5Account}
+                      </span>
+                    </p>
                     <p>
                       <span className="font-medium">AC Type:</span>{" "}
                       <span className="text-gray-200 font-semibold">

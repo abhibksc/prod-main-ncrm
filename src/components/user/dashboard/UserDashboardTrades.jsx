@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { metaApi } from "@/utils/apiClients";
-import { setOpenTrades } from "@/redux/user/userSlice";
 import ModernText from "@/lib/ModernText";
+import { setOpenTrades } from "@/redux/user/userSlice";
 
 export default function UserDashboardTrades() {
   const navigate = useNavigate();
@@ -51,13 +51,9 @@ export default function UserDashboardTrades() {
           );
           if (Array.isArray(res.data)) {
             data = data.concat(res.data);
+            dispatch(setOpenTrades(data));
           }
         }
-        // console.log("final data--", data);
-        dispatch(setOpenTrades(data));
-        // if (shouldFetch) {
-        //   setTimeout(fetchOpenTrades, 1000); // Call again after 1 second
-        // }
       } else {
         console.log("No account found");
       }
@@ -77,7 +73,7 @@ export default function UserDashboardTrades() {
   useEffect(() => {
     const fetchBalance = setInterval(() => {
       fetchOpenTrades();
-    }, 4000);
+    }, 3000);
     return () => clearInterval(fetchBalance);
   }, []);
 
@@ -85,7 +81,7 @@ export default function UserDashboardTrades() {
     <div className="bg-secondary-800/80 p-6 rounded-lg shadow-lg my-5 text-white">
       <div className="flex justify-between items-center mb-6">
         <div className="">
-          <ModernText text={"Trades Summary"}></ModernText>
+          <ModernText text={"Open Trades Summary"}></ModernText>
         </div>
         <button
           onClick={() => navigate("/user/trade-history")}

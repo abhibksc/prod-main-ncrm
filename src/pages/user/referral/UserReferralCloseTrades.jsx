@@ -1,15 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  ArrowLeft,
-  ArrowUpDown,
-  CheckCheck,
-  Download,
-  FileSpreadsheet,
-  FileText,
-  Info,
-  RefreshCw,
-  X,
-} from "lucide-react";
+import { ArrowLeft, CheckCheck, Info, RefreshCw, X } from "lucide-react";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import { backendApi } from "@/utils/apiClients";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -144,7 +134,6 @@ const UserReferralCloseTrades = () => {
     try {
       const res = await backendApi.get(`/user-ib-close-trade/${id}`);
       const commissionsRes = res.data.data.reverse();
-
       const filteredCommissions = commissionsRes
         .map((trade) => ({
           ...trade,
@@ -154,7 +143,6 @@ const UserReferralCloseTrades = () => {
             ) || null,
         }))
         .filter((trade) => trade.commission !== null); // Remove trades without matching commission
-
       setCommissionsData(filteredCommissions);
     } catch (error) {
       console.log(error);
@@ -162,7 +150,6 @@ const UserReferralCloseTrades = () => {
       setIsLoading(false);
     }
   };
-  console.log(`object`);
 
   useEffect(() => {
     fetchCommissions();

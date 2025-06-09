@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import UserNewChallengeHook from "@/hooks/user/UseNewChallengeHook";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
-import { CFgenerateRandomNumber } from "@/utils/CustomFunctions";
 import OpenAccountMail from "../emails/OpenAccountMail";
+import { CFgenerateRandomNumber } from "@/utils/CustomFunctions";
 
 const UserNewChallenge = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);

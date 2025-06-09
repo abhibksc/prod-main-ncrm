@@ -1,4 +1,4 @@
-// format date ---------------------
+// format date MONGODB ---------------------
 
 export function CFformatDate(isoDateString) {
   const date = new Date(isoDateString);
@@ -18,7 +18,7 @@ export function CFformatDate(isoDateString) {
 
   return `${formattedDate}, ${formattedTime}`;
 }
-// since joined ---------------
+// since joined MONGODB ---------------
 
 export function CFcalculateTimeSinceJoined(isoDateString) {
   const joinDate = new Date(isoDateString);
@@ -55,14 +55,12 @@ export function CFcalculateTimeSinceJoined(isoDateString) {
   return timeString.join(", ") + " ago";
 }
 
-// live time and date ----
-
-const currentDateTime = new Date();
+// current date and time ----------------------
 
 export const CFformattedDateTime =
-  currentDateTime.toLocaleDateString("en-GB") +
+  new Date().toLocaleDateString("en-GB") +
   ", " +
-  currentDateTime.toLocaleTimeString("en-US", {
+  new Date().toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",

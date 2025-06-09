@@ -179,7 +179,7 @@ const UserLogin = () => {
               </div>
             </div>
             <div class="footer">
-             <div class="footer-info">
+              <div class="footer-info">
                   <p>Website: <a href="https://${
                     import.meta.env.VITE_EMAIL_WEBSITE
                   }"> ${
@@ -187,9 +187,6 @@ const UserLogin = () => {
         } </a> | E-mail: <a href="mailto:${
           import.meta.env.VITE_EMAIL_EMAIL || ""
         }">${import.meta.env.VITE_EMAIL_EMAIL || ""}</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
                   <p>© 2025 ${
                     import.meta.env.VITE_WEBSITE_NAME || ""
                   }. All Rights Reserved</p>
@@ -224,6 +221,8 @@ const UserLogin = () => {
       toast.success(res.data.message);
       setResetEmail("");
       setIsResetLoading(false);
+      setShowForgotPassword(false);
+      navigate("/user/login");
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to send reset email!"
@@ -422,7 +421,7 @@ const UserLogin = () => {
                     className="relative"
                   >
                     <Mail
-                      className="absolute top-3 left-3 text-secondary-500/80"
+                      className="absolute top-4 left-3 text-gray-300/80"
                       size={20}
                     />
                     <input

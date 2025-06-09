@@ -8,6 +8,9 @@ const initialState = {
   paymentMethods: [],
   totalFinalPnL: 0,
   siteConfig: "",
+  accountsData: [],
+  accountsStats: {},
+  ibAccountsData: [],
 };
 
 export const userSlice = createSlice({
@@ -35,6 +38,15 @@ export const userSlice = createSlice({
     setSiteConfig: (state, action) => {
       state.siteConfig = action.payload;
     },
+    setAccountsData: (state, action) => {
+      state.accountsData = action.payload;
+    },
+    setAccountStats: (state, action) => {
+      state.accountsStats = action.payload;
+    },
+    setIbAccountsData: (state, action) => {
+      state.ibAccountsData = action.payload;
+    },
   },
 });
 
@@ -46,6 +58,9 @@ export const {
   setPaymentMethods,
   setTotalFinalPnL,
   setSiteConfig,
+  setAccountsData,
+  setAccountStats,
+  setIbAccountsData,
 } = userSlice.actions;
 
 export default userSlice.reducer;

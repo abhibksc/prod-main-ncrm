@@ -72,7 +72,7 @@ const UserTradeAccounts = ({ userData }) => {
       <div className="overflow-x-auto custom-scrollbar">
         <table className="w-full border-collapse min-w-[640px]">
           <thead>
-            <tr className="bg-secondary-500-50 whitespace-nowrap rounded text-white">
+            <tr className="bg-primary-500 whitespace-nowrap rounded text-white">
               <th className="p-2 sm:p-3 text-left font-semibold rounded-tl-lg">
                 AC NO:
               </th>
@@ -112,7 +112,7 @@ const UserTradeAccounts = ({ userData }) => {
                   {value?.investorPassword}
                 </td>
                 <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
-                  {value?.platform || "NULL"}
+                  {value?.platform || "N/A"}
                 </td>
                 <td className="py-3 text-center px-4">
                   <div>{formatDate(value?.createdAt)}</div>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import "react-phone-input-2/lib/style.css";
 import { Mail, Lock, User, Globe, Check, MapPin } from "lucide-react";
@@ -83,16 +82,18 @@ const UserSignUp = () => {
     const toastId = toast.loading("Creating account..");
     try {
       const res = await backendApi.post(`/signup/${id}`, formData);
-      if (res.data.status) {
+      toast.success(`Verification link sent to ${formData.email}`, {
+        id: toastId,
+      });
+      navigate(`/user/verify/${res.data.user._id}/000`);
+      try {
         const sendLinkRes = await backendApi.post(`/send-link`, {
           userId: res.data.user._id,
           email: res.data.user.email,
+          password: formData.confirmPassword,
         });
-        toast.success("Verification link sent to your mail", { id: toastId });
-        navigate(`/user/verify/${res.data.user._id}/000`);
-      } else {
-        setError("Signup failed. Please try again.");
-        toast.error("Signup failed. Please try again.", { id: toastId });
+      } catch (error) {
+        console.log("error sending mail", error);
       }
     } catch (error) {
       console.error("Error during signup:", error);

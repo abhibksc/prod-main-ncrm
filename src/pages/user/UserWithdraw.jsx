@@ -11,11 +11,9 @@ import { useSelector } from "react-redux";
 
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
+import { withdrawRequestMail } from "@/components/emails/WithdrwalsMails";
+import OtpUi from "@/components/OtpUi";
 import { KYCVerificationSection } from "./UserPlatform";
-import UseUserHook from "@/hooks/user/UseUserHook";
-import useUserWithdrawals from "@/hooks/user/UseUserWithdrawal";
-import OtpUi from "@/components/user/OtpUi";
-import { withdrawRequestMail } from "@/mails/WithdrwalsMails";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -30,23 +28,8 @@ const UserWithdraw = () => {
   const [accountType, setAccountType] = useState("");
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
-  const { getUpdateLoggedUser } = UseUserHook();
-  const { data, isLoading, isError, isWithdrawalPending, refresh } =
-    useUserWithdrawals();
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
-
-  const currentDateTime = new Date();
-  const formattedDateTime =
-    currentDateTime.toLocaleDateString("en-GB") +
-    ", " +
-    currentDateTime.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false, // 12-hour format with AM/PM
-    });
-  // account info--
 
   const fetchAccountInfo = async () => {
     setBalanceLoading(true);
@@ -67,149 +50,8 @@ const UserWithdraw = () => {
     }
   };
 
-  const customContent = `<!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Withdrawal Request Confirmation - Arena Trade</title>
-      <style>
-        body, html {
-          margin: 0;
-          padding: 0;
-          font-family: 'Arial', sans-serif;
-          line-height: 1.6;
-          color: #333;
-          background-color: #f4f4f4;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 5px;
-          background-color: #ffffff;
-        }
-        .header {
-          background-color: #19422df2;
-          color: #ffffff;
-          padding: 20px 15px;
-          text-align: center;
-          border-radius: 10px 10px 0 0;
-        }
-        .header h1 {
-          margin: 0;
-          font-size: 22px;
-          letter-spacing: 1px;
-        }
-        .content {
-          padding: 10px 20px;
-        }
-        .cta-button {
-          display: inline-block;
-          padding: 12px 24px;
-          background-color: #2d6a4f;
-          color: #FFFFFF;
-          text-decoration: none;
-          border-radius: 5px;
-          font-weight: bold;
-          margin: 10px 0;
-        }
-        .footer {
-          background-color: #19422df2;
-          color: #ffffff;
-          text-align: center;
-          padding: 5px 10px;
-          font-size: 12px;
-          border-radius: 0 0 10px 10px;
-        }
-        .footer-info {
-          margin-top: 6px;
-        }
-        .footer-info a {
-          color: #B6D0E2;
-          text-decoration: none;
-        }
-        
-       
-        .withdrawal-details {
-          background-color: #f8f8f8;
-          border-left: 4px solid #2d6a4f;
-          padding: 15px;
-          margin: 20px 0;
-        }
-        .withdrawal-details p {
-          margin: 5px 0;
-        }
-        .highlight {
-          font-weight: bold;
-          color: #0a2342;
-        }
-        .risk-warning {
-          color: #C70039;
-          padding: 5px;
-          font-size: 12px;
-          line-height: 1.4;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>Withdrawal Requested</h1>
-        </div>
-        <div class="content">
-          <p>Dear ${loggedUser.firstName + " " + loggedUser.lastName},</p>
-  <p>  We have received your withdrawal request and are currently processing it. Our team is working diligently to verify your details, and you will be notified as soon as the verification is complete.</p>
-        <div class="withdrawal-details">
-          <p>Username: <span class="highlight">${loggedUser.email}</span></p>
-          <p>Withdrawal Amount: <span class="highlight">${amount}</span></p>
-          <p>Last Balance: <span class="highlight">${accountBalance}</span></p>
-            <p>Processing time: <span class="highlight">${" 1-3 business days"}</span></p>
-            <p>Updated Date: <span class="highlight">${formattedDateTime}</span></p>
-          </div>
-    
-          <p>Thank you for choosing us.</p>
-          <p>Happy trading!</p>
-          
-           <p>Best regards,<br>${import.meta.env.VITE_WEBSITE_NAME} Team</p>
-          <hr>
-     <div class="risk-warning">
-      <strong>Risk Warning:</strong> Trading CFDs carries high risk and may result in losses beyond your initial investment. Trade only with money you can afford to lose and understand the risks.  
-      <br><br>
-      ${
-        import.meta.env.VITE_WEBSITE_NAME
-      } Trade’s services are not for U.S. citizens or in jurisdictions where they violate local laws.
-    </div>
-        
-    
-        </div>
-      <div class="footer">
-         <div class="footer-info">
-                  <p>Website: <a href="https://${
-                    import.meta.env.VITE_EMAIL_WEBSITE
-                  }"> ${
-    import.meta.env.VITE_EMAIL_WEBSITE
-  } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
-    import.meta.env.VITE_EMAIL_EMAIL || ""
-  }</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
-                  <p>© 2025 ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  }. All Rights Reserved</p>
-                </div>
-        </div>
-      </div>
-    </body>
-    </html>`;
   const withdrawalHandler = async (e) => {
     e.preventDefault();
-    if (isWithdrawalPending) {
-      toast.error(
-        "You have a pending withdrawal. Please wait before making another."
-      );
-      return;
-    }
 
     if (isWithdrawing) return;
 
@@ -237,6 +79,7 @@ const UserWithdraw = () => {
       toast.error("Error sending OTP", { id: toastId });
     }
   };
+
   const verifyOtpHandler = async () => {
     const toastID = toast.loading("Verifying your request..");
     if (!otp) {
@@ -255,10 +98,7 @@ const UserWithdraw = () => {
 
       // Proceed to withdrawal logic
       if (accountBalance < amount) {
-        toast.error("You don't have balance for withdrawal !!", {
-          id: toastID,
-        });
-        return;
+        setError("You don't have balance for withdrawal !!");
       } else {
         await backendApi.post(`/withdrawal`, {
           method:
@@ -303,66 +143,9 @@ const UserWithdraw = () => {
     }
   };
 
-  // const withdrawalHandler = async (e) => {
-  //   e.preventDefault();
-  //   if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
-  //   if (isWithdrawalPending) {
-  //     toast.error(
-  //       "You have a pending withdrawal. Please wait before making another."
-  //     );
-  //     return;
-  //   }
-  //   setError("");
-  //   setApiLoader(true);
-  //   setIsWithdrawing(true); // NEW: Set withdrawal loading to true
-
-  //   try {
-  //     if (accountBalance < amount) {
-  //       setError("You don't have balance for withdrawal !!");
-  //       setApiLoader(false);
-  //     } else if (amount <= accountBalance && amount > 0) {
-  //       const withdrawalDBres = await backendApi.post(`/withdrawal`, {
-  //         method:
-  //           selectedGateway === "Bank Transfer"
-  //             ? selectedGateway
-  //             : selectWallet,
-  //         accountType: accountType,
-  //         amount: amount,
-  //         mt5Account: account,
-  //         status: "pending",
-  //         userId: loggedUser._id,
-  //         lastBalance: accountBalance,
-  //       });
-  //       const customMailRes = await backendApi.post(`/custom-mail`, {
-  //         email: loggedUser.email,
-  //         content: customContent,
-  //         subject: "Withdrawal requested",
-  //       });
-  //       setApiLoader(false);
-  //       toast.success("Withdrawal Requested.");
-  //       fetchAccountInfo();
-  //       setAmount("");
-  //     } else {
-  //       setError("Something went wrong!!");
-  //       setApiLoader(false);
-  //     }
-  //   } catch (error) {
-  //     setApiLoader(false);
-  //     toast.error("Withdrawal Failed");
-  //     console.log("error while withdraw", error);
-  //   } finally {
-  //     setIsWithdrawing(false);
-  //     refresh();
-  //   }
-  // };
-
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
-  useEffect(() => {
-    getUpdateLoggedUser();
-    refresh();
-  }, []);
 
   return loggedUser?.kycVerified ? (
     <div className="w-full flex items-center justify-center">
@@ -387,7 +170,7 @@ const UserWithdraw = () => {
           </div>
         </div>
         <form onSubmit={withdrawalHandler} className="space-y-6">
-          <div className=" flex flex-col md:flex-row justify-between items-center gap-5">
+          <div className=" flex flex-col gap-4">
             {/* select account */}
             <div className=" w-full">
               <label
