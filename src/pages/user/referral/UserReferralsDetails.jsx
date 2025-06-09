@@ -256,7 +256,7 @@ const UserReferralsDetails = () => {
       </div> */}
 
       {/* Level Distribution */}
-      {Object.keys(stats.levelDistribution || {}).length > 0 && (
+      {/* {Object.keys(stats.levelDistribution || {}).length > 0 && (
         <div className="bg-secondary-800/20 rounded-lg p-3 border border-secondary-700/30 mb-6">
           <h3 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
             <BarChart3 size={16} />
@@ -274,7 +274,7 @@ const UserReferralsDetails = () => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       {isLoading ? (
         <div className="flex items-center justify-center py-10">
