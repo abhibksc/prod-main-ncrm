@@ -64,10 +64,6 @@ const UserNewChallenge = () => {
   };
 
   const createAccountHandler = async () => {
-    if (!loggedUser.kycVerified) {
-      toast.error("KYC required to open account.");
-      return;
-    }
     if (creatingLoading) return;
 
     setCreatingLoading(true);
