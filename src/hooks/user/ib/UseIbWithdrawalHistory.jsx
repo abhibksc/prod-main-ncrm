@@ -14,8 +14,6 @@ export default function UseIbWithdrawalHistory() {
     if (!loggedUser?._id) return;
 
     setIsLoading(true);
-    setIsError(false);
-
     try {
       const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
       const resData = res.data.data.reverse();
