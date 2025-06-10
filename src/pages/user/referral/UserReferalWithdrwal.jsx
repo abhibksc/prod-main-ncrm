@@ -17,7 +17,7 @@ export const UserReferralWithdrawal = () => {
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
-  const balance = loggedUser?.ibBalance;
+  const balance = Number(loggedUser?.ibBalance).toFixed(4);
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
