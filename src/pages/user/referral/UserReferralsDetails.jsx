@@ -213,7 +213,7 @@ const UserReferralsDetails = () => {
       </div>
 
       {/* Comprehensive Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
+      {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
         <StatCard
           icon={Users}
           title="Total Users"
@@ -238,14 +238,6 @@ const UserReferralsDetails = () => {
           color="text-purple-400"
         />
 
-        {/* <StatCard
-          icon={UserCheck}
-          title="Active Users"
-          value={stats.activeUsers || 0}
-          subtitle={`${(stats.activeRate || 0).toFixed(0)}% rate`}
-          color="text-emerald-400"
-        /> */}
-
         <StatCard
           icon={Globe}
           title="Top Country"
@@ -261,10 +253,10 @@ const UserReferralsDetails = () => {
           subtitle="Live balance"
           color="text-rose-400"
         />
-      </div>
+      </div> */}
 
       {/* Level Distribution */}
-      {Object.keys(stats.levelDistribution || {}).length > 0 && (
+      {/* {Object.keys(stats.levelDistribution || {}).length > 0 && (
         <div className="bg-secondary-800/20 rounded-lg p-3 border border-secondary-700/30 mb-6">
           <h3 className="text-sm font-medium text-gray-300 mb-3 flex items-center gap-2">
             <BarChart3 size={16} />
@@ -282,7 +274,7 @@ const UserReferralsDetails = () => {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       {isLoading ? (
         <div className="flex items-center justify-center py-10">
