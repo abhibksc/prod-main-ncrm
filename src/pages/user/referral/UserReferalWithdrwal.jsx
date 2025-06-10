@@ -274,7 +274,7 @@ export const UserReferralWithdrawal = () => {
                 className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
               >
                 {/* <option value="">Select Gateway</option> */}
-                <option value="Bank Transfer">Bank Transfer</option>
+                {/* <option value="Bank Transfer">Bank Transfer</option> */}
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>
             </div>
@@ -295,8 +295,8 @@ export const UserReferralWithdrawal = () => {
                 >
                   <option value="usdtTrc20">USDT {"(Trc20)"} </option>
                   <option value="usdtBep20">USDT {"(Bep20)"} </option>
-                  <option value="binanceId">Binance ID </option>
-                  <option value="btcAddress">BTC Address </option>
+                  {/* <option value="binanceId">Binance ID </option>
+                  <option value="btcAddress">BTC Address </option> */}
                 </select>
               </div>
             )}
