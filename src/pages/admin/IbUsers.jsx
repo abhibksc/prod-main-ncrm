@@ -198,7 +198,7 @@ const IbUsers = () => {
                       {item?.referralAccount || "N/A"}
                     </td>
                     <td className="py-2 text-green-400 font-semibold  text-center px-4">
-                      {item?.ibBalance || "0"}
+                      {Number(item?.ibBalance || 0).toFixed(4)}
                     </td>
                     <td className="py-3 whitespace-nowrap px-4">
                       <div className=" flex gap-2">
