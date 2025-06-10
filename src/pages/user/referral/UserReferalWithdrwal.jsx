@@ -14,7 +14,7 @@ import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectedGateway, setSelectedGateway] = useState("Wallet Transfer");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const balance = Number(loggedUser?.ibBalance).toFixed(4);
