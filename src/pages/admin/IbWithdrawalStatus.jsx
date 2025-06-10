@@ -276,21 +276,22 @@ const IbWithdrawalStatus = () => {
 
         </div>
           <div class="footer">
-       <div class="footer-info">
-                  <p>Website: <a href="https://${
-                    import.meta.env.VITE_EMAIL_WEBSITE
-                  }"> ${
+          <div class="footer-info">    
+         <p>${import.meta.env.VITE_EMAIL_ADDRESS || "forextest@mail.com"}</p>
+            <p>Website: <a href="https://${
+              import.meta.env.VITE_EMAIL_WEBSITE
+            }"> ${
     import.meta.env.VITE_EMAIL_WEBSITE
-  } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
-    import.meta.env.VITE_EMAIL_EMAIL || ""
-  }</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
-                  <p>© 2025 ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  }. All Rights Reserved</p>
-                </div>
+  } </a> | E-mail: <a href="mailto:${
+    import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"
+  }">${import.meta.env.VITE_EMAIL_EMAIL || "forextest@mail.com"}</a></p>
+            <p>We sent out this message to all existing ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
+            } traders. Please visit this page to know more about our Privacy Policy.</p>
+            <p>&copy; 2025 ${
+              import.meta.env.VITE_WEBSITE_NAME || "Forex"
+            }. All Rights Reserved</p>
+          </div>
         </div>
       </div>
     </body>
@@ -302,12 +303,12 @@ const IbWithdrawalStatus = () => {
     setIsActionLoading(true);
     try {
       if (actionType === "approve") {
-        const apiWithdrwalRes = await metaApi.get(
-          `/MakeWithdrawBalance?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${selectedDeposit.referralId}&Amount=${
-            selectedDeposit.amount
-          }&Comment=ib-withdrawal`
+        const ibWithdrawBalance = await backendApi.post(
+          `/withdraw-ib-balance`,
+          {
+            referralAccount: selectedDeposit.referralId,
+            amount: selectedDeposit.amount,
+          }
         );
         setIsDialogOpen(false);
 
@@ -319,12 +320,13 @@ const IbWithdrawalStatus = () => {
           }
         );
 
+        toast.success("IB Withdrawal Approved", { id: toastId });
+
         const customMailRes = await backendApi.post(`/custom-mail`, {
           email: selectedDeposit.userData.email,
           content: customContent,
           subject: " IB Withdrawal Success",
         });
-        toast.success("IB Withdrawal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
@@ -356,10 +358,16 @@ const IbWithdrawalStatus = () => {
         toast.success("IB Withdrawal Rejected", { id: toastId });
       }
     } catch (error) {
-      toast.error("Something went wrong", { id: toastId });
-      console.error("Error updating IB withdrwal:", error);
+      toast.error(`${error?.response?.data?.msg || "Please Try again later"}`, {
+        id: toastId,
+      });
+      console.error(
+        "Error updating IB withdrawal:",
+        error?.response?.data?.msg || error?.message || ""
+      );
     } finally {
       setIsActionLoading(false);
+      setIsDialogOpen(false);
     }
   };
   // total deposits ----------
@@ -513,9 +521,9 @@ const IbWithdrawalStatus = () => {
             <thead className="bg-primary-400 text-white sticky top-0">
               <tr>
                 <th className="py-2 px-4 text-left">User | Email</th>
-                <th className="py-2 px-4 text-left">Referral AC</th>
-                <th className="py-2 px-4 text-left">Last Balance</th>
-                <th className="py-2 px-4 text-left">Withdraw</th>
+                <th className="py-2 px-4 text-left">IB ID</th>
+                <th className="py-2 px-4 text-left">Balance</th>
+                <th className="py-2 px-4 text-left">Requested</th>
                 <th className="py-2 px-4 text-left">Method</th>
                 <th className="py-2 px-4 text-left">
                   {status === "rejected" || status === "approved"
@@ -549,7 +557,7 @@ const IbWithdrawalStatus = () => {
                     </td>
                     <td className="py-2 px-4">{item?.referralId}</td>
                     <td className="py-2 px-4">
-                      {Number(item?.totalBalance).toFixed(2)}
+                      {Number(item?.userData?.ibBalance).toFixed(4)}
                     </td>
                     <td className="py-2 px-4">{item?.amount}</td>
                     <td className="py-2 first-letter:uppercase px-4">

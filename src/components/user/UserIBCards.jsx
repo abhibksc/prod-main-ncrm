@@ -1,11 +1,8 @@
-import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
-import { backendApi } from "@/utils/apiClients";
-import axios from "axios";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { PiHandWithdrawBold } from "react-icons/pi";
+import UseIbWithdrawalHistory from "@/hooks/user/ib/UseIbWithdrawalHistory";
 
 const UserIBcards = ({ commissionsData }) => {
   const totalCommissionLength = commissionsData?.length;
@@ -13,32 +10,14 @@ const UserIBcards = ({ commissionsData }) => {
     (increment, value) => increment + Number(value.totalCommission),
     0
   );
-  const [balance, userInfoData] = UseCommissionBalance();
-  const [WithdarwalSum, setWithdrawalSum] = useState(0);
   const loggedUser = useSelector((store) => store.user.loggedUser);
-
-  // fetch withdrawal history ---
-  const fetchHistoryData = async () => {
-    try {
-      const res = await backendApi.get(`/ib-withdrawals/${loggedUser._id}`);
-      const totalSum = res.data.data
-        .filter((value) => value.status === "approved")
-        .reduce((total, value) => total + value.amount, 0);
-      setWithdrawalSum(totalSum);
-    } catch (error) {
-      console.log("error in fetch user challenges", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHistoryData();
-  }, [balance, userInfoData, WithdarwalSum]);
+  const { totalApprovedWithdrawal } = UseIbWithdrawalHistory();
 
   const stats = {
     totalIBs: Number(totalCommissionLength), // Assuming it's already an integer
-    totalCommission: Number(totalCommissionValue).toFixed(2),
-    availableCommission: Number(balance).toFixed(2),
-    pendingWithdrawals: `$${Number(WithdarwalSum).toFixed(2)}`,
+    totalCommission: Number(totalCommissionValue).toFixed(4),
+    availableCommission: Number(loggedUser?.ibBalance).toFixed(4),
+    pendingWithdrawals: `$${Number(totalApprovedWithdrawal || 0).toFixed(4)}`,
   };
 
   return (
@@ -52,7 +31,7 @@ const UserIBcards = ({ commissionsData }) => {
                 Total Commission
               </span>
               <span className="text-2xl font-bold text-gray-100">
-                ${Number(stats?.totalCommission || 0).toFixed(2)}
+                ${Number(stats?.totalCommission || 0).toFixed(4)}
               </span>
             </div>
 
@@ -95,19 +74,6 @@ const UserIBcards = ({ commissionsData }) => {
                 wi
                 className=" text-blue-500"
               ></PiHandWithdrawBold>
-              {/* <svg
-                className="w-6 h-6 text-orange-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
-                />
-              </svg> */}
             </div>
           </div>
           <div className="mt-4">
@@ -128,7 +94,7 @@ const UserIBcards = ({ commissionsData }) => {
                 Withdrawable balance
               </span>
               <span className="text-2xl font-bold text-green-500/70">
-                ${Number(stats?.availableCommission || 0).toFixed(2)}
+                ${Number(loggedUser?.ibBalance || 0).toFixed(4)}
               </span>
             </div>
             <div className="p-3 bg-purple-100 rounded-full">
@@ -149,10 +115,7 @@ const UserIBcards = ({ commissionsData }) => {
           </div>
           <div className="mt-4">
             <Link to={"/user/referrals/withdraw"}>
-              <button
-                className="w-full bg-green-600/80 hover:bg-green-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium"
-                onClick={() => console.log("Withdraw clicked")}
-              >
+              <button className="w-full bg-green-600/80 hover:bg-green-700 text-white py-2 px-4 rounded-full transition-colors duration-200 flex items-center justify-center font-medium">
                 Withdraw
               </button>
             </Link>

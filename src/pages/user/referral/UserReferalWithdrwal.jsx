@@ -8,19 +8,20 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import UseCommissionBalance from "@/hooks/user/UseCommissionBalance";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
+import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
-  const [balance, userInfoData] = UseCommissionBalance();
+  const balance = Number(loggedUser?.ibBalance || 0).toFixed(4);
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
+  useAutoUpdateLoggedUser();
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -150,7 +151,7 @@ export const UserReferralWithdrawal = () => {
     
         </div>
           <div class="footer">
-        <div class="footer-info">
+         <div class="footer-info">
                   <p>Website: <a href="https://${
                     import.meta.env.VITE_EMAIL_WEBSITE
                   }"> ${
@@ -158,9 +159,7 @@ export const UserReferralWithdrawal = () => {
   } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
     import.meta.env.VITE_EMAIL_EMAIL || ""
   }</a></p>
-                  <p>We sent out this message to all existing ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  } traders. Please visit this page to know more about our Privacy Policy.</p>
+   
                   <p>© 2025 ${
                     import.meta.env.VITE_WEBSITE_NAME || ""
                   }. All Rights Reserved</p>
@@ -209,7 +208,6 @@ export const UserReferralWithdrawal = () => {
           content: customContent,
           subject: "IB Withdrawal Requested",
         });
-        console.log("withdraw db res--", withdrawalDBres.data);
 
         setApiLoader(false);
         toast.success("Withdrawal Requested");
@@ -223,7 +221,6 @@ export const UserReferralWithdrawal = () => {
       setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
-  useEffect(() => {}, [balance, userInfoData]);
 
   return (
     <div className="w-full flex items-center justify-center">
@@ -233,8 +230,8 @@ export const UserReferralWithdrawal = () => {
         transition={{ duration: 0.5 }}
         className="w-full bg-secondary-800/50  p-8 rounded-lg shadow-xl"
       >
-        <div className="flex flex-col md:flex-row items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
+          <div className="flex flex-col md:flex-row items-center gap-2">
             {/* Back Button */}
             <button
               onClick={() => {
@@ -256,7 +253,7 @@ export const UserReferralWithdrawal = () => {
                 text-secondary-500 bg-secondary-500-10 "
               }   mt-1 rounded-full py-1  font-bold`}
             >
-              ${Number(balance)}
+              ${balance}
             </p>
           </div>
         </div>
