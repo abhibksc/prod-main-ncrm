@@ -19,6 +19,7 @@ const UserLogin = () => {
   const [loginData, setLoginData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -293,8 +294,29 @@ const UserLogin = () => {
                       <img
                         src={siteConfig?.logo}
                         alt="Forex Logo"
-                        className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
+                        className="block object-contain w-auto dynamic-logo"
                       />
+
+                      <style jsx>{`
+                        .dynamic-logo {
+                          height: ${baseHeight * 0.8}rem;
+                        }
+                        @media (min-width: 640px) {
+                          .dynamic-logo {
+                            height: ${baseHeight * 0.666}rem;
+                          }
+                        }
+                        @media (min-width: 768px) {
+                          .dynamic-logo {
+                            height: ${baseHeight}rem;
+                          }
+                        }
+                        @media (min-width: 1024px) {
+                          .dynamic-logo {
+                            height: ${baseHeight * 1.2}rem;
+                          }
+                        }
+                      `}</style>
                     </a>
                     <ModernHeading text={"Welcome Back"}></ModernHeading>
                     <p className="text-secondary-500 mt-4 mb-8">

@@ -10,6 +10,7 @@ const SadminSiteConfiguration = () => {
     logo: "",
     favicon: "",
     inrUi: false,
+    logoSize: 4,
   });
 
   const [isEditing, setIsEditing] = useState(false);
@@ -33,6 +34,11 @@ const SadminSiteConfiguration = () => {
       name: "websiteName",
       type: "text",
       placeholder: "Enter website name",
+    },
+    {
+      name: "logoSize",
+      type: "number",
+      placeholder: "Logo size in rem value",
     },
     // Add any other general settings here
   ];
@@ -77,8 +83,15 @@ const SadminSiteConfiguration = () => {
   const fetchData = async () => {
     try {
       const res = await backendApi.get("/site-config");
-      const { serverName, mt5Digit, websiteName, logo, favicon, inrUi } =
-        res.data.data || {};
+      const {
+        serverName,
+        mt5Digit,
+        websiteName,
+        logo,
+        favicon,
+        inrUi,
+        logoSize,
+      } = res.data.data || {};
       setDetails({
         serverName: serverName || "",
         mt5Digit: mt5Digit || "",
@@ -86,6 +99,7 @@ const SadminSiteConfiguration = () => {
         logo: logo || "",
         favicon: favicon || "",
         inrUi: inrUi || false,
+        logoSize: logoSize || 4,
       });
     } catch (error) {
       console.error("Error fetching site config:", error);

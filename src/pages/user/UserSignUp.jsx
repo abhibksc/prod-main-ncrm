@@ -48,6 +48,7 @@ const UserSignUp = () => {
   });
   const { id } = useParams();
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   const countriesArray = getData();
 
@@ -148,8 +149,29 @@ const UserSignUp = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
+                className="block object-contain w-auto dynamic-logo"
               />
+
+              <style jsx>{`
+                .dynamic-logo {
+                  height: ${baseHeight * 0.8}rem;
+                }
+                @media (min-width: 640px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 0.666}rem;
+                  }
+                }
+                @media (min-width: 768px) {
+                  .dynamic-logo {
+                    height: ${baseHeight}rem;
+                  }
+                }
+                @media (min-width: 1024px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 1.2}rem;
+                  }
+                }
+              `}</style>
             </a>
             <div className="p-8 md:p-12">
               <motion.div
