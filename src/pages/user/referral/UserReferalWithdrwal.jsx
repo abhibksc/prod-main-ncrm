@@ -20,7 +20,7 @@ export const UserReferralWithdrawal = () => {
   const balance = Number(loggedUser?.ibBalance || 0).toFixed(4);
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
-  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state--
+  const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   useAutoUpdateLoggedUser();
 
   const currentDateTime = new Date();
