@@ -136,7 +136,7 @@ const UserHeader = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
   };
   return (
-    <nav className="bg-secondary-900 p-4 w-full h-16">
+    <nav className="bg-secondary-900 flex flex-col justify-center  px-4 py-1 w-full h-16">
       <div className=" md:px-5  flex justify-between items-center">
         <div className=" flex gap-2">
           <button
@@ -152,7 +152,7 @@ const UserHeader = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className="block object-contain w-auto dynamic-logo"
+              className=" block md:hidden object-contain  w-auto dynamic-logo"
             />
 
             <style jsx>{`

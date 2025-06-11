@@ -186,11 +186,7 @@ const UserSidebar = () => {
                 .dynamic-logo {
                   height: ${baseHeight * 0.8}rem;
                 }
-                @media (min-width: 640px) {
-                  .dynamic-logo {
-                    height: ${baseHeight * 0.666}rem;
-                  }
-                }
+
                 @media (min-width: 768px) {
                   .dynamic-logo {
                     height: ${baseHeight}rem;
@@ -212,7 +208,7 @@ const UserSidebar = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="text-sm whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500-70 w-full transition-all duration-300 hover:bg-secondary-500-60">
+                  <button className="text-sm shadow-none outline-none border-none whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500-70 w-full transition-all duration-300 hover:bg-secondary-500-60">
                     Open Account
                   </button>
                 </Link>

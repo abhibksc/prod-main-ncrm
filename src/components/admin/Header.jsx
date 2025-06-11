@@ -88,26 +88,26 @@ const Header = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className="block object-contain w-auto dynamic-logo"
+                className="block  object-contain w-auto dynamic-logo"
               />
 
               <style jsx>{`
                 .dynamic-logo {
-                  height: ${baseHeight * 0.8}rem;
+                  height: ${baseHeight * 0.7}rem;
                 }
                 @media (min-width: 640px) {
                   .dynamic-logo {
-                    height: ${baseHeight * 0.666}rem;
+                    height: ${baseHeight * 0.8}rem;
                   }
                 }
                 @media (min-width: 768px) {
                   .dynamic-logo {
-                    height: ${baseHeight}rem;
+                    height: ${baseHeight * 0.9}rem;
                   }
                 }
                 @media (min-width: 1024px) {
                   .dynamic-logo {
-                    height: ${baseHeight * 1.2}rem;
+                    height: ${baseHeight * 1}rem;
                   }
                 }
               `}</style>
