@@ -248,12 +248,12 @@ const Sidebar = () => {
         >
           <a
             href="/user/dashboard"
-            className=" flex items-center md:hidden justify-center my-4 mr-4"
+            className=" flex  lg:hidden my-4 justify-center"
           >
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className="block object-contain w-auto dynamic-logo"
+              className="block  object-contain w-auto dynamic-logo"
             />
 
             <style jsx>{`
@@ -262,7 +262,7 @@ const Sidebar = () => {
               }
               @media (min-width: 640px) {
                 .dynamic-logo {
-                  height: ${baseHeight * 0.666}rem;
+                  height: ${baseHeight * 0.9}rem;
                 }
               }
               @media (min-width: 768px) {
