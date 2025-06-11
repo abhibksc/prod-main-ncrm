@@ -65,6 +65,7 @@ const Sidebar = () => {
   const sidebarRef = useRef(null);
   const [openSections, setOpenSections] = useState(new Set());
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
@@ -252,8 +253,29 @@ const Sidebar = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className=" object-contain w-auto h-10 md:h-8 sm:h-6"
+              className="block object-contain w-auto dynamic-logo"
             />
+
+            <style jsx>{`
+              .dynamic-logo {
+                height: ${baseHeight * 0.8}rem;
+              }
+              @media (min-width: 640px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 0.666}rem;
+                }
+              }
+              @media (min-width: 768px) {
+                .dynamic-logo {
+                  height: ${baseHeight}rem;
+                }
+              }
+              @media (min-width: 1024px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 1.2}rem;
+                }
+              }
+            `}</style>
           </a>
           <ul className="space-y-2 text-sm px-4 py-3">
             {menuItems.map((item, index) => (

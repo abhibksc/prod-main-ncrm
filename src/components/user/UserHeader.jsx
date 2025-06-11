@@ -130,7 +130,7 @@ const UserHeader = () => {
   const dispatch = useDispatch();
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const siteConfig = useSelector((state) => state.user.siteConfig);
-  // console.log("isOpenSidebar", isSidebarOpen);
+  const baseHeight = siteConfig?.logoSize || 4;
 
   const sidebarHandler = () => {
     dispatch(handleToggleSidebar(!isSidebarOpen));
@@ -152,8 +152,29 @@ const UserHeader = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className=" block md:hidden  object-contain w-auto h-10 md:h-12 sm:h-8"
+              className="block object-contain w-auto dynamic-logo"
             />
+
+            <style jsx>{`
+              .dynamic-logo {
+                height: ${baseHeight * 0.8}rem;
+              }
+              @media (min-width: 640px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 0.666}rem;
+                }
+              }
+              @media (min-width: 768px) {
+                .dynamic-logo {
+                  height: ${baseHeight}rem;
+                }
+              }
+              @media (min-width: 1024px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 1.2}rem;
+                }
+              }
+            `}</style>
           </a>
         </div>
 
