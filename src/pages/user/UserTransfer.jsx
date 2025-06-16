@@ -56,8 +56,11 @@ const UserTransfer = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isTransferLoading) return; // NEW: Prevent multiple clicks if already loading
-
+    if (isTransferLoading) return;
+    if (!fromAccount || !toAccount) {
+      toast.error("Both two account must be selected !!");
+      return;
+    }
     const toastId = toast.loading("Processing your transfer. Please wait...");
     setIsTransferLoading(true); // NEW: Set loading to true when transfer starts
 
@@ -148,6 +151,7 @@ const UserTransfer = () => {
             </label>
             <select
               id="from-account"
+              required
               value={fromAccount}
               onChange={(e) => setFromAccount(e.target.value)}
               className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
@@ -195,6 +199,7 @@ const UserTransfer = () => {
             </label>
             <select
               id="to-account"
+              required
               value={toAccount}
               onChange={(e) => setToAccount(e.target.value)}
               className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
@@ -228,6 +233,7 @@ const UserTransfer = () => {
           <input
             type="number"
             id="amount"
+            required
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Enter amount"
