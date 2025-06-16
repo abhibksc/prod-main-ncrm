@@ -511,14 +511,6 @@ const UserKycDetails = () => {
       )}
 
       <div className="text-white p-6 rounded-xl">
-        {/* Warning Message */}
-        <p className="text-yellow-400/80  p-4 rounded-lg text-center text-sm mb-6">
-          <strong>Note:</strong> Updating any information or re-uploading
-          documents will set your KYC status back to{" "}
-          <span className="font-semibold">"Under Review"</span>. Your
-          application will be re-verified by our team.
-        </p>
-
         {/* Dropdown Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <DropdownField
