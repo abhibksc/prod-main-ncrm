@@ -1,71 +1,98 @@
-import React, { useEffect, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import axios from "axios";
-import DynamicLoder from "@/components/Loader/DynamicLoder";
+import { useState } from "react";
+import {
+  CFcalculateTimeSinceJoined,
+  CFformatDate,
+} from "@/utils/CustomFunctions";
+import { Pencil, X } from "lucide-react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { backendApi, metaApi } from "@/utils/apiClients";
+import toast from "react-hot-toast";
 
-const UserTradeAccounts = ({ userData }) => {
-  // console.log("challenge account -----", challengesData);
-  // format date ---------------------
+const UserTradeAccounts = ({ userData, fetchUserData }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState(null);
+  const [activeTab, setActiveTab] = useState("master");
+  const [passwords, setPasswords] = useState({ new: "", confirm: "" });
+  const [error, setError] = useState("");
 
-  function formatDate(isoDateString) {
-    const date = new Date(isoDateString);
+  const handleOpenDialog = (account) => {
+    setSelectedAccount(account);
+    setPasswords({ new: "", confirm: "" });
+    setError("");
+    setOpenDialog(true);
+  };
 
-    const formattedDate = date.toLocaleDateString("en-GB", {
-      year: "numeric",
-      day: "2-digit",
-      month: "2-digit",
-    });
+  const validatePassword = (password) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=<>?]).{8,}$/;
+    return passwordRegex.test(password);
+  };
 
-    const formattedTime = date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true, // 12-hour format with AM/PM
-    });
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    const toastId = toast.loading("Please wait...");
 
-    return `${formattedDate}, ${formattedTime}`;
-  }
-  // since joined ---------------
-
-  function calculateTimeSinceJoined(isoDateString) {
-    const joinDate = new Date(isoDateString);
-    const today = new Date();
-
-    // Calculate the difference in time (in milliseconds)
-    const timeDifference = today - joinDate;
-
-    // Calculate different time units
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-    );
-
-    // Build the time string
-    let timeString = [];
-
-    if (days > 0) {
-      timeString.push(`${days} day${days !== 1 ? "s" : ""}`);
-    }
-    if (hours > 0) {
-      timeString.push(`${hours} hour${hours !== 1 ? "s" : ""}`);
-    }
-    if (minutes > 0) {
-      timeString.push(`${minutes} minute${minutes !== 1 ? "s" : ""}`);
+    // Validate new password
+    if (!validatePassword(passwords.new)) {
+      setError(
+        "Password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special symbol."
+      );
+      toast.error("Invalid password format", { id: toastId });
+      return;
     }
 
-    // Handle case when less than a minute
-    if (timeString.length === 0) {
-      return "less than a minute ago";
+    // Validate confirm password
+    if (passwords.new !== passwords.confirm) {
+      setError("Passwords do not match. Please try again.");
+      toast.error("Passwords do not match", { id: toastId });
+      return;
     }
 
-    return timeString.join(", ") + " ago";
-  }
-  // console.log("challenges data --", challengesData);
+    try {
+      // Determine API endpoint based on active tab
+      const endpoint =
+        activeTab === "master"
+          ? `/ChangeMasterPassword?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&Account=${selectedAccount.accountNumber}&password=${
+              passwords.confirm
+            }`
+          : `/ChangeMasterPassword?Manager_Index=${
+              import.meta.env.VITE_MANAGER_INDEX
+            }&Account=${selectedAccount.accountNumber}&password=${
+              passwords.confirm
+            }`;
+
+      // Call metaApi to change password
+      const res = await metaApi.get(endpoint);
+
+      // Update backend with new password
+      const backendRes = await backendApi.post(
+        `/${
+          activeTab === "master"
+            ? "update-master-password"
+            : "update-investor-password"
+        }`,
+        {
+          userId: userData._id,
+          accountId: selectedAccount._id,
+          newPassword: passwords.confirm,
+        }
+      );
+      fetchUserData();
+      toast.success(res.data.MESSAGE, { id: toastId });
+      setOpenDialog(false);
+    } catch (error) {
+      console.log("error", error);
+      setError("An error occurred. Please try again.");
+      toast.error("An error occurred. Please try again.", { id: toastId });
+    }
+
+    setPasswords({ new: "", confirm: "" });
+  };
+
   return (
-    <div className=" mx-auto mt-4 ">
+    <div className="mx-auto mt-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-white">User Accounts</h2>
       </div>
@@ -88,18 +115,19 @@ const UserTradeAccounts = ({ userData }) => {
               <th className="p-2 sm:p-3 text-center font-semibold">
                 Timestamp
               </th>
+              <th className="p-2 sm:p-3 text-center font-semibold">Action</th>
             </tr>
           </thead>
           <tbody>
             {userData?.accounts?.map((value, index) => (
               <tr
                 key={index}
-                className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-secondary-700/40 transition-colors"
+                className="border-b whitespace-nowrap border-secondary-700/50 hover:bg-primary-500/20 transition-colors"
               >
                 <td className="p-2 sm:p-3 text-sm sm:text-base">
                   {value?.accountNumber}
                 </td>
-                <td className="p-2 sm:p-3 text-sm sm:text-base text-center ">
+                <td className="p-2 sm:p-3 text-sm sm:text-base text-center">
                   {value?.accountType}
                 </td>
                 <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
@@ -115,16 +143,107 @@ const UserTradeAccounts = ({ userData }) => {
                   {value?.platform || "N/A"}
                 </td>
                 <td className="py-3 text-center px-4">
-                  <div>{formatDate(value?.createdAt)}</div>
+                  <div>{CFformatDate(value?.createdAt)}</div>
                   <div className="text-sm text-gray-400">
-                    {calculateTimeSinceJoined(value?.createdAt)}
+                    {CFcalculateTimeSinceJoined(value?.createdAt)}
                   </div>
+                </td>
+                <td className="p-2 text-center sm:p-3 text-sm sm:text-base">
+                  <button
+                    onClick={() => handleOpenDialog(value)}
+                    className="bg-blue-500/20 hover:bg-blue-500/40 transition-all rounded-full p-1 flex justify-center items-center"
+                  >
+                    <Pencil className="text-blue-500" />
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Dialog for Password Change */}
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900/85 border border-gray-700/50 rounded-xl p-6 w-full max-w-md shadow-2xl z-50">
+            <Dialog.Title className="text-lg font-semibold text-white mb-4">
+              Change Password for Account {selectedAccount?.accountNumber}
+            </Dialog.Title>
+            <button
+              onClick={() => setOpenDialog(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Tabs */}
+            <div className="flex border-b border-gray-700 mb-4">
+              <button
+                onClick={() => setActiveTab("master")}
+                className={`flex-1 py-2 text-sm font-medium text-center transition-colors ${
+                  activeTab === "master"
+                    ? "text-white border-b-2 border-blue-500"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Master Password
+              </button>
+              <button
+                onClick={() => setActiveTab("investor")}
+                className={`flex-1 py-2 text-sm font-medium text-center transition-colors ${
+                  activeTab === "investor"
+                    ? "text-white border-b-2 border-blue-500"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Investor Password
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="space-y-4">
+              {error && (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-300">
+                  New {activeTab === "master" ? "Master" : "Investor"} Password
+                </label>
+                <input
+                  type="password"
+                  value={passwords.new}
+                  onChange={(e) =>
+                    setPasswords({ ...passwords, new: e.target.value })
+                  }
+                  className="mt-1 w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter new password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  value={passwords.confirm}
+                  onChange={(e) =>
+                    setPasswords({ ...passwords, confirm: e.target.value })
+                  }
+                  className="mt-1 w-full px-3 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Confirm new password"
+                />
+              </div>
+              <button
+                onClick={handlePasswordChange}
+                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-white font-medium transition-colors"
+              >
+                Change Password
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 };
