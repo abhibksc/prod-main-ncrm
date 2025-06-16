@@ -14,6 +14,7 @@ const UserTransfer = () => {
   const [fromAccountBalance, setFromAccountBalance] = useState("");
   const [toAccountBalance, setToAccountBalance] = useState("");
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const [isTransferLoading, setIsTransferLoading] = useState(false); // NEW: Added transfer loading state
 
   const fromAccountInfo = async () => {
     try {
@@ -55,7 +56,14 @@ const UserTransfer = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isTransferLoading) return;
+    if (!fromAccount || !toAccount) {
+      toast.error("Both two account must be selected !!");
+      return;
+    }
     const toastId = toast.loading("Processing your transfer. Please wait...");
+    setIsTransferLoading(true); // NEW: Set loading to true when transfer starts
+
     try {
       const withdrawal = await metaApi.get(
         `/MakeWithdrawBalance?Manager_Index=${
@@ -74,6 +82,8 @@ const UserTransfer = () => {
     } catch (error) {
       console.log(error);
       toast.error("Transfer failed. Please try again.", { id: toastId });
+    } finally {
+      setIsTransferLoading(false); // NEW: Reset loading to false when transfer completes
     }
   };
 
@@ -141,6 +151,7 @@ const UserTransfer = () => {
             </label>
             <select
               id="from-account"
+              required
               value={fromAccount}
               onChange={(e) => setFromAccount(e.target.value)}
               className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
@@ -188,6 +199,7 @@ const UserTransfer = () => {
             </label>
             <select
               id="to-account"
+              required
               value={toAccount}
               onChange={(e) => setToAccount(e.target.value)}
               className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
@@ -221,6 +233,7 @@ const UserTransfer = () => {
           <input
             type="number"
             id="amount"
+            required
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             placeholder="Enter amount"
@@ -238,9 +251,14 @@ const UserTransfer = () => {
           <motion.button
             type="submit"
             whileTap={{ scale: 0.95 }}
-            className="px-12 hover:px-16 py-3 mt-4 bg-secondary-500-90 text-white font-semibold rounded-full transition-all hover:bg-secondary-500-80 focus:outline-none focus:ring-2 focus:ring-secondary-500/30"
+            disabled={isTransferLoading} // NEW: Disable button while loading
+            className={`px-12 py-3 mt-4 text-white font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-secondary-500/30 ${
+              isTransferLoading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-secondary-500-90 hover:px-16 hover:bg-secondary-500-80"
+            }`}
           >
-            Transfer Now
+            {isTransferLoading ? "Processing..." : "Transfer Now"}
           </motion.button>
         </motion.div>
       </motion.form>
