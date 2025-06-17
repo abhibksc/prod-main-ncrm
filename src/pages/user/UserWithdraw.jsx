@@ -15,10 +15,11 @@ import { withdrawRequestMail } from "@/components/emails/WithdrwalsMails";
 import OtpUi from "@/components/OtpUi";
 import { KYCVerificationSection } from "./UserPlatform";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import useUserWithdrawals from "@/hooks/user/UseUserWithdrawal";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("");
+  const [selectedGateway, setSelectedGateway] = useState("Wallet Transfer");
   const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
   const [account, selectAccount] = useState("");
   const [amount, setAmount] = useState("");
@@ -32,6 +33,8 @@ const UserWithdraw = () => {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
   const { getUpdateLoggedUser } = UseUserHook();
+  const { data, isLoading, isError, isWithdrawalPending, refresh } =
+    useUserWithdrawals();
 
   const fetchAccountInfo = async () => {
     setBalanceLoading(true);
@@ -56,6 +59,13 @@ const UserWithdraw = () => {
     e.preventDefault();
 
     if (isWithdrawing) return;
+
+    if (isWithdrawalPending) {
+      toast.error(
+        "Your last withdrawal is still pending. Please wait until it is processed."
+      );
+      return;
+    }
 
     // Validate inputs first
     if (!account || !selectedGateway || !amount) {
@@ -123,6 +133,7 @@ const UserWithdraw = () => {
         toast.success("Withdrawal Requested.", { id: toastID });
         fetchAccountInfo();
         setAmount("");
+        refresh();
 
         await backendApi.post(`/custom-mail`, {
           email: loggedUser.email,
