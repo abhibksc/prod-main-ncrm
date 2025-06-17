@@ -14,6 +14,7 @@ import { backendApi, metaApi } from "@/utils/apiClients";
 import { withdrawRequestMail } from "@/components/emails/WithdrwalsMails";
 import OtpUi from "@/components/OtpUi";
 import { KYCVerificationSection } from "./UserPlatform";
+import UseUserHook from "@/hooks/user/UseUserHook";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -30,6 +31,7 @@ const UserWithdraw = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
+  const { getUpdateLoggedUser } = UseUserHook();
 
   const fetchAccountInfo = async () => {
     setBalanceLoading(true);
@@ -146,6 +148,10 @@ const UserWithdraw = () => {
   useEffect(() => {
     fetchAccountInfo();
   }, [account]);
+
+  useEffect(() => {
+    getUpdateLoggedUser();
+  }, []);
 
   return loggedUser?.kycVerified ? (
     <div className="w-full flex items-center justify-center">

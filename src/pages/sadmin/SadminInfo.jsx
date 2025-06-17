@@ -5,6 +5,7 @@ import { backendApi } from "@/utils/apiClients";
 import { RiUserSharedFill } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 import { setAdminUser } from "@/redux/adminSlice";
+import md5 from "md5";
 
 const SadminAdminInfo = () => {
   const [email, setEmail] = useState("");
@@ -61,6 +62,8 @@ const SadminAdminInfo = () => {
       toast.error("Admin not fetched yet!! please try again ");
       return;
     }
+    const currentPasswordHash = md5(admin.password);
+    localStorage.setItem("admin_password_ref", currentPasswordHash);
     dispatch(setAdminUser(admin));
     window.open("/admin/dashboard", "_blank");
   };
