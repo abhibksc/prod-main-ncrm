@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { backendApi } from "@/utils/apiClients";
+import { RiUserSharedFill } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import { setAdminUser } from "@/redux/adminSlice";
+import md5 from "md5";
 
 const SadminAdminInfo = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +14,7 @@ const SadminAdminInfo = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showCredentials, setShowCredentials] = useState(false);
+  const dispatch = useDispatch();
 
   const fetchDetails = async () => {
     setLoading(true);
@@ -49,6 +54,18 @@ const SadminAdminInfo = () => {
     setTimeout(() => {
       setShowCredentials(false);
     }, 30000); // Hide credentials after 30 seconds
+  };
+  // super admin handler -----
+
+  const adminLoginHandler = () => {
+    if (!admin) {
+      toast.error("Admin not fetched yet!! please try again ");
+      return;
+    }
+    const currentPasswordHash = md5(admin.password);
+    localStorage.setItem("admin_password_ref", currentPasswordHash);
+    dispatch(setAdminUser(admin));
+    window.open("/admin/dashboard", "_blank");
   };
 
   useEffect(() => {
@@ -157,6 +174,13 @@ const SadminAdminInfo = () => {
                     </p>
                   </div>
                 )}
+                <button
+                  onClick={adminLoginHandler}
+                  className="w-full flex items-center justify-center bg-gray-700/40 text-green-400 font-semibold hover:text-green-500 py-3 rounded-lg hover:bg-gray-700/30 transition duration-300"
+                >
+                  <RiUserSharedFill size={25} />
+                  <p className=" ">Login as Admin</p>
+                </button>
               </div>
             ) : (
               <p className="text-gray-400 text-center">No credentials found.</p>

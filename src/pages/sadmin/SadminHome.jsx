@@ -4,6 +4,7 @@ import AccountConfiguration from "../admin/AccountConfiguration";
 import { useSelector } from "react-redux";
 import SadminAdminInfo from "./SadminInfo";
 import SadminSiteConfiguration from "@/components/s-admin/SadminSiteConfiguration";
+import { backendApi } from "@/utils/apiClients";
 // import SadminAdminInfo from "@/components/admin/s-admin/SadminAdminInfo";
 
 const PasswordScreen = ({ onAuthenticate }) => {
@@ -12,10 +13,13 @@ const PasswordScreen = ({ onAuthenticate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (password === import.meta.env.VITE_S_ADMIN_PASSWORD) {
+    setIsLoading(true);
+    try {
+      const res = await backendApi.post(`/s-admin-login`, {
+        password: password,
+      });
       // Set expiry to 1 hour from now
       const expiryDate = new Date();
       expiryDate.setTime(expiryDate.getTime() + 60 * 60 * 1000); // 60 minutes * 60 seconds * 1000 ms
@@ -28,12 +32,14 @@ const PasswordScreen = ({ onAuthenticate }) => {
 
       sessionStorage.setItem("adminAuth", JSON.stringify(authData));
       onAuthenticate(true);
-    } else {
+    } catch (error) {
+      console.log("error", error);
+    } finally {
+      setIsLoading(false);
       setError("Invalid password");
       setTimeout(() => setError(""), 3000);
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
       <div className="relative w-full max-w-md">
@@ -114,6 +120,7 @@ const SadminHome = () => {
   const [currentRoute, setCurrentRoute] = useState("account-configuration");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   useEffect(() => {
     const checkAuth = () => {
@@ -203,8 +210,29 @@ const SadminHome = () => {
             <img
               src={siteConfig?.logo}
               alt="Forex Logo"
-              className=" object-contain w-auto h-10 md:h-12 sm:h-10"
+              className="block object-contain w-auto dynamic-logo"
             />
+
+            <style jsx>{`
+              .dynamic-logo {
+                height: ${baseHeight * 0.8}rem;
+              }
+              @media (min-width: 640px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 0.666}rem;
+                }
+              }
+              @media (min-width: 768px) {
+                .dynamic-logo {
+                  height: ${baseHeight}rem;
+                }
+              }
+              @media (min-width: 1024px) {
+                .dynamic-logo {
+                  height: ${baseHeight * 1.2}rem;
+                }
+              }
+            `}</style>
           </a>
           <div className="p-6 border-b border-gray-700/50">
             <h1 className="text-xl font-bold">Super Admin Panel</h1>

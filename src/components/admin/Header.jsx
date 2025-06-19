@@ -10,6 +10,7 @@ import { setAdminToggle } from "@/redux/adminSlice";
 const Header = () => {
   const isSidebarOpen = useSelector((store) => store.user.isSidebarOpen);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   // const isSidebarOpen = false;
   const [isNotificationDropdownOpen, setIsNotificationDropdownOpen] =
@@ -87,8 +88,29 @@ const Header = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
+                className="block  object-contain w-auto dynamic-logo"
               />
+
+              <style jsx>{`
+                .dynamic-logo {
+                  height: ${baseHeight * 0.7}rem;
+                }
+                @media (min-width: 640px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 0.8}rem;
+                  }
+                }
+                @media (min-width: 768px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 0.9}rem;
+                  }
+                }
+                @media (min-width: 1024px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 1}rem;
+                  }
+                }
+              `}</style>
             </a>
             <div></div>
           </div>
