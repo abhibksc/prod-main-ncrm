@@ -97,18 +97,6 @@ const UserDetailDashboard = ({ username }) => {
       const depositRes = await backendApi.get(`/deposits`);
       const withdrwalRes = await backendApi.get(`/withdrawals`);
 
-      //   withdrwalRes.data.data
-      //     .filter((value) => value?.userId?._id === res.data.data._id)
-      //     .reduce((total, value) => total + (Number(value.amount) || 0), 0)
-      // );
-
-      // console.log("user res ###############", res.data.data._id);
-      // setTotalDepositAmount(
-      //   depositRes.data.data
-      //     .filter((value) => value?.userId?._id === res.data.data._id)
-      //     .reduce((total, value) => total + (Number(value.deposit) || 0), 0)
-      // );
-
       setUserData(res.data.data);
       setTotalDeposit(
         depositRes.data.data.filter(
@@ -192,7 +180,10 @@ const UserDetailDashboard = ({ username }) => {
         ))}
       </motion.div>
       <UserInfoForm userData={userData}></UserInfoForm>
-      <UserTradeAccounts userData={userData}></UserTradeAccounts>
+      <UserTradeAccounts
+        fetchUserData={fetchUserData}
+        userData={userData}
+      ></UserTradeAccounts>
     </div>
   );
 };

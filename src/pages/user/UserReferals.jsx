@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Copy,
   Check,
@@ -21,16 +21,19 @@ import toast from "react-hot-toast";
 import UserIBcards from "@/components/user/UserIBCards";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { CFgenerateRandomNumber } from "@/utils/CustomFunctions";
+import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
 
 const UserReferal = () => {
   const [activeTab, setActiveTab] = useState("commission");
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const { getUpdateLoggedUser } = UseUserHook();
   const [isVisible, setIsVisible] = useState(false);
+  const hasAnimatedRef = useRef(false); // Track if initial animation has run
   const currentUrl = window.location.href;
   const extractedUrl = new URL(currentUrl).origin;
   const [commissionsData, setCommissionsData] = useState([]);
-  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const siteConfig = useSelector((state) => state.user.siteConfig);
+  // useAutoUpdateLoggedUser();
 
   const TabButton = ({ label, isActive, onClick }) => (
     <motion.button
@@ -48,58 +51,18 @@ const UserReferal = () => {
   );
 
   // generate IB account handler ------------
-
   const generateHandler = async () => {
-    // const randomNumber = 345853;
-    const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
-
+    const randomNumber = CFgenerateRandomNumber(7);
     const toastId = toast.loading("Generating..");
-    try {
-      const check = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${randomNumber}`
-      );
-      if (check.data.MT5Account) {
-        console.log("Account already exists");
-        toast.error("Please try again..", { id: toastId });
-        return;
-      }
-    } catch (error) {
-      console.log("beauty error");
-    }
 
     try {
-      const groupRes = await metaApi.get(
-        `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
-      );
-
-      const envGroup = String(groupRes.data.lstGroups[0]);
-      const doubleQuotedEnvGroup = envGroup.replace(/\\\\/g, "\\");
-      const generateMtId = await metaApi.post(`/Adduser`, {
-        Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
-        MT5Account: randomNumber,
-        Name: loggedUser.firstName + " " + loggedUser.lastName,
-        Leverage: 100,
-        Group_Name: doubleQuotedEnvGroup,
+      const updateLoggedUser = await backendApi.put(`/update-user`, {
+        id: loggedUser._id,
+        referralAccount: randomNumber,
       });
-      const disableTradingAccount = await metaApi.get(
-        `EnableTrading?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${generateMtId.data.MT5Account}&Status=0`
-      );
 
-      if (generateMtId.data.MT5Account > 0) {
-        const updateLoggedUser = await backendApi.put(`/update-user`, {
-          id: loggedUser._id,
-          referralAccount: generateMtId.data.MT5Account,
-        });
-
-        toast.success("IB account created", { id: toastId });
-        getUpdateLoggedUser();
-      } else {
-        toast.error("Please try again", { id: toastId });
-      }
+      toast.success("IB account created", { id: toastId });
+      getUpdateLoggedUser();
     } catch (error) {
       console.log("error", error);
       toast.error(`Please Try again later. ${error?.response?.data?.code}`, {
@@ -107,14 +70,13 @@ const UserReferal = () => {
       });
     }
   };
-  // fetch all commissions data------------
 
+  // fetch all commissions data------------
   const fetchCommissions = async () => {
     try {
       const res = await backendApi.get(
         `/user-zone-ibs/${loggedUser?.referralAccount}`
       );
-
       setCommissionsData(res.data.data);
     } catch (error) {
       console.log(error);
@@ -123,7 +85,6 @@ const UserReferal = () => {
 
   const ReferralsView = () => {
     const referralLink = `${extractedUrl}/user/signup/${loggedUser?.referralAccount}`;
-
     const [isCopied, setIsCopied] = useState(false);
     const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
 
@@ -143,7 +104,7 @@ const UserReferal = () => {
         twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           shareText
         )}`,
-        instagram: "https://www.instagram.com/", // Note: Instagram doesn't support direct sharing via URL
+        instagram: "https://www.instagram.com/",
       };
 
       if (platform !== "instagram") {
@@ -168,12 +129,7 @@ const UserReferal = () => {
     };
 
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 rounded-xl p-4 sm:p-6"
-      >
+      <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 rounded-xl p-4 sm:p-6">
         <div className="w-full sm:w-1/2">
           <img
             src="/referral2.png"
@@ -262,28 +218,35 @@ const UserReferal = () => {
             Share this link to invite friends and earn commissions.
           </p>
         </div>
-      </motion.div>
+      </div>
     );
   };
 
   const CommissionView = () => (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="space-y-4 sm:space-y-6"
-    >
+    <div className="space-y-4 sm:space-y-6">
       <UserIBcards commissionsData={commissionsData}></UserIBcards>
-    </motion.div>
+    </div>
   );
 
-  // use effect -------
-
+  // useEffect with proper dependency control
   useEffect(() => {
+    // Only set isVisible once on mount
+    if (!hasAnimatedRef.current) {
+      setIsVisible(true);
+      hasAnimatedRef.current = true;
+    }
+
     getUpdateLoggedUser();
     fetchCommissions();
-    setIsVisible(true);
-  }, []);
+  }, []); // Empty dependency array for mount only
+
+  // Separate useEffect for data updates that don't trigger animations
+  useEffect(() => {
+    if (loggedUser?.referralAccount && hasAnimatedRef.current) {
+      fetchCommissions();
+    }
+  }, [loggedUser?.referralAccount]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -325,14 +288,30 @@ const UserReferal = () => {
       {loggedUser?.referralAccount ? (
         <AnimatePresence mode="wait">
           {activeTab === "referrals" ? (
-            <ReferralsView key="referrals" />
+            <motion.div
+              key="referrals"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ReferralsView />
+            </motion.div>
           ) : (
-            <CommissionView key="commission" />
+            <motion.div
+              key="commission"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <CommissionView />
+            </motion.div>
           )}
         </AnimatePresence>
       ) : (
         <div className="p-4 md:mt-[-90px] mt-[-70px] rounded-2xl mb-8 w-full overflow-hidden">
-          {/* Hero Section with Fade-in Animation */}
+          {/* Hero Section with Fade-in Animation - Only animates once */}
           <div
             className={`flex flex-col items-center text-center mb-12 transition-all duration-1000 transform ${
               isVisible
@@ -364,7 +343,7 @@ const UserReferal = () => {
             </div>
           </div>
 
-          {/* Stats Section with Stagger Animation */}
+          {/* Stats Section with Stagger Animation - Only animates once */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
             {[
               { value: "Unlimited", label: "IB Commission" },
@@ -389,7 +368,7 @@ const UserReferal = () => {
             ))}
           </div>
 
-          {/* Features Grid with Hover Effects */}
+          {/* Features Grid with Hover Effects - Only animates once */}
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {[
               {
@@ -429,7 +408,7 @@ const UserReferal = () => {
             ))}
           </div>
 
-          {/* Getting Started Section with Step Animation */}
+          {/* Getting Started Section with Step Animation - Only animates once */}
           <div
             className={`bg-secondary-700/10 rounded-xl p-8 shadow-sm transition-all duration-1000 transform ${
               isVisible
@@ -478,7 +457,7 @@ const UserReferal = () => {
             </div>
           </div>
 
-          {/* Final CTA with Pulse Animation */}
+          {/* Final CTA with Pulse Animation - Only animates once */}
           <div
             className={`mt-12 text-center transition-all duration-1000 transform ${
               isVisible

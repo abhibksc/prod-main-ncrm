@@ -77,6 +77,7 @@ const UserSidebar = () => {
   const dispatch = useDispatch();
   const sidebarRef = useRef(null);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const baseHeight = siteConfig?.logoSize || 4;
 
   useEffect(() => {
     const handleResize = () => {
@@ -178,8 +179,25 @@ const UserSidebar = () => {
               <img
                 src={siteConfig?.logo}
                 alt="Forex Logo"
-                className=" object-contain w-auto h-[2rem] md:h-[4rem] sm:h-[3rem]"
+                className="block object-contain w-auto dynamic-logo"
               />
+
+              <style jsx>{`
+                .dynamic-logo {
+                  height: ${baseHeight * 0.8}rem;
+                }
+
+                @media (min-width: 768px) {
+                  .dynamic-logo {
+                    height: ${baseHeight}rem;
+                  }
+                }
+                @media (min-width: 1024px) {
+                  .dynamic-logo {
+                    height: ${baseHeight * 1.2}rem;
+                  }
+                }
+              `}</style>
             </a>
           </div>
           <div className="flex-grow overflow-y-auto pb-16 pr-3 user-custom-scrollbar w-full">
@@ -190,7 +208,7 @@ const UserSidebar = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <Link to={"/user/new-challenge"}>
-                  <button className="text-sm whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500-70 w-full transition-all duration-300 hover:bg-secondary-500-60">
+                  <button className="text-sm shadow-none outline-none border-none whitespace-nowrap font-semibold rounded-full px-8 py-2 bg-secondary-500-70 w-full transition-all duration-300 hover:bg-secondary-500-60">
                     Open Account
                   </button>
                 </Link>

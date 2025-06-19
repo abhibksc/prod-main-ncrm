@@ -146,12 +146,12 @@ const ManageUsers = () => {
       </div>
       {/* Added max-height and overflow-y-auto to create scrollable container */}
       <div className="overflow-x-auto relative max-h-[70vh] overflow-y-auto custom-scrollbar">
-        <table className="w-full shadow-md rounded-lg">
+        <table className="w-full whitespace-nowrap shadow-md rounded-lg">
           {/* Add sticky positioning to thead */}
           <thead className="bg-primary-400 text-white sticky top-0">
             <tr>
               <th className="py-3 px-4 text-left">User/Email</th>
-              <th className="py-3 px-4 text-left">Country</th>
+              <th className="py-3 px-4 text-center">Country</th>
               <th className="py-3 px-4 text-left">EMAIL</th>
               <th className="py-3 px-4 text-left">KYC </th>
               <th className="py-3 px-4 text-left">Total AC</th>

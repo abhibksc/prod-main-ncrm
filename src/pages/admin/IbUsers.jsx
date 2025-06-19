@@ -3,6 +3,12 @@ import { Ban, CheckCircle, Copy, Loader, Search } from "lucide-react";
 
 import toast from "react-hot-toast";
 import { backendApi } from "@/utils/apiClients";
+import { Button } from "@headlessui/react";
+import { RiUserSharedFill } from "react-icons/ri";
+import { setLoggedUser } from "@/redux/user/userSlice";
+import { useDispatch } from "react-redux";
+import UseUserHook from "@/hooks/user/UseUserHook";
+import { Link } from "react-router-dom";
 
 const IbUsers = () => {
   const [ibUsers, setIbUsers] = useState([]);
@@ -55,6 +61,10 @@ const IbUsers = () => {
       setCurrentPage((prev) => prev - 1);
     }
   };
+  // for login as user
+
+  const dispatch = useDispatch();
+  const { getReset } = UseUserHook();
 
   // page reset ------
 
@@ -110,14 +120,16 @@ const IbUsers = () => {
 
       <div className="overflow-x-auto relative">
         <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
-          <table className="min-w-full bg-primary-700">
+          <table className="min-w-full whitespace-nowrap bg-primary-700">
             {/* Made header sticky */}
             <thead className="bg-primary-400 text-white sticky top-0 z-10">
               <tr>
                 <th className="py-2 px-4 text-left">User | Email</th>
-                <th className="py-2 px-4 text-left">MT5 Accounts</th>
-                <th className="py-2 px-4 text-left">Email Verified</th>
-                <th className="py-2 px-4 text-left">Referral ID</th>
+                <th className="py-2 px-4 text-center">MT5 Accounts</th>
+                <th className="py-2 px-4 text-center">Email</th>
+                <th className="py-2 px-4 text-center">KYC</th>
+                <th className="py-2 px-4 text-center">IB ID</th>
+                <th className="py-2 px-4 text-center">IB Balance</th>
                 <th className="py-2 px-4 text-center">Referral Link</th>
               </tr>
             </thead>
@@ -135,24 +147,37 @@ const IbUsers = () => {
               ) : (
                 ibUsers?.map((item) => (
                   <tr key={item._id} className="border-b border-gray-400/30">
-                    <td className="py-2 px-4">
-                      <div className="font-semibold">
-                        {item?.firstName ? item?.firstName : "Not found!!"}
-                      </div>
-                      <div className="text-white/70 text-sm">
-                        {item?.email ? item?.email : "Not found!!"}
+                    <td className="py-2 flex gap-2 px-4">
+                      <button
+                        onClick={() => {
+                          getReset();
+                          dispatch(setLoggedUser(item));
+                          window.open("/user/dashboard", "_blank");
+                        }}
+                        className="text-blue-500 hover:shadow-lg hover:text-blue-500/80 hover:scale-110 transition-all"
+                      >
+                        <RiUserSharedFill size={25} />
+                      </button>
+                      <div>
+                        <div className="font-semibold">
+                          {item?.firstName ? item?.firstName : "Not found!!"}
+                        </div>
+                        <Link to={`/admin/user-detail/${item?._id}`}>
+                          <div className="text-white/70 hover:text-blue-400 hover:font-semibold transition-all text-sm">
+                            {item?.email ? item?.email : "Not found!!"}
+                          </div>
+                        </Link>
                       </div>
                     </td>
 
-                    <td className="py-2 px-4">
-                      <div className=" flex flex-col justify-center items-center">
-                        <span className="bg-primary-400/20 whitespace-nowrap text-white px-2 py-1 rounded-full text-sm">
-                          {item?.accounts?.length}
-                        </span>
-                      </div>
+                    <td className="py-2 text-center px-4">
+                      <span className="bg-primary-400/20 whitespace-nowrap text-white px-2 py-1 rounded-full text-sm">
+                        {item?.accounts?.length}
+                      </span>
                     </td>
-                    <td className="py-2 text-center mx-auto px-4">
-                      <div className=" flex flex-col  justify-center items-center mx-auto">
+
+                    <td className="py-2  text-center px-4">
+                      <div className=" flex flex-col items-center justify-center">
                         {item?.emailVerified ? (
                           <CheckCircle className=" text-green-500"></CheckCircle>
                         ) : (
@@ -160,8 +185,20 @@ const IbUsers = () => {
                         )}
                       </div>
                     </td>
-                    <td className="py-2 px-4">
+                    <td className="py-2  text-center px-4">
+                      <div className=" flex flex-col items-center justify-center">
+                        {item?.kycVerified ? (
+                          <CheckCircle className=" text-green-500"></CheckCircle>
+                        ) : (
+                          <Ban className=" text-red-500"></Ban>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2  text-center px-4">
                       {item?.referralAccount || "N/A"}
+                    </td>
+                    <td className="py-2 text-green-400 font-semibold  text-center px-4">
+                      {Number(item?.ibBalance || 0).toFixed(4)}
                     </td>
                     <td className="py-3 whitespace-nowrap px-4">
                       <div className=" flex gap-2">
