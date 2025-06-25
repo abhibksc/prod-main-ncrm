@@ -8,6 +8,7 @@ export default function UseIbWithdrawalHistory() {
   const [isError, setIsError] = useState(false);
   const [data, setData] = useState([]);
   const [totalApprovedWithdrawal, setTotalApprovedWithdrawal] = useState(0);
+  const [isPendingWithdrawal, setIsPendingWithdrawal] = useState(false);
 
   const fetchData = useCallback(async () => {
     // console.log("ib called");
@@ -23,6 +24,11 @@ export default function UseIbWithdrawalHistory() {
           .filter((value) => value.status === "approved")
           .reduce((total, value) => total + value.amount, 0);
         setTotalApprovedWithdrawal(totalSum);
+
+        const isPendingRes = resData.some(
+          (value) => value.status === "pending"
+        );
+        setIsPendingWithdrawal(isPendingRes);
         setData(resData);
       }
     } catch (error) {
@@ -43,5 +49,6 @@ export default function UseIbWithdrawalHistory() {
     isLoading,
     isError,
     refresh: fetchData,
+    isPendingWithdrawal,
   };
 }

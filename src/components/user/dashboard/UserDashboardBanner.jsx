@@ -2,41 +2,87 @@ import React from "react";
 import { Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
+const circleVariants = {
+  hidden: { scale: 0.8, opacity: 0 },
+  visible: { scale: 1, opacity: 1, transition: { duration: 0.4, delay: 0.1 } },
+};
+
+const buttonVariants = {
+  hidden: { opacity: 0, x: -10 },
+  visible: (delay) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.3, delay },
+  }),
+};
 
 const UserDashboardBanner = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
 
   return (
-    <div className="bg-gradient-to-br sm:max-h-[300px] sm:my-auto from-secondary-800 to-secondary-800/30 text-white p-6 sm:p-8 rounded-xl shadow-xl max-w-xl lg:max-w-2xl mx-auto">
-      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center">
-        Welcome{" "}
-        <span className="text-secondary-500">
-          {loggedUser?.firstName} {loggedUser?.lastName}
-        </span>
-      </h1>
-      <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-6 gap-4">
-        <div className="text-center sm:text-left">
-          <p className="text-sm sm:text-base text-secondary-300 font-semibold leading-relaxed">
-            We’re excited to have you here! Visit our FAQ for helpful guidance.
-          </p>
+    <motion.div
+      className="bg-secondary-800/30 p-6 rounded-3xl shadow-lg w-full max-w-2xl mx-auto flex flex-col items-center"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div
+        className="relative p-2 flex items-center justify-center w-40 h-40 bg-secondary-800/20 shadow-lg rounded-full mb-2"
+        variants={circleVariants}
+      >
+        <Trophy className="absolute top-8 w-8 h-8 text-secondary-500 drop-shadow-md" />
+        <div className="text-center mt-8">
+          <h1 className="text-lg font-semibold text-white">
+            Welcome{" "}
+            <span className="text-secondary-500">
+              {loggedUser?.firstName} {loggedUser?.lastName}
+            </span>
+          </h1>
         </div>
-        <div className="flex-shrink-0">
-          <Trophy className="w-12 h-12 sm:w-14 sm:h-14 text-secondary-500 drop-shadow-md" />
-        </div>
+      </motion.div>
+
+      <div className="flex flex-col items-center mb-4">
+        <p className="text-sm text-secondary-300 font-medium text-center max-w-md">
+          We’re excited to have you here! Visit our FAQ for helpful guidance.
+        </p>
       </div>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+      <motion.div
+        className="flex flex-col sm:flex-row gap-3 justify-center"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.1 } },
+        }}
+      >
         <Link to={"/user/new-challenge"}>
-          <button className="w-full text-xs lg:text-sm sm:w-auto border-t-2 bg-secondary-500 border-secondary-500 text-white py-3 px-6 rounded-full font-semibold hover:bg-secondary-500-70 transition-all duration-300">
+          <motion.button
+            className="bg-secondary-500 text-white py-2 px-5 rounded-full text-sm font-medium hover:bg-secondary-500/70 transition-all duration-300"
+            variants={buttonVariants}
+            custom={0.2}
+          >
             Create An Account
-          </button>
+          </motion.button>
         </Link>
         <Link to={"/user/challenges"}>
-          <button className="w-full text-xs lg:text-sm sm:w-auto border-secondary-500 border-b-2 text-white py-3 px-6 rounded-full font-semibold shadow hover:text-secondary-500 hover:shadow-lg transition-all duration-300">
+          <motion.button
+            className="border border-secondary-500 text-white py-2 px-5 rounded-full text-sm font-medium hover:text-secondary-500 hover:bg-secondary-800/20 transition-all duration-300"
+            variants={buttonVariants}
+            custom={0.3}
+          >
             Account Details
-          </button>
+          </motion.button>
         </Link>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

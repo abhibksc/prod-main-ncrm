@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
+import UseIbWithdrawalHistory from "@/hooks/user/ib/UseIbWithdrawalHistory";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -21,6 +22,7 @@ export const UserReferralWithdrawal = () => {
   const [amount, setAmount] = useState("");
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
+  const { isPendingWithdrawal } = UseIbWithdrawalHistory();
   useAutoUpdateLoggedUser();
 
   const currentDateTime = new Date();
@@ -173,6 +175,13 @@ export const UserReferralWithdrawal = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+
+    if (isPendingWithdrawal) {
+      toast.error(
+        `One of your withdrawal request is still pending please wait until it get resolved`
+      );
+      return;
+    }
     if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
 
     setApiLoader(true);

@@ -14,16 +14,16 @@ import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { useGetIdInfo } from "@/hooks/user/UseGetIdInfo";
 import { CiMoneyBill } from "react-icons/ci";
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 10 },
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
   visible: (delay) => ({
     opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, delay },
+    scale: 1,
+    transition: { duration: 0.4, ease: "easeOut", delay },
   }),
 };
 
-const CredentialItem = ({
+const CredentialCard = ({
   icon: Icon,
   label,
   value,
@@ -32,25 +32,27 @@ const CredentialItem = ({
   link,
 }) => (
   <motion.div
-    className="flex items-center justify-between py-2"
-    variants={itemVariants}
+    className="flex flex-col items-center p-4 bg-secondary-800/20 rounded-2xl duration-300"
+    variants={cardVariants}
     custom={delay}
     initial="hidden"
     animate="visible"
   >
-    <div className="flex items-center space-x-3">
-      <Icon className="w-5 h-5 text-gray-300" />
-      <span className="text-sm font-medium text-gray-200">{label}</span>
+    <div className="p-2 bg-secondary-900/20 rounded-full ">
+      <Icon className="w-6 h-6 text-gray-200" />
     </div>
+    <span className="text-xs font-medium text-gray-200 text-center">
+      {label}
+    </span>
     <Link to={link || "#"}>
       <motion.div
-        className="flex items-center"
+        className="mt-2"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        transition={{ duration: 0.1 }}
+        transition={{ duration: 0.2 }}
       >
         <span
-          className={`text-sm font-medium px-3 py-1 rounded-full ${badgeColor} bg-opacity-80`}
+          className={`text-sm font-semibold px-3 py-1 rounded-full ${badgeColor} bg-opacity-80`}
         >
           {value}
         </span>
@@ -81,35 +83,35 @@ const UserDashboardAccount = () => {
 
   return (
     <motion.div
-      className="bg-secondary-800/70 shadow-lg rounded-lg p-6 min-w-5xl w-full md:max-w-lg"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.3 }}
+      className="bg-secondary-800/20 p-6 rounded-3xl shadow-lg w-full max-w-2xl"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <motion.div
-        className="text-2xl flex justify-between items-center gap-5 mb-2 whitespace-nowrap text-gray-200"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
+        className="flex items-center justify-between bg-secondary-800/20 p-4 rounded-xl mb-6"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
       >
-        <div className="font-semibold justify-center items-center flex sm:flex-row flex-col text-lg">
-          <p>Server :</p>
-          <span className="bg-secondary-500-10 text-sm md:text-lg mt-1 rounded-full py-1 px-3">
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-semibold text-gray-200">Server:</span>
+          <span className="bg-secondary-500/10 text-sm text-gray-200 py-1 rounded-full">
             {siteConfig?.serverName}
           </span>
         </div>
-        <div className="text-sm">
+        <div className="flex items-center gap-2">
           {Array.isArray(loggedUser?.accounts) &&
             loggedUser.accounts.length > 0 && (
               <select
                 onChange={handleAccountChange}
                 id="accountNumber"
                 name="accountNumber"
-                className="w-full border-none py-1 rounded-full bg-secondary-500-10 px-2 outline-none font-semibold border-gray-700 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
+                className="bg-secondary-800/20 text-gray-200 border border-secondary-700/30 py-2 px-3 rounded-lg focus:ring-2 focus:ring-secondary-500 outline-none text-sm transition-all duration-300"
               >
                 <option
                   disabled
-                  className="bg-secondary-800 text-gray-500"
+                  className="bg-secondary-800 text-gray-400"
                   value=""
                 >
                   Select Account
@@ -117,7 +119,7 @@ const UserDashboardAccount = () => {
                 {loggedUser.accounts?.map((account, index) => (
                   <option
                     key={index}
-                    className="bg-secondary-800 font-semibold text-white"
+                    className="bg-secondary-800 text-gray-200"
                     value={account.accountNumber}
                   >
                     {account.accountNumber}
@@ -129,7 +131,7 @@ const UserDashboardAccount = () => {
       </motion.div>
 
       <motion.div
-        className="space-y-1"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
         initial="hidden"
         animate="visible"
         variants={{
@@ -141,42 +143,42 @@ const UserDashboardAccount = () => {
           },
         }}
       >
-        <CredentialItem
+        <CredentialCard
           icon={User}
           label="Trading Account"
           value={currentAccount.accountNumber}
           badgeColor="bg-blue-100 text-blue-800"
           delay={0.2}
         />
-        <CredentialItem
+        <CredentialCard
           icon={MdOutlineAccountBalanceWallet}
           label="Balance"
           value={`$${info?.Balance || 0}`}
           badgeColor="bg-sky-100 text-sky-800"
           delay={0.3}
         />
-        <CredentialItem
+        <CredentialCard
           icon={CiMoneyBill}
           label="Equity"
           value={`$${info?.Equity || 0}`}
           badgeColor="bg-sky-100 text-sky-800"
           delay={0.4}
         />
-        <CredentialItem
+        <CredentialCard
           icon={CheckCircle}
           label="Leverage"
           value={currentAccount.leverage}
           badgeColor="bg-indigo-100 text-indigo-800"
           delay={0.5}
         />
-        <CredentialItem
+        <CredentialCard
           icon={PanelTopInactiveIcon}
           label="Account Type"
           value={currentAccount.accountType || "N/A"}
           badgeColor="bg-orange-100 text-orange-800"
           delay={0.6}
         />
-        <CredentialItem
+        <CredentialCard
           icon={Info}
           label="KYC Status"
           value={loggedUser?.kycVerified ? "Active" : "Inactive"}

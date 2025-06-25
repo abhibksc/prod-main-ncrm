@@ -44,7 +44,7 @@ const useMT5Stats = () => {
     return { total, active, disabled, profitable, loss };
   }, [accounts]);
 
-  return { mt5Stats, isLoading, error };
+  return { accounts, mt5Stats, isLoading, error };
 };
 
 export default useMT5Stats;

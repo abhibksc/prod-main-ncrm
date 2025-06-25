@@ -19,6 +19,7 @@ import {
   SubtitlesIcon,
   HardDrive,
   CopyPlusIcon,
+  ArrowRightLeftIcon,
 } from "lucide-react";
 import { RiFileUserFill, RiProfileFill } from "react-icons/ri";
 
@@ -125,6 +126,11 @@ const Sidebar = () => {
         { label: "Rejected Withdrawals", route: "/admin/withdrawal/rejected" },
         { label: "All Withdrawals", route: "/admin/withdrawal/all" },
       ],
+    },
+    {
+      label: "Transfers",
+      icon: <ArrowRightLeftIcon />,
+      route: "/admin/transfers",
     },
     {
       label: "IB Withdrawals",

@@ -1,12 +1,31 @@
 import ModernHeading from "@/lib/ModernHeading";
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { metaApi } from "@/utils/apiClients";
+import { motion, AnimatePresence } from "framer-motion";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import { useSelector } from "react-redux";
 import { LoaderPinwheelIcon } from "lucide-react";
 import toast from "react-hot-toast";
+import UserP2pTransfer from "@/components/user/UserP2pTransfer";
+
+// Motion Variants
+const containerStagger = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
 
 const UserTransfer = () => {
+  const [activeTab, setActiveTab] = useState("internal");
   const [fromAccount, setFromAccount] = useState("");
   const [toAccount, setToAccount] = useState("");
   const [amount, setAmount] = useState("");
@@ -14,7 +33,7 @@ const UserTransfer = () => {
   const [fromAccountBalance, setFromAccountBalance] = useState("");
   const [toAccountBalance, setToAccountBalance] = useState("");
   const [balanceLoading, setBalanceLoading] = useState(false);
-  const [isTransferLoading, setIsTransferLoading] = useState(false); // NEW: Added transfer loading state
+  const [isTransferLoading, setIsTransferLoading] = useState(false);
 
   const fromAccountInfo = async () => {
     try {
@@ -26,15 +45,13 @@ const UserTransfer = () => {
         }&MT5Account=${fromAccount}`
       );
       setBalanceLoading(false);
-
-      if (res.data.Equity) {
-        setFromAccountBalance(res.data.Equity);
-      }
+      if (res.data.Equity) setFromAccountBalance(res.data.Equity);
     } catch (error) {
       console.log(error);
       setBalanceLoading(false);
     }
   };
+
   const toAccountInfo = async () => {
     try {
       setToAccountBalance("");
@@ -45,15 +62,13 @@ const UserTransfer = () => {
         }&MT5Account=${toAccount}`
       );
       setBalanceLoading(false);
-
-      if (res.data.Equity) {
-        setToAccountBalance(res.data.Equity);
-      }
+      if (res.data.Equity) setToAccountBalance(res.data.Equity);
     } catch (error) {
       console.log(error);
       setBalanceLoading(false);
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isTransferLoading) return;
@@ -62,19 +77,27 @@ const UserTransfer = () => {
       return;
     }
     const toastId = toast.loading("Processing your transfer. Please wait...");
-    setIsTransferLoading(true); // NEW: Set loading to true when transfer starts
+    setIsTransferLoading(true);
 
     try {
-      const withdrawal = await metaApi.get(
+      await metaApi.get(
         `/MakeWithdrawBalance?Manager_Index=${
           import.meta.env.VITE_MANAGER_INDEX
         }&MT5Account=${fromAccount}&Amount=${amount}&Comment=transfer`
       );
-      const deposit = await metaApi.get(
+      await metaApi.get(
         `/MakeDepositBalance?Manager_Index=${
           import.meta.env.VITE_MANAGER_INDEX
         }&MT5Account=${toAccount}&Amount=${amount}&Comment=transfer`
       );
+      await backendApi.post(`/add-transfer`, {
+        userId: loggedUser._id,
+        type: "internal",
+        fromAccount: fromAccount,
+        toAccount: toAccount,
+        amount: amount,
+        status: "success",
+      });
       toast.success("Transfer completed successfully!", { id: toastId });
       setAmount("");
       await fromAccountInfo();
@@ -83,7 +106,7 @@ const UserTransfer = () => {
       console.log(error);
       toast.error("Transfer failed. Please try again.", { id: toastId });
     } finally {
-      setIsTransferLoading(false); // NEW: Reset loading to false when transfer completes
+      setIsTransferLoading(false);
     }
   };
 
@@ -102,166 +125,177 @@ const UserTransfer = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
-      <motion.div
-        className="mb-4"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <ModernHeading text={"Transfer Funds"} />
-      </motion.div>
-      <p className="text-gray-400 mb-6">
-        You can instantly transfer funds between accounts with the same currency
-        using the form below. <br /> For transfers between different currencies,
-        Contact Admin.
-      </p>
+      <ModernHeading text="Transfer Funds" />
 
-      <motion.form
-        onSubmit={handleSubmit}
-        className="space-y-6"
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
-      >
-        <div className="flex flex-col md:flex-row justify-between gap-5">
-          {/* From Account */}
-          <motion.div
-            className="w-full"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <label
-              htmlFor="from-account"
-              className="text-sm font-medium flex justify-between text-gray-200"
-            >
-              <p>From Account</p>
-              {balanceLoading ? (
-                <LoaderPinwheelIcon className=" animate-spin text-secondary-500"></LoaderPinwheelIcon>
-              ) : (
-                fromAccountBalance && (
-                  <p className="px-4">
-                    Balance :{" "}
-                    <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
-                      ${fromAccountBalance}
-                    </span>{" "}
-                  </p>
-                )
-              )}
-            </label>
-            <select
-              id="from-account"
-              required
-              value={fromAccount}
-              onChange={(e) => setFromAccount(e.target.value)}
-              className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-            >
-              <option className="bg-secondary-800 text-white" value="" disabled>
-                Select Account
-              </option>
-              {loggedUser?.accounts?.map((value, index) => (
-                <option
-                  disabled={toAccount === value.accountNumber}
-                  key={index}
-                  className="bg-secondary-800 text-white"
-                  value={value.accountNumber}
-                >
-                  {value.accountNumber}
-                </option>
-              ))}
-            </select>
-          </motion.div>
-
-          {/* To Account */}
-          <motion.div
-            className="w-full"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <label
-              htmlFor="to-account"
-              className="text-sm flex justify-between font-medium text-gray-200"
-            >
-              <p>To Account</p>
-              {balanceLoading ? (
-                <LoaderPinwheelIcon className=" animate-spin text-secondary-500"></LoaderPinwheelIcon>
-              ) : (
-                toAccountBalance && (
-                  <p className="px-4">
-                    Balance :{" "}
-                    <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
-                      ${toAccountBalance}
-                    </span>{" "}
-                  </p>
-                )
-              )}
-            </label>
-            <select
-              id="to-account"
-              required
-              value={toAccount}
-              onChange={(e) => setToAccount(e.target.value)}
-              className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-            >
-              <option className="bg-secondary-800 text-white" value="" disabled>
-                Select Account
-              </option>
-              {loggedUser?.accounts?.map((value, index) => (
-                <option
-                  disabled={fromAccount === value.accountNumber}
-                  key={index}
-                  className="bg-secondary-800 text-white"
-                  value={value.accountNumber}
-                >
-                  {value.accountNumber}
-                </option>
-              ))}
-            </select>
-          </motion.div>
-        </div>
-
-        {/* Amount to Transfer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <label htmlFor="amount" className="text-sm font-medium text-gray-200">
-            Amount Wish To Transfer
-          </label>
-          <input
-            type="number"
-            id="amount"
-            required
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="Enter amount"
-            className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
-          />
-        </motion.div>
-
-        {/* Transfer Button */}
-        <motion.div
-          className="flex justify-center items-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.6 }}
-        >
+      {/* Tabs */}
+      <div className="flex justify-center mt-6 mb-6 space-x-4">
+        {["internal", "p2p"].map((tab) => (
           <motion.button
-            type="submit"
+            key={tab}
+            onClick={() => setActiveTab(tab)}
             whileTap={{ scale: 0.95 }}
-            disabled={isTransferLoading} // NEW: Disable button while loading
-            className={`px-12 py-3 mt-4 text-white font-semibold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-secondary-500/30 ${
-              isTransferLoading
-                ? "bg-gray-500 cursor-not-allowed"
-                : "bg-secondary-500-90 hover:px-16 hover:bg-secondary-500-80"
+            className={`px-6 py-2 rounded-full  text-[10px] md:text-sm font-semibold transition-all ${
+              activeTab === tab
+                ? "bg-secondary-500 text-white"
+                : "bg-secondary-700/60 hover:bg-secondary-500-30 text-gray-300"
             }`}
           >
-            {isTransferLoading ? "Processing..." : "Transfer Now"}
+            {tab === "internal" ? "Internal Transfer" : "P2P Transfer"}
           </motion.button>
-        </motion.div>
-      </motion.form>
+        ))}
+      </div>
+
+      <AnimatePresence mode="wait">
+        {activeTab === "internal" ? (
+          <motion.div
+            key="internal-tab"
+            variants={containerStagger}
+            initial="hidden"
+            animate="show"
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.p
+              variants={fadeInUp}
+              className="text-gray-400 mb-6 text-sm"
+            >
+              Instantly transfer funds between your own accounts with same
+              currency. <br />
+              For different currencies, contact admin.
+            </motion.p>
+
+            <motion.form
+              onSubmit={handleSubmit}
+              className="space-y-6"
+              variants={containerStagger}
+            >
+              <motion.div
+                className="flex flex-col md:flex-row justify-between gap-5"
+                variants={fadeInUp}
+              >
+                {/* From Account */}
+                <div className="w-full">
+                  <label className="text-sm font-medium flex justify-between text-gray-200">
+                    <span>From Account</span>
+                    {balanceLoading ? (
+                      <LoaderPinwheelIcon className="animate-spin text-secondary-500" />
+                    ) : (
+                      fromAccountBalance && (
+                        <span className="px-4">
+                          Balance:{" "}
+                          <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
+                            ${fromAccountBalance}
+                          </span>
+                        </span>
+                      )
+                    )}
+                  </label>
+                  <select
+                    required
+                    value={fromAccount}
+                    onChange={(e) => setFromAccount(e.target.value)}
+                    className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:ring-2 focus:ring-secondary-500"
+                  >
+                    <option className=" bg-secondary-800" value="" disabled>
+                      Select Account
+                    </option>
+                    {loggedUser?.accounts?.map((acc, i) => (
+                      <option
+                        key={i}
+                        value={acc.accountNumber}
+                        disabled={toAccount === acc.accountNumber}
+                        className="bg-secondary-800 text-white"
+                      >
+                        {acc.accountNumber}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* To Account */}
+                <div className="w-full">
+                  <label className="text-sm font-medium flex justify-between text-gray-200">
+                    <span>To Account</span>
+                    {balanceLoading ? (
+                      <LoaderPinwheelIcon className="animate-spin text-secondary-500" />
+                    ) : (
+                      toAccountBalance && (
+                        <span className="px-4">
+                          Balance:{" "}
+                          <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
+                            ${toAccountBalance}
+                          </span>
+                        </span>
+                      )
+                    )}
+                  </label>
+                  <select
+                    required
+                    value={toAccount}
+                    onChange={(e) => setToAccount(e.target.value)}
+                    className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:ring-2 focus:ring-secondary-500"
+                  >
+                    <option className=" bg-secondary-800" value="" disabled>
+                      Select Account
+                    </option>
+                    {loggedUser?.accounts?.map((acc, i) => (
+                      <option
+                        key={i}
+                        value={acc.accountNumber}
+                        disabled={fromAccount === acc.accountNumber}
+                        className="bg-secondary-800 text-white"
+                      >
+                        {acc.accountNumber}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </motion.div>
+
+              {/* Amount */}
+              <motion.div variants={fadeInUp}>
+                <label className="text-sm font-medium text-gray-200">
+                  Amount to Transfer
+                </label>
+                <input
+                  type="number"
+                  required
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Enter amount"
+                  className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:ring-2 focus:ring-secondary-500"
+                />
+              </motion.div>
+
+              {/* Button */}
+              <motion.div className="flex justify-center" variants={fadeInUp}>
+                <motion.button
+                  type="submit"
+                  whileTap={{ scale: 0.95 }}
+                  disabled={isTransferLoading}
+                  className={`px-10 py-3 text-white font-semibold rounded-full transition-all focus:ring-2 ${
+                    isTransferLoading
+                      ? "bg-gray-500 cursor-not-allowed"
+                      : "bg-secondary-500-90 hover:bg-secondary-500-80"
+                  }`}
+                >
+                  {isTransferLoading ? "Processing..." : "Transfer Now"}
+                </motion.button>
+              </motion.div>
+            </motion.form>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="p2p-tab"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <UserP2pTransfer></UserP2pTransfer>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

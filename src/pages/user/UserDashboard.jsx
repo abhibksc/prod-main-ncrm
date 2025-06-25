@@ -53,11 +53,11 @@ export default function UserDashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className="">
-          <TradingViewWidget />
-        </div>
         <div className="flex  justify-center items-center">
           <UserDashboardAccount />
+        </div>
+        <div className="">
+          <TradingViewWidget />
         </div>
       </motion.div>
       {/* 3rd row  */}

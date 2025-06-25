@@ -23,7 +23,10 @@ export default function UserTransaction() {
       if (tradeType === "deposit") {
         res = await backendApi.get(`/deposit/${loggedUser._id}`);
       }
-      const filteredData = res.data.data;
+      if (tradeType === "transfers") {
+        res = await backendApi.get(`/get-transfers?userId=${loggedUser._id}`);
+      }
+      const filteredData = res.data.data.reverse();
 
       if (filteredData.length === 0) {
         setError(`No ${tradeType} data available.`);
@@ -147,6 +150,18 @@ export default function UserTransaction() {
         >
           Withdrawals
         </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className={`px-6 py-2 text-sm font-semibold rounded-full transition-colors ${
+            activeTab === "transfers"
+              ? "bg-secondary-500-80 text-white"
+              : "bg-secondary-800/50 text-gray-300 hover:bg-secondary-700/50"
+          }`}
+          onClick={() => handleTabClick("transfers")}
+        >
+          Transfers
+        </motion.button>
       </motion.div>
 
       {loading && (
@@ -179,137 +194,207 @@ export default function UserTransaction() {
           animate="visible"
           className=" overflow-x-auto user-custom-scrollbar"
         >
-          <table className="w-full text-sm overflow-y-hidden overflow-x-auto user-custom-scrollbar">
-            <thead>
-              <tr className="text-gray-400 border-b border-gray-700">
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Account No
-                </th>
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Type
-                </th>
-                {activeTab === "withdrawal" && (
+          {activeTab === "transfers" ? (
+            <table className="w-full text-sm overflow-y-hidden overflow-x-auto user-custom-scrollbar">
+              <thead>
+                <tr className="text-gray-400 border-b border-gray-700">
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Type
+                  </th>
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    From Ac
+                  </th>
+
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    To Ac
+                  </th>
+
                   <th className="text-center py-3 px-4 whitespace-nowrap">
                     Amount
                   </th>
-                )}
-                {activeTab === "deposit" && (
-                  <>
-                    <th className="text-center py-3 px-4 whitespace-nowrap">
-                      Deposit
-                    </th>
-                  </>
-                )}
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Method
-                </th>
 
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Requested on
-                </th>
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Updated on
-                </th>
-                {activeTab === "deposit" ? (
                   <th className="text-center py-3 px-4 whitespace-nowrap">
-                    Attachment
+                    Timestamp
                   </th>
-                ) : (
-                  <th className="text-center py-3 px-4 whitespace-nowrap">
-                    Last Balance
-                  </th>
-                )}
-
-                <th className="text-center py-3 px-4 whitespace-nowrap">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <AnimatePresence>
-              <motion.tbody variants={tableVariants}>
-                {transactionData?.map((item, index) => (
-                  <motion.tr
-                    key={index}
-                    variants={rowVariants}
-                    className="border-b border-gray-700/60 sticky hover:bg-secondary-800 transition-all"
-                    whileHover={{
-                      backgroundColor: "rgba(255,255,255,0.05)",
-                      transition: { duration: 0.2 },
-                    }}
-                  >
-                    <td className="py-2 px-4 text-center">
-                      {item?.mt5Account}
-                    </td>
-                    <td className="py-2 px-4 text-center">
-                      <motion.div
-                        className="bg-secondary-500-10 whitespace-nowrap rounded-full px-3 py-1 inline-block"
-                        whileHover={{ scale: 1.05 }}
+                </tr>
+              </thead>
+              <AnimatePresence>
+                <motion.tbody variants={tableVariants}>
+                  {transactionData?.map((item, index) => (
+                    <motion.tr
+                      key={index}
+                      variants={rowVariants}
+                      className="border-b border-gray-700/60 sticky hover:bg-secondary-800/40 transition-all"
+                      whileHover={{
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        transition: { duration: 0.2 },
+                      }}
+                    >
+                      <td
+                        className={`py-2 px-4 text-center first-letter:uppercase`}
                       >
-                        {item?.accountType}
-                      </motion.div>
-                    </td>
-                    {activeTab === "withdrawal" && (
-                      <td className="py-2 px-4 text-center">${item?.amount}</td>
-                    )}
-                    {activeTab === "deposit" && (
-                      <>
-                        <td className="py-2 text-center">${item?.deposit}</td>
-                      </>
-                    )}
-                    <td className="py-2 px-4 text-center capitalize">
-                      <p className=" capitalize"> {item?.method}</p>
-                    </td>
-
-                    <td className="text-center text-xs py-2 px-3">
-                      {formatDate(item?.createdAt)}
-                    </td>
-                    <td className="text-center text-xs py-2 px-3">
-                      {formatDate(item?.updatedAt)}
-                    </td>
-                    {activeTab === "deposit" ? (
-                      <td className="text-center py-2 px-3">
-                        <a
-                          target="_blank"
-                          className=" text-blue-500 hover:text-blue-600 transition-all"
-                          href={`${
-                            import.meta.env.VITE_BACKEND_BASE_URL +
-                            "/" +
-                            item.depositSS
+                        <p
+                          className={` rounded-full
+py-1 ${
+                            item?.type === "internal"
+                              ? "bg-sky-500/10  text-sky-500  "
+                              : " bg-lime-500/10 text-lime-500"
                           }`}
                         >
-                          View
-                        </a>
-                      </td>
-                    ) : (
-                      <td className="text-center text-xs py-2 px-3">
-                        ${item?.lastBalance}
-                      </td>
-                    )}
-
-                    <td className="text-center py-2 px-2">
-                      <motion.div
-                        className={`inline-block px-2 py-1 font-semibold rounded-full ${
-                          item?.status === "pending"
-                            ? "bg-yellow-500/10 text-yellow-500"
-                            : item?.status === "approved"
-                            ? "bg-green-500/10 text-green-500"
-                            : item?.status === "rejected"
-                            ? "bg-red-400/10 text-red-500"
-                            : ""
-                        }`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <p className="first-letter:capitalize">
-                          {item?.status}
+                          {item?.type}
                         </p>
-                      </motion.div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </motion.tbody>
-            </AnimatePresence>
-          </table>
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {item?.fromAccount}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {item?.toAccount}
+                      </td>
+                      <td className="py-2 text-center">${item?.amount}</td>
+
+                      <td className="text-center text-xs py-2 px-3">
+                        {formatDate(item?.createdAt)}
+                      </td>
+                    </motion.tr>
+                  ))}
+                </motion.tbody>
+              </AnimatePresence>
+            </table>
+          ) : (
+            <table className="w-full text-sm overflow-y-hidden overflow-x-auto user-custom-scrollbar">
+              <thead>
+                <tr className="text-gray-400 border-b border-gray-700">
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Account No
+                  </th>
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Type
+                  </th>
+                  {activeTab === "withdrawal" && (
+                    <th className="text-center py-3 px-4 whitespace-nowrap">
+                      Amount
+                    </th>
+                  )}
+                  {activeTab === "deposit" && (
+                    <>
+                      <th className="text-center py-3 px-4 whitespace-nowrap">
+                        Deposit
+                      </th>
+                    </>
+                  )}
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Method
+                  </th>
+
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Requested on
+                  </th>
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Updated on
+                  </th>
+                  {activeTab === "deposit" ? (
+                    <th className="text-center py-3 px-4 whitespace-nowrap">
+                      Attachment
+                    </th>
+                  ) : (
+                    <th className="text-center py-3 px-4 whitespace-nowrap">
+                      Last Balance
+                    </th>
+                  )}
+
+                  <th className="text-center py-3 px-4 whitespace-nowrap">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <AnimatePresence>
+                <motion.tbody variants={tableVariants}>
+                  {transactionData?.map((item, index) => (
+                    <motion.tr
+                      key={index}
+                      variants={rowVariants}
+                      className="border-b border-gray-700/60 sticky hover:bg-secondary-800 transition-all"
+                      whileHover={{
+                        backgroundColor: "rgba(255,255,255,0.05)",
+                        transition: { duration: 0.2 },
+                      }}
+                    >
+                      <td className="py-2 px-4 text-center">
+                        {item?.mt5Account}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        <motion.div
+                          className="bg-secondary-500-10 whitespace-nowrap rounded-full px-3 py-1 inline-block"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          {item?.accountType}
+                        </motion.div>
+                      </td>
+                      {activeTab === "withdrawal" && (
+                        <td className="py-2 px-4 text-center">
+                          ${item?.amount}
+                        </td>
+                      )}
+                      {activeTab === "deposit" && (
+                        <>
+                          <td className="py-2 text-center">${item?.deposit}</td>
+                        </>
+                      )}
+                      <td className="py-2 px-4 text-center capitalize">
+                        <p className=" capitalize"> {item?.method}</p>
+                      </td>
+
+                      <td className="text-center text-xs py-2 px-3">
+                        {formatDate(item?.createdAt)}
+                      </td>
+                      <td className="text-center text-xs py-2 px-3">
+                        {formatDate(item?.updatedAt)}
+                      </td>
+                      {activeTab === "deposit" ? (
+                        <td className="text-center py-2 px-3">
+                          <a
+                            target="_blank"
+                            className=" text-blue-500 hover:text-blue-600 transition-all"
+                            href={`${
+                              import.meta.env.VITE_BACKEND_BASE_URL +
+                              "/" +
+                              item.depositSS
+                            }`}
+                          >
+                            View
+                          </a>
+                        </td>
+                      ) : (
+                        <td className="text-center text-xs py-2 px-3">
+                          ${item?.lastBalance}
+                        </td>
+                      )}
+
+                      <td className="text-center py-2 px-2">
+                        <motion.div
+                          className={`inline-block px-2 py-1 font-semibold rounded-full ${
+                            item?.status === "pending"
+                              ? "bg-yellow-500/10 text-yellow-500"
+                              : item?.status === "approved"
+                              ? "bg-green-500/10 text-green-500"
+                              : item?.status === "rejected"
+                              ? "bg-red-400/10 text-red-500"
+                              : ""
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <p className="first-letter:capitalize">
+                            {item?.status}
+                          </p>
+                        </motion.div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </motion.tbody>
+              </AnimatePresence>
+            </table>
+          )}
         </motion.div>
       )}
     </motion.div>

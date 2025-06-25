@@ -5,6 +5,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { metaApi } from "@/utils/apiClients";
 import ModernText from "@/lib/ModernText";
 import { setOpenTrades } from "@/redux/user/userSlice";
+import { motion } from "framer-motion";
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: (delay) => ({
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.4, ease: "easeOut", delay },
+  }),
+};
+
+const TradeCard = ({ title, value, valueColor, delay }) => (
+  <motion.div
+    className="flex flex-col items-center justify-center w-28 h-28 bg-secondary-800/30 rounded-full shadow-md hover:bg-secondary-800/40 transition-all duration-300"
+    variants={cardVariants}
+    custom={delay}
+    initial="hidden"
+    animate="visible"
+  >
+    <p className="text-xs text-gray-100 text-center mb-1">{title}</p>
+    <p className={`text-lg font-semibold ${valueColor}`}>{value}</p>
+  </motion.div>
+);
 
 export default function UserDashboardTrades() {
   const navigate = useNavigate();
@@ -43,7 +66,6 @@ export default function UserDashboardTrades() {
       if (loggedUser.accounts.length > 0) {
         let data = [];
         for (const account of loggedUser.accounts) {
-          // console.log("open trade api called");
           const res = await metaApi.get(
             `/GetOpenTradeByAccount?Manager_Index=${
               import.meta.env.VITE_MANAGER_INDEX
@@ -59,7 +81,7 @@ export default function UserDashboardTrades() {
       }
     } catch (error) {
       console.log("error in openTrades", error);
-      setTimeout(fetchOpenTrades, 1000); // Call again after 1 second
+      setTimeout(fetchOpenTrades, 1000);
     }
   };
 
@@ -78,48 +100,68 @@ export default function UserDashboardTrades() {
   }, []);
 
   return (
-    <div className="bg-secondary-800/80 p-6 rounded-lg shadow-lg my-5 text-white">
-      <div className="flex justify-between items-center mb-6">
-        <div className="">
-          <ModernText text={"Open Trades Summary"}></ModernText>
-        </div>
+    <motion.div
+      className="bg-secondary-800/30 p-8 rounded-3xl shadow-lg w-full max-w-2xl flex flex-col items-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.div
+        className="flex flex-col items-center mb-6"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+      >
+        <ModernText text={"Open Trades Summary"} />
         <button
           onClick={() => navigate("/user/trade-history")}
-          className="flex items-center text-blue-400 hover:text-blue-500 transition-colors"
+          className="flex items-center text-blue-400 hover:text-blue-500 mt-2 text-sm font-medium transition-colors duration-300"
         >
           View History
-          <ArrowRight className="ml-1" size={18} />
+          <ArrowRight className="ml-1" size={16} />
         </button>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div className="bg-secondary-700/30  p-4 rounded-lg">
-          <p className="text-gray-100 mb-1">Total Trades</p>
-          <p className="text-2xl font-bold">{tradesSummary.totalTrades}</p>
-        </div>
-        <div className="bg-secondary-700/30 p-4 rounded-lg">
-          <p className="text-gray-100 whitespace-nowrap mb-1">Profit Trades</p>
-          <p className="text-2xl font-bold text-green-500">
-            {tradesSummary.profitableTrades}
-          </p>
-        </div>
-        <div className="bg-secondary-700/30 p-4 rounded-lg">
-          <p className="text-gray-100 mb-1">PnL floating</p>
-          <p className="text-2xl font-bold text-yellow-500">
-            {tradesSummary.winRate.toFixed(2)}%
-          </p>
-        </div>
-        <div className="bg-secondary-700/30 p-4 rounded-lg">
-          <p className="text-gray-100 mb-1">Net Profit</p>
-          <p
-            className={`text-2xl font-bold ${
-              tradesSummary.netProfit >= 0 ? "text-green-500" : "text-red-400"
-            }`}
-          >
-            {tradesSummary.netProfit.toFixed(2)}
-          </p>
-        </div>
-      </div>
-    </div>
+      <motion.div
+        className="flex flex-wrap justify-center gap-4 md:gap-10"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.1,
+            },
+          },
+        }}
+      >
+        <TradeCard
+          title="Total Trades"
+          value={tradesSummary.totalTrades}
+          valueColor="text-gray-100"
+          delay={0.2}
+        />
+        <TradeCard
+          title="Profit Trades"
+          value={tradesSummary.profitableTrades}
+          valueColor="text-green-500"
+          delay={0.3}
+        />
+        <TradeCard
+          title="PnL Floating"
+          value={`${tradesSummary.winRate.toFixed(2)}%`}
+          valueColor="text-yellow-500"
+          delay={0.4}
+        />
+        <TradeCard
+          title="Net Profit"
+          value={tradesSummary.netProfit.toFixed(2)}
+          valueColor={
+            tradesSummary.netProfit >= 0 ? "text-green-500" : "text-red-400"
+          }
+          delay={0.5}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

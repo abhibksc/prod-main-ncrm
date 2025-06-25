@@ -52,6 +52,7 @@ import KycUsers from "./pages/admin/KycUsers";
 import IbUsers from "./pages/admin/IbUsers";
 import UserCopyRequest from "./pages/user/UserCopyRequest";
 import AdminCopyRequests from "./pages/admin/AdminCopyRequests";
+import Transfers from "./pages/admin/Transfers";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -130,6 +131,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/copy-requests",
         element: <AdminCopyRequests></AdminCopyRequests>,
+      },
+      {
+        path: "/admin/transfers",
+        element: <Transfers></Transfers>,
       },
     ],
   },
