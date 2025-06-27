@@ -30,7 +30,7 @@ const UserChallenges = () => {
     logggedUser?.accounts?.map((acc) => +acc.accountNumber) || [];
   useGetInfoByAccounts(accountIds, "accounts");
   const { accountsData } = useSelector((store) => store.user);
-  // console.log("liveData---", liveData);
+  // console.log("accountsData---", accountsData);
   // const socketData = useSocketInfoByAccounts(accountIds);
   // console.log("socketData 2", socketData);
   // console.log("liveData", liveData);

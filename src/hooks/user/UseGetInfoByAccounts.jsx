@@ -14,7 +14,8 @@ export function useGetInfoByAccounts(accountIds = [], component) {
     totalEquity: 0,
     totalProfit: 0,
   });
-  // console.log("stats", stats);
+  // console.log("component", component);
+  // console.log("accountIds", accountIds);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,6 +29,7 @@ export function useGetInfoByAccounts(accountIds = [], component) {
           Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
           MT5Accounts: accountIds,
         });
+
         if (Array.isArray(res.data)) {
           setData(res.data);
           // Calculate stats
@@ -52,6 +54,7 @@ export function useGetInfoByAccounts(accountIds = [], component) {
           setStats({ totalBalance, totalEquity, totalProfit });
 
           // dispatch conditionally ---
+          // console.log("res.data", res.data);
           if (component === "accounts") {
             dispatch(setAccountsData(res.data));
             dispatch(setAccountStats(dispatchStats));

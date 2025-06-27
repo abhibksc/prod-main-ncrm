@@ -136,7 +136,7 @@ const UserDashboardBalanceCards = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <motion.div
-        className=" md:flex-row flex-col grid-cols-2 md:grid-cols-4 grid   w-full px-4 md:px-36 items-center justify-between gap-6"
+        className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4   w-full px-4 md:px-36 items-center justify-between gap-6"
         initial="hidden"
         animate="visible"
         variants={{
