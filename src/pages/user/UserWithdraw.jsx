@@ -165,12 +165,12 @@ const UserWithdraw = () => {
   }, []);
 
   return loggedUser?.kycVerified ? (
-    <div className="w-full flex items-center justify-center">
+    <div className="w-full mx-auto flex items-center justify-center">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className=" w-full bg-secondary-800/20 p-8 rounded-lg shadow-xl"
+        className=" w-full bg-secondary-800/20 p-4 md:p-8 rounded-lg shadow-xl"
       >
         {showOtpInput && (
           <OtpUi
@@ -361,7 +361,7 @@ const UserWithdraw = () => {
             </div>
             {/* account details */}
 
-            <div className=" w-full">
+            <div className=" w-full break-words">
               {selectedGateway === "Bank Transfer" ? (
                 <div>
                   <div className=" flex items-center gap-2 mb-3">
@@ -427,7 +427,7 @@ const UserWithdraw = () => {
                     <div>
                       <p>
                         USDT-Trc20 :{" "}
-                        <span className=" font-bold">
+                        <span className=" font-bold  ">
                           {loggedUser?.walletDetails?.tetherAddress}{" "}
                         </span>
                       </p>
@@ -436,7 +436,7 @@ const UserWithdraw = () => {
                   {selectWallet === "USDT(Bep20)" && (
                     <div>
                       <p>
-                        USDT-Erc20 :{" "}
+                        USDT-Bep20 :{" "}
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.ethAddress}
                         </span>{" "}

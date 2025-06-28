@@ -24,6 +24,7 @@ const Transfers = () => {
   const [paginationData, setPaginationData] = useState({});
   const [loader, setLoader] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const debouncedSearch = useDebounce(searchQuery, 500);
@@ -32,7 +33,7 @@ const Transfers = () => {
     setLoader(true);
     try {
       const res = await backendApi.get(
-        `/get-transfers?page=${currentPage}&limit=${itemsPerPage}&search=${debouncedSearch}`
+        `/get-transfers?page=${currentPage}&limit=${itemsPerPage}&search=${debouncedSearch}&type=${typeFilter}`
       );
       setLoadedData(res.data.data);
       setPaginationData(res.data.pagination || {});
@@ -45,12 +46,12 @@ const Transfers = () => {
   };
 
   useEffect(() => {
-    setCurrentPage(1); // reset to page 1 on new search
-  }, [debouncedSearch]);
+    setCurrentPage(1);
+  }, [debouncedSearch, typeFilter]);
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, debouncedSearch]);
+  }, [currentPage, debouncedSearch, typeFilter]);
 
   const getPageNumbers = () => {
     const totalPages = paginationData.totalPages || 1;
@@ -88,28 +89,43 @@ const Transfers = () => {
   return (
     <div className="m-5 p-5 sm:px-6 bg-primary-700/40 text-white rounded-xl shadow-2xl">
       <div className="py-6">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 flex-wrap w-full">
           <h2 className="text-xl md:text-3xl font-bold">Funds Transfers</h2>
-          <div className="relative w-full md:w-96">
-            <input
-              type="text"
-              placeholder="Search by mail/name"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-gray-300"
-            />
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300"
-              size={18}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
-              >
-                ×
-              </button>
-            )}
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            {/* 🔍 Search Box */}
+            <div className="relative w-full sm:w-64">
+              <input
+                type="text"
+                placeholder="Search by mail/name"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-gray-300"
+              />
+              <Search
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-300"
+                size={18}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            {/* ⬇️ Type Filter */}
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="bg-primary-600 border border-primary-500 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary-400"
+            >
+              <option value="">All Types</option>
+              <option value="internal">Internal</option>
+              <option value="p2p">P2P</option>
+            </select>
           </div>
         </div>
 

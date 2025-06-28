@@ -312,111 +312,113 @@ export const UserReferralWithdrawal = () => {
           </div>
           {/* account details -- */}
 
-          {selectedGateway === "Bank Transfer" ? (
-            <div>
-              <div className=" flex items-center gap-2 mb-3">
-                <WalletCardsIcon></WalletCardsIcon>
-                <h1 className=" text-lg font-bold">Account details</h1>
-              </div>
+          <div className=" break-words">
+            {selectedGateway === "Bank Transfer" ? (
               <div>
-                <p>
-                  Bank Name -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.bankName}{" "}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Holder Name -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.holderName}
-                  </span>{" "}
-                </p>
-              </div>
-              <div>
-                <p>
-                  Account Number -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.accountNumber}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  IFSC Code -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.ifscCode}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  Swift Code -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.swiftCode}
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p>
-                  UPI ID -{" "}
-                  <span className=" font-bold">
-                    {loggedUser?.bankDetails?.upiId}
-                  </span>
-                </p>
-              </div>
-            </div>
-          ) : selectedGateway === "Wallet Transfer" ? (
-            <div>
-              <div className=" flex items-center gap-2 mb-3">
-                <WalletCardsIcon></WalletCardsIcon>
-                <h1 className=" text-lg font-bold">Account details</h1>
-              </div>{" "}
-              {selectWallet === "usdtTrc20" && (
+                <div className=" flex items-center gap-2 mb-3">
+                  <WalletCardsIcon></WalletCardsIcon>
+                  <h1 className=" text-lg font-bold">Account details</h1>
+                </div>
                 <div>
                   <p>
-                    USDT Trc20 :{" "}
+                    Bank Name -{" "}
                     <span className=" font-bold">
-                      {loggedUser?.walletDetails?.tetherAddress}{" "}
+                      {loggedUser?.bankDetails?.bankName}{" "}
                     </span>
                   </p>
                 </div>
-              )}
-              {selectWallet === "usdtBep20" && (
                 <div>
                   <p>
-                    USDT Bep20 :{" "}
+                    Holder Name -{" "}
                     <span className=" font-bold">
-                      {loggedUser?.walletDetails?.ethAddress}
+                      {loggedUser?.bankDetails?.holderName}
                     </span>{" "}
                   </p>
                 </div>
-              )}
-              {selectWallet === "binanceId" && (
                 <div>
                   <p>
-                    Binance ID :{" "}
+                    Account Number -{" "}
                     <span className=" font-bold">
-                      {loggedUser?.walletDetails?.accountNumber}
+                      {loggedUser?.bankDetails?.accountNumber}
                     </span>
                   </p>
                 </div>
-              )}
-              {selectWallet === "btcAddress" && (
                 <div>
                   <p>
-                    BTC Address :{" "}
+                    IFSC Code -{" "}
                     <span className=" font-bold">
-                      {loggedUser?.walletDetails?.trxAddress}
+                      {loggedUser?.bankDetails?.ifscCode}
                     </span>
                   </p>
                 </div>
-              )}
-            </div>
-          ) : (
-            ""
-          )}
+                <div>
+                  <p>
+                    Swift Code -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.bankDetails?.swiftCode}
+                    </span>
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    UPI ID -{" "}
+                    <span className=" font-bold">
+                      {loggedUser?.bankDetails?.upiId}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            ) : selectedGateway === "Wallet Transfer" ? (
+              <div>
+                <div className=" flex items-center gap-2 mb-3">
+                  <WalletCardsIcon></WalletCardsIcon>
+                  <h1 className=" text-lg font-bold">Account details</h1>
+                </div>{" "}
+                {selectWallet === "usdtTrc20" && (
+                  <div>
+                    <p>
+                      USDT Trc20 :{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.walletDetails?.tetherAddress}{" "}
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {selectWallet === "usdtBep20" && (
+                  <div>
+                    <p>
+                      USDT Bep20 :{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.walletDetails?.ethAddress}
+                      </span>{" "}
+                    </p>
+                  </div>
+                )}
+                {selectWallet === "binanceId" && (
+                  <div>
+                    <p>
+                      Binance ID :{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.walletDetails?.accountNumber}
+                      </span>
+                    </p>
+                  </div>
+                )}
+                {selectWallet === "btcAddress" && (
+                  <div>
+                    <p>
+                      BTC Address :{" "}
+                      <span className=" font-bold">
+                        {loggedUser?.walletDetails?.trxAddress}
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
 
           <div>
             <label
