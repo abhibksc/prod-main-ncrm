@@ -139,11 +139,11 @@ const UserSidebar = () => {
     //   link: "/user/copy-trading",
     // },
     { icon: SquareStackIcon, label: "IB Zone", link: "/user/referrals" },
-    // {
-    //   icon: CopyPlus,
-    //   label: "Request Copy",
-    //   link: "/user/copy-request",
-    // },
+    {
+      icon: CopyPlus,
+      label: "Request Copy",
+      link: "/user/copy-request",
+    },
     { icon: HardDriveDownloadIcon, label: "Platform", link: "/user/platform" },
     {
       icon: ReceiptPoundSterlingIcon,
