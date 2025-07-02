@@ -242,13 +242,13 @@ const UserWithdraw = () => {
                   >
                     select Method
                   </option>
-                  <option
+                  {/* <option
                     selected
                     className=" bg-secondary-800 text-white"
                     value="Bank Transfer"
                   >
                     Bank Transfer
-                  </option>
+                  </option> */}
                   <option
                     className=" bg-secondary-800 text-white"
                     value="Wallet Transfer"

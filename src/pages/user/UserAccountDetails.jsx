@@ -27,7 +27,7 @@ const UserAccountDetails = () => {
 
   const tabs = [
     { id: "personal", label: "Kyc Details", icon: User },
-    { id: "account", label: "Bank Details", icon: CreditCard },
+    // { id: "account", label: "Bank Details", icon: CreditCard },
     { id: "wallet", label: "Wallet Details", icon: Wallet },
   ];
 

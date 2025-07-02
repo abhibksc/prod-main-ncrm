@@ -14,7 +14,7 @@ import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("Bank Transfer");
+  const [selectedGateway, setSelectedGateway] = useState("Wallet Transfer");
   const [apiLoader, setApiLoader] = useState(false);
   const [error, setError] = useState("");
   const balance = Number(loggedUser?.ibBalance || 0).toFixed(4);
@@ -274,7 +274,7 @@ export const UserReferralWithdrawal = () => {
                 className="block w-full p-3 text-base bg-secondary-700 outline-none border-none text-white rounded-md "
               >
                 {/* <option value="">Select Gateway</option> */}
-                <option value="Bank Transfer">Bank Transfer</option>
+                {/* <option value="Bank Transfer">Bank Transfer</option> */}
                 <option value="Wallet Transfer">Wallet Transfer</option>
               </select>
             </div>
