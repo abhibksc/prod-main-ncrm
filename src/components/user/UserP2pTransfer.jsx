@@ -1,4 +1,3 @@
-import ModernHeading from "@/lib/ModernHeading";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { backendApi, metaApi } from "@/utils/apiClients";
@@ -7,6 +6,7 @@ import { LoaderPinwheelIcon, CheckCircle2Icon } from "lucide-react";
 import toast from "react-hot-toast";
 import useMT5Stats from "@/hooks/admin/UseMT5AccountStats";
 import OtpUi from "../OtpUi";
+import { useNavigate } from "react-router-dom";
 
 const UserP2pTransfer = () => {
   const [fromAccount, setFromAccount] = useState("");
@@ -22,7 +22,8 @@ const UserP2pTransfer = () => {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
-
+  // -----------------
+  const navigate = useNavigate();
   const fromAccountInfo = async () => {
     try {
       setFromAccountBalance("");
@@ -43,8 +44,14 @@ const UserP2pTransfer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isTransferLoading) return;
+    if (!selectedToAccount?.MT5Account) {
+      toast.error(
+        "Invalid receiver account. Please double-check and try again."
+      );
+      return;
+    }
     const toastId = toast.loading("Processing your transfer. Please wait...");
-    // Send OTP first
+    // Send OTP first --
     setIsTransferLoading(false);
 
     try {
@@ -116,6 +123,7 @@ const UserP2pTransfer = () => {
       setShowOtpInput(false);
       setOtp("");
       fromAccountInfo();
+      navigate("/user/transaction");
     } catch (error) {
       toast.error(error.response.data.message || "Transfer failed", {
         id: toastID,
