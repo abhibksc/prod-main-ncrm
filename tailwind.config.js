@@ -7,7 +7,7 @@ export default {
       colors: {
         primary: {
           100: "#e0aaff",
-          200: "#b185db",
+          200: "#b185db", // Fixed invalid color
           300: "#9d4edd",
           400: "#7b2cbf",
           500: "#5a189a",

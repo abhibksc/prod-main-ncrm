@@ -175,6 +175,12 @@ export const UserReferralWithdrawal = () => {
     e.preventDefault();
     if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
 
+    if (amount < 10) {
+      toast.error(
+        "Minimum withdrawal amount is $10. Please increase your amount."
+      );
+      return;
+    }
     setApiLoader(true);
     setError("");
     setIsWithdrawing(true); // NEW: Set withdrawal loading to true

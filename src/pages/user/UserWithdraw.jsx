@@ -51,8 +51,19 @@ const UserWithdraw = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (accountBalance < amount) {
+      setError("You don't have sufficient balance for the withdrawal !!");
+      toast.error("You don't have sufficient balance for the withdrawal !!");
+      return;
+    }
 
     if (isWithdrawing) return;
+    if (amount < 10) {
+      toast.error(
+        "Minimum withdrawal amount is $10. Please increase your amount."
+      );
+      return;
+    }
 
     // Validate inputs first
     if (!account || !selectedGateway || !amount) {
