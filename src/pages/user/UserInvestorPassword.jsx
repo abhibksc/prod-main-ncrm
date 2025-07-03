@@ -171,7 +171,6 @@ const UserInvesterPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const toastId = toast.loading("Please wait...");
-
     // Validate new password
     if (!validatePassword(passwords.new)) {
       setError(
@@ -190,7 +189,7 @@ const UserInvesterPassword = () => {
 
     try {
       const res = await metaApi.get(
-        `/ChangeMasterPassword?Manager_Index=${
+        `/ChangeInvesterPassword?Manager_Index=${
           import.meta.env.VITE_MANAGER_INDEX
         }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
       );
