@@ -190,7 +190,7 @@ const UserInvesterPassword = () => {
 
     try {
       const res = await metaApi.get(
-        `/ChangeMasterPassword?Manager_Index=${
+        `/ChangeInvesterPassword?Manager_Index=${
           import.meta.env.VITE_MANAGER_INDEX
         }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
       );
