@@ -17,7 +17,7 @@ import OtpUi from "@/components/OtpUi";
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [selectedGateway, setSelectedGateway] = useState("");
-  const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
+  const [selectWallet, setSelectWallet] = useState("");
   const [account, selectAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
@@ -284,12 +284,12 @@ const UserWithdraw = () => {
                     onChange={(e) => setSelectWallet(e.target.value)}
                     className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                   >
-                    <option
+                    {/* <option
                       className=" bg-secondary-800 text-white"
                       value="USDT(Trc20)"
                     >
                       USDT (Trc20)
-                    </option>
+                    </option> */}
                     <option
                       className=" bg-secondary-800 text-white"
                       value="USDT(Bep20)"
@@ -302,12 +302,12 @@ const UserWithdraw = () => {
                     >
                       Binance ID
                     </option>
-                    <option
+                    {/* <option
                       className=" bg-secondary-800 text-white"
                       value="BTCAddress"
                     >
                       BTC Address
-                    </option>
+                    </option> */}
                   </select>
                 </div>
               )}
