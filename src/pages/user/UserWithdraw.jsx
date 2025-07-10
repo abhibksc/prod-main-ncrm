@@ -15,7 +15,11 @@ import { withdrawRequestMail } from "@/components/emails/WithdrwalsMails";
 import OtpUi from "@/components/OtpUi";
 
 const UserWithdraw = () => {
-  const loggedUser = useSelector((store) => store.user.loggedUser);
+  const { loggedUser, siteConfig } = useSelector((store) => store.user);
+  const minimumWithdrawalAmount =
+    +import.meta.env.VITE_MINIMUM_WITHDRAWAL_AMOUNT || 0;
+  // const minimumWithdrawalAmount = siteConfig?.minimumWithdrawalAmount;
+  console.log("minimumWithdrawalAmount", minimumWithdrawalAmount);
   const [selectedGateway, setSelectedGateway] = useState("");
   const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
   const [account, selectAccount] = useState("");
@@ -25,7 +29,6 @@ const UserWithdraw = () => {
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [accountBalance, setAccountBalance] = useState("");
   const [accountType, setAccountType] = useState("");
-  const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
@@ -58,6 +61,15 @@ const UserWithdraw = () => {
     if (!account || !selectedGateway || !amount) {
       setError("All fields are required.");
       return;
+    }
+    // check minimum required balance ---
+    if (minimumWithdrawalAmount > 0) {
+      if (amount < minimumWithdrawalAmount) {
+        toast.error(
+          `Minimum withdrawal amount is $${minimumWithdrawalAmount} !`
+        );
+        return;
+      }
     }
     const toastId = toast.loading("please wait..");
 
