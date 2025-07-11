@@ -372,8 +372,8 @@ const IbWithdrawalStatus = () => {
       // console.log("errorUrl", errorUrl);
       try {
         const logError = await backendApi.post(`/log-error`, {
-          email: selectedDeposit?.userId?.email,
-          accountId: selectedDeposit?.mt5Account,
+          email: selectedDeposit?.userData?.email,
+          accountId: selectedDeposit?.referralId,
           url: errorUrl,
           errorCode: statusCode,
           errorMessage: errorMessage,

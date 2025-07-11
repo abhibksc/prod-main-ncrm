@@ -368,7 +368,7 @@ const WithdrawalStatus = () => {
       // console.log("errorUrl", errorUrl);
       try {
         const logError = await backendApi.post(`/log-error`, {
-          email: selectedDeposit?.userId?.email,
+          email: selectedDeposit?.userData?.email,
           accountId: selectedDeposit?.mt5Account,
           url: errorUrl,
           errorCode: statusCode,
