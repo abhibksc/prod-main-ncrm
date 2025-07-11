@@ -358,6 +358,27 @@ const DepositsStatus = () => {
     } catch (error) {
       console.error("Error updating deposit status:", error);
       toast.error("Something went wrong", { id: toastId });
+
+      // log-error -----------
+      const statusCode = error?.response?.status || error?.status;
+      const errorMessage = error?.response?.data?.message || error?.message;
+      const errorUrl =
+        error?.request?.__URL__ || error?.config?.url || error?.config?.baseURL;
+
+      // console.log("statusCode", statusCode);
+      // console.log("errorMessage", errorMessage);
+      // console.log("errorUrl", errorUrl);
+      try {
+        const logError = await backendApi.post(`/log-error`, {
+          email: selectedDeposit?.userId?.email,
+          accountId: selectedDeposit?.mt5Account,
+          url: errorUrl,
+          errorCode: statusCode,
+          errorMessage: errorMessage,
+        });
+      } catch (error) {
+        console.log("failed to log error", error);
+      }
     } finally {
       setIsActionLoading(false); // NEW: Reset action loading to false
     }
