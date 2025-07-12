@@ -12,6 +12,7 @@ import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
 import UseIbWithdrawalHistory from "@/hooks/user/ib/UseIbWithdrawalHistory";
+import { useNavigate } from "react-router-dom";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -24,6 +25,7 @@ export const UserReferralWithdrawal = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   const { isPendingWithdrawal } = UseIbWithdrawalHistory();
   useAutoUpdateLoggedUser();
+  const navigate = useNavigate();
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -212,21 +214,26 @@ export const UserReferralWithdrawal = () => {
             level: 1,
           }
         );
-        const customMailRes = await backendApi.post(`/custom-mail`, {
-          email: loggedUser.email,
-          content: customContent,
-          subject: "IB Withdrawal Requested",
-        });
-
         setApiLoader(false);
         toast.success("Withdrawal Requested");
+        navigate("/user/referrals/withdrawal-history");
+
+        try {
+          const customMailRes = await backendApi.post(`/custom-mail`, {
+            email: loggedUser.email,
+            content: customContent,
+            subject: "IB Withdrawal Requested",
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
       }
-      setApiLoader(false);
     } catch (error) {
       setApiLoader(false);
       toast.error("Something went wrong!!");
       console.log("error while withdraw", error);
     } finally {
+      setApiLoader(false);
       setIsWithdrawing(false); // NEW: Reset withdrawal loading to false
     }
   };
