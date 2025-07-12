@@ -13,6 +13,7 @@ import ModernHeading from "@/lib/ModernHeading";
 import { backendApi, metaApi } from "@/utils/apiClients";
 import { withdrawRequestMail } from "@/components/emails/WithdrwalsMails";
 import OtpUi from "@/components/OtpUi";
+import useUserWithdrawals from "@/hooks/user/UseUserWithdrawal";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -29,6 +30,8 @@ const UserWithdraw = () => {
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
+  const { data, isLoading, isError, isWithdrawalPending, refresh } =
+    useUserWithdrawals();
 
   const fetchAccountInfo = async () => {
     setBalanceLoading(true);
@@ -51,6 +54,12 @@ const UserWithdraw = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+    if (isWithdrawalPending) {
+      toast.error(
+        "Your last withdrawal is still pending. Please wait until it is processed."
+      );
+      return;
+    }
     if (accountBalance < amount) {
       setError("You don't have sufficient balance for the withdrawal !!");
       toast.error("You don't have sufficient balance for the withdrawal !!");
@@ -150,6 +159,7 @@ const UserWithdraw = () => {
     } finally {
       setApiLoader(false);
       setIsWithdrawing(false);
+      refresh();
     }
   };
 

@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import useAutoUpdateLoggedUser from "@/hooks/user/UseAutoUpdateLoggedUser";
+import UseIbWithdrawalHistory from "@/hooks/user/ib/UseIbWithdrawalHistory";
+import { useNavigate } from "react-router-dom";
 
 export const UserReferralWithdrawal = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -22,6 +24,8 @@ export const UserReferralWithdrawal = () => {
   const [selectWallet, setSelectWallet] = useState("usdtTrc20");
   const [isWithdrawing, setIsWithdrawing] = useState(false); // NEW: Added withdrawal loading state
   useAutoUpdateLoggedUser();
+  const { isPendingWithdrawal } = UseIbWithdrawalHistory();
+  const navigate = useNavigate();
 
   const currentDateTime = new Date();
   const formattedDateTime =
@@ -173,6 +177,13 @@ export const UserReferralWithdrawal = () => {
 
   const withdrawalHandler = async (e) => {
     e.preventDefault();
+
+    if (isPendingWithdrawal) {
+      toast.error(
+        `One of your withdrawal request is still pending please wait until it get resolved`
+      );
+      return;
+    }
     if (isWithdrawing) return; // NEW: Prevent multiple clicks if already loading
 
     if (amount < 10) {
@@ -209,14 +220,18 @@ export const UserReferralWithdrawal = () => {
             level: 1,
           }
         );
-        const customMailRes = await backendApi.post(`/custom-mail`, {
-          email: loggedUser.email,
-          content: customContent,
-          subject: "IB Withdrawal Requested",
-        });
-
+        navigate("/user/referrals/withdrawal-history");
         setApiLoader(false);
         toast.success("Withdrawal Requested");
+        try {
+          const customMailRes = await backendApi.post(`/custom-mail`, {
+            email: loggedUser.email,
+            content: customContent,
+            subject: "IB Withdrawal Requested",
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
       }
       setApiLoader(false);
     } catch (error) {
