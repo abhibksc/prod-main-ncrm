@@ -79,16 +79,13 @@ const UserWithdraw = () => {
       const sendOtpRes = await backendApi.post("/send-otp", {
         email: loggedUser.email,
       });
-
-      if (sendOtpRes.data.otp) {
-        toast.success("OTP sent to your email", { id: toastId });
-        setShowOtpInput(true); // open OTP input modal
-      } else {
-        toast.error("Failed to send OTP", { id: toastId });
-      }
+      toast.success("OTP sent to your email", { id: toastId });
+      setShowOtpInput(true); // open OTP input modal
     } catch (err) {
       console.log("OTP error", err);
-      toast.error("Error sending OTP", { id: toastId });
+      toast.error("Failed to send OTP, Please try again later", {
+        id: toastId,
+      });
     }
   };
 
@@ -356,7 +353,7 @@ const UserWithdraw = () => {
                   type="number"
                   id="amount"
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-10 py-3 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
+                  className="w-full pl-10 py-3 min-w-32 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
                   placeholder="Enter Amount"
                   value={amount}
                 />
