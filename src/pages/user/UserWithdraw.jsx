@@ -111,6 +111,9 @@ const UserWithdraw = () => {
       // Proceed to withdrawal logic
       if (accountBalance < amount) {
         setError("You don't have balance for withdrawal !!");
+        toast.error("You don't have balance for withdrawal !!", {
+          id: toastID,
+        });
       } else {
         await backendApi.post(`/withdrawal`, {
           method:
@@ -146,7 +149,7 @@ const UserWithdraw = () => {
       setShowOtpInput(false);
       setOtp("");
     } catch (error) {
-      toast.error(error.response.data.message || "Withdrawal failed", {
+      toast.error(error?.response?.data.message || "Withdrawal failed", {
         id: toastID,
       });
       console.log("error during withdrawal", error);
