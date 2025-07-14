@@ -306,35 +306,36 @@ const DepositsStatus = () => {
         );
         setIsDialogOpen(false);
 
-        if (depositApires.data.Equity) {
-          const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
-            _id: selectedDeposit._id,
-            status: "approved",
+        const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
+          _id: selectedDeposit._id,
+          status: "approved",
+        });
+
+        try {
+          const customMailRes = await backendApi.post(`/custom-mail`, {
+            email: selectedDeposit.userId.email,
+            content: customContent,
+            subject: "Deposit Added",
           });
-          try {
-            const customMailRes = await backendApi.post(`/custom-mail`, {
-              email: selectedDeposit.userId.email,
-              content: customContent,
-              subject: "Deposit Added",
-            });
-          } catch (error) {
-            console.error("error while mailing", error);
-          }
-          const updatedDepositData = depositData.map((deposit) =>
-            deposit._id === selectedDeposit._id
-              ? {
-                  ...deposit,
-                  status: "approved",
-                }
-              : deposit
-          );
-          setDepositData(updatedDepositData);
-          setIsDialogOpen(false);
-          toast.success("Deposit Added", { id: toastId });
-        } else {
-          toast.error("Failed, Please retry!!", { id: toastId });
-          setIsDialogOpen(false);
+        } catch (error) {
+          console.error("error sending while mailing", error);
         }
+        const updatedDepositData = depositData.map((deposit) =>
+          deposit._id === selectedDeposit._id
+            ? {
+                ...deposit,
+                status: "approved",
+              }
+            : deposit
+        );
+        setDepositData(updatedDepositData);
+        setIsDialogOpen(false);
+        toast.success("Deposit Added", { id: toastId });
+        // if (depositApires.data.Equity) {
+        // } else {
+        //   toast.error("Failed, Please retry!!", { id: toastId });
+        //   setIsDialogOpen(false);
+        // }
       } else if (actionType === "reject") {
         const res = await backendApi.put(`/update-deposit`, {
           _id: selectedDeposit._id,
