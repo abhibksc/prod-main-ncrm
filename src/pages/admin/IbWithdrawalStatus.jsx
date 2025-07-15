@@ -318,12 +318,6 @@ const IbWithdrawalStatus = () => {
 
         toast.success("IB Withdrawal Approved", { id: toastId });
 
-        const customMailRes = await backendApi.post(`/custom-mail`, {
-          email: selectedDeposit.userData.email,
-          content: customContent,
-          subject: " IB Withdrawal Success",
-        });
-
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
@@ -334,6 +328,17 @@ const IbWithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+
+        // send mail ------------
+        try {
+          const customMailRes = await backendApi.post(`/custom-mail`, {
+            email: selectedDeposit.userData.email,
+            content: customContent,
+            subject: " IB Withdrawal Success",
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
       } else if (actionType === "reject") {
         const res = await backendApi.put(`/update-referral-withdrawal`, {
           id: selectedDeposit._id,

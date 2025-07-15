@@ -84,6 +84,9 @@ const WithdrawalStatus = () => {
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [pagination, setPagination] = useState({});
   const [isActionLoading, setIsActionLoading] = useState(false); // NEW: Added action loading state
+  const [comment, setComment] = useState("");
+
+  // REMOVED: notifyUser state ------
 
   // fetch data------------------
   const fetchApiData = async () => {
@@ -142,6 +145,8 @@ const WithdrawalStatus = () => {
   const handleActionClick = (deposit, action) => {
     setSelectedDeposit(deposit);
     setActionType(action);
+    setComment("");
+    // REMOVED: setNotifyUser(true);
     setIsDialogOpen(true);
   };
 
@@ -149,104 +154,41 @@ const WithdrawalStatus = () => {
 
   console.log("selected withdrawal####################", selectedDeposit);
 
-  const currentDateTime = new Date();
-  const formattedDateTime =
-    currentDateTime.toLocaleDateString("en-GB") +
-    ", " +
-    currentDateTime.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false, // 12-hour format with AM/PM
-    });
-
-  const customContent = `<!DOCTYPE html>
+  // getCustomContent for email
+  const getCustomContent = (actionType, selectedDeposit, comment) => {
+    const isApprove = actionType === "approve";
+    const currentDateTime = new Date();
+    return `<!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Withdrawal Request Confirmation - Arena Trade</title>
+      <title>Withdrawal Request ${
+        isApprove ? "Success" : "Rejected"
+      } - Arena Trade</title>
       <style>
-        body, html {
-          margin: 0;
-          padding: 0;
-          font-family: 'Arial', sans-serif;
-          line-height: 1.6;
-          color: #333;
-          background-color: #f4f4f4;
-        }
-        .container {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 5px;
-          background-color: #ffffff;
-        }
-        .header {
-          background-color: #19422df2;
-          color: #ffffff;
-          padding: 20px 15px;
-          text-align: center;
-          border-radius: 10px 10px 0 0;
-        }
-        .header h1 {
-          margin: 0;
-          font-size: 22px;
-          letter-spacing: 1px;
-        }
-        .content {
-          padding: 10px 20px;
-        }
-        .cta-button {
-          display: inline-block;
-          padding: 12px 24px;
-          background-color: #2d6a4f;
-          color: #FFFFFF;
-          text-decoration: none;
-          border-radius: 5px;
-          font-weight: bold;
-          margin: 10px 0;
-        }
-        .footer {
-          background-color: #19422df2;
-          color: #ffffff;
-          text-align: center;
-          padding: 5px 10px;
-          font-size: 12px;
-          border-radius: 0 0 10px 10px;
-        }
-        .footer-info {
-          margin-top: 6px;
-        }
-        .footer-info a {
-          color: #B6D0E2;
-          text-decoration: none;
-        }
-
-        .withdrawal-details {
-          background-color: #f8f8f8;
-          border-left: 4px solid #2d6a4f;
-          padding: 15px;
-          margin: 20px 0;
-        }
-        .withdrawal-details p {
-          margin: 5px 0;
-        }
-        .highlight {
-          font-weight: bold;
-          color: #0a2342;
-        }
-        .risk-warning {
-          color: #C70039;
-          padding: 5px;
-          font-size: 12px;
-          line-height: 1.4;
-        }
+        body, html { margin: 0; padding: 0; font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 0 auto; padding: 5px; background-color: #ffffff; }
+        .header { background-color: #19422df2; color: #ffffff; padding: 20px 15px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .content { padding: 10px 20px; }
+        .cta-button { display: inline-block; padding: 12px 24px; background-color: #2d6a4f; color: #FFFFFF; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 10px 0; }
+        .footer { background-color: #19422df2; color: #ffffff; text-align: center; padding: 5px 10px; font-size: 12px; border-radius: 0 0 10px 10px; }
+        .footer-info { margin-top: 6px; }
+        .footer-info a { color: #B6D0E2; text-decoration: none; }
+        .withdrawal-details { background-color: #f8f8f8; border-left: 4px solid #2d6a4f; padding: 15px; margin: 20px 0; }
+        .withdrawal-details p { margin: 5px 0; }
+        .highlight { font-weight: bold; color: #0a2342; }
+        .risk-warning { color: #C70039; padding: 5px; font-size: 12px; line-height: 1.4; }
+        .admin-comment { background: #f1f5f9; border-left: 4px solid ${
+          isApprove ? "#2d6a4f" : "#C70039"
+        }; padding: 10px; margin: 15px 0; font-style: italic; color: #333; }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">
-          <h1>Withdrawal Success</h1>
+          <h1>Withdrawal ${isApprove ? "Success" : "Rejected"}</h1>
         </div>
         <div class="content">
           <p>Dear ${
@@ -254,46 +196,70 @@ const WithdrawalStatus = () => {
             " " +
             selectedDeposit?.userData?.lastName
           },</p>
-  <p> Your withdrawal request has been processed and the requested amount has been successfully added to your chosen account</p>
-        <div class="withdrawal-details">
-          <p>Account No: <span class="highlight">${
-            selectedDeposit?.mt5Account
-          }</span></p>
+          <p>
+            ${
+              isApprove
+                ? "Your withdrawal request has been processed and the requested amount has been successfully added to your chosen account."
+                : "We regret to inform you that your withdrawal request has been rejected."
+            }
+          </p>
+          <div class="withdrawal-details">
+            <p>Account No: <span class="highlight">${
+              selectedDeposit?.mt5Account
+            }</span></p>
             <p>Amount: <span class="highlight">${
               selectedDeposit?.amount
             }</span></p>
             <p>Account Type: <span class="highlight">${
               selectedDeposit?.accountType
             }</span></p>
-            <p>Time Stamp: <span class="highlight">${formattedDateTime}</span></p>
+            <p>Time Stamp: <span class="highlight">${currentDateTime.toLocaleDateString(
+              "en-GB"
+            )}, ${currentDateTime.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    })}</span></p>
           </div>
-
-    <p>Thank you for choosing us.</p>
-    <p>Happy trading!</p>
-
+          ${
+            comment && comment.trim()
+              ? `<div class="admin-comment">
+            <strong>${
+              isApprove ? "Admin's Note:" : "Reason for Rejection:"
+            }</strong><br/>
+            ${comment}
+          </div>`
+              : ""
+          }
+          <p>${
+            isApprove
+              ? "Thank you for choosing us. Happy trading!"
+              : "If you have questions, please contact support."
+          }</p>
           <p>Best regards,<br>The ${
             import.meta.env.VITE_WEBSITE_NAME || "Forex"
           } Team</p>
           <hr>
-
         </div>
-          <div class="footer">
+        <div class="footer">
           <div class="footer-info">
-                  <p>Website: <a href="https://${
-                    import.meta.env.VITE_EMAIL_WEBSITE
-                  }"> ${
-    import.meta.env.VITE_EMAIL_WEBSITE
-  } </a> | E-mail: <a href="mailto:${import.meta.env.VITE_EMAIL_EMAIL || ""}">${
-    import.meta.env.VITE_EMAIL_EMAIL || ""
-  }</a></p>
-                  <p>© 2025 ${
-                    import.meta.env.VITE_WEBSITE_NAME || ""
-                  }. All Rights Reserved</p>
-                </div>
+            <p>Website: <a href="https://${
+              import.meta.env.VITE_EMAIL_WEBSITE
+            }"> ${
+      import.meta.env.VITE_EMAIL_WEBSITE
+    } </a> | E-mail: <a href="mailto:${
+      import.meta.env.VITE_EMAIL_EMAIL || ""
+    }">${import.meta.env.VITE_EMAIL_EMAIL || ""}</a></p>
+            <p>© 2025 ${
+              import.meta.env.VITE_WEBSITE_NAME || ""
+            }. All Rights Reserved</p>
+          </div>
         </div>
       </div>
     </body>
     </html>`;
+  };
 
   // handle confirm click ----------------
   const handleConfirmAction = async (selectedDeposit) => {
@@ -304,7 +270,7 @@ const WithdrawalStatus = () => {
 
     try {
       if (actionType === "approve") {
-        const apiWithdrawalRes = await metaApi.get(
+        await metaApi.get(
           `/MakeWithdrawBalance?Manager_Index=${
             import.meta.env.VITE_MANAGER_INDEX
           }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
@@ -313,15 +279,11 @@ const WithdrawalStatus = () => {
         );
         setIsDialogOpen(false);
 
-        const updateWithdrawal = await backendApi.put(`/update-withdrawal`, {
+        await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
         });
-        const customMailRes = await backendApi.post(`/custom-mail`, {
-          email: selectedDeposit.userData.email,
-          content: customContent,
-          subject: "Withdrawal Success",
-        });
+
         toast.success("Withdrawal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
@@ -334,8 +296,19 @@ const WithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+
+        //  send email now
+        try {
+          await backendApi.post(`/custom-mail`, {
+            email: selectedDeposit.userData.email,
+            content: getCustomContent("approve", selectedDeposit, comment),
+            subject: "Withdrawal Success",
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
       } else if (actionType === "reject") {
-        const res = await backendApi.put(`/update-withdrawal`, {
+        await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "rejected",
         });
@@ -352,33 +325,25 @@ const WithdrawalStatus = () => {
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
         toast.success("Withdrawal Rejected", { id: toastId });
+
+        //  send email now ---
+        try {
+          await backendApi.post(`/custom-mail`, {
+            email: selectedDeposit.userData.email,
+            content: getCustomContent("reject", selectedDeposit, comment),
+            subject: "Withdrawal Rejected",
+          });
+        } catch (error) {
+          console.log("error", error);
+        }
       }
     } catch (error) {
       toast.error("Something went wrong", { id: toastId }); // MODIFIED: Corrected toast type to error
       console.error("Error updating deposit status:", error);
-
-      // log-error -----------
-      const statusCode = error?.response?.status || error?.status;
-      const errorMessage = error?.response?.data?.message || error?.message;
-      const errorUrl =
-        error?.request?.__URL__ || error?.config?.url || error?.config?.baseURL;
-
-      // console.log("statusCode", statusCode);
-      // console.log("errorMessage", errorMessage);
-      // console.log("errorUrl", errorUrl);
-      try {
-        const logError = await backendApi.post(`/log-error`, {
-          email: selectedDeposit?.userData?.email,
-          accountId: selectedDeposit?.mt5Account,
-          url: errorUrl,
-          errorCode: statusCode,
-          errorMessage: errorMessage,
-        });
-      } catch (error) {
-        console.log("failed to log error", error);
-      }
     } finally {
       setIsActionLoading(false); // NEW: Reset action loading to false
+      setComment("");
+      // REMOVED: setNotifyUser(true);
     }
   };
   // total deposits ----------
@@ -677,7 +642,16 @@ const WithdrawalStatus = () => {
           </div>
         </div>
       </div>
-      <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <AlertDialog
+        open={isDialogOpen}
+        onOpenChange={(open) => {
+          setIsDialogOpen(open);
+          if (!open) {
+            setComment("");
+            // REMOVED: setNotifyUser(true);
+          }
+        }}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -830,27 +804,60 @@ const WithdrawalStatus = () => {
                       ""
                     )}
                   </div>
+                  {/* Minimalistic comment box */}
+                  <div className="mt-2">
+                    <label
+                      htmlFor="admin-comment"
+                      className="block text-sm text-white mb-1 font-medium"
+                    >
+                      Admin Comment <span className="text-red-400">*</span>
+                    </label>
+                    <textarea
+                      id="admin-comment"
+                      className="w-full rounded-md border border-primary-500 bg-primary-900 text-black px-3 py-2 text-sm focus:outline-none focus:border-primary-400 resize-none min-h-[60px]"
+                      placeholder={
+                        actionType === "approve"
+                          ? "Add a note for the user"
+                          : "Reason for rejection"
+                      }
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      maxLength={300}
+                      required
+                    />
+                    <div className="text-xs text-gray-400 text-right mt-1">
+                      {comment.length}/300
+                    </div>
+                  </div>
+                  {/* REMOVED: Notify user checkbox */}
+                  <p className="mt-4 text-sm">
+                    Are you sure you want to{" "}
+                    {actionType === "approve" ? "approve" : "reject"} this
+                    Withdraw?
+                  </p>
                 </div>
               )}
-              <p className="mt-2">
-                Are you sure you want to{" "}
-                {actionType === "approve" ? "approve" : "reject"} this Withdraw?
-              </p>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsDialogOpen(false)}>
+            <AlertDialogCancel
+              onClick={() => {
+                setIsDialogOpen(false);
+                setComment("");
+                // REMOVED: setNotifyUser(true);
+              }}
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => handleConfirmAction(selectedDeposit)}
-              disabled={isActionLoading}
+              disabled={isActionLoading || !comment.trim()}
             >
               {isActionLoading
                 ? "Processing..."
                 : `Confirm ${
                     actionType === "approve" ? "Approval" : "Rejection"
-                  }`}{" "}
+                  }`}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
