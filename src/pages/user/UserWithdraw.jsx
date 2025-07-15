@@ -284,24 +284,24 @@ const UserWithdraw = () => {
                     onChange={(e) => setSelectWallet(e.target.value)}
                     className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                   >
-                    {/* <option
+                    <option
                       className=" bg-secondary-800 text-white"
                       value="USDT(Trc20)"
                     >
                       USDT (Trc20)
-                    </option> */}
+                    </option>
                     <option
                       className=" bg-secondary-800 text-white"
                       value="USDT(Bep20)"
                     >
-                      USDT (Bep20)
+                      Bitcoin
                     </option>
-                    <option
+                    {/* <option
                       className=" bg-secondary-800 text-white"
                       value="BinanceID"
                     >
-                      Binance ID
-                    </option>
+                      Bitcoin
+                    </option> */}
                     {/* <option
                       className=" bg-secondary-800 text-white"
                       value="BTCAddress"
@@ -429,7 +429,7 @@ const UserWithdraw = () => {
                   {selectWallet === "USDT(Bep20)" && (
                     <div>
                       <p>
-                        USDT-Erc20 :{" "}
+                        Bitcoin :{" "}
                         <span className=" font-bold">
                           {loggedUser?.walletDetails?.ethAddress}
                         </span>{" "}

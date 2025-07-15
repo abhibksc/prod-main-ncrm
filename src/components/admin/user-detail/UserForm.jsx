@@ -409,13 +409,13 @@ const UserInfoForm = ({ userData }) => {
                       </span>{" "}
                     </p>
                     <p className="">
-                      USDT-Bep20 -{" "}
+                      Bitcoin -{" "}
                       <span className=" font-semibold">
                         {" "}
                         {userData?.walletDetails?.ethAddress}{" "}
                       </span>{" "}
                     </p>
-                    <p className="">
+                    {/* <p className="">
                       Binance ID -{" "}
                       <span className=" font-semibold">
                         {" "}
@@ -428,7 +428,7 @@ const UserInfoForm = ({ userData }) => {
                         {" "}
                         {userData?.walletDetails?.trxAddress}{" "}
                       </span>{" "}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
               </div>

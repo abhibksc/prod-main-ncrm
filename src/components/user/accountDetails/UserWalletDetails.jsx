@@ -71,13 +71,13 @@ const UserWalletDetails = () => {
             name="tetherAddress"
           />
           <InputField
-            label="USDT (Bep20)"
-            placeholder="Enter USDT(Bep20) address"
+            label="Bitcoin"
+            placeholder="Enter Bitcoin address"
             value={formData.ethAddress}
             onChange={handleInputChange}
             name="ethAddress"
           />
-          <InputField
+          {/* <InputField
             label="Binance ID"
             placeholder="Enter Binance ID"
             value={formData.accountNumber}
@@ -90,7 +90,7 @@ const UserWalletDetails = () => {
             value={formData.trxAddress}
             onChange={handleInputChange}
             name="trxAddress"
-          />
+          /> */}
         </div>
         <div className="flex items-center justify-center mt-8">
           <motion.button

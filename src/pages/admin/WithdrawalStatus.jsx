@@ -770,7 +770,7 @@ const WithdrawalStatus = () => {
                         <WalletCardsIcon size={20}></WalletCardsIcon>
 
                         <p>
-                          USDT-Bep20 -{" "}
+                          Bitcoin -{" "}
                           <span className=" font-bold">
                             {
                               selectedDeposit?.userData?.walletDetails
