@@ -267,7 +267,7 @@ const DepositsStatus = () => {
           }&Comment=deposit`
         );
         setIsDialogOpen(false);
-        if (depositApires.data.Equity) {
+        if (depositApires.data) {
           await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
             status: "approved",
