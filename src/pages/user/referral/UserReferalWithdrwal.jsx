@@ -276,6 +276,11 @@ export const UserReferralWithdrawal = () => {
                 {/* <option value="">Select Gateway</option> */}
                 <option value="Bank Transfer">Bank Transfer</option>
                 <option value="Wallet Transfer">Wallet Transfer</option>
+                <option
+                    value="Cash Withdrawal"
+                  >
+                    Cash Withdrawal
+                  </option>
               </select>
             </div>
 
