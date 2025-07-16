@@ -255,12 +255,6 @@ const UserWithdraw = () => {
                   >
                     Wallet Transfer
                   </option>
-                  <option
-                    className=" bg-secondary-800 text-white"
-                    value="Cash Withdrawal"
-                  >
-                    Cash Withdrawal
-                  </option>
                 </select>
               </div>
 
