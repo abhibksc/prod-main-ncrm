@@ -297,19 +297,23 @@ const DepositsStatus = () => {
 
     try {
       if (actionType === "approve") {
-        const depositApires = await metaApi.get(
-          `/MakeDepositBalance?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
-            selectedDeposit.deposit
-          }&Comment=deposit`
-        );
-        setIsDialogOpen(false);
+        // const depositApires = await metaApi.get(
+        //   `/MakeDepositBalance?Manager_Index=${
+        //     import.meta.env.VITE_MANAGER_INDEX
+        //   }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
+        //     selectedDeposit.deposit
+        //   }&Comment=deposit`
+        // );
 
         const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
           _id: selectedDeposit._id,
           status: "approved",
+          server: true,
+          email: selectedDeposit?.userId?.email,
+          accountId: selectedDeposit?.mt5Account,
         });
+        setIsDialogOpen(false);
+
         try {
           const customMailRes = await backendApi.post(`/custom-mail`, {
             email: selectedDeposit.userId.email,
