@@ -3,12 +3,17 @@ import {
   ArrowLeftRight,
   CircleCheckBig,
   CircleX,
+  Download,
+  FileText,
   Loader,
   Search,
   WalletCardsIcon,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -83,6 +88,7 @@ const IbWithdrawalStatus = () => {
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [pagination, setPagination] = useState({});
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // fetch data------------------
   const fetchApiData = async () => {
@@ -495,32 +501,278 @@ const IbWithdrawalStatus = () => {
     }
   }, []);
 
+  // Download functions
+  const prepareDownloadData = () => {
+    return depositData.map((item, index) => ({
+      "S.No": index + 1,
+      "User Name":
+        `${item?.userData?.firstName || ""} ${
+          item?.userData?.lastName || ""
+        }`.trim() || "Not found",
+      Email: item?.userData?.email || "Not found",
+      "IB ID": item?.referralId || "",
+      "Current Balance": Number(item?.userData?.ibBalance || 0).toFixed(4),
+      "Withdrawal Amount": item?.amount || 0,
+      "Remaining Balance": (
+        Number(item?.userData?.ibBalance || 0) - Number(item?.amount || 0)
+      ).toFixed(4),
+      "Payment Method": item?.method || "",
+      Status:
+        item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
+      "Bank Name": item?.userData?.bankDetails?.bankName || "",
+      "Account Holder": item?.userData?.bankDetails?.holderName || "",
+      "Account Number": item?.userData?.bankDetails?.accountNumber || "",
+      "IFSC Code": item?.userData?.bankDetails?.ifscCode || "",
+      "Swift Code": item?.userData?.bankDetails?.swiftCode || "",
+      "UPI ID": item?.userData?.bankDetails?.upiId || "",
+      "USDT TRC20": item?.userData?.walletDetails?.tetherAddress || "",
+      "USDT BEP20": item?.userData?.walletDetails?.ethAddress || "",
+      "Binance ID": item?.userData?.walletDetails?.accountNumber || "",
+      "BTC Address": item?.userData?.walletDetails?.trxAddress || "",
+      "Request Date": CFformatDate(item?.createdAt),
+      "Updated Date": CFformatDate(item?.updatedAt),
+    }));
+  };
+
+  const downloadExcel = () => {
+    setIsDownloading(true);
+    try {
+      const data = prepareDownloadData();
+      const ws = XLSX.utils.json_to_sheet(data);
+
+      // Set column widths
+      const colWidths = [
+        { wch: 8 }, // S.No
+        { wch: 20 }, // User Name
+        { wch: 25 }, // Email
+        { wch: 15 }, // IB ID
+        { wch: 15 }, // Current Balance
+        { wch: 18 }, // Withdrawal Amount
+        { wch: 18 }, // Remaining Balance
+        { wch: 15 }, // Payment Method
+        { wch: 12 }, // Status
+        { wch: 20 }, // Bank Name
+        { wch: 20 }, // Account Holder
+        { wch: 18 }, // Account Number
+        { wch: 15 }, // IFSC Code
+        { wch: 15 }, // Swift Code
+        { wch: 20 }, // UPI ID
+        { wch: 25 }, // USDT TRC20
+        { wch: 25 }, // USDT BEP20
+        { wch: 20 }, // Binance ID
+        { wch: 25 }, // BTC Address
+        { wch: 18 }, // Request Date
+        { wch: 18 }, // Updated Date
+      ];
+      ws["!cols"] = colWidths;
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "IB Withdrawals");
+
+      const fileName = `IB_Withdrawals_${status}_${
+        new Date().toISOString().split("T")[0]
+      }.xlsx`;
+      XLSX.writeFile(wb, fileName);
+
+      toast.success("Excel file downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download Excel file");
+      console.error("Excel download error:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const downloadCSV = () => {
+    setIsDownloading(true);
+    try {
+      const data = prepareDownloadData();
+      const ws = XLSX.utils.json_to_sheet(data);
+      const csv = XLSX.utils.sheet_to_csv(ws);
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute(
+        "download",
+        `IB_Withdrawals_${status}_${new Date().toISOString().split("T")[0]}.csv`
+      );
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("CSV file downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download CSV file");
+      console.error("CSV download error:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const downloadPDF = () => {
+    setIsDownloading(true);
+    try {
+      const doc = new jsPDF("l", "mm", "a4"); // landscape orientation
+
+      // Add title
+      doc.setFontSize(16);
+      doc.setFont(undefined, "bold");
+      doc.text(`IB Withdrawals Report - ${status.toUpperCase()}`, 20, 20);
+
+      // Add generation date
+      doc.setFontSize(10);
+      doc.setFont(undefined, "normal");
+      doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
+
+      // Prepare table data
+      const tableData = depositData.map((item, index) => [
+        index + 1,
+        `${item?.userData?.firstName || ""} ${
+          item?.userData?.lastName || ""
+        }`.trim() || "Not found",
+        item?.userData?.email || "Not found",
+        item?.referralId || "",
+        Number(item?.userData?.ibBalance || 0).toFixed(4),
+        item?.amount || 0,
+        item?.method || "",
+        item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
+        CFformatDate(item?.createdAt),
+      ]);
+
+      // Add table
+      doc.autoTable({
+        head: [
+          [
+            "S.No",
+            "User Name",
+            "Email",
+            "IB ID",
+            "Balance",
+            "Amount",
+            "Method",
+            "Status",
+            "Date",
+          ],
+        ],
+        body: tableData,
+        startY: 40,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          fontStyle: "bold",
+        },
+        alternateRowStyles: {
+          fillColor: [245, 245, 245],
+        },
+        columnStyles: {
+          0: { cellWidth: 15 }, // S.No
+          1: { cellWidth: 35 }, // User Name
+          2: { cellWidth: 45 }, // Email
+          3: { cellWidth: 25 }, // IB ID
+          4: { cellWidth: 25 }, // Balance
+          5: { cellWidth: 25 }, // Amount
+          6: { cellWidth: 25 }, // Method
+          7: { cellWidth: 20 }, // Status
+          8: { cellWidth: 30 }, // Date
+        },
+      });
+
+      // Add summary if available
+      if (isAll && !allLoading) {
+        const finalY = doc.lastAutoTable.finalY + 20;
+        doc.setFontSize(12);
+        doc.setFont(undefined, "bold");
+        doc.text("Summary:", 20, finalY);
+
+        doc.setFontSize(10);
+        doc.setFont(undefined, "normal");
+        doc.text(`Total Withdrawals: $${TotalDeposits}`, 20, finalY + 10);
+        doc.text(`Approved: $${TotalSuccessfullDeposits}`, 20, finalY + 20);
+        doc.text(`Pending: $${TotalPendingDeposits}`, 20, finalY + 30);
+        doc.text(`Rejected: $${TotalRejectedDeposits}`, 20, finalY + 40);
+      }
+
+      const fileName = `IB_Withdrawals_${status}_${
+        new Date().toISOString().split("T")[0]
+      }.pdf`;
+      doc.save(fileName);
+
+      toast.success("PDF file downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download PDF file");
+      console.error("PDF download error:", error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className=" mx-auto p-5">
-      <div className=" w-full flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+      <div className=" w-full flex flex-col lg:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
           {status} IB Withdrawals
         </h1>
-        <div className="relative w-full md:w-96">
-          <input
-            type="text"
-            placeholder="Name / Email / IB AC"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
-          />
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
-            size={18}
-          />
-          {searchQuery && (
+
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full lg:w-auto">
+          {/* Download Buttons */}
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
+              onClick={downloadExcel}
+              disabled={isDownloading || loading || depositData.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
             >
-              ×
+              <FileText size={16} />
+              Excel
             </button>
-          )}
+
+            <button
+              onClick={downloadCSV}
+              disabled={isDownloading || loading || depositData.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
+            >
+              <Download size={16} />
+              CSV
+            </button>
+
+            <button
+              onClick={downloadPDF}
+              disabled={isDownloading || loading || depositData.length === 0}
+              className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
+            >
+              <FileText size={16} />
+              PDF
+            </button>
+          </div>
+
+          {/* Search Input */}
+          <div className="relative w-full md:w-96">
+            <input
+              type="text"
+              placeholder="Name / Email / IB AC"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
+            />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
+              size={18}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <div className="overflow-x-auto">
