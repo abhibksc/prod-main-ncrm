@@ -17,7 +17,7 @@ import OtpUi from "@/components/OtpUi";
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [selectedGateway, setSelectedGateway] = useState("");
-  const [selectWallet, setSelectWallet] = useState("");
+  const [selectWallet, setSelectWallet] = useState("USDT(Bep20)");
   const [account, selectAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
