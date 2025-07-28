@@ -45,10 +45,10 @@ const AdminCopyRequests = () => {
       const updateRes = await backendApi.put(
         `/update-copy-request/${selectedUser?._id}`,
         {
-          status: actionType,
+          status: action,
         }
       );
-      toast.success(`Request ${actionType}`, { id: toastId });
+      toast.success(`Request ${action}`, { id: toastId });
       refresh();
     } catch (error) {
       console.error("Error updating status:", error);
