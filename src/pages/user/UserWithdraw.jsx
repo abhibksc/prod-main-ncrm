@@ -33,8 +33,26 @@ const UserWithdraw = () => {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
   const { getUpdateLoggedUser } = UseUserHook();
-  const { data, isLoading, isError, isWithdrawalPending, refresh } =
-    useUserWithdrawals();
+  const { isWithdrawalPending, refresh } = useUserWithdrawals();
+  const [selectedAccount, setSelecetdAccount] = useState({});
+  const [netWithdrawalAmount, setNetWithdrawalAmount] =
+    useState(accountBalance);
+  // console.log("accountBalance", accountBalance);
+  // console.log("netWithdrawalAmount", netWithdrawalAmount);
+
+  useEffect(() => {
+    if (selectedAccount?.lockInfo?.isLocked) {
+      setNetWithdrawalAmount(
+        +(
+          parseFloat(accountBalance || 0) -
+          parseFloat(selectedAccount.lockInfo.amount || 0)
+        ).toFixed(2)
+      );
+    } else {
+      setNetWithdrawalAmount(accountBalance);
+    }
+  }, [accountBalance]);
+  // console.log("selectedAccount", selectedAccount);
 
   const fetchAccountInfo = async () => {
     setBalanceLoading(true);
@@ -66,6 +84,10 @@ const UserWithdraw = () => {
       );
       return;
     }
+    if (amount > netWithdrawalAmount) {
+      toast.error("You don't have sufficient funds for withdrawal");
+      return;
+    }
 
     // Validate inputs first
     if (!account || !selectedGateway || !amount) {
@@ -88,6 +110,7 @@ const UserWithdraw = () => {
       });
     }
   };
+  // verify and submit---
 
   const verifyOtpHandler = async () => {
     const toastID = toast.loading("Verifying your request..");
@@ -215,6 +238,7 @@ const UserWithdraw = () => {
                   const selectedAccount = loggedUser?.accounts?.find(
                     (value) => value.accountNumber === e.target.value
                   );
+                  setSelecetdAccount(selectedAccount);
                   setAccountType(selectedAccount?.accountType || ""); // Handle potential undefined value
                 }}
                 className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
@@ -238,6 +262,73 @@ const UserWithdraw = () => {
                 ))}
               </select>
             </div>
+            {/* locked amount UI if it has  */}
+            {selectedAccount?.lockInfo?.isLocked && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-full mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
+                    <svg
+                      className="w-4 h-4 text-amber-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-semibold text-amber-400">
+                        Account Partially Locked
+                      </h3>
+                      <span className="px-2 py-1 text-xs bg-amber-500/20 text-amber-300 rounded-full">
+                        Restricted
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                      <div className="space-y-1">
+                        <p className="text-gray-400">Locked Amount</p>
+                        <p className="font-semibold text-amber-300">
+                          ${selectedAccount.lockInfo.amount || "0.00"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-gray-400">
+                          Available for Withdrawal
+                        </p>
+                        <p className="font-semibold text-green-400">
+                          $
+                          {(
+                            parseFloat(accountBalance || 0) -
+                            parseFloat(selectedAccount.lockInfo.amount || 0)
+                          ).toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+
+                    {selectedAccount.lockInfo.comment && (
+                      <div className="mt-3 p-3 bg-secondary-800/30 rounded-md border-l-2 border-amber-500/50">
+                        <p className="text-xs text-gray-400 mb-1">
+                          Administrator Note:
+                        </p>
+                        <p className="text-sm text-gray-200 italic">
+                          "{selectedAccount.lockInfo.comment}"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            )}
             {/* Gateway Selection */}
             <div className="w-full space-y-4">
               <div className="w-full">

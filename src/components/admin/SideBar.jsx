@@ -20,6 +20,8 @@ import {
   HardDrive,
   CopyPlusIcon,
   ArrowRightLeftIcon,
+  Lock,
+  LockKeyhole,
 } from "lucide-react";
 import { RiFileUserFill, RiProfileFill } from "react-icons/ri";
 
@@ -151,10 +153,15 @@ const Sidebar = () => {
         { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
       ],
     },
+    // {
+    //   label: "Copy Requests",
+    //   icon: <CopyPlusIcon />,
+    //   route: "/admin/copy-requests",
+    // },
     {
-      label: "Copy Requests",
-      icon: <CopyPlusIcon />,
-      route: "/admin/copy-requests",
+      label: "Lock Funds",
+      icon: <LockKeyhole />,
+      route: "/admin/lock-account",
     },
     {
       label: "Payment Getaways",

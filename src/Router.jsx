@@ -53,6 +53,7 @@ import IbUsers from "./pages/admin/IbUsers";
 import UserCopyRequest from "./pages/user/UserCopyRequest";
 import AdminCopyRequests from "./pages/admin/AdminCopyRequests";
 import Transfers from "./pages/admin/Transfers";
+import LockAccount from "./pages/admin/LockAccount";
 const Router = createBrowserRouter([
   {
     path: "/admin",
@@ -135,6 +136,10 @@ const Router = createBrowserRouter([
       {
         path: "/admin/transfers",
         element: <Transfers></Transfers>,
+      },
+      {
+        path: "/admin/lock-account",
+        element: <LockAccount></LockAccount>,
       },
     ],
   },
