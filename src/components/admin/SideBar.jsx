@@ -153,11 +153,11 @@ const Sidebar = () => {
         { label: "All IB Withdrawals", route: "/admin/ib-withdrawal/all" },
       ],
     },
-    // {
-    //   label: "Copy Requests",
-    //   icon: <CopyPlusIcon />,
-    //   route: "/admin/copy-requests",
-    // },
+    {
+      label: "Copy Requests",
+      icon: <CopyPlusIcon />,
+      route: "/admin/copy-requests",
+    },
     {
       label: "Lock Funds",
       icon: <LockKeyhole />,
