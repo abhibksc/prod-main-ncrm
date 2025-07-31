@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import UseUserHook from "@/hooks/user/UseUserHook";
+import { RiStockLine } from "react-icons/ri";
 
 const UserPlatform = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -186,6 +187,12 @@ const PlatformDownloadSection = ({ siteConfig }) => (
           icon: <Monitor className="w-6 h-6 text-secondary-500" />,
           text: "Windows",
           link: siteConfig?.windowsDL,
+          description: "Full-featured desktop trading environment",
+        },
+        {
+          icon: <RiStockLine className="w-6 h-6 text-secondary-500" />,
+          text: "Social Trading APK",
+          link: "https://www.dropbox.com/scl/fi/5gvjj6wyex448m1uj1zo1/client-copy-new.apk?rlkey=kq66piu6jwv0bx4m890yef31f&st=lrqasogv&dl=1",
           description: "Full-featured desktop trading environment",
         },
       ].map((platform, index) => (
