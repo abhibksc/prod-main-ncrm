@@ -18,7 +18,16 @@ export function useGetInfoByAccounts(accountIds = [], component) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!accountIds || accountIds.length === 0) return;
+    if (!accountIds || accountIds.length === 0) {
+      const dispatchStats = {
+        totalBalance: 0,
+        totalEquity: 0,
+        totalProfit: 0,
+      };
+      dispatch(setAccountStats(dispatchStats));
+
+      return;
+    }
 
     let intervalId;
 
