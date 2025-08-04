@@ -22,8 +22,25 @@ const UserP2pTransfer = () => {
   const [showOtpInput, setShowOtpInput] = useState(false);
   const [otp, setOtp] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
+  const [selectedFromAccount, setSelectedFromAccount] = useState({});
+  const [netTransferAmount, setNetTransferAmount] =
+    useState(fromAccountBalance);
   // -----------------
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (selectedFromAccount?.lockInfo?.isLocked) {
+      setNetTransferAmount(
+        +(
+          parseFloat(fromAccountBalance || 0) -
+          parseFloat(selectedFromAccount.lockInfo.amount || 0)
+        ).toFixed(2)
+      );
+    } else {
+      setNetTransferAmount(fromAccountBalance);
+    }
+  }, [fromAccountBalance]);
+
   const fromAccountInfo = async () => {
     try {
       setFromAccountBalance("");
@@ -50,6 +67,12 @@ const UserP2pTransfer = () => {
       );
       return;
     }
+
+    if (amount > netTransferAmount) {
+      toast.error("You don't have sufficient funds for transfer");
+      return;
+    }
+
     const toastId = toast.loading("Processing your transfer. Please wait...");
     // Send OTP first --
     setIsTransferLoading(false);
@@ -83,9 +106,9 @@ const UserP2pTransfer = () => {
         email: loggedUser.email,
         otp,
       });
-      // Proceed to withdrawal logic
-      if (fromAccountBalance < amount) {
-        toast.error("You don't have balance for withdrawal !!", {
+      // Proceed to transfer logic
+      if (netTransferAmount < amount) {
+        toast.error("You don't have sufficient funds for transfer !!", {
           id: toastID,
         });
         return;
@@ -195,7 +218,13 @@ const UserP2pTransfer = () => {
             <select
               required
               value={fromAccount}
-              onChange={(e) => setFromAccount(e.target.value)}
+              onChange={(e) => {
+                setFromAccount(e.target.value);
+                const selectedAccount = loggedUser?.accounts?.find(
+                  (acc) => acc.accountNumber === e.target.value
+                );
+                setSelectedFromAccount(selectedAccount || {});
+              }}
               className="w-full px-4 py-2 mt-2 border bg-secondary-900 border-gray-700 rounded-md focus:ring-2 focus:ring-secondary-500"
             >
               <option className="bg-secondary-900" value="" disabled>
@@ -264,6 +293,72 @@ const UserP2pTransfer = () => {
           </div>
         </div>
 
+        {/* Locked Amount UI */}
+        {selectedFromAccount?.lockInfo?.isLocked && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full mt-4 p-4 bg-amber-500/10 border border-amber-500/30 rounded-lg"
+          >
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-amber-500/20 rounded-full flex items-center justify-center">
+                <svg
+                  className="w-4 h-4 text-amber-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="flex-1 space-y-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-amber-400">
+                    Account Partially Locked
+                  </h3>
+                  <span className="px-2 py-1 text-xs bg-amber-500/20 text-amber-300 rounded-full">
+                    Restricted
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                  <div className="space-y-1">
+                    <p className="text-gray-400">Locked Amount</p>
+                    <p className="font-semibold text-amber-300">
+                      ${selectedFromAccount.lockInfo.amount || "0.00"}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-gray-400">Available for Transfer</p>
+                    <p className="font-semibold text-green-400">
+                      $
+                      {(
+                        parseFloat(fromAccountBalance || 0) -
+                        parseFloat(selectedFromAccount.lockInfo.amount || 0)
+                      ).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                {selectedFromAccount.lockInfo.comment && (
+                  <div className="mt-3 p-3 bg-secondary-800/30 rounded-md border-l-2 border-amber-500/50">
+                    <p className="text-xs text-gray-400 mb-1">
+                      Administrator Note:
+                    </p>
+                    <p className="text-sm text-gray-200 italic">
+                      "{selectedFromAccount.lockInfo.comment}"
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Amount */}
         <div>
           <label className="text-sm font-medium text-gray-200 mb-1 block">
@@ -279,7 +374,7 @@ const UserP2pTransfer = () => {
 
               if (
                 val === "" ||
-                (num >= 0 && num <= parseFloat(fromAccountBalance))
+                (num >= 0 && num <= parseFloat(netTransferAmount))
               ) {
                 setAmount(val);
               }
