@@ -69,101 +69,50 @@ const UserNewChallenge = () => {
     setCreatingLoading(true);
     const toastID = toast.loading("Please wait...");
 
-    let retries = 0;
-    let accountCreated = false;
+    const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
 
-    while (retries < 5 && !accountCreated) {
-      // const randomNumber = 250410236;
-      const randomNumber = CFgenerateRandomNumber(siteConfig?.mt5Digit || 6);
+    try {
+      // ✅ Step 1: Call backend to create MT5 account
+      const createAccountResponse = await backendApi.post(`/create-account`, {
+        userId: loggedUser._id,
+        accountNumber: randomNumber,
+        accountType: formData.accountType,
+        leverage: formData.leverage,
+        groupName: formData.apiGroup,
+        platform: formData.platform,
+      });
+      // ✅ Step 2: Success flow
+      toast.success("Account created successfully!", { id: toastID });
+      await getUpdateLoggedUser();
+      navigate("/user/challenges");
 
-      let accountExists = false;
-
+      // ✅ Step 3: Send confirmation email (optional, don't block main flow)
       try {
-        const check = await metaApi.get(
-          `/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${randomNumber}`
-        );
-        if (check.data.MT5Account) {
-          accountExists = true;
-          console.log("Account already exists, retrying...");
-          retries++;
-          continue;
-        }
-      } catch (error) {
-        console.log("error?.response?.data?.message", error.response.status);
-        if (error.response && error.response.status === 404) {
-          // Account doesn't exist - proceed
-          accountExists = false;
-        } else {
-          // Some other error
-          console.error("Check account failed:", error);
-          retries++;
-          continue;
-        }
-      }
-
-      try {
-        const res = await metaApi.post(`/Adduser`, {
-          Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
-          MT5Account: randomNumber,
-          Name: `${loggedUser.firstName} ${loggedUser.lastName}`,
-          Country: loggedUser.Country,
-          Leverage: formData.leverage,
-          Group_Name: formData.apiGroup,
+        const emailContent = OpenAccountMail({
+          loggedUser,
+          generateMt5: createAccountResponse?.data,
+          formData,
+          siteConfig,
+          randomNumber,
         });
 
-        const mt5Account = res.data.MT5Account;
-
-        if (mt5Account > 0) {
-          await backendApi.post(`/add-mt5-account/${loggedUser._id}`, {
-            accountNumber: mt5Account,
-            leverage: formData.leverage,
-            accountType: formData.accountType,
-            groupName: formData.apiGroup,
-            masterPassword: res.data.Master_Pwd,
-            investorPassword: res.data.Investor_Pwd,
-            platform: formData.platform,
-          });
-
-          try {
-            const emailContent = OpenAccountMail({
-              loggedUser,
-              generateMt5: res,
-              formData,
-              siteConfig,
-            });
-
-            await backendApi.post(`/custom-mail`, {
-              email: loggedUser.email,
-              content: emailContent,
-              subject: "Account Created",
-            });
-          } catch (mailErr) {
-            console.error("Email failed:", mailErr);
-          }
-
-          toast.success("Account created successfully!", { id: toastID });
-          await getUpdateLoggedUser();
-          navigate("/user/challenges");
-          accountCreated = true;
-        } else {
-          console.warn("MT5Account generation failed, retrying...");
-          retries++;
-        }
-      } catch (err) {
-        console.error("Error in account creation attempt:", err);
-        retries++;
+        await backendApi.post(`/custom-mail`, {
+          randomNumber,
+          email: loggedUser.email,
+          content: emailContent,
+          subject: "Account Created",
+        });
+      } catch (mailErr) {
+        console.error("Email failed:", mailErr);
       }
-    }
-
-    if (!accountCreated) {
-      toast.error("Failed to create account. Please try again later.", {
+    } catch (err) {
+      console.error("Error in account creation attempt:", err);
+      toast.error("Account creation failed. Please try again.", {
         id: toastID,
       });
+    } finally {
+      setCreatingLoading(false);
     }
-
-    setCreatingLoading(false);
   };
 
   const fetchAccountConfigurations = async () => {

@@ -78,11 +78,10 @@ const UserDetailDashboard = ({ username }) => {
       let Balance = 0;
       for (const account of userData.accounts) {
         console.log("user details called");
-        const res = await metaApi.get(
-          `/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${account.accountNumber}`
+        const res = await backendApi.get(
+          `id-info?accountNumber=${account.accountNumber}`
         );
+
         Balance += Number(res.data.Equity);
       }
       setTotalBalance(Number(Balance.toFixed(2)));

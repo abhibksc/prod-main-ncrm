@@ -58,11 +58,8 @@ const UserWithdraw = () => {
     setBalanceLoading(true);
     try {
       setAccountBalance("");
-      const res = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${account}`
-      );
+      const res = await backendApi.get(`id-info?accountNumber=${account}`);
+
       setBalanceLoading(false);
       if (res.data.Equity) {
         setAccountBalance(res.data.Equity);

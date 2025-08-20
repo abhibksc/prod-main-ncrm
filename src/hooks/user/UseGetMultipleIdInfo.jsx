@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 export function useGetMultipleIdInfo(accountIds = []) {
   const [dataMap, setDataMap] = useState({});
@@ -15,11 +15,7 @@ export function useGetMultipleIdInfo(accountIds = []) {
       await Promise.all(
         accountIds.map(async (id) => {
           try {
-            const res = await metaApi.get(
-              `/GetUserInfo?Manager_Index=${
-                import.meta.env.VITE_MANAGER_INDEX
-              }&MT5Account=${id}`
-            );
+            const res = await backendApi.get(`id-info?accountNumber=${id}`);
 
             if (res.data?.Equity) {
               newMap[id] = {

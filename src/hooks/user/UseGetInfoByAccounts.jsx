@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import { useDispatch } from "react-redux";
 import {
   setAccountsData,
@@ -25,9 +25,8 @@ export function useGetInfoByAccounts(accountIds = [], component) {
 
     const fetchData = async () => {
       try {
-        const res = await metaApi.post(`GetUserInfoByAccounts`, {
-          Manager_Index: import.meta.env.VITE_MANAGER_INDEX,
-          MT5Accounts: accountIds,
+        const res = await backendApi.post(`ids-info`, {
+          accountIds: accountIds,
         });
 
         if (Array.isArray(res.data)) {

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { AnimatePresence, motion } from "framer-motion";
 import DynamicLoder from "@/components/Loader/DynamicLoder";
 import ModernHeading from "@/lib/ModernHeading";
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 
 export default function UserTradeHistory() {
   const [activeTab, setActiveTab] = useState("open");
@@ -21,47 +21,54 @@ export default function UserTradeHistory() {
     setActiveTab(tradeType);
     setLoading(true);
     setError(null);
+    setTradeData([]); // reset before loading
+
     try {
-      setTradeData([]);
-      const data = [];
+      let successCount = 0;
+
       for (const account of loggedUser.accounts) {
-        let res;
-        if (tradeType === "closed") {
-          res = await metaApi.get(
-            `/GetCloseTradeAll?Manager_Index=${
-              import.meta.env.VITE_MANAGER_INDEX
-            }&MT5Accont=${
-              account.accountNumber
-            }&StartTime=2021-07-20 00:00:00&EndTime=${currentDate} 23:59:59`
+        try {
+          let res;
+          if (tradeType === "closed") {
+            res = await backendApi.get(
+              `/close-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
+            );
+          } else if (tradeType === "open") {
+            res = await metaApi.get(
+              `/GetOpenTradeByAccount?Manager_Index=${
+                import.meta.env.VITE_MANAGER_INDEX
+              }&MT5Accont=${account.accountNumber}`
+            );
+          }
+
+          if (Array.isArray(res?.data) && res.data.length > 0) {
+            successCount++;
+            // ✅ Add new data progressively
+            setTradeData((prev) => [...prev, ...res.data]);
+          }
+        } catch (accountErr) {
+          console.warn(
+            `Failed to fetch trades for account ${account.accountNumber}:`,
+            accountErr.message
           );
-        } else if (tradeType === "open") {
-          res = await metaApi.get(
-            `/GetOpenTradeByAccount?Manager_Index=${
-              import.meta.env.VITE_MANAGER_INDEX
-            }&MT5Accont=${account.accountNumber}`
-          );
         }
-        // console.log("res trade history--", res.data);
-        if (Array.isArray(res.data)) {
-          data.push(...res.data);
-        }
-        // After all data is collected, update the state once
-        if (data.length > 0) {
-          setTradeData(data);
-          setError("");
-        } else if (data.length == 0) {
-          setTradeData([]);
-          setError("No data found. Please try again.");
-        }
-        setLoading(false);
+      }
+
+      // ✅ After loop ends, if no account succeeded → show error
+      if (successCount === 0) {
+        setError("No data found. Please try again.");
+      } else {
+        setError(""); // clear error if at least one worked
       }
     } catch (error) {
-      console.error("Error fetching trade data:", error);
+      console.error("Unexpected error fetching trade data:", error);
       setError("Failed to fetch trade data. Please try again.");
       setTradeData([]);
+    } finally {
       setLoading(false);
     }
   };
+
   const handleTabClick = (tradeType) => {
     setActiveTab(tradeType);
     fetchTradeData(tradeType);

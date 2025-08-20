@@ -88,10 +88,8 @@ export default function UserDeposit() {
     try {
       setBalanceLoading(true);
       setAccountBalance("");
-      const res = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${formData.accountNumber}`
+      const res = await backendApi.get(
+        `id-info?accountNumber=${formData.accountNumber}`
       );
       setBalanceLoading(false);
       if (res.data.Equity) {

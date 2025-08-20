@@ -55,13 +55,9 @@ const UserTransfer = () => {
     try {
       setFromAccountBalance("");
       setBalanceLoading(true);
-      const res = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${fromAccount}`
-      );
+      const res = await backendApi.get(`id-info?accountNumber=${fromAccount}`);
       setBalanceLoading(false);
-      if (res.data.Equity) setFromAccountBalance(res.data.Equity);
+      if (res.data.Equity) setFromAccountBalance(res.data.Equity.toFixed(2));
     } catch (error) {
       console.log(error);
       setBalanceLoading(false);
@@ -72,13 +68,9 @@ const UserTransfer = () => {
     try {
       setToAccountBalance("");
       setBalanceLoading(true);
-      const res = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${toAccount}`
-      );
+      const res = await backendApi.get(`id-info?accountNumber=${toAccount}`);
       setBalanceLoading(false);
-      if (res.data.Equity) setToAccountBalance(res.data.Equity);
+      if (res.data.Equity) setToAccountBalance(res.data.Equity.toFixed(2));
     } catch (error) {
       console.log(error);
       setBalanceLoading(false);
@@ -102,23 +94,11 @@ const UserTransfer = () => {
     setIsTransferLoading(true);
 
     try {
-      await metaApi.get(
-        `/MakeWithdrawBalance?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${fromAccount}&Amount=${amount}&Comment=transfer`
-      );
-      await metaApi.get(
-        `/MakeDepositBalance?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${toAccount}&Amount=${amount}&Comment=transfer`
-      );
-      await backendApi.post(`/add-transfer`, {
+      await backendApi.post(`/internal-transfer`, {
         userId: loggedUser._id,
-        type: "internal",
         fromAccount: fromAccount,
         toAccount: toAccount,
         amount: amount,
-        status: "success",
       });
       toast.success("Transfer completed successfully!", { id: toastId });
       setAmount("");

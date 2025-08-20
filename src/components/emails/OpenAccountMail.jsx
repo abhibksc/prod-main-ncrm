@@ -3,6 +3,7 @@ export default function OpenAccountMail({
   generateMt5,
   formData,
   siteConfig,
+  randomNumber,
 }) {
   return `<!DOCTYPE html>
           <html lang="en">
@@ -99,9 +100,7 @@ export default function OpenAccountMail({
         <p>We are pleased to inform you that your MT5 trading account has been successfully created. Below are your account details:</p>
                <div class="withdrawal-details">
 
-                <p>Account No: <span class="highlight">${
-                  generateMt5.data.MT5Account
-                }</span></p>
+                <p>Account No: <span class="highlight">${randomNumber}</span></p>
                   <p>Account Type: <span class="highlight">${
                     formData.accountType
                   }</span></p>
@@ -109,10 +108,10 @@ export default function OpenAccountMail({
                     formData.leverage
                   }</span></p>
                   <p>Master Password: <span class="highlight">${
-                    generateMt5.data.Master_Pwd
+                    generateMt5.data.masterPassword
                   }</span></p>
                   <p>Investor Password: <span class="highlight">${
-                    generateMt5.data.Investor_Pwd
+                    generateMt5.data.investorPassword
                   }</span></p>
                   <p>Server Name: <span class="highlight">${
                     siteConfig?.serverName

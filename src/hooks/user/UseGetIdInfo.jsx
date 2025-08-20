@@ -1,5 +1,5 @@
 // hooks/user/useGetIdInfo.js
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import { useEffect, useState } from "react";
 
 export function useGetIdInfo(id) {
@@ -14,11 +14,7 @@ export function useGetIdInfo(id) {
     const fetchAccountInfo = async () => {
       setLoading(true);
       try {
-        const res = await metaApi.get(
-          `/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${id}`
-        );
+        const res = await backendApi.get(`id-info?accountNumber=${id}`);
         if (res.data?.Equity) {
           setInfo(res.data);
         } else {

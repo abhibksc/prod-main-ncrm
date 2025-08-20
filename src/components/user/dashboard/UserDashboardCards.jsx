@@ -80,10 +80,8 @@ const UserDashboardBalanceCards = () => {
     try {
       let Balance = 0;
       for (const account of loggedUser?.accounts) {
-        const res = await metaApi.get(
-          `/GetUserInfo?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${account.accountNumber}`
+        const res = await backendApi.get(
+          `id-info?accountNumber=${account.accountNumber}`
         );
         Balance += Number(res.data.Equity);
       }

@@ -45,11 +45,8 @@ const UserP2pTransfer = () => {
     try {
       setFromAccountBalance("");
       setBalanceLoading(true);
-      const res = await metaApi.get(
-        `/GetUserInfo?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&MT5Account=${fromAccount}`
-      );
+      const res = await backendApi.get(`id-info?accountNumber=${fromAccount}`);
+
       setBalanceLoading(false);
       if (res.data.Equity) setFromAccountBalance(res.data.Equity);
     } catch (error) {
