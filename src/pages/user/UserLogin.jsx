@@ -8,6 +8,7 @@ import { setLoggedUser } from "../../redux/user/userSlice";
 import { Mail, Lock, LogIn, Loader2, ArrowLeft } from "lucide-react";
 import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
+import useBlockInCountries from "@/hooks/UseBlockInCountries";
 const UserLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +20,8 @@ const UserLogin = () => {
   const [loginData, setLoginData] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const siteConfig = useSelector((state) => state.user.siteConfig); // Get from Redux
+  const blockUi = useBlockInCountries();
+  if (blockUi) return blockUi;
 
   const currentDateTime = new Date();
   const formattedDateTime =

@@ -12,6 +12,7 @@ import ModernHeading from "@/lib/ModernHeading";
 import { backendApi } from "@/utils/apiClients";
 import { useSelector } from "react-redux";
 import { FaLeftRight } from "react-icons/fa6";
+import useBlockInCountries from "@/hooks/UseBlockInCountries";
 
 const phoneInputCustomStyles = `
   .react-tel-input .country-list {
@@ -53,6 +54,8 @@ const UserSignUp = () => {
   const countriesArray = getData();
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const blockUi = useBlockInCountries();
+  if (blockUi) return blockUi;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

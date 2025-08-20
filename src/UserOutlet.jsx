@@ -5,11 +5,14 @@ import { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import UserSidebar from "./components/user/UserSidebar";
 import useSiteConfig from "./hooks/user/UseSiteConfig";
+import useBlockInCountries from "./hooks/UseBlockInCountries";
 
 export default function UserOutlet() {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const navigate = useNavigate();
+
   useSiteConfig();
+
   const verifyUser = () => {
     if (!loggedUser || !loggedUser.emailVerified) {
       navigate("/user/login");
@@ -21,6 +24,9 @@ export default function UserOutlet() {
       verifyUser();
     }, 2000);
   }, [navigate, loggedUser]);
+
+  const blockUi = useBlockInCountries();
+  if (blockUi) return blockUi;
 
   if (!loggedUser) {
     return null;
