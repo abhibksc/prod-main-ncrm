@@ -151,7 +151,7 @@ const UserTransfer = () => {
 
       {/* Tabs */}
       <div className="flex justify-center mt-6 mb-6 space-x-4">
-        {["internal", "p2p"].map((tab) => (
+        {["internal"].map((tab) => (
           <motion.button
             key={tab}
             onClick={() => setActiveTab(tab)}
