@@ -74,6 +74,16 @@ const UserSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!id || id.length <= 4) {
+      setError(
+        "Currently we are accepting signup only for referrers with valid ID."
+      );
+      toast.error(
+        "Currently we are accepting signup only for referrers with valid ID."
+      );
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
