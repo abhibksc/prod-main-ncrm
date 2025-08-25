@@ -276,25 +276,12 @@ const WithdrawalStatus = () => {
 
     try {
       if (actionType === "approve") {
-        await metaApi.get(
-          `/MakeWithdrawBalance?Manager_Index=${
-            import.meta.env.VITE_MANAGER_INDEX
-          }&MT5Account=${selectedDeposit.mt5Account}&Amount=${
-            selectedDeposit.amount
-          }&Comment=Withdrawal`
-        );
-        setIsDialogOpen(false);
-
         await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
           server: true,
         });
-        await backendApi.put(`/update-withdrawal`, {
-          _id: selectedDeposit._id,
-          status: "approved",
-        });
-
+        setIsDialogOpen(false);
         toast.success("Withdrawal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
