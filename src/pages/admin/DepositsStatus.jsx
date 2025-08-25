@@ -299,7 +299,7 @@ const DepositsStatus = () => {
     if (isActionLoading) return;
 
     const toastId = toast.loading("Please wait..");
-    setIsActionLoading(true); // NEW: Set action loading to true
+    setIsActionLoading(true);
 
     try {
       if (actionType === "approve") {

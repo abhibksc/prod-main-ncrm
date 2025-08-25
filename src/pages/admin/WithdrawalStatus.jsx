@@ -288,6 +288,11 @@ const WithdrawalStatus = () => {
         await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
+          server: true,
+        });
+        await backendApi.put(`/update-withdrawal`, {
+          _id: selectedDeposit._id,
+          status: "approved",
         });
 
         toast.success("Withdrawal Approved", { id: toastId });
