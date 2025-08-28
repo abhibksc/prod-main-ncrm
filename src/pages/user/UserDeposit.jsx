@@ -104,6 +104,13 @@ export default function UserDeposit() {
   // submit api handler---------------
 
   const submitHandler = async () => {
+    if (+formData?.depositAmount < 100) {
+      toast.error(
+        "he minimum deposit is 100$, if the deposit is less than 100$ then fund loss may occur!!"
+      );
+      return;
+    }
+
     if (!creatingLoading && !isSubmitting) {
       // MODIFIED: Added check for isSubmitting
       const toastID = toast.loading("Please wait..");

@@ -26,10 +26,12 @@ const AdminCopyRequests = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState(searchQuery);
   const [comment, setComment] = useState("");
-  const { data, pagination, refresh } = useAdminCopyRequest({
+  const [statusFilter, setStatusFilter] = useState("All");
+  const { data, pagination, refresh, isLoading } = useAdminCopyRequest({
     page: currentPage,
     limit: 10,
-    status: "Pending",
+    status: statusFilter === "All" ? undefined : statusFilter,
+    search: searchQuery,
   });
 
   const handleSearchChange = (e) => {
@@ -88,13 +90,13 @@ const AdminCopyRequests = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, statusFilter]);
 
   // debouncing searching ------------
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-    }, 500); // 500ms debounce time
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -105,37 +107,55 @@ const AdminCopyRequests = () => {
 
   useEffect(() => {
     refresh();
-  }, [currentPage, debouncedSearch]);
+    // console.log(searchQuery);
+  }, [currentPage, debouncedSearch, statusFilter]);
+
+  useEffect(() => {}, [data]);
 
   useEffect(() => {}, [data]);
 
   return (
     <div className="mx-auto mt-5 px-5">
-      <div className=" w-full flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+      <div className="w-full flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h1 className="text-2xl flex-col font-bold mb-4 text-white first-letter:uppercase">
           Copy Trading Requests
         </h1>
-        {/* <div className="relative w-full md:w-96">
-          <input
-            type="text"
-            placeholder="Name / Email"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
-          />
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
-            size={18}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
-            >
-              ×
-            </button>
-          )}
-        </div> */}
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          {/* Status Filter Dropdown */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-3 py-2 rounded-lg bg-primary-600 border border-primary-500 text-white focus:outline-none focus:border-primary-400"
+          >
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Approved">Approved</option>
+          </select>
+          {/* Search input (optional, uncomment if needed) */}
+
+          <div className="relative w-full md:w-96">
+            <input
+              type="text"
+              placeholder="Name / Email"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 bg-primary-600 border border-primary-500 rounded-lg focus:outline-none focus:border-primary-400 text-white placeholder-primary-300"
+            />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary-300"
+              size={18}
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary-300 hover:text-white"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="overflow-x-auto relative">
@@ -153,7 +173,7 @@ const AdminCopyRequests = () => {
             </thead>
 
             <tbody className="text-white">
-              {loading ? (
+              {isLoading ? (
                 <tr>
                   <td colSpan="8" className="py-4">
                     <div className="text-white flex justify-center items-center gap-4">
@@ -200,12 +220,20 @@ const AdminCopyRequests = () => {
                     </td>
 
                     <td className="py-2 px-4">
-                      <button
-                        className="flex items-center justify-center gap-1 text-blue-400 hover:text-blue-500 transition-all"
-                        onClick={() => togglePreview(item)}
-                      >
-                        <View></View> Assign
-                      </button>
+                      {item?.status === "Approved" && (
+                        <div className="text-green-500">Approved</div>
+                      )}
+                      {item?.status === "Rejected" && (
+                        <div className="text-red-500">Rejected</div>
+                      )}
+                      {item?.status === "Pending" && (
+                        <button
+                          className="flex items-center justify-center gap-1 text-blue-400 hover:text-blue-500 transition-all"
+                          onClick={() => togglePreview(item)}
+                        >
+                          <View></View> Assign
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))

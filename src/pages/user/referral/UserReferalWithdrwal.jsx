@@ -178,6 +178,13 @@ export const UserReferralWithdrawal = () => {
   const withdrawalHandler = async (e) => {
     e.preventDefault();
 
+    if (amount < 10) {
+      toast.error(
+        "The minimum withdrawal amount is 10$, if the withdrawal is less than 10$ then fund loss may occur!!"
+      );
+      return;
+    }
+
     if (isPendingWithdrawal) {
       toast.error(
         `One of your withdrawal request is still pending please wait until it get resolved`

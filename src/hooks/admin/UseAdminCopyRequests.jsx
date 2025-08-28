@@ -6,6 +6,7 @@ export default function useAdminCopyRequest({
   page = 1,
   limit = 10,
   status = "",
+  search,
 } = {}) {
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +26,7 @@ export default function useAdminCopyRequest({
           page,
           limit,
           status: status || undefined,
+          search,
         },
       });
       setData(res.data.data);
@@ -35,11 +37,11 @@ export default function useAdminCopyRequest({
     } finally {
       setIsLoading(false);
     }
-  }, [loggedUser?._id, loggedUser?.token, page, limit, status]);
+  }, [loggedUser?._id, page, limit, status, search]);
 
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [fetchData, status, search]);
 
   return { data, isLoading, isError, pagination, refresh: fetchData };
 }

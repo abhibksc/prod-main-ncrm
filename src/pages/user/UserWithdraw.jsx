@@ -74,6 +74,12 @@ const UserWithdraw = () => {
     e.preventDefault();
 
     if (isWithdrawing) return;
+    if (amount < 10) {
+      toast.error(
+        "The minimum withdrawal amount is 10$, if the withdrawal is less than 10$ then fund loss may occur!!"
+      );
+      return;
+    }
 
     if (isWithdrawalPending) {
       toast.error(

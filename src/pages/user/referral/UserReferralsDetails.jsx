@@ -159,22 +159,22 @@ const UserReferralsDetails = () => {
     Object.keys(groupedData).length / ITEMS_PER_PAGE
   );
 
-  // const StatCard = ({
-  //   icon: Icon,
-  //   title,
-  //   value,
-  //   subtitle,
-  //   color = "text-blue-400",
-  // }) => (
-  //   <div className="bg-secondary-800/20 rounded-lg p-3 border border-secondary-800/50 hover:border-secondary-800/90 transition-all duration-200">
-  //     <div className="flex items-center gap-2 mb-1">
-  //       <Icon size={16} className={color} />
-  //       <p className="text-xs text-gray-400 font-medium">{title}</p>
-  //     </div>
-  //     <p className="text-lg font-semibold text-white mb-0.5">{value}</p>
-  //     {subtitle && <p className="text-xs text-gray-400/80 ">{subtitle}</p>}
-  //   </div>
-  // );
+  const StatCard = ({
+    icon: Icon,
+    title,
+    value,
+    subtitle,
+    color = "text-blue-400",
+  }) => (
+    <div className="bg-secondary-800/20 rounded-lg p-3 border border-secondary-800/50 hover:border-secondary-800/90 transition-all duration-200">
+      <div className="flex items-center gap-2 mb-1">
+        <Icon size={16} className={color} />
+        <p className="text-xs text-gray-400 font-medium">{title}</p>
+      </div>
+      <p className="text-lg font-semibold text-white mb-0.5">{value}</p>
+      {subtitle && <p className="text-xs text-gray-400/80 ">{subtitle}</p>}
+    </div>
+  );
 
   return (
     <div className="mx-auto sm:p-6 md:bg-secondary-800/20 rounded-lg md:shadow-lg overflow-x-auto">
@@ -213,7 +213,7 @@ const UserReferralsDetails = () => {
       </div>
 
       {/* Comprehensive Stats Cards */}
-      {/* <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
         <StatCard
           icon={Users}
           title="Total Users"
@@ -253,7 +253,7 @@ const UserReferralsDetails = () => {
           subtitle="Live balance"
           color="text-rose-400"
         />
-      </div> */}
+      </div>
 
       {/* Level Distribution */}
       {/* {Object.keys(stats.levelDistribution || {}).length > 0 && (
