@@ -34,11 +34,14 @@ export default function UserTradeHistory() {
               `/close-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
             );
           } else if (tradeType === "open") {
-            res = await metaApi.get(
-              `/GetOpenTradeByAccount?Manager_Index=${
-                import.meta.env.VITE_MANAGER_INDEX
-              }&MT5Accont=${account.accountNumber}`
+            res = await backendApi.get(
+              `/open-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
             );
+            // res = await metaApi.get(
+            //   `/GetOpenTradeByAccount?Manager_Index=${
+            //     import.meta.env.VITE_MANAGER_INDEX
+            //   }&MT5Accont=${account.accountNumber}`
+            // );
           }
 
           if (Array.isArray(res?.data) && res.data.length > 0) {

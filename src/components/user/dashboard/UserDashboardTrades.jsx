@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import ModernText from "@/lib/ModernText";
 import { setOpenTrades } from "@/redux/user/userSlice";
 import { motion } from "framer-motion";
@@ -66,11 +66,14 @@ export default function UserDashboardTrades() {
       if (loggedUser.accounts.length > 0) {
         let data = [];
         for (const account of loggedUser.accounts) {
-          const res = await metaApi.get(
-            `/GetOpenTradeByAccount?Manager_Index=${
-              import.meta.env.VITE_MANAGER_INDEX
-            }&MT5Accont=${account.accountNumber}`
+          const res = await backendApi.get(
+            `/open-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
           );
+          // const res = await metaApi.get(
+          //   `/GetOpenTradeByAccount?Manager_Index=${
+          //     import.meta.env.VITE_MANAGER_INDEX
+          //   }&MT5Accont=${account.accountNumber}`
+          // );
           if (Array.isArray(res.data)) {
             data = data.concat(res.data);
             dispatch(setOpenTrades(data));

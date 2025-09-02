@@ -189,11 +189,16 @@ const UserMasterPassword = () => {
     }
 
     try {
-      const res = await metaApi.get(
-        `/ChangeMasterPassword?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
-      );
+      const res = await backendApi.post(`/change-master-password`, {
+        userId: loggedUser._id,
+        accountNumber: currentAccount.accountNumber,
+        newPassword: passwords.confirm,
+      });
+      // const res = await metaApi.get(
+      //   `/ChangeMasterPassword?Manager_Index=${
+      //     import.meta.env.VITE_MANAGER_INDEX
+      //   }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
+      // );
 
       const backendRes = await backendApi.post(`/update-master-password`, {
         userId: loggedUser._id,

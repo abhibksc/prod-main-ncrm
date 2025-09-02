@@ -1,4 +1,4 @@
-import { metaApi } from "@/utils/apiClients";
+import { backendApi, metaApi } from "@/utils/apiClients";
 import { useState, useEffect, useMemo } from "react";
 
 const useMT5Stats = () => {
@@ -11,9 +11,10 @@ const useMT5Stats = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await metaApi.get(
-          `/GetUserList?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
-        );
+        const response = await backendApi.get(`/user-lists`);
+        // const response = await metaApi.get(
+        //   `/GetUserList?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
+        // );
         setAccounts(response.data.lstUsers);
       } catch (err) {
         setError(err.message);

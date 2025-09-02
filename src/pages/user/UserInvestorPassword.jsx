@@ -188,11 +188,16 @@ const UserInvesterPassword = () => {
     }
 
     try {
-      const res = await metaApi.get(
-        `/ChangeInvesterPassword?Manager_Index=${
-          import.meta.env.VITE_MANAGER_INDEX
-        }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
-      );
+      const res = await backendApi.post(`/change-investor-password`, {
+        userId: loggedUser._id,
+        accountNumber: currentAccount.accountNumber,
+        newPassword: passwords.confirm,
+      });
+      // const res = await metaApi.get(
+      //   `/ChangeInvesterPassword?Manager_Index=${
+      //     import.meta.env.VITE_MANAGER_INDEX
+      //   }&Account=${currentAccount.accountNumber}&password=${passwords.confirm}`
+      // );
 
       const backendRes = await backendApi.post(`/update-investor-password`, {
         userId: loggedUser._id,

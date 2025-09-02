@@ -14,9 +14,11 @@ const AccountGroup = ({ refresh, setRefresh }) => {
   const fetchApiGroups = async () => {
     setIsFetchingGroups(true);
     try {
-      const res = await metaApi.get(
-        `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
-      );
+      const res = await backendApi.get(`/meta-groups`);
+
+      // const res = await metaApi.get(
+      //   `/GetGroups?Manager_Index=${import.meta.env.VITE_MANAGER_INDEX}`
+      // );
       return res.data.lstGroups;
     } finally {
       setIsFetchingGroups(false);
