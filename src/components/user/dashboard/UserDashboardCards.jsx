@@ -156,7 +156,11 @@ const UserDashboardBalanceCards = () => {
         <BalanceCard
           icon={isPositive ? TrendingUp : TrendingDown}
           title="Available Balance"
-          value={`${accountsStats?.totalEquity.toFixed(2) || 0} USD`}
+          value={`${
+            accountsStats?.totalEquity !== undefined
+              ? Number(accountsStats.totalEquity).toFixed(2)
+              : "0.00"
+          } USD`}
           borderColor="var(--theme-color)"
           delay={0.35}
           isProfit={isPositive}
