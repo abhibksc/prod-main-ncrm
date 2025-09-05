@@ -43,10 +43,15 @@ const Login = () => {
       toast.success("OTP sent to your email", { id: toastId });
       setShowOtpInput(true); // open OTP input modal
     } catch (err) {
-      console.log("OTP error", err);
-      toast.error("Failed to send OTP, Please try again later", {
-        id: toastId,
-      });
+      // console.log("OTP error", err);
+      toast.error(
+        `Failed to send OTP, ${
+          err?.response?.data?.message || "Please try again later"
+        } `,
+        {
+          id: toastId,
+        }
+      );
     }
   };
 
