@@ -20,8 +20,8 @@ import { PiUniteSquare } from "react-icons/pi";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
-  const [selectedGateway, setSelectedGateway] = useState("Wallet Transfer");
-  const [selectWallet, setSelectWallet] = useState("USDT(Trc20)");
+  const [selectedGateway, setSelectedGateway] = useState("");
+  const [selectWallet, setSelectWallet] = useState("");
   const [account, selectAccount] = useState("");
   const [amount, setAmount] = useState("");
   const [apiLoader, setApiLoader] = useState(false);
@@ -76,6 +76,18 @@ const UserWithdraw = () => {
   const withdrawalHandler = async (e) => {
     e.preventDefault();
 
+    if (
+      !account ||
+      account === "" ||
+      amount === "" ||
+      uniqueWithdrawalRequestId === "" ||
+      selectedGateway === ""
+    ) {
+      toast.error("All fields are required.");
+      setError("All fields are required.");
+      return;
+    }
+
     if (isWithdrawing) return;
     if (amount < 10) {
       toast.error(
@@ -96,8 +108,13 @@ const UserWithdraw = () => {
     }
 
     // Validate inputs first
-    if (!account || !selectedGateway || !amount) {
+    if (!account || !selectedGateway || !amount || !uniqueWithdrawalRequestId) {
       setError("All fields are required.");
+      return;
+    }
+
+    if (selectedGateway === "Wallet Transfer" && !selectWallet) {
+      setError("Please select a wallet.");
       return;
     }
     const toastId = toast.loading("please wait..");
@@ -227,7 +244,11 @@ const UserWithdraw = () => {
             <ModernHeading text={"Withdraw Funds"}></ModernHeading>
           </div>
         </div>
-        <form onSubmit={withdrawalHandler} className="space-y-6">
+        <form
+          onSubmit={withdrawalHandler}
+          className="space-y-6"
+          autoComplete="off"
+        >
           <div className=" flex flex-col gap-4">
             {/* select account */}
             <div className=" w-full">
@@ -251,13 +272,15 @@ const UserWithdraw = () => {
               </label>
               <select
                 id="from-account"
+                required
+                value={account}
                 onChange={(e) => {
                   selectAccount(e.target.value);
                   const selectedAccount = loggedUser?.accounts?.find(
                     (value) => value.accountNumber === e.target.value
                   );
                   setSelecetdAccount(selectedAccount);
-                  setAccountType(selectedAccount?.accountType || ""); // Handle potential undefined value
+                  setAccountType(selectedAccount?.accountType || "");
                 }}
                 className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >
@@ -265,7 +288,6 @@ const UserWithdraw = () => {
                   className="bg-secondary-800 text-white/30"
                   value=""
                   disabled
-                  selected
                 >
                   Select Account
                 </option>
@@ -359,18 +381,18 @@ const UserWithdraw = () => {
                 <select
                   id="gateway"
                   value={selectedGateway}
+                  required
                   onChange={(e) => setSelectedGateway(e.target.value)}
                   className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                 >
                   <option
-                    selected
                     className=" bg-secondary-800 text-white/20"
                     value=""
+                    disabled
                   >
                     select Method
                   </option>
                   {/* <option
-                    selected
                     className=" bg-secondary-800 text-white"
                     value="Bank Transfer"
                   >
@@ -397,9 +419,17 @@ const UserWithdraw = () => {
                   <select
                     id="account"
                     value={selectWallet}
+                    required
                     onChange={(e) => setSelectWallet(e.target.value)}
                     className="block w-full px-4 py-2 bg-secondary-800/20 text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
                   >
+                    <option
+                      className=" bg-secondary-800 text-white/30"
+                      value=""
+                      disabled
+                    >
+                      Choose Wallet
+                    </option>
                     <option
                       className=" bg-secondary-800 text-white"
                       value="USDT(Trc20)"
@@ -461,6 +491,8 @@ const UserWithdraw = () => {
                 <input
                   type="number"
                   id="amount"
+                  required
+                  min="1"
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full pl-10 py-3 min-w-32 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
                   placeholder="Enter Amount"
@@ -584,7 +616,7 @@ const UserWithdraw = () => {
             <div className="w-full">
               <div className=" w-full flex justify-between items-center">
                 <label
-                  htmlFor="amount"
+                  htmlFor="uniqueWithdrawalRequestId"
                   className=" text-sm font-medium text-gray-200"
                 >
                   Unique Withdrawal Request ID (Required*)
@@ -599,6 +631,7 @@ const UserWithdraw = () => {
                 <input
                   type="text"
                   id="uniqueWithdrawalRequestId"
+                  required
                   onChange={(e) => setUniqueWithdrawalRequestId(e.target.value)}
                   className="w-full pl-10 py-3 min-w-32 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
                   placeholder="Enter Unique Withdrawal Request ID"
