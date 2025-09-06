@@ -914,6 +914,12 @@ const WithdrawalStatus = () => {
                     <p>Withdrawal Amount: ${selectedDeposit?.amount}</p>
                     <p>Account: {selectedDeposit?.mt5Account}</p>
                     <p>Date: {CFformatDate(selectedDeposit?.updatedAt)}</p>
+                    <p>
+                      Unique Withdrawal Request ID:{" "}
+                      <span className=" font-bold text-green-500">
+                        {selectedDeposit?.uniqueWithdrawalRequestId}
+                      </span>
+                    </p>
                   </div>
                   <div>
                     <li className=" text-lg my-4 font-semibold mb-1">

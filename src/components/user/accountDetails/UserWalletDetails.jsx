@@ -5,6 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import { backendApi } from "@/utils/apiClients";
+import OtpUi from "@/components/OtpUi";
 
 const InputField = ({ label, placeholder, value, onChange, name }) => (
   <div className="mb-6 w-full">
@@ -28,6 +29,9 @@ const UserWalletDetails = () => {
     accountNumber: loggedUser?.walletDetails?.accountNumber || "",
     trxAddress: loggedUser?.walletDetails?.trxAddress || "",
   });
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [apiLoader, setApiLoader] = useState(false);
   const { getUpdateLoggedUser } = UseUserHook();
 
   const handleInputChange = (e) => {
@@ -40,20 +44,67 @@ const UserWalletDetails = () => {
 
   const submitHandler = async () => {
     const toastId = toast.loading("Please wait..");
-    // console.log(formData);
+
+    // Send OTP first
     try {
-      const res = await backendApi.put(`/${loggedUser._id}/wallet-details`, {
+      await backendApi.post("/send-otp", {
+        email: loggedUser.email,
+      });
+      toast.success("OTP sent to your email", { id: toastId });
+      setShowOtpInput(true); // open OTP input modal
+    } catch (err) {
+      console.log("OTP error", err);
+      toast.error(
+        `Failed to send OTP, ${
+          err?.response?.data?.message || "Please try again later"
+        } `,
+        {
+          id: toastId,
+        }
+      );
+    }
+  };
+
+  // verify and submit wallet details
+  const verifyOtpHandler = async () => {
+    const toastID = toast.loading("Verifying and updating details..");
+    if (!otp) {
+      toast.error("OTP required", { id: toastID });
+      return;
+    }
+
+    setApiLoader(true);
+
+    try {
+      const res = await backendApi.post("/verify-otp", {
+        email: loggedUser.email,
+        otp,
+        purpose: "wallet-update",
+      });
+      const verificationToken = res.data.verificationToken;
+
+      // Proceed to wallet details update
+      await backendApi.put(`/${loggedUser._id}/wallet-details`, {
         tetherAddress: formData.tetherAddress,
         accountNumber: formData.accountNumber,
         trxAddress: formData.trxAddress,
         ethAddress: formData.ethAddress,
+        verificationToken: verificationToken,
       });
-      // console.log(res);
+
       getUpdateLoggedUser();
-      toast.success("Details updated", { id: toastId });
+      toast.success("Details updated successfully", { id: toastID });
+
+      // Reset OTP state
+      setShowOtpInput(false);
+      setOtp("");
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!!", { id: toastId });
+      toast.error(error?.response?.data.message || "Update failed", {
+        id: toastID,
+      });
+      console.log("error during wallet update", error);
+    } finally {
+      setApiLoader(false);
     }
   };
   useEffect(() => {
@@ -61,6 +112,15 @@ const UserWalletDetails = () => {
   }, []);
   return (
     <div className="mx-auto p-4 bg-secondary-800/40 rounded-2xl ">
+      {showOtpInput && (
+        <OtpUi
+          otp={otp}
+          setOtp={setOtp}
+          setShowOtpInput={setShowOtpInput}
+          verifyOtpHandler={verifyOtpHandler}
+          apiLoader={apiLoader}
+        />
+      )}
       <div className=" text-black p-4 rounded-xl ">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <InputField

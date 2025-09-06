@@ -16,6 +16,7 @@ import OtpUi from "@/components/OtpUi";
 import { KYCVerificationSection } from "./UserPlatform";
 import UseUserHook from "@/hooks/user/UseUserHook";
 import useUserWithdrawals from "@/hooks/user/UseUserWithdrawal";
+import { PiUniteSquare } from "react-icons/pi";
 
 const UserWithdraw = () => {
   const loggedUser = useSelector((store) => store.user.loggedUser);
@@ -37,6 +38,8 @@ const UserWithdraw = () => {
   const [selectedAccount, setSelecetdAccount] = useState({});
   const [netWithdrawalAmount, setNetWithdrawalAmount] =
     useState(accountBalance);
+  const [uniqueWithdrawalRequestId, setUniqueWithdrawalRequestId] =
+    useState("");
   // console.log("accountBalance", accountBalance);
   // console.log("netWithdrawalAmount", netWithdrawalAmount);
 
@@ -135,6 +138,7 @@ const UserWithdraw = () => {
       const res = await backendApi.post("/verify-otp", {
         email: loggedUser.email,
         otp,
+        purpose: "withdrawal",
       });
       const verificationToken = res.data.verificationToken;
 
@@ -159,6 +163,7 @@ const UserWithdraw = () => {
           userId: loggedUser._id,
           lastBalance: accountBalance,
           verificationToken,
+          uniqueWithdrawalRequestId,
         });
 
         const customContent = withdrawRequestMail({
@@ -424,7 +429,7 @@ const UserWithdraw = () => {
               )}
             </div>
           </div>
-
+          {/* amount input ---- */}
           <div className=" flex flex-col md:flex-row justify-between items-center gap-10">
             {/* enter amount */}
             <div className="w-full">
@@ -571,6 +576,35 @@ const UserWithdraw = () => {
               ) : (
                 ""
               )}
+            </div>
+          </div>
+          {/* uniqueTransactionId ---- */}
+          <div className=" flex flex-col md:flex-row justify-between items-center gap-10">
+            {/* enter amount */}
+            <div className="w-full">
+              <div className=" w-full flex justify-between items-center">
+                <label
+                  htmlFor="amount"
+                  className=" text-sm font-medium text-gray-200"
+                >
+                  Unique Withdrawal Request ID (Required*)
+                </label>
+              </div>
+              <div className="relative bg-secondary-800/20 rounded-md cursor-not-allowed">
+                {/* Icon */}
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <PiUniteSquare className="h-6 w-6 text-gray-400" />
+                </div>
+                {/* Input */}
+                <input
+                  type="text"
+                  id="uniqueWithdrawalRequestId"
+                  onChange={(e) => setUniqueWithdrawalRequestId(e.target.value)}
+                  className="w-full pl-10 py-3 min-w-32 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
+                  placeholder="Enter Unique Withdrawal Request ID"
+                  value={uniqueWithdrawalRequestId}
+                />
+              </div>
             </div>
           </div>
           <div className=" flex items-center justify-center">
