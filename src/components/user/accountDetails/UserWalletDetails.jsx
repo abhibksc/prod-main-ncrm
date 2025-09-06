@@ -39,7 +39,7 @@ const UserWalletDetails = () => {
   };
 
   const submitHandler = async () => {
-    const toastId = toast.loading("Plese wait..");
+    const toastId = toast.loading("Please wait..");
     // console.log(formData);
     try {
       const res = await backendApi.put(`/${loggedUser._id}/wallet-details`, {

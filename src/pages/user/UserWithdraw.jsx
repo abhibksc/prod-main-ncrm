@@ -136,6 +136,9 @@ const UserWithdraw = () => {
         email: loggedUser.email,
         otp,
       });
+      const verificationToken = res.data.verificationToken;
+
+      // console.log(" verificationToken", verificationToken);
 
       // Proceed to withdrawal logic
       if (accountBalance < amount) {
@@ -155,6 +158,7 @@ const UserWithdraw = () => {
           status: "pending",
           userId: loggedUser._id,
           lastBalance: accountBalance,
+          verificationToken,
         });
 
         const customContent = withdrawRequestMail({
