@@ -632,12 +632,18 @@ const UserWithdraw = () => {
                   type="text"
                   id="uniqueWithdrawalRequestId"
                   required
+                  maxLength={8}
                   onChange={(e) => setUniqueWithdrawalRequestId(e.target.value)}
                   className="w-full pl-10 py-3 min-w-32 bg-secondary-800/20 text-gray-200 border focus:ring-secondary-500  focus:ring-2 border-gray-700 rounded-md focus:outline-none placeholder-gray-500"
-                  placeholder="Enter Unique Withdrawal Request ID"
+                  placeholder="Enter Unique Withdrawal Request ID (Max 8 chars)"
                   value={uniqueWithdrawalRequestId}
                 />
               </div>
+              {uniqueWithdrawalRequestId.length > 0 && (
+                <p className="text-xs text-gray-400 mt-1">
+                  {uniqueWithdrawalRequestId.length}/8 characters
+                </p>
+              )}
             </div>
           </div>
           <div className=" flex items-center justify-center">

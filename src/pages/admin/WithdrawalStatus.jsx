@@ -460,6 +460,7 @@ const WithdrawalStatus = () => {
       "Account Type": item?.accountType || "",
       "Withdrawal Amount": item?.amount?.toFixed(2) || 0,
       "Payment Method": item?.method || "",
+      "Unique Code": item?.uniqueWithdrawalRequestId || "",
       Status:
         item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
       "Bank Name": item?.userData?.bankDetails?.bankName || "",
@@ -580,6 +581,7 @@ const WithdrawalStatus = () => {
         item?.accountType || "",
         item?.amount?.toFixed(2) || 0,
         item?.method || "",
+        item?.uniqueWithdrawalRequestId || "",
         item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
         CFformatDate(item?.createdAt),
       ]);
@@ -595,6 +597,7 @@ const WithdrawalStatus = () => {
             "AC Type",
             "Amount",
             "Method",
+            "Unique Code",
             "Status",
             "Date",
           ],
