@@ -40,7 +40,13 @@ const UserWithdraw = () => {
     useState(accountBalance);
   const [uniqueWithdrawalRequestId, setUniqueWithdrawalRequestId] =
     useState("");
-  // console.log("accountBalance", accountBalance);
+
+  const selectedAccountNumber = selectedAccount?.accountNumber || "";
+  const selectedAccountType = selectedAccount?.accountType || "";
+
+  // console.log("selectedAccountNumber", selectedAccountNumber);
+  // console.log("selectedAccountType", selectedAccountType);
+  // console.log("formData", selectedAccount);
   // console.log("netWithdrawalAmount", netWithdrawalAmount);
 
   useEffect(() => {
@@ -173,9 +179,9 @@ const UserWithdraw = () => {
             selectedGateway === "Bank Transfer"
               ? selectedGateway
               : selectWallet,
-          accountType: accountType,
+          accountType: selectedAccountType,
           amount: amount,
-          mt5Account: account,
+          mt5Account: selectedAccountNumber,
           status: "pending",
           userId: loggedUser._id,
           lastBalance: accountBalance,
@@ -264,7 +270,10 @@ const UserWithdraw = () => {
                     <p className="px-4">
                       Balance :{" "}
                       <span className="bg-secondary-500-10 px-3 py-1 rounded-full text-secondary-500">
-                        ${accountBalance}
+                        $
+                        {accountBalance
+                          ? Number(accountBalance).toFixed(2)
+                          : "0.00"}
                       </span>{" "}
                     </p>
                   )
@@ -277,10 +286,11 @@ const UserWithdraw = () => {
                 onChange={(e) => {
                   selectAccount(e.target.value);
                   const selectedAccount = loggedUser?.accounts?.find(
-                    (value) => value.accountNumber === e.target.value
+                    (value) =>
+                      Number(value.accountNumber) === Number(e.target.value)
                   );
                   setSelecetdAccount(selectedAccount);
-                  setAccountType(selectedAccount?.accountType || "");
+                  setAccountType(selectedAccount?.accountType);
                 }}
                 className="w-full px-4 py-2 mt-2 border bg-secondary-800/20 border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-secondary-500"
               >

@@ -24,7 +24,7 @@ export default function UserDeposit() {
   const [formData, setFormData] = useState({
     apiGroup: "",
     depositAmount: "",
-    accountNumber: "",
+    accountNumber: null,
     transactionId: "",
   });
 
@@ -48,6 +48,9 @@ export default function UserDeposit() {
   const bankTransfers = paymentMethods?.filter(
     (value) => value.status === "active" && value.name === "Bank Transfer"
   );
+
+  // console.log("form data---", formData);
+  // console.log("accountType---", accountType);
 
   const uniqueActiveMethods = [];
   const namesSet = new Set();
@@ -281,10 +284,15 @@ export default function UserDeposit() {
             </label>
             <select
               onChange={(e) => {
-                const selectedValue = loggedUser.accounts?.find(
-                  (value) => value.accountNumber === e.target.value
+                const selectedAccount = loggedUser.accounts?.find(
+                  (value) =>
+                    Number(value.accountNumber) === Number(e.target.value)
                 );
-                setAccountType(selectedValue.accountType);
+
+                // console.log("target---", e.target.value);
+
+                // console.log("selectedValue---", selectedAccount);
+                setAccountType(selectedAccount?.accountType);
                 handleInputChange(e);
               }}
               id="accountNumber"
@@ -298,7 +306,12 @@ export default function UserDeposit() {
                 <option
                   key={index}
                   className=" bg-secondary-800 text-white"
-                  onClick={() => setAccountType(value)}
+                  onClick={() =>
+                    setFormData({
+                      ...formData,
+                      accountNumber: Number(value.accountNumber),
+                    })
+                  }
                   value={value.accountNumber}
                 >
                   {value.accountNumber}
