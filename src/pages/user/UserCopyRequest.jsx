@@ -22,7 +22,6 @@ export default function UserCopyRequest() {
       role: role,
       accounts: selectedAccounts,
     });
-    console.log("res", res);
 
     try {
       toast.success("Request Submitted", { id: toastId });

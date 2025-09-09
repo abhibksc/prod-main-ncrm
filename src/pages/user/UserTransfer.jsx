@@ -38,6 +38,9 @@ const UserTransfer = () => {
   const [netTransferAmount, setNetTransferAmount] =
     useState(fromAccountBalance);
 
+  console.log("netTransferAmount", netTransferAmount);
+  console.log("fromAccountBalance", fromAccountBalance);
+
   useEffect(() => {
     if (selectedFromAccount?.lockInfo?.isLocked) {
       setNetTransferAmount(
@@ -85,7 +88,9 @@ const UserTransfer = () => {
       return;
     }
 
-    if (amount > netTransferAmount) {
+    if (Number(amount) > Number(netTransferAmount)) {
+      console.log("amount", amount);
+      console.log("netTransferAmount", netTransferAmount);
       toast.error("You don't have sufficient funds for transfer");
       return;
     }
