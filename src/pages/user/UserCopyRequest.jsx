@@ -28,9 +28,16 @@ export default function UserCopyRequest() {
       toast.success("Request Submitted", { id: toastId });
     } catch (error) {
       console.log("error", error);
-      toast.error(`${error.response.message || `Please try again later`}`, {
-        id: toastId,
-      });
+      toast.error(
+        `${
+          error?.response?.data?.message ||
+          error?.message ||
+          `Please try again later`
+        }`,
+        {
+          id: toastId,
+        }
+      );
     } finally {
       setIsSubmitting(false);
       setRole("");
