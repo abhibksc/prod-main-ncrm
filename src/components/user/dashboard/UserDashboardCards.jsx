@@ -94,10 +94,9 @@ const UserDashboardBalanceCards = () => {
   const fetchTotalDeposits = async () => {
     try {
       const res = await backendApi.get(`/deposit/${loggedUser._id}`);
-      const balance = res.data.data.reduce(
-        (total, current) => total + Number(current.deposit),
-        0
-      );
+      const balance = res.data.data
+        .filter((item) => item.status === "approved")
+        .reduce((total, current) => total + Number(current.deposit), 0);
       setTotalDeposits(balance);
     } catch (error) {
       console.error(error);
@@ -107,10 +106,14 @@ const UserDashboardBalanceCards = () => {
   const fetchTotalWithdrawals = async () => {
     try {
       const res = await backendApi.get(`/withdrawals/${loggedUser._id}`);
-      const balance = res.data.data.reduce(
-        (total, current) => total + Number(current.amount),
-        0
-      );
+
+      const data = res.data.data;
+
+      // console.log("withdrawals data", data);
+      const balance = data
+        .filter((item) => item.status === "approved")
+        .reduce((total, current) => total + Number(current.amount), 0);
+
       setTotalWithdrawals(balance);
     } catch (error) {
       console.error(error);
