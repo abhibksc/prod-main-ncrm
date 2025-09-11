@@ -71,7 +71,7 @@ const UserInfoForm = ({ userData }) => {
     const toastId = toast.loading("Please pait..");
 
     try {
-      const updateLoggedUser = await backendApi.put(`/update-user`, {
+      const updateLoggedUser = await backendApi.put(`/admin-update-user`, {
         id: userData._id,
         ...formData,
         emailVerified: verificationStatuses.email,
