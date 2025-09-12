@@ -123,10 +123,20 @@ const UserDashboardBalanceCards = () => {
   useEffect(() => {
     fetchTotalDeposits();
     fetchTotalWithdrawals();
-    const fetchBalance = setInterval(() => {
-      fetchAccountsInfo();
-    }, 4000);
-    return () => clearInterval(fetchBalance);
+
+    let isFetching = false;
+    const interval = setInterval(async () => {
+      if (!isFetching) {
+        isFetching = true;
+        try {
+          // await fetchAccountsInfo();
+        } finally {
+          isFetching = false; // release lock after success or failure
+        }
+      }
+    }, 6000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
