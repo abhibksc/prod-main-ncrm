@@ -71,11 +71,11 @@ const Sidebar = () => {
 
   const menuItems = [
     { label: "Dashboard", icon: <Home />, route: "/admin/dashboard" },
-    {
-      label: "Login Logs",
-      icon: <ChevronsRight />,
-      route: "/admin/login-logs",
-    },
+    // {
+    //   label: "Login Logs",
+    //   icon: <ChevronsRight />,
+    //   route: "/admin/login-logs",
+    // },
     // {
     //   label: "Rules",
     //   icon: <LucideBookText />,
