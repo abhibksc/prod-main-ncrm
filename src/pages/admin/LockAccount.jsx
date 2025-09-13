@@ -90,9 +90,9 @@ const LockAccount = () => {
       }
 
       const { data } = await backendApi.get(`/lock-accounts?${params}`);
-      //   console.log("res", data);
+      // console.log("res", data.acc);
 
-      setLoadedData(data.users || []);
+      setLoadedData(data.accounts || []);
       setPaginationData({
         currentPage: data.currentPage || 1,
         totalPages: data.totalPages || 1,
@@ -569,52 +569,52 @@ const LockAccount = () => {
                   </td>
                 </tr>
               ) : (
-                loadedData?.map((user, userIndex) =>
-                  user.accounts.map((account, accountIndex) => (
-                    <tr
-                      key={`${user._id}-${account._id}`}
-                      className="border-b border-primary-500/50 hover:bg-primary-600/50 transition-colors"
-                    >
-                      <td className="p-3 text-sm">
-                        <div>
-                          <p className="font-medium">
-                            {user.firstName || "Unknown"} {user.lastName || ""}
-                          </p>
-                          <p className="text-gray-300/80 text-xs">
-                            {user.email || "N/A"}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-center">
-                        <div>
-                          <p className="font-medium">{account.accountNumber}</p>
-                          <p className="text-gray-300/80 text-xs">
-                            {account.accountType}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          <DollarSign size={14} className="text-red-400" />
-                          <span className="font-medium">
-                            {account.lockInfo.amount}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-center">
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            account.lockInfo.isLocked
-                              ? "bg-red-500/20 text-red-300"
-                              : "bg-green-500/20 text-green-300"
-                          }`}
-                        >
-                          {account.lockInfo.isLocked
-                            ? "🔒 Locked"
-                            : "🔓 Unlocked"}
+                loadedData?.map((account, index) => (
+                  <tr
+                    key={`${index}`}
+                    className="border-b border-primary-500/50 hover:bg-primary-600/50 transition-colors"
+                  >
+                    <td className="p-3 text-sm">
+                      <div>
+                        <p className="font-medium">
+                          {account?.user?.firstName || "Unknown"}{" "}
+                          {account?.user?.lastName || ""}
+                        </p>
+                        <p className="text-gray-300/80 text-xs">
+                          {account?.user?.email || "N/A"}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="p-3 text-sm text-center">
+                      <div>
+                        <p className="font-medium">{account.accountNumber}</p>
+                        <p className="text-gray-300/80 text-xs">
+                          {account.accountType}
+                        </p>
+                      </div>
+                    </td>
+                    <td className="p-3 text-sm text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <DollarSign size={14} className="text-red-400" />
+                        <span className="font-medium">
+                          {account.lockInfo.amount}
                         </span>
-                      </td>
-                      {/* <td className="p-3 text-sm text-center">
+                      </div>
+                    </td>
+                    <td className="p-3 text-sm text-center">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          account.lockInfo.isLocked
+                            ? "bg-red-500/20 text-red-300"
+                            : "bg-green-500/20 text-green-300"
+                        }`}
+                      >
+                        {account.lockInfo.isLocked
+                          ? "🔒 Locked"
+                          : "🔓 Unlocked"}
+                      </span>
+                    </td>
+                    {/* <td className="p-3 text-sm text-center">
                         <div className="flex flex-col items-center gap-1">
                           <div className="flex items-center gap-1 text-xs">
                             <Calendar size={12} />
@@ -630,26 +630,25 @@ const LockAccount = () => {
                           </div>
                         </div>
                       </td> */}
-                      <td className="p-3 text-sm text-center max-w-xs">
-                        <div>{CFformatDate(account?.lockInfo?.lockedOn)}</div>
-                        <div className="text-sm text-gray-400">
-                          {CFcalculateTimeSinceJoined(
-                            account?.lockInfo?.lockedOn
-                          )}
-                        </div>
-                      </td>
-                      <td className="p-3 text-sm text-center">
-                        <button
-                          onClick={() => handleEditClick(user, account)}
-                          className="flex items-center justify-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 text-xs"
-                        >
-                          <Edit size={14} />
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )
+                    <td className="p-3 text-sm text-center max-w-xs">
+                      <div>{CFformatDate(account?.lockInfo?.lockedOn)}</div>
+                      <div className="text-sm text-gray-400">
+                        {CFcalculateTimeSinceJoined(
+                          account?.lockInfo?.lockedOn
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-3 text-sm text-center">
+                      <button
+                        onClick={() => handleEditClick(account?.user, account)}
+                        className="flex items-center justify-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 text-xs"
+                      >
+                        <Edit size={14} />
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
