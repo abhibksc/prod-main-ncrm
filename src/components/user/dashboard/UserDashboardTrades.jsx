@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -61,32 +61,10 @@ export default function UserDashboardTrades() {
     return totalNetProfit;
   };
 
-  const fetchOpenTrades = async () => {
-    try {
-      if (loggedUser.accounts.length > 0) {
-        let data = [];
-        for (const account of loggedUser.accounts) {
-          const res = await backendApi.get(
-            `/open-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
-          );
-          // const res = await metaApi.get(
-          //   `/GetOpenTradeByAccount?Manager_Index=${
-          //     import.meta.env.VITE_MANAGER_INDEX
-          //   }&MT5Accont=${account.accountNumber}`
-          // );
-          if (Array.isArray(res.data)) {
-            data = data.concat(res.data);
-            dispatch(setOpenTrades(data));
-          }
-        }
-      } else {
-        console.log("No account found");
-      }
-    } catch (error) {
-      console.log("error in openTrades", error);
-      setTimeout(fetchOpenTrades, 1000);
-    }
-  };
+  // Ref to track if component is mounted
+  const isMountedRef = useRef(true);
+  // Ref to prevent overlapping API calls
+  const isRequestingRef = useRef(false);
 
   const tradesSummary = {
     totalTrades: openTrades?.length,
@@ -96,11 +74,54 @@ export default function UserDashboardTrades() {
   };
 
   useEffect(() => {
-    const fetchBalance = setInterval(() => {
-      fetchOpenTrades();
-    }, 3000);
-    return () => clearInterval(fetchBalance);
-  }, []);
+    isMountedRef.current = true;
+    let intervalId;
+    let stopped = false;
+
+    const fetchOpenTrades = async () => {
+      if (isRequestingRef.current) return; // Prevent overlapping
+      isRequestingRef.current = true;
+      try {
+        if (loggedUser.accounts.length > 0) {
+          let data = [];
+          for (const account of loggedUser.accounts) {
+            const res = await backendApi.get(
+              `/open-trades?userId=${loggedUser._id}&accountNumber=${account.accountNumber}`
+            );
+            if (Array.isArray(res.data)) {
+              data = data.concat(res.data);
+              if (isMountedRef.current) {
+                dispatch(setOpenTrades(data));
+              }
+            }
+          }
+        } else {
+          if (isMountedRef.current) {
+            console.log("No account found");
+          }
+        }
+      } catch (error) {
+        if (isMountedRef.current) {
+          console.log("error in openTrades", error);
+        }
+      } finally {
+        isRequestingRef.current = false;
+      }
+    };
+
+    const intervalFn = async () => {
+      if (!isMountedRef.current || stopped) return;
+      await fetchOpenTrades();
+    };
+    intervalId = setInterval(intervalFn, 6000);
+    // Call once immediately
+    intervalFn();
+    return () => {
+      isMountedRef.current = false;
+      stopped = true;
+      clearInterval(intervalId);
+    };
+  }, [dispatch, loggedUser.accounts, loggedUser._id]);
 
   return (
     <motion.div

@@ -17,19 +17,26 @@ export default function UserCopyRequest() {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading("Please wait..");
-    const res = await backendApi.post(`/create-copy-request`, {
-      userId: loggedUser?._id,
-      role: role,
-      accounts: selectedAccounts,
-    });
 
     try {
+      const res = await backendApi.post(`/create-copy-request`, {
+        userId: loggedUser?._id,
+        role: role,
+        accounts: selectedAccounts,
+      });
       toast.success("Request Submitted", { id: toastId });
     } catch (error) {
       console.log("error", error);
-      toast.error(`${error.response.message || `Please try again later`}`, {
-        id: toastId,
-      });
+      toast.error(
+        `${
+          error?.response?.data?.message ||
+          error?.message ||
+          `Please try again later`
+        }`,
+        {
+          id: toastId,
+        }
+      );
     } finally {
       setIsSubmitting(false);
       setRole("");

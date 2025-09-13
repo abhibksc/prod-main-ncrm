@@ -1,5 +1,5 @@
 // hooks/user/useGetIdInfo.js
-import { backendApi, metaApi } from "@/utils/apiClients";
+import { backendApi } from "@/utils/apiClients";
 import { useEffect, useState } from "react";
 
 export function useGetIdInfo(id) {
@@ -10,9 +10,13 @@ export function useGetIdInfo(id) {
     if (!id) return;
 
     let intervalId;
+    let isFetching = false; // guard flag
 
     const fetchAccountInfo = async () => {
+      if (isFetching) return; // skip if a request is already running
+      isFetching = true;
       setLoading(true);
+
       try {
         const res = await backendApi.get(`id-info?accountNumber=${id}`);
         if (res.data?.Equity) {
@@ -25,14 +29,15 @@ export function useGetIdInfo(id) {
         setInfo({});
       } finally {
         setLoading(false);
+        isFetching = false; // release guard
       }
     };
 
-    fetchAccountInfo(); // Call immediately on mount
+    fetchAccountInfo(); // run immediately once
 
-    intervalId = setInterval(fetchAccountInfo, 2000); // Then every 3 seconds
+    intervalId = setInterval(fetchAccountInfo, 6000); // poll every 6s
 
-    return () => clearInterval(intervalId); // Cleanup on unmount or id change
+    return () => clearInterval(intervalId);
   }, [id]);
 
   return { info, loading };

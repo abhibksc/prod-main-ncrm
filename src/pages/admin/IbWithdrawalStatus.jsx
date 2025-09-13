@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   ArrowLeftRight,
   CircleCheckBig,
@@ -89,31 +89,34 @@ const IbWithdrawalStatus = () => {
   const [pagination, setPagination] = useState({});
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [showCustomLimit, setShowCustomLimit] = useState(false);
+  const [customLimit, setCustomLimit] = useState("");
 
   // fetch data------------------
-  const fetchApiData = async () => {
+  const fetchApiData = useCallback(async () => {
     setLoading(true);
     try {
       let finalRes;
 
       if (status === "all") {
         const res = await backendApi.get(
-          `/referral-withdrawals?page=${currentPage}&limit=10&search=${debouncedSearch}&status=`
+          `/referral-withdrawals?page=${currentPage}&limit=${itemsPerPage}&search=${debouncedSearch}&status=`
         );
         finalRes = res.data;
       } else if (status === "pending") {
         const res = await backendApi.get(
-          `/referral-withdrawals?page=${currentPage}&limit=10&search=${debouncedSearch}&status=pending`
+          `/referral-withdrawals?page=${currentPage}&limit=${itemsPerPage}&search=${debouncedSearch}&status=pending`
         );
         finalRes = res.data;
       } else if (status === "approved") {
         const res = await backendApi.get(
-          `/referral-withdrawals?page=${currentPage}&limit=10&search=${searchQuery}&status=approved`
+          `/referral-withdrawals?page=${currentPage}&limit=${itemsPerPage}&search=${searchQuery}&status=approved`
         );
         finalRes = res.data;
       } else if (status === "rejected") {
         const res = await backendApi.get(
-          `/referral-withdrawals?page=${currentPage}&limit=10&search=${searchQuery}&status=rejected`
+          `/referral-withdrawals?page=${currentPage}&limit=${itemsPerPage}&search=${searchQuery}&status=rejected`
         );
         finalRes = res.data;
       }
@@ -125,7 +128,7 @@ const IbWithdrawalStatus = () => {
       console.log("Error fetching deposits:", error);
       setLoading(false);
     }
-  };
+  }, [status, currentPage, itemsPerPage, debouncedSearch, searchQuery]);
 
   // fetch all data ----------------
 
@@ -470,11 +473,35 @@ const IbWithdrawalStatus = () => {
     }
   };
 
+  // Handle limit change
+  const handleLimitChange = (value) => {
+    if (value === "custom") {
+      setShowCustomLimit(true);
+    } else {
+      setShowCustomLimit(false);
+      setCustomLimit("");
+      setItemsPerPage(parseInt(value));
+      setCurrentPage(1); // Reset to first page when changing limit
+    }
+  };
+
+  const handleCustomLimitSubmit = () => {
+    const limit = parseInt(customLimit);
+    if (limit > 0 && limit <= 1000) {
+      setItemsPerPage(limit);
+      setCurrentPage(1);
+      setShowCustomLimit(false);
+      setCustomLimit("");
+    } else {
+      toast.error("Please enter a valid number between 1 and 1000");
+    }
+  };
+
   // page reset ------
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearch, status]);
+  }, [debouncedSearch, status, itemsPerPage]);
 
   // debouncing searching ------------
   useEffect(() => {
@@ -491,7 +518,7 @@ const IbWithdrawalStatus = () => {
 
   useEffect(() => {
     fetchApiData();
-  }, [status, currentPage, debouncedSearch]);
+  }, [fetchApiData]);
 
   // use effect for all data -----------------
 
@@ -499,45 +526,75 @@ const IbWithdrawalStatus = () => {
     if (status == "all") {
       fetchAllData();
     }
-  }, []);
+  }, [status]);
 
   // Download functions
-  const prepareDownloadData = () => {
-    return depositData.map((item, index) => ({
-      "S.No": index + 1,
-      "User Name":
-        `${item?.userData?.firstName || ""} ${
-          item?.userData?.lastName || ""
-        }`.trim() || "Not found",
-      Email: item?.userData?.email || "Not found",
-      "IB ID": item?.referralId || "",
-      "Current Balance": Number(item?.userData?.ibBalance || 0).toFixed(4),
-      "Withdrawal Amount": item?.amount || 0,
-      "Remaining Balance": (
-        Number(item?.userData?.ibBalance || 0) - Number(item?.amount || 0)
-      ).toFixed(4),
-      "Payment Method": item?.method || "",
-      Status:
-        item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
-      "Bank Name": item?.userData?.bankDetails?.bankName || "",
-      "Account Holder": item?.userData?.bankDetails?.holderName || "",
-      "Account Number": item?.userData?.bankDetails?.accountNumber || "",
-      "IFSC Code": item?.userData?.bankDetails?.ifscCode || "",
-      "Swift Code": item?.userData?.bankDetails?.swiftCode || "",
-      "UPI ID": item?.userData?.bankDetails?.upiId || "",
-      "USDT TRC20": item?.userData?.walletDetails?.tetherAddress || "",
-      "USDT BEP20": item?.userData?.walletDetails?.ethAddress || "",
-      "Binance ID": item?.userData?.walletDetails?.accountNumber || "",
-      "BTC Address": item?.userData?.walletDetails?.trxAddress || "",
-      "Request Date": CFformatDate(item?.createdAt),
-      "Updated Date": CFformatDate(item?.updatedAt),
-    }));
+  const prepareDownloadData = async () => {
+    try {
+      let downloadData;
+
+      // Fetch all data for download based on current status and search
+      if (status === "all") {
+        const res = await backendApi.get(
+          `/referral-withdrawals?page=1&limit=10000&search=${debouncedSearch}&status=`
+        );
+        downloadData = res.data.data;
+      } else if (status === "pending") {
+        const res = await backendApi.get(
+          `/referral-withdrawals?page=1&limit=10000&search=${debouncedSearch}&status=pending`
+        );
+        downloadData = res.data.data;
+      } else if (status === "approved") {
+        const res = await backendApi.get(
+          `/referral-withdrawals?page=1&limit=10000&search=${debouncedSearch}&status=approved`
+        );
+        downloadData = res.data.data;
+      } else if (status === "rejected") {
+        const res = await backendApi.get(
+          `/referral-withdrawals?page=1&limit=10000&search=${debouncedSearch}&status=rejected`
+        );
+        downloadData = res.data.data;
+      }
+
+      return downloadData.map((item, index) => ({
+        "S.No": index + 1,
+        "User Name":
+          `${item?.userData?.firstName || ""} ${
+            item?.userData?.lastName || ""
+          }`.trim() || "Not found",
+        Email: item?.userData?.email || "Not found",
+        "IB ID": item?.referralId || "",
+        "Current Balance": Number(item?.userData?.ibBalance || 0).toFixed(4),
+        "Withdrawal Amount": item?.amount || 0,
+        "Remaining Balance": (
+          Number(item?.userData?.ibBalance || 0) - Number(item?.amount || 0)
+        ).toFixed(4),
+        "Payment Method": item?.method || "",
+        Status:
+          item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
+        "Bank Name": item?.userData?.bankDetails?.bankName || "",
+        "Account Holder": item?.userData?.bankDetails?.holderName || "",
+        "Account Number": item?.userData?.bankDetails?.accountNumber || "",
+        "IFSC Code": item?.userData?.bankDetails?.ifscCode || "",
+        "Swift Code": item?.userData?.bankDetails?.swiftCode || "",
+        "UPI ID": item?.userData?.bankDetails?.upiId || "",
+        "USDT TRC20": item?.userData?.walletDetails?.tetherAddress || "",
+        "USDT BEP20": item?.userData?.walletDetails?.ethAddress || "",
+        "Binance ID": item?.userData?.walletDetails?.accountNumber || "",
+        "BTC Address": item?.userData?.walletDetails?.trxAddress || "",
+        "Request Date": CFformatDate(item?.createdAt),
+        "Updated Date": CFformatDate(item?.updatedAt),
+      }));
+    } catch (error) {
+      console.error("Error fetching download data:", error);
+      throw error;
+    }
   };
 
-  const downloadExcel = () => {
+  const downloadExcel = async () => {
     setIsDownloading(true);
     try {
-      const data = prepareDownloadData();
+      const data = await prepareDownloadData();
       const ws = XLSX.utils.json_to_sheet(data);
 
       // Set column widths
@@ -574,7 +631,9 @@ const IbWithdrawalStatus = () => {
       }.xlsx`;
       XLSX.writeFile(wb, fileName);
 
-      toast.success("Excel file downloaded successfully!");
+      toast.success(
+        `Excel file downloaded successfully! (${data.length} records)`
+      );
     } catch (error) {
       toast.error("Failed to download Excel file");
       console.error("Excel download error:", error);
@@ -583,10 +642,10 @@ const IbWithdrawalStatus = () => {
     }
   };
 
-  const downloadCSV = () => {
+  const downloadCSV = async () => {
     setIsDownloading(true);
     try {
-      const data = prepareDownloadData();
+      const data = await prepareDownloadData();
       const ws = XLSX.utils.json_to_sheet(data);
       const csv = XLSX.utils.sheet_to_csv(ws);
 
@@ -603,7 +662,9 @@ const IbWithdrawalStatus = () => {
       link.click();
       document.body.removeChild(link);
 
-      toast.success("CSV file downloaded successfully!");
+      toast.success(
+        `CSV file downloaded successfully! (${data.length} records)`
+      );
     } catch (error) {
       toast.error("Failed to download CSV file");
       console.error("CSV download error:", error);
@@ -612,9 +673,10 @@ const IbWithdrawalStatus = () => {
     }
   };
 
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     setIsDownloading(true);
     try {
+      const allData = await prepareDownloadData();
       const doc = new jsPDF("l", "mm", "a4"); // landscape orientation
 
       // Add title
@@ -626,20 +688,19 @@ const IbWithdrawalStatus = () => {
       doc.setFontSize(10);
       doc.setFont(undefined, "normal");
       doc.text(`Generated on: ${new Date().toLocaleString()}`, 20, 30);
+      doc.text(`Total Records: ${allData.length}`, 20, 35);
 
       // Prepare table data
-      const tableData = depositData.map((item, index) => [
+      const tableData = allData.map((item, index) => [
         index + 1,
-        `${item?.userData?.firstName || ""} ${
-          item?.userData?.lastName || ""
-        }`.trim() || "Not found",
-        item?.userData?.email || "Not found",
-        item?.referralId || "",
-        Number(item?.userData?.ibBalance || 0).toFixed(4),
-        item?.amount || 0,
-        item?.method || "",
-        item?.status?.charAt(0).toUpperCase() + item?.status?.slice(1) || "",
-        CFformatDate(item?.createdAt),
+        item["User Name"],
+        item["Email"],
+        item["IB ID"],
+        item["Current Balance"],
+        item["Withdrawal Amount"],
+        item["Payment Method"],
+        item["Status"],
+        item["Request Date"],
       ]);
 
       // Add table
@@ -658,7 +719,7 @@ const IbWithdrawalStatus = () => {
           ],
         ],
         body: tableData,
-        startY: 40,
+        startY: 45,
         styles: {
           fontSize: 8,
           cellPadding: 2,
@@ -704,7 +765,9 @@ const IbWithdrawalStatus = () => {
       }.pdf`;
       doc.save(fileName);
 
-      toast.success("PDF file downloaded successfully!");
+      toast.success(
+        `PDF file downloaded successfully! (${allData.length} records)`
+      );
     } catch (error) {
       toast.error("Failed to download PDF file");
       console.error("PDF download error:", error);
@@ -725,29 +788,41 @@ const IbWithdrawalStatus = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={downloadExcel}
-              disabled={isDownloading || loading || depositData.length === 0}
+              disabled={isDownloading || loading}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
             >
-              <FileText size={16} />
-              Excel
+              {isDownloading ? (
+                <Loader size={16} className="animate-spin" />
+              ) : (
+                <FileText size={16} />
+              )}
+              {isDownloading ? "Downloading..." : "Excel"}
             </button>
 
             <button
               onClick={downloadCSV}
-              disabled={isDownloading || loading || depositData.length === 0}
+              disabled={isDownloading || loading}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
             >
-              <Download size={16} />
-              CSV
+              {isDownloading ? (
+                <Loader size={16} className="animate-spin" />
+              ) : (
+                <Download size={16} />
+              )}
+              {isDownloading ? "Downloading..." : "CSV"}
             </button>
 
             <button
               onClick={downloadPDF}
-              disabled={isDownloading || loading || depositData.length === 0}
+              disabled={isDownloading || loading}
               className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg transition-all duration-200 text-sm"
             >
-              <FileText size={16} />
-              PDF
+              {isDownloading ? (
+                <Loader size={16} className="animate-spin" />
+              ) : (
+                <FileText size={16} />
+              )}
+              {isDownloading ? "Downloading..." : "PDF"}
             </button>
           </div>
 
@@ -887,7 +962,7 @@ const IbWithdrawalStatus = () => {
             </tbody>
           </table>
         </div>
-        <div className="mt-6 flex flex-col items-center space-y-3">
+        <div className="mt-6 flex flex-col items-center space-y-4">
           {/* Pagination Info */}
           <p className="text-gray-300 text-sm">
             <span className="font-semibold text-white">
@@ -896,6 +971,68 @@ const IbWithdrawalStatus = () => {
             </span>{" "}
             total records
           </p>
+
+          {/* Limit Selector */}
+          <div className="flex items-center gap-3">
+            <span className="text-gray-300 text-sm">Show:</span>
+            <div className="relative">
+              <select
+                value={showCustomLimit ? "custom" : itemsPerPage.toString()}
+                onChange={(e) => handleLimitChange(e.target.value)}
+                className="bg-primary-600 border border-primary-500 text-white text-sm rounded-lg px-3 py-1 focus:outline-none focus:border-primary-400 appearance-none pr-8"
+              >
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="custom">Custom</option>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+            {showCustomLimit && (
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={customLimit}
+                  onChange={(e) => setCustomLimit(e.target.value)}
+                  placeholder="1-1000"
+                  min="1"
+                  max="1000"
+                  className="bg-primary-600 border border-primary-500 text-white text-sm rounded-lg px-3 py-1 w-20 focus:outline-none focus:border-primary-400"
+                />
+                <button
+                  onClick={handleCustomLimitSubmit}
+                  className="bg-primary-500 hover:bg-primary-600 text-white text-sm px-3 py-1 rounded-lg transition-all"
+                >
+                  Set
+                </button>
+                <button
+                  onClick={() => {
+                    setShowCustomLimit(false);
+                    setCustomLimit("");
+                  }}
+                  className="text-gray-400 hover:text-white text-sm"
+                >
+                  ×
+                </button>
+              </div>
+            )}
+            <span className="text-gray-300 text-sm">per page</span>
+          </div>
 
           {/* Pagination Controls */}
           <div className="flex items-center space-x-4">
