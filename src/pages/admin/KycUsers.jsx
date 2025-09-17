@@ -182,7 +182,7 @@ const KycUsers = () => {
     </body>
     </html>`;
       if (action === "approve") {
-        const updateLoggedUser = await backendApi.put(`/update-user`, {
+        const updateLoggedUser = await backendApi.put(`/admin-update-user`, {
           id: selectedUser._id,
           kycVerified: true,
         });
@@ -204,7 +204,7 @@ const KycUsers = () => {
           console.log("error sending mail", error);
         }
       } else if (action === "reject") {
-        const updateLoggedUser = await backendApi.put(`/update-user`, {
+        const updateLoggedUser = await backendApi.put(`/admin-update-user`, {
           id: selectedUser._id,
           kycVerified: false,
         });
