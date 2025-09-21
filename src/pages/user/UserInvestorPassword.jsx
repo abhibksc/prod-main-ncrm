@@ -16,7 +16,7 @@ const UserInvesterPassword = () => {
   const navigate = useNavigate();
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [currentAccount, setCurrentAccount] = useState(
-    loggedUser.accounts[0] || "000"
+    loggedUser.accounts[0] || {}
   );
 
   const handleChange = (e) => {
@@ -238,7 +238,7 @@ const UserInvesterPassword = () => {
             <select
               onChange={(e) => {
                 const selectedValue = loggedUser.accounts?.find(
-                  (value) => value.accountNumber === e.target.value
+                  (value) => +value.accountNumber === +e.target.value
                 );
                 setCurrentAccount(selectedValue);
               }}
@@ -257,8 +257,8 @@ const UserInvesterPassword = () => {
                 <option
                   key={index}
                   className=" bg-secondary-800 font-semibold text-white"
-                  onClick={() => setCurrentAccount(value)}
-                  value={value.accountNumber}
+                  // onClick={() => setCurrentAccount(value)}
+                  // value={value.accountNumber}
                 >
                   {value.accountNumber}
                 </option>

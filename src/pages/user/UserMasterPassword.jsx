@@ -16,8 +16,10 @@ const UserMasterPassword = () => {
   const navigate = useNavigate();
   const loggedUser = useSelector((store) => store.user.loggedUser);
   const [currentAccount, setCurrentAccount] = useState(
-    loggedUser.accounts[0] || "000"
+    loggedUser.accounts[0] || {}
   );
+
+  // console.log("current ac", currentAccount);
 
   const handleChange = (e) => {
     setPasswords({ ...passwords, [e.target.name]: e.target.value });
@@ -125,10 +127,10 @@ const UserMasterPassword = () => {
          <div class="withdrawal-details">
           
           <p>Account No: <span class="highlight">${
-            currentAccount.accountNumber
+            currentAccount?.accountNumber
           }</span></p>
             <p>Old password: <span class="highlight">${
-              currentAccount.masterPassword
+              currentAccount?.masterPassword
             }</span></p>
             <p>New password: <span class="highlight">${
               passwords.confirm
@@ -238,7 +240,7 @@ const UserMasterPassword = () => {
             <select
               onChange={(e) => {
                 const selectedValue = loggedUser.accounts?.find(
-                  (value) => value.accountNumber === e.target.value
+                  (value) => +value.accountNumber === +e.target.value
                 );
                 setCurrentAccount(selectedValue);
               }}
@@ -257,8 +259,8 @@ const UserMasterPassword = () => {
                 <option
                   key={index}
                   className=" bg-secondary-800 font-semibold text-white"
-                  onClick={() => setCurrentAccount(value)}
-                  value={value.accountNumber}
+                  // onClick={() => setCurrentAccount("000")}
+                  // value={value.accountNumber}
                 >
                   {value.accountNumber}
                 </option>
