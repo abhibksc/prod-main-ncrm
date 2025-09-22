@@ -1,5 +1,6 @@
 import { setAdminUser } from "@/redux/adminSlice";
-import { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,16 +8,12 @@ import { motion } from "framer-motion";
 import { BadgeDollarSign, ScanEyeIcon } from "lucide-react";
 import { backendApi } from "@/utils/apiClients";
 import md5 from "md5";
-import OtpUi from "@/components/OtpUi";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [showOtpInput, setShowOtpInput] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [apiLoader, setApiLoader] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,71 +29,24 @@ const Login = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const toastId = toast.loading("Sending OTP...");
-
+    const toastId = toast.loading("Authenticating...");
     try {
-      // Send OTP first
-      const sendOtpRes = await backendApi.post("/send-otp", {
-        email: import.meta.env.VITE_ADMIN_EMAIL,
-        admin: true,
-      });
-      toast.success("OTP sent to your email", { id: toastId });
-      setShowOtpInput(true); // open OTP input modal
-    } catch (err) {
-      // console.log("OTP error", err);
-      toast.error(
-        `Failed to send OTP, ${
-          err?.response?.data?.message || "Please try again later"
-        } `,
-        {
-          id: toastId,
-        }
-      );
-    }
-  };
-
-  // verify OTP and login
-  const verifyOtpHandler = async () => {
-    const toastID = toast.loading("Verifying and logging in...");
-    if (!otp) {
-      toast.error("OTP required", { id: toastID });
-      return;
-    }
-
-    setApiLoader(true);
-
-    try {
-      await backendApi.post("/verify-otp", {
-        email: import.meta.env.VITE_ADMIN_EMAIL,
-        otp,
-      });
-
-      // Proceed to login after OTP verification
-      const loginRes = await backendApi.post(`/admin/login`, {
+      const res = await backendApi.post(`/admin/login`, {
         email: formData.email,
         password: formData.password,
       });
-
-      if (loginRes.data.status) {
-        toast.success("Login successful", { id: toastID });
-        dispatch(setAdminUser(loginRes.data.userExist));
-        const currentPasswordHash = md5(loginRes.data.userExist.password);
+      if (res.data.status) {
+        toast.success("Login successful", { id: toastId });
+        dispatch(setAdminUser(res.data.userExist));
+        const currentPasswordHash = md5(res.data.userExist.password);
         localStorage.setItem("admin_password_ref", currentPasswordHash);
         navigate("/admin/dashboard");
       } else {
-        toast.error(loginRes.data.msg, { id: toastID });
+        toast.error(res.data.msg, { id: toastId });
       }
-
-      // Reset OTP state
-      setShowOtpInput(false);
-      setOtp("");
     } catch (error) {
-      toast.error(error?.response?.data.message || "Login failed", {
-        id: toastID,
-      });
-      console.log("error during login", error);
-    } finally {
-      setApiLoader(false);
+      console.error(error);
+      toast.error("Authentication failed", { id: toastId });
     }
   };
 
@@ -130,15 +80,6 @@ const Login = () => {
       className="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-black to-primary-600/80"
     >
       <Toaster />
-      {showOtpInput && (
-        <OtpUi
-          otp={otp}
-          setOtp={setOtp}
-          setShowOtpInput={setShowOtpInput}
-          verifyOtpHandler={verifyOtpHandler}
-          apiLoader={apiLoader}
-        />
-      )}
       <motion.div
         variants={containerVariants}
         initial="hidden"
