@@ -192,13 +192,13 @@ const UserReferralsDetails = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-          {/* <input
+          <input
             type="text"
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-3 py-1 rounded-md border border-secondary-700/70 bg-secondary-900 text-gray-200 w-full sm:w-auto"
-          /> */}
+          />
           <button
             onClick={fetchCommissions}
             className="flex items-center gap-2 px-4 py-2 text-gray-200 rounded-lg hover:text-secondary-500/80 transition-all justify-center sm:justify-start"
