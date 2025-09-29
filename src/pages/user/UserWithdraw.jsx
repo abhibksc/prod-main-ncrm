@@ -296,6 +296,12 @@ const UserWithdraw = () => {
                     >
                       Bitcoin
                     </option>
+                    <option
+                      className=" bg-secondary-800 text-white"
+                      value="USDT(BEP20)"
+                    >
+                      USDT(BEP20)
+                    </option>
                     {/* <option
                       className=" bg-secondary-800 text-white"
                       value="BinanceID"
