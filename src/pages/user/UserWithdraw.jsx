@@ -294,9 +294,9 @@ const UserWithdraw = () => {
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
-                      value="USDT(Bep20)"
+                      value="BITCOIN"
                     >
-                      Bitcoin
+                      BITCOIN
                     </option>
                     <option
                       className=" bg-secondary-800 text-white"
