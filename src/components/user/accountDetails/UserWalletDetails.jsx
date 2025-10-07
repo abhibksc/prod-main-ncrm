@@ -27,6 +27,7 @@ const UserWalletDetails = () => {
     ethAddress: loggedUser?.walletDetails?.ethAddress || "",
     accountNumber: loggedUser?.walletDetails?.accountNumber || "",
     trxAddress: loggedUser?.walletDetails?.trxAddress || "",
+    bep20Address: loggedUser?.walletDetails?.bep20Address || "", // 🆕 new field
   });
   const { getUpdateLoggedUser } = UseUserHook();
 
@@ -38,24 +39,25 @@ const UserWalletDetails = () => {
     }));
   };
 
-  const submitHandler = async () => {
-    const toastId = toast.loading("Plese wait..");
-    // console.log(formData);
-    try {
-      const res = await backendApi.put(`/${loggedUser._id}/wallet-details`, {
-        tetherAddress: formData.tetherAddress,
-        accountNumber: formData.accountNumber,
-        trxAddress: formData.trxAddress,
-        ethAddress: formData.ethAddress,
-      });
-      // console.log(res);
-      getUpdateLoggedUser();
-      toast.success("Details updated", { id: toastId });
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong!!", { id: toastId });
-    }
-  };
+ const submitHandler = async () => {
+  const toastId = toast.loading("Please wait...");
+  try {
+    const res = await backendApi.put(`/${loggedUser._id}/wallet-details`, {
+      tetherAddress: formData.tetherAddress,
+      accountNumber: formData.accountNumber,
+      trxAddress: formData.trxAddress,
+      ethAddress: formData.ethAddress,
+      bep20Address: formData.bep20Address, // 🆕 include this
+    });
+
+    getUpdateLoggedUser();
+    toast.success("Details updated", { id: toastId });
+  } catch (error) {
+    console.log(error);
+    toast.error("Something went wrong!!", { id: toastId });
+  }
+};
+
   useEffect(() => {
     getUpdateLoggedUser();
   }, []);
@@ -91,6 +93,16 @@ const UserWalletDetails = () => {
             onChange={handleInputChange}
             name="trxAddress"
           /> */}
+
+    <InputField
+  label="USDT (BEP20)"
+  placeholder="Enter USDT (BEP20) address"
+  value={formData.bep20Address}
+  onChange={handleInputChange}
+  name="bep20Address"
+/>
+
+        
         </div>
         <div className="flex items-center justify-center mt-8">
           <motion.button
