@@ -69,6 +69,11 @@ const StatCard = ({ icon, amount, label, bgColor, link, allLoading }) => (
   </Link>
 );
 const IbWithdrawalStatus = () => {
+
+  const [exchangeRate, setExchangeRate] = useState(Number(import.meta.env.VITE_USD_INR_RATE)); // USD -> INR
+
+
+
   const { status } = useParams();
   const [depositData, setDepositData] = useState([]);
   const [selectedDeposit, setSelectedDeposit] = useState(null);
@@ -121,6 +126,17 @@ const IbWithdrawalStatus = () => {
       setLoading(false);
     }
   };
+
+
+
+
+
+
+
+const formatNumber = (value, decimals = 2) => {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
+  return Number(value).toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+};
 
   // fetch all data ----------------
 
@@ -513,9 +529,29 @@ const IbWithdrawalStatus = () => {
                       </div>
                     </td>
                     <td className="py-2 px-4">{item?.referralId}</td>
-                    <td className="py-2 px-4">
-                      {Number(item?.userData?.ibBalance).toFixed(4)}
-                    </td>
+                 <td className="py-2 px-4">
+  <div className="font-mono">
+    {/* USD balance (existing) */}
+    <div className="font-semibold">
+      {item?.userData?.ibBalance !== undefined && item?.userData?.ibBalance !== null
+        ? `${formatNumber(item.userData.ibBalance, 4)} USD`
+        : "0.0000 USD"}
+    </div>
+
+    {/* INR converted below USD */}
+    <div className="text-sm text-gray-300 mt-1">
+      {exchangeRate ? (
+        <>
+          ≈ {formatNumber(Number(item?.userData?.ibBalance || 0) * exchangeRate, 2)} INR
+          <span className="ml-2 text-xs text-gray-400">(@ {formatNumber(exchangeRate,4)} INR/USD)</span>
+        </>
+      ) : (
+        <span className="text-xs text-gray-400">INR rate unavailable</span>
+      )}
+    </div>
+  </div>
+</td>
+
                     <td className="py-2 px-4">{item?.amount}</td>
                     <td className="py-2 first-letter:uppercase px-4">
                       {item?.method}
