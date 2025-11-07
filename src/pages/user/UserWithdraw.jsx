@@ -221,15 +221,26 @@ const UserWithdraw = () => {
           accountBalance: equity,
         });
 
+        console.log(customContent);
+        
+
         toast.success("Withdrawal Requested.", { id: toastID });
         fetchAccountInfo();
         setAmount("");
 
-        await backendApi.post(`/custom-mail`, {
+        console.log(loggedUser);
+        
+
+       const mailres =  await backendApi.post(`/custom-mail`, {
           email: loggedUser.email,
           content: customContent,
           subject: "Withdrawal requested",
         });
+
+        console.log(mailres);
+        
+
+
       }
 
       setShowOtpInput(false);

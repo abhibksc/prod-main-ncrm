@@ -122,6 +122,7 @@ const createAccountHandler = async () => {
     endLoadingToast(toastId, { type: "success", message: successMsg, autoClose: 2500 });
 
      // Redirect after a short beat so the toast can flip
+          setTimeout(() => navigate("/"), 100);
       setTimeout(() => navigate("/user/challenges"), 200);
 
     // If you need: setAccounts((prev) => [data.account, ...prev]);

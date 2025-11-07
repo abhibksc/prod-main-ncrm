@@ -143,6 +143,10 @@ const UserReferralCloseTrades = () => {
             ) || null,
         }))
         .filter((trade) => trade.commission !== null); // Remove trades without matching commission
+        console.log(filteredCommissions);
+        console.log(level);
+
+        
       setCommissionsData(filteredCommissions);
     } catch (error) {
       console.log(error);
@@ -263,6 +267,8 @@ const UserReferralCloseTrades = () => {
               </tr>
             </thead>
             <tbody>
+              {console.log(commissionsData)
+              }
               {commissionsData.length === 0 && (
                 <tr className="text-red-500 border-b border-secondary-800 hover:bg-secondary-500-10">
                   <td className="text-center align-middle py-6" colSpan="10">

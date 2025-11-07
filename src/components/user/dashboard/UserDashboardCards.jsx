@@ -116,7 +116,9 @@ const UserDashboardBalanceCards = () => {
         (total, current) => total + Number(current.deposit),
         0
       );
-      setTotalDeposits(balance);
+      const notPendindg = balance.filter((ele)=>ele.status !== "pending");
+      
+      setTotalDeposits(notPendindg);
     } catch (error) {
       console.error(error);
     }

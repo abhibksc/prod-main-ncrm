@@ -121,6 +121,9 @@ const UserReferralsDetails = () => {
       const res = await backendApi.get(
         `/user-zone-ibs/${loggedUser?.referralAccount}`
       );
+
+      console.log(res);
+      
       setCommissionsData(res.data.data.reverse());
     } catch (error) {
       console.error(error);
