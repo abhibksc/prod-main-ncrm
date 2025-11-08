@@ -109,20 +109,22 @@ const UserDashboardBalanceCards = () => {
     }
   };
 
-  const fetchTotalDeposits = async () => {
-    try {
-      const res = await backendApi.get(`/deposit/${loggedUser._id}`);
-      const balance = res.data.data.reduce(
-        (total, current) => total + Number(current.deposit),
-        0
-      );
-      const notPendindg = balance.filter((ele)=>ele.status !== "pending");
-      
-      setTotalDeposits(notPendindg);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+const fetchTotalDeposits = async () => {
+  try {
+    const { data } = await backendApi.get(`/deposit/${loggedUser._id}`);
+
+    const rows = Array.isArray(data?.data) ? data.data : [];
+
+    const totalApproved = rows
+      .filter(r => r?.status?.toLowerCase() === "approved")
+      .reduce((sum, r) => sum + (Number(r?.deposit) || 0), 0);
+
+    setTotalDeposits(totalApproved);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   const fetchTotalWithdrawals = async () => {
     try {
