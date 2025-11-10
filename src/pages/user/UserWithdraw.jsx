@@ -122,22 +122,27 @@ const UserWithdraw = () => {
           status: "pending",
           userId: loggedUser._id,
           lastBalance: accountBalance,
-        });
 
-        const customContent = withdrawRequestMail({
-          loggedUser,
-          amount,
+           loggedUser,
+        
           accountBalance,
         });
+
+        // const customContent = withdrawRequestMail({
+        //   loggedUser,
+        //   amount,
+        //   accountBalance,
+        // });
         toast.success("Withdrawal Requested.", { id: toastID });
         fetchAccountInfo();
         setAmount("");
 
-        await backendApi.post(`/custom-mail`, {
-          email: loggedUser.email,
-          content: customContent,
-          subject: "Withdrawal requested",
-        });
+        // await backendApi.post(`/custom-mail`, {
+        //   email: loggedUser.email,
+        //   content: customContent,
+        //   subject: "Withdrawal requested",
+        // });
+        
       }
 
       // Reset OTP state

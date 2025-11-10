@@ -281,13 +281,19 @@ const WithdrawalStatus = () => {
         await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "approved",
+           email: selectedDeposit.userData.email,
+             subject: "Withdrawal Success",
+             selectedDeposit : selectedDeposit
         });
+
+
         // Always send email now
-        await backendApi.post(`/custom-mail`, {
-          email: selectedDeposit.userData.email,
-          content: getCustomContent("approve", selectedDeposit, comment),
-          subject: "Withdrawal Success",
-        });
+        // await backendApi.post(`/custom-mail`, {
+        //   email: selectedDeposit.userData.email,
+        //   content: getCustomContent("approve", selectedDeposit, comment),
+        //   subject: "Withdrawal Success",
+        // });
+
         toast.success("Withdrawal Approved", { id: toastId });
 
         const updatedDepositData = depositData.map((deposit) =>
@@ -300,18 +306,26 @@ const WithdrawalStatus = () => {
         );
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
+
+           await fetchApiData();
+        
       } else if (actionType === "reject") {
         await backendApi.put(`/update-withdrawal`, {
           _id: selectedDeposit._id,
           status: "rejected",
+
+              email: selectedDeposit.userData.email,
+             subject: "Withdrawal Rejected",
+             selectedDeposit : selectedDeposit
         });
         setIsDialogOpen(false);
+
         // Always send email now
-        await backendApi.post(`/custom-mail`, {
-          email: selectedDeposit.userData.email,
-          content: getCustomContent("reject", selectedDeposit, comment),
-          subject: "Withdrawal Rejected",
-        });
+        // await backendApi.post(`/custom-mail`, {
+        //   email: selectedDeposit.userData.email,
+        //   content: getCustomContent("reject", selectedDeposit, comment),
+        //   subject: "Withdrawal Rejected",
+        // });
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? {
@@ -323,13 +337,18 @@ const WithdrawalStatus = () => {
         setDepositData(updatedDepositData);
         setIsDialogOpen(false);
         toast.success("Withdrawal Rejected", { id: toastId });
+
+         await fetchApiData();
       }
+
+     
     } catch (error) {
       toast.error("Something went wrong", { id: toastId }); // MODIFIED: Corrected toast type to error
       console.error("Error updating deposit status:", error);
     } finally {
       setIsActionLoading(false); // NEW: Reset action loading to false
       setComment("");
+
       // REMOVED: setNotifyUser(true);
     }
   };
