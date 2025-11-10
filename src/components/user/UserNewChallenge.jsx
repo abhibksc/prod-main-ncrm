@@ -63,6 +63,20 @@ const UserNewChallenge = () => {
     }
   };
 
+
+
+    // helpers that work with react-toastify *and* react-hot-toast
+const endLoadingToast = (id, { type, message, autoClose = 2500 }) => {
+  if (typeof toast.update === "function") {
+    // react-toastify path
+    toast.update(id, { render: message, type, isLoading: false, autoClose });
+  } else {
+    // react-hot-toast path
+    toast.dismiss(id);
+    type === "success" ? toast.success(message) : toast.error(message);
+  }
+};
+
 const createAccountHandler = async () => {
   if (creatingLoading) return;
 
