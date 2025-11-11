@@ -271,16 +271,26 @@ const DepositsStatus = () => {
           await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
             status: "approved",
+
+              email: selectedDeposit.userData.email,
+             subject: "Withdrawal Rejected",
+             selectedDeposit : selectedDeposit
           });
-          try {
-            await backendApi.post(`/custom-mail`, {
-              email: selectedDeposit.userId.email,
-              content: getCustomContent("approve", selectedDeposit, comment),
-              subject: "Deposit Approved",
-            });
-          } catch (error) {
-            console.error("error while mailing", error);
-          }
+
+
+
+
+          // try {
+          //   await backendApi.post(`/custom-mail`, {
+          //     email: selectedDeposit.userId.email,
+          //     content: getCustomContent("approve", selectedDeposit, comment),
+          //     subject: "Deposit Approved",
+          //   });
+          // } catch (error) {
+          //   console.error("error while mailing", error);
+          // }
+
+
           const updatedDepositData = depositData.map((deposit) =>
             deposit._id === selectedDeposit._id
               ? { ...deposit, status: "approved" }
@@ -289,6 +299,8 @@ const DepositsStatus = () => {
           setDepositData(updatedDepositData);
           setIsDialogOpen(false);
           toast.success("Deposit Approved", { id: toastId });
+
+              await fetchApiData();
         } else {
           toast.error("Failed, Please retry!!", { id: toastId });
           setIsDialogOpen(false);
@@ -297,17 +309,24 @@ const DepositsStatus = () => {
         await backendApi.put(`/update-deposit`, {
           _id: selectedDeposit._id,
           status: "rejected",
+
+          
+              email: selectedDeposit.userData.email,
+             subject: "Deposit Rejected",
+             selectedDeposit : selectedDeposit
+
+
         });
         setIsDialogOpen(false);
-        try {
-          await backendApi.post(`/custom-mail`, {
-            email: selectedDeposit.userId.email,
-            content: getCustomContent("reject", selectedDeposit, comment),
-            subject: "Deposit Rejected",
-          });
-        } catch (error) {
-          console.error("error while mailing", error);
-        }
+        // try {
+        //   await backendApi.post(`/custom-mail`, {
+        //     email: selectedDeposit.userId.email,
+        //     content: getCustomContent("reject", selectedDeposit, comment),
+        //     subject: "Deposit Rejected",
+        //   });
+        // } catch (error) {
+        //   console.error("error while mailing", error);
+        // }
         const updatedDepositData = depositData.map((deposit) =>
           deposit._id === selectedDeposit._id
             ? { ...deposit, status: "rejected" }
@@ -317,6 +336,7 @@ const DepositsStatus = () => {
         setIsDialogOpen(false);
         setSelectedDeposit("");
         toast.success("Deposit Rejected", { id: toastId });
+           await fetchApiData();
       }
     } catch (error) {
       console.error("Error updating deposit status:", error);
