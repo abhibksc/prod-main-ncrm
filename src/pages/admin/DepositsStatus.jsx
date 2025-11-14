@@ -267,12 +267,15 @@ const DepositsStatus = () => {
           }&Comment=deposit`
         );
         setIsDialogOpen(false);
+
+        console.log(selectedDeposit);
+        
         if (depositApires.data) {
           await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
             status: "approved",
 
-              email: selectedDeposit.userData.email,
+              email: selectedDeposit.userId.email,
              subject: "Withdrawal Rejected",
              selectedDeposit : selectedDeposit
           });
@@ -311,7 +314,7 @@ const DepositsStatus = () => {
           status: "rejected",
 
           
-              email: selectedDeposit.userData.email,
+              email: selectedDeposit.userId.email,
              subject: "Deposit Rejected",
              selectedDeposit : selectedDeposit
 
