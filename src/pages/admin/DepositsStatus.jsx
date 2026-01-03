@@ -306,7 +306,9 @@ const DepositsStatus = () => {
         );
         setIsDialogOpen(false);
 
-        if (depositApires.data.Equity) {
+        // if (depositApires.data.Equity) {
+        if (depositApires.data.status === "success") {
+
           const updateDbDepositRes = await backendApi.put(`/update-deposit`, {
             _id: selectedDeposit._id,
             status: "approved",
